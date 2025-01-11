@@ -1,162 +1,68 @@
----
-output: 
-  github_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-rd <- tools::parse_Rd(file.path("man", "CAs-package.Rd"))
-rd_html <- capture.output(tools::Rd2HTML(rd))
-
-## Note:  These functions are internal to the tools package, but are not exposed
-##    and are therefore not intended to be used and are subject to change.
-##    for that reason, they are replicated here to ensure they stay consistent
-##    with this document
-
-## based on tools:::RdTags
-rd_get_tags <- function(Rd)
-{
-  res <- lapply(Rd, attr, "Rd_tag")
-  if (length(res)) 
-      simplify2array(res, FALSE)
-  else character()
-}
-
-## based on tools:::.Rd_get_metadata
-rd_get_metadata <- function(x, tag)
-{
-  x <- x[rd_get_tags(x) == sprintf("\\%s", tag)]
-  if (!length(x)) 
-      character()
-  else unique(trimws(vapply(x, paste, "", collapse = "\n")))
-}
-
-## might also want to capture html output for markdown.  This is more fragile
-rd_html_get <- function(rd_html, from_h3, to_h3)
-{
-  #from_h3 <- "Details"
-  #to_h3 <- "Author"
-  ind_from <- grep(paste0("<h3>", from_h3), rd_html)
-  ind_to <- grep(paste0("<h3>", to_h3), rd_html)
-  if (length(ind_from) != 1 | length(ind_to) != 1 | all(ind_from == ind_to))
-  {
-    stop("from_h3 or to_h3 are not specified correctly")
-  }
-  return(rd_html[(ind_from + 1):(ind_to - 1)])
-}
-
-my_Rd_expr_doi <- function (x) 
-{
-    x <- tools:::.canonicalize_doi(x)
-    sprintf("[doi: %s](https://doi.org/%s)", x, x)
-}
-```
 
 <!--- DO NOT EDIT:  AUTOMATICALLY GENERATED from README.Rmd -->
 
 # CAs
 
-```{r description, results = "asis"}
-cat(rd_get_metadata(rd, "description"))
-```
+Creates covering arrays).
 
-```{r authors, results = "asis"}
-x <- rd_get_metadata(rd, "author")
-x <- gsub("Author", "- **Author**", x)
-cat(x)
-```
-
+- **Author**: Ulrike Groemping, BHT Berlin.
 
 ## Installation
 
-**CAs** is not yet on [CRAN](https://CRAN.R-project.org). You can install the package from this repository with:
+**CAs** is not yet on [CRAN](https://CRAN.R-project.org). You can
+install the package from this repository with:
 
-```{r install_option, eval=FALSE, echo=TRUE}
+``` r
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("ugroempi/CAs")
 ```
 
 ## Details
 
-```{r details, results = "asis"}
-temp <- rd_html_get(rd_html, "Details", "Author") 
+This package constructs covering arrays, i.e., arrays that cover all
+$t$-ary combinations of a set of factors at least once. The focus is on
+mathematical constructions. Initially, the package only offers arrays
+for which all columns have the same number of levels.
 
-# change equations back to $ for eqn and $$ for deqn
-#   Find <code class=\"reqn\"> and then the very next </code>
+The goal is to implement as many constructions as possible that yield
+arrays with small numbers of runs, as evidenced by the Colbourn covering
+array tables, which do not provide the CAs themselves but pointers to
+which CA constructions yield the smallest known array for which setting.
 
-start_token <- '<code class="reqn">'
-end_token <- '</code>'
-deqn_start_token <- '<p style="text-align: center;"><code class="reqn">'
-p_token <- '<p>'
-p_end_token <- '</p>'
-p_align_token <- '<p style="text-align: center;">'
+All references of the package are listed in this file and referenced
+from the other documentation files.
 
-ind_start <- grep(start_token, temp)
-ind_deqn_start <- grep(deqn_start_token, temp)
+Within the package, available CA constructions for specific situations
+can be queried using the guide functions <code>guide_CAs</code> (not yet
+implemented, might be changed).
 
-for (i in 1:length(temp))
-{
-  ## /deqn
-  if (i %in% ind_deqn_start)
-  {
-    temp[i] <- gsub(start_token, "\n$$", temp[i])
-    if (!grepl(end_token, temp[i]))
-      stop("closing </code> tag is not on the same line as the start for an equation")
-    temp[i] <- gsub(end_token, "$$\n", temp[i])
-  }
-  ## /eqn
-  if (i %in% setdiff(ind_start, ind_deqn_start))
-  {
-    temp[i] <- gsub(start_token, "$", temp[i])
-    if (!grepl(end_token, temp[i]))
-      stop("closing </code> tag is not on the same line as the start for an equation")
-    temp[i] <- gsub(end_token, "$", temp[i])
-  }
-}
+Besides the construction functions, coverage properties of any array can
+be checked by function <code>coverage</code> and plotted by function
+<code>coverplot</code>.
 
-## <p> tags
-temp <- gsub(p_token, "\n", temp)
-temp <- gsub(p_end_token, "\n", temp)
-temp <- gsub(p_align_token, "\n", temp)
-
-cat(temp)
-```
+So far, constructions for strength 2 2-level CAs by Kleitman and Spencer
+(1973) and Katona (1973), as well as constructions based on cyclotomy
+(Colbourn 2010) have been implemented.
 
 ## References
 
-```{r references, results = "asis"}
-temp <- rd_html_get(rd_html, "References", "See") 
-for (i in seq_along(temp))
-{
-  if (grepl("[\\]+Sexpr[[]results=rd,stage=build[]][{].+[}]", temp[i]))
-  {
-    m <- regexpr("[\\]+Sexpr[[]results=rd,stage=build[]][{].+[}]", temp[i])
-    text1 <- substring(temp[i], 1, m-1)
-    code <- substring(temp[i], m, m + attr(m, "match.length"))
-    if (m + attr(m, "match.length") >= nchar(temp[i]))
-    {
-      text2 <- ""
-    } else
-    {
-      text2 <- substring(temp[i], m + attr(m,"match.length") + 1, nchar(temp[i]))
-    }
-    code <- gsub(".*[{]", "", code)
-    code <- gsub("[}].*", "", code)
-    code <- gsub("tools:::Rd_expr_doi", "my_Rd_expr_doi", code)
-    temp[i] <- paste(text1, eval(parse(text=code)), text2)
-  }
-}
-
-# this is a fix for Issue 19 - https://github.com/bertcarnell/SOAs/issues/19
-line_found <- grep("[_]II", temp)
-posit_found <- gregexpr("[_]II", temp[line_found])
-temp2 <- temp
-# temp2[line_found] <- paste0(substring(temp[line_found], 1, posit_found[[1]][2]-1),
-#                             "&#95;",
-#                             substring(temp[line_found], posit_found[[1]][2]+1, nchar(temp[line_found])))
-temp2[line_found] <- gsub("[>]http", ">`http", temp[line_found])
-temp2[line_found] <- gsub("pdf[<]", "pdf`<", temp2[line_found])
-
-cat(temp2)
-```
-
+<p>
+Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6,
+t≤k ≤10000, 2005–23.
+<a href="https://www.public.asu%20.edu%20/~ccolbou%20/src%20/tabby"><https://www.public.asu>
+.edu /~ccolbou /src /tabby</a>.
+</p>
+<p>
+Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes
+Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
+</p>
+<p>
+Kleitman, D.J. und Spencer, J. (1973). Families of k-independent sets,
+Discrete Math., vol. 6, no. 3, pp. 255–262. doi:
+10.1016/0012-365X(73)90098-8.
+</p>
+<p>
+Katona, G. O. H. (1973). Two applications (for search theory and truth
+functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1,
+pp. 19–26. doi: 10.1007/BF02018457.
+</p>
