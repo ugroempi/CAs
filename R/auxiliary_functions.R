@@ -1,0 +1,642 @@
+#' auxiliary functions
+#'
+#' non-visible functions to be used in other functions,
+#' and currently also previous drafts that may be deleted
+#'
+#' @rdname auxiliary
+#'
+#' @details
+#'
+#' funmakefromstrings: read example designs from copy-pasted strings
+#' iacheck: check a two-column matrix for correct interaction structure
+#' subia: checks whether ia1 is subset of ia2
+#' levels.no from DoE.base
+#' fasttab: table replacement without using factors
+#' ord from DoE.base
+#' rho: extracts run numbers of D that hold the interaction ia
+#' allints: function that extracts all interactions for (up to) t factors from a run
+#' failcands: fail candidates from a test suite with a single failed run
+#'   failcands2: (failed) attempt to speed up failcands
+#' rhos_for_ints
+#' is.CA: checks for covering array properties,
+#'   can return distribution of covering frequencies or actual row sets
+#' is.LA: checks for locating array properties
+
+## function for reading and arranging copy-pasted strings
+funmakefromstrings <- function(stringvec){
+  do.call(rbind, lapply(strsplit(stringvec, "", fixed=TRUE), as.numeric))
+}
+
+levels.no.NA <- function (x){
+  xx <- x
+  ff <- FALSE
+  if (is.data.frame(xx)) {
+    if (any(ff <- sapply(xx, is.factor)))
+      nflevs <- sapply(xx[ff], nlevels)
+  }
+  aus <- apply(xx, 2, function(v) length(setdiff(unique(v),NA)))
+  if (any(ff))
+    aus[ff] <- nflevs
+  aus
+}
+
+iacheck <- function(ia, t=NULL, lno=NULL, upto=FALSE, start0=TRUE){
+  ## two column matrix with first index a factor,
+  ## second index its value
+  ## first index must not have duplicates!
+  ##    needs check for valid ia format (iacheck)
+  ##    needs subset method between interactions (subia)
+  ##    needs row selection method of interaction and design (rho)
+  if (!is.matrix(ia)) return(FALSE)
+  if (is.null(t)) t <- nrow(ia)
+  ## wrong dimension
+  if (!(nrow(ia)==t || (upto && nrow(ia)<t)) || !ncol(ia)==2) return(FALSE)
+  ## non-unique ia[,1]
+  if (!length(unique(ia[,1]))==nrow(ia)) return(FALSE)
+  ## non-integer levels
+  if (!all(ia[,2]%%1==0)) return(FALSE)
+  ## non-permissible levels
+  if (!all(ia[,2]>=ifelse(start0, 0, 1))) return(FALSE)
+  ## invalid levels
+  if (!is.null(lno))
+  if (!all(lno[ia[,1]]-start0 >= ia[,2])) return(FALSE)
+  TRUE
+}
+
+#iacheck(ia1, 2)
+
+subia <- function(ia1, ia2){
+  ## checks whether ia1 is a subset of ia2
+  t1 <- nrow(ia1); t2 <- nrow(ia2)
+  stopifnot(iacheck(ia1, t1) && iacheck(ia2, t2))
+  if (t1 > t2) return(FALSE)
+  if (t1==t2)
+    if (all(ia1[ord(ia1),]==ia2[ord(ia2),])) return(TRUE) else return(FALSE)
+  ## now nrow(ia1) < nrow(ia2)
+  if (length(andere <- setdiff(ia2[,1],ia1[,1])) > t2-t1) return(FALSE)
+  ia2compare <- ia2[-which(ia2[,1]%in%andere),]
+  ia1 <- ia1[ord(ia1),]
+  ia2compare <- ia2[ord(ia2compare),]
+  all(ia1==ia2compare)
+}
+
+levels.no <- DoE.base:::levels.no
+ord <- DoE.base:::ord
+nchoosek <- DoE.base:::nchoosek
+## check for rows with the interaction in design D
+rho <- function(D, ia, start0=TRUE){
+  ## D the design
+  ## ia the interaction (tx2 matrix)
+  ## start0 levels start with 0 (otherwise with 1)
+  lno <- levels.no(D)
+  stopifnot(iacheck(ia, nrow(ia), lno, start0=start0))
+  stopifnot(max(ia[,1])<=ncol(D))
+  t <- nrow(ia)
+  ## actual values of the columns of interest (as a list of column vectors)
+  hilf <- lapply(ia[,1], function(obj) D[,obj])
+  ## function to return row numbers
+  ##    for which the respective values are taken on
+  myfun <- function(ll1, ll2)
+    lapply(1:length(ll1), function(obj) which(ll1[[obj]]==ll2[[obj]]))
+  ## count the row numbers,
+  ## return row numbers for which all t coincidences are met
+  hilf <- table(do.call(c, myfun(hilf, as.list(ia[,2]))))
+  as.numeric(names(hilf)[hilf==t])
+}
+#rho(d2f, ia1)
+#rho(d2f, ia2)
+#rho(d1d, ia2)
+#rho(d1e, ia2)
+
+allints <- function(D, r, t, upto=FALSE){
+  # D design
+  # r run number or vector of run numbers
+  # t strength (t-way interactions)
+  # upto: if TRUE, up to t-way interactions
+  # returns list of interactions
+  if (upto && t>1){
+    ll <- rep(list(NULL), t)
+    for (i in 1:t){
+      ll[[i]] <- allints(D,r,i,upto=FALSE)
+    }
+    ll <- unlist(ll, recursive=FALSE)
+  }else{
+    hilf <- nchoosek(ncol(D),t)
+    if (length(r)==1)
+    ll <- lapply(1:ncol(hilf),
+                 function(obj) cbind(hilf[,obj], D[r,hilf[,obj]]))
+    else
+      ll <- unlist(lapply(1:ncol(hilf),
+                          function(obj)
+                            lapply(r, function(obj2)
+                              cbind(hilf[,obj], D[obj2,hilf[,obj]]))),
+                          recursive=FALSE)
+  }
+  ll
+}
+
+failcands <- function(D, r, t, upto=FALSE){
+  # D a test suite (design)
+  # r a run number or a vector of run numbers of failed tests
+  # t the degree of interactions
+  # upto logical that says whether interactions with up to t or exactly t factors
+
+  ## fail candidates from a single failed run
+  ## at least one must be actually a failure cause
+
+  ## fail candidates from a vector of failed runs
+  ## at least one must be a failure cause, likely more than one needed,
+  ##     because all the runs have failed
+  candfail <- allints(D, r, t, upto=upto)
+  n <- nrow(D)
+  candpass <- unique(unlist(lapply(setdiff(1:n,r),
+                                   function(obj) allints(D, obj, t, upto=upto)),
+                            recursive=FALSE)
+                     )
+  setdiff(candfail, candpass)
+}
+
+failcands2 <- function(D, r, t, upto=FALSE){
+  ## fail candidates from a single failed run
+  ## works for upto=FALSE only, at the moment
+  ## and is not faster but slower
+  ## nevertheless, might be necessary for large numbers of columns
+  candfail <- allints(D, r, t, upto=upto)
+  facs <- 1:ncol(D)
+  andere <- setdiff(1:nrow(D), r)
+  for (i in andere){
+    weg <- allints(D[i,facs,drop=FALSE], 1, t, upto=upto)
+    weg <- lapply(weg, function(obj) {
+      obj[,1] <- facs[obj[,1]]
+      obj
+    })
+    candfail <- setdiff(candfail, weg)
+    facs <- sort(unique(c(sapply(candfail, function(obj) obj[,1]))))
+  }
+  candfail
+}
+
+rhos_for_ints <- function(D, t, upto=FALSE, start0=TRUE){
+  ## calculates the sets of rows for each interaction
+  lnos <- levels.no.NA(D)
+  m <- ncol(D)
+  ints_per_row <- choose(m, t)
+  pickcols <- nchoosek(m,t)
+  liste <- vector(mode="list", length=ints_per_row)
+  names(liste) <- sapply(1:ncol(pickcols), function(obj)
+    paste(pickcols[,obj], collapse="-"))
+  if (start0) {
+    for (i in 1:ncol(pickcols)){
+      hilf <- lapply(lnos[pickcols[,i]], function(obj) 0:(obj-1))
+      allintsi <- as.matrix(do.call(expand.grid, hilf))
+        ## has only the relevant columns
+      hilf <- lapply(1:nrow(allintsi), function(obj)
+        rho(D, cbind(pickcols[,i], allintsi[obj,]), start0 =TRUE))
+      names(hilf) <- apply(allintsi, 1, function(obj) paste(obj, collapse="."))
+      liste[[i]] <- hilf
+    }
+  } else{
+    for (i in 1:ncol(pickcols)){
+      hilf <- lapply(lnos[pickcols[,i]], function(obj) 1:obj)
+      allintsi <- as.matrix(do.call(expand.grid, hilf))
+        ## has only the relevant columns
+      hilf <- lapply(1:nrow(allintsi), function(obj)
+        rho(D, cbind(pickcols[,i], allintsi[obj,]), start0 = FALSE))
+      names(hilf) <- apply(allintsi, 1, function(obj) paste(obj, collapse="."))
+      liste[[i]] <- hilf
+    }
+  }
+  ## important: all elements of liste are always sorted in increasing order
+  return(liste)
+}
+
+is.LA_intersect_probably_wrong <- function(D, t, d, upto=FALSE, start0=TRUE, dupto=FALSE){
+  m <- ncol(D)
+  allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+  ## a list-valued entry for each t-factor combination
+  ##     length of the list element is the number of possible instances
+  ##     of interactions for the specific set of t factors
+  dups <- duplicated(unlist(allrhos, recursive=FALSE))
+  ## initially, works with d=1 only
+  if (d==1) return(!any(dups))
+  if (d==2 && t==1)
+    stop("d=2 and t=1 is not yet implemented")
+  if (d==2 && t==2){
+    ## have to cover pairs of distinct interactions
+    ## and pairs of interactions with an overlapping factor
+    sammel <- array(data=vector(mode="list"),
+                    dim=c(choose(m,t), choose(m,t)))
+    cases <- nchoosek(m, t)  ## column numbers refer to D
+    rownames(sammel) <- colnames(sammel) <-
+      apply(cases, 2, function(obj) paste(obj, collapse="-"))
+    anzahlen <- lengths(allrhos)
+        ## numbers of instances of the t-way interactions
+
+    vec0s <- mapply(function(obj) 1:obj, levels.no(D))
+    vecs <- mapply(function(obj) 1:obj, anzahlen)
+    ## list of index vectors for looping through the interactions
+    ## not all combinations are physically possible, some are incompatible!
+
+    dset <- nchoosek(length(anzahlen), d)
+        ## length(anzahlen) is choose(m,t) (corresponding pairs in cases)
+    ## nintcombis
+    nintcombis <- choose(choose(m,t),d) ## =ncol(dset)
+    ## determine overlap or not
+    for (i in 1:nintcombis){
+      cols <- dset[,i, drop=FALSE]
+      if (overlapping[i]){
+        ## handle overlapping case
+        hilf <- cases[,cols, drop=FALSE]
+        doppelt <- hilf[which(duplicated(c(hilf)))] ## relies on t=2 and d=2
+        einzeln <- apply(hilf, 2, function(obj) setdiff(obj, doppelt))
+        levsdoppel <- vec0s[doppelt]
+        levseinzeln <- expand.grid(vec0s[einzeln[1]], vec0s[einzeln[2]])
+        ## all level combinations to be inspected
+        x <- expand.grid(levsdoppel, 1:nrow(levseinzeln))
+        x <- cbind(x[,1], levseinzeln[x[,2]], row.names=NULL)
+        sammel[cols[1],cols[2]] <- mapply(intersect,
+                  rhos_for_ints(D[,c(doppelt, einzeln[1])], t, upto=upto, start0=start0),
+                     rhos_for_ints(D[,c(doppelt, einzeln[2])], t, upto=upto, start0=start0),
+                  SIMPLIFY = FALSE
+        )
+      }else
+      {
+      x <- do.call(expand.grid, vecs[cols])  ## the selected combinations
+      sammel[min(cols), max(cols)][[1]] <- lapply(1:nrow(x),
+                     function(obj){## obj is the row no of x
+                       ## obj2 is the list of rho sets for the tfis of dset[,i],
+                       ## j is the list of selections from each list element
+                Reduce(intersect,
+                        mapply(function(obj2, j) obj2[[j]],
+                               obj2=allrhos[dset[,i]], j=x[obj,],
+                               SIMPLIFY = FALSE))
+                     })
+        names(sammel[min(cols), max(cols)][[1]]) <- apply(as.matrix(x), 1,
+                               function(obj) paste(obj, collapse=":"))
+    }
+  }
+    hilf <- c(sammel)
+    if (dupto){
+      allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+      ## a list-valued entry for each t-factor combination
+      ##     length of the list element is the number of possible instances
+      ##     of interactions for the specific set of t factors
+      hilf <- c(unlist(allrhos, recursive=FALSE), hilf)
+    }
+  ## some cases are duplicates and MUST be the same, e.g.
+  ##     4-5=9, 4-6=9 and 5-6=9 all correspond to the two runs with
+  ##        4=2, 5=2 and 6=2 (12 and 29)
+  ## hence, I have to program this more adequately,
+  ## which is not trivial
+  ## is there a package for doing this more generally ?
+  #print(hilf[which(lengths(hilf)>0 & duplicated(hilf))])
+  return(!any(duplicated(hilf) & lengths(hilf)>0))
+  }else{"This combination of d and t has not yet been implemented."}
+}
+
+is.CA <- function(D, t, index=1, start0=TRUE, verbose=0){
+  stopifnot(is.logical(start0))
+  allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+  if (verbose==0) return(all(lengths(unlist(allrhos, recursive=FALSE))>=index))
+  aus <- all(lengths(unlist(allrhos, recursive=FALSE))>0)
+  if (verbose==2) attr(aus, "rowsets") <- allrhos
+  if (verbose==1){
+    attr(aus, "frequDistr") <- table(lengths(unlist(allrhos, recursive=FALSE)))
+    attr(aus, "proportions") <- sapply(allrhos, function(obj) sum(lengths(obj)>0)/length(obj))
+  }
+  aus
+}
+
+is.LA <- function(D, t, d, upto=FALSE, start0=TRUE, dupto=FALSE, verbose=0){
+  ## implemented variants: d=1 should be correct
+  ## d=2 and t=2 not yet trustworthy
+  ## d=2 and t=1 not yet finished
+  stopifnot(is.logical(upto))
+  stopifnot(is.logical(dupto))
+  stopifnot(is.logical(start0))
+  if (!is.CA(D,t,start0=start0)) return(FALSE)
+  m <- ncol(D)
+  ## rho sets for individual t-factor interactions
+  allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+  ## a list-valued entry for each t-factor combination
+  ##     length of the list element is the number of possible instances
+  ##     of interactions for the specific set of t factors
+
+  ## dups holds TRUE in the element positions that are identical
+  ##    to earlier elements of the list of row number vectors,
+  ##    FALSE for first occurrence or unique values
+  dups <- duplicated(unlist(allrhos, recursive=FALSE))
+  ##################
+  ## d=1, dupto irrelevant, upto (for t) handled in allrhos
+  if (d==1) {
+    if (verbose==0) return(!any(dups))
+    else{
+      aus <- !any(dups)
+      attr(aus, "liste") <- allrhos
+      return(aus)
+    }
+  }
+  ##################
+
+  ##################
+  if (d==2 && t==1){
+    cases <- nchoosek(m, t)  ## entries are column numbers of D
+                             ## 1 x m matrix, entries 1:m
+    sammel <- array(data=vector(mode="list"), dim=c(m, m))
+    rownames(sammel) <- colnames(sammel) <- cases
+    anzahlen <- lengths(allrhos) ## coincides with levels.no(D)
+    ## lengths of single vectors (for upto=TRUE)
+
+    ## index number of levels for the columns of d (starting with 1)
+    ## equal to index number of the 1-way interactions
+    vecs <- mapply(function(obj) 1:obj, anzahlen)
+
+    ## combinations of d different interactions
+    dset <- nchoosek(length(anzahlen), d)
+    ## add cases with same columns
+    ## for levels.no>2 ## (otherwise would always be all rows)
+    nlevs <- levels.no(D)  ## same as anzahlen
+    hilf <- (1:m)          ## for more than one factor with 2 levels
+                           ## LA(2,1) is never possible
+    if (length(hilf)>0)
+      dset <- cbind(dset, rbind(hilf,hilf))
+    ## later perhaps handle with gtools::combinations with repeats.allowed = TRUE
+    nintcombis <- ncol(dset)
+    for (i in 1:nintcombis){
+      cols <- dset[,i]  ## vector of length d with d vector combination indices in it
+      {
+        x <- do.call(expand.grid, vecs[cols])
+        ## the selected combinations
+        ## has d=2 columns (for the d vector combination indices)
+        ## same vector combinations must use different instances
+        ## and each instance only once
+        if (cols[1]==cols[2]){
+          if (dupto)
+          x <- x[x[,1]<=x[,2],] ## including = for d=1
+          else
+          x <- x[x[,1] < x[,2],]
+        }
+        sammel[min(cols), max(cols)][[1]] <-
+          lapply(1:nrow(x), ## every combination that was not removed
+                 function(obj){
+                   ## obj is the row no of x
+                   ## obj2 is the list of rho sets for the tfis of dset[,i],
+                   ## j is the row of x (i.e. selected interaction instance)
+                   sort(Reduce(union,
+                          mapply(function(obj2, j) obj2[[j]],
+                                 obj2=allrhos[dset[,i]],
+                                 j=x[obj,],
+                                 SIMPLIFY = FALSE)))
+                 })
+        ## elements of sammel hold the list of row sets for unions of two instances
+        ##     of combined interactions
+        if (verbose>0) names(sammel[min(cols), max(cols)][[1]]) <-
+          apply(as.matrix(x), 1, function(obj) paste(obj, collapse=":"))
+      }
+    }
+    hilf <- c(sammel)  ## array structure removed
+    if (verbose>0) {
+      hilf2 <- expand.grid(rownames(sammel), colnames(sammel))
+      names(hilf) <- paste(hilf2[,1], hilf2[,2], sep="-")
+    }
+    hilf <- hilf[sapply(hilf, function(obj) !is.null(obj))]
+    if (dupto){
+      ## d=1
+      allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+      ## a list-valued entry for each t-factor combination
+      ##     length of the list element is the number of possible instances
+      ##     of interactions for the specific set of t factors
+      hilf <- c(unlist(allrhos, recursive=FALSE), hilf)
+    }
+    ## t=1 and d=2
+    if (verbose==0) return(!any(duplicated(unlist(hilf, recursive = FALSE)))) else{
+       aus <- !any(duplicated(unlist(hilf, recursive = FALSE)))
+       attr(aus, "liste") <- hilf
+       return(aus)
+      }
+  }
+  ##################
+
+  ##################
+  if (d==2 && t==2){
+    ## have to cover pairs of 2-way interactions
+    sammel <- array(data=vector(mode="list"),
+                    dim=c(choose(m,t), choose(m,t)))
+    cases <- nchoosek(m, t)  ## column numbers refer to D
+    if (verbose>0)
+      rownames(sammel) <- colnames(sammel) <-
+      apply(cases, 2, function(obj) paste(obj, collapse="-"))
+    anzahlen <- lengths(allrhos)
+    ## numbers of instances of the t-way interactions
+    ## length of the vector is choose(m,t)
+    nintclasses <- length(anzahlen)
+
+    ## lengths of single vectors (for upto=TRUE)
+    #vec0s <- mapply(function(obj) 1:obj - start0, levels.no(D))
+    ## index number of interaction
+    vecs <- mapply(function(obj) 1:obj, anzahlen)
+
+    dset <- nchoosek(nintclasses, d)
+    ## add cases with same interaction columns (but different instances)
+    ## perhaps do with gtools::combinations and repeats.allowed=TRUE later
+    dset <- cbind(dset, rbind(1:nintclasses, 1:nintclasses))
+    ## nintclasses is choose(m,t) (corresponding to pairs in cases)
+    ##     each column of dset holds two elements of 1:nintclasses
+    ##     they can also be the same
+    ## nintcombis for d (i.e., if not dupto)
+    nintcombis <- ncol(dset)
+    for (i in 1:nintcombis){
+      cols <- dset[,i]  ## a particular interaction combination (e.g. colums (3,4) with columns (2,5))
+      {
+        x <- do.call(expand.grid, vecs[cols])  ## all actual variants combined,
+                                               ## e.g. {(3,0), (4,1)} with {(2,1),(5,2)}
+               ## the selected combinations, elements from interaction indices
+               ## has only d=2 columns
+        if (cols[1]==cols[2]) {
+          ## keep each interaction only once
+          ## remove duplicated same interaction, if dupto is FALSE
+          if (dupto)
+            x <- x[x[,1] <= x[,2],]  ## same covers d=1
+          else
+            x <- x[x[,1] < x[,2],]
+        }
+        sammel[min(cols), max(cols)][[1]] <-
+          lapply(1:nrow(x), ## every combination
+                function(obj){
+                  ## obj is the row no of x
+                  ## obj2 is the list of rho sets for the tfis of dset[,i],
+                  ## j is the list of selections from each list element, as indicated in x
+                  ## create list of row number lists
+                  hilf <- mapply(function(obj2, j) obj2[[j]],
+                                 obj2=allrhos[cols],
+                                 j=x[obj,],
+                                 SIMPLIFY = FALSE)
+                  sort(Reduce(union, hilf))
+                  })
+        if (verbose>0) names(sammel[min(cols), max(cols)][[1]]) <-
+          apply(as.matrix(x), 1, function(obj) paste(obj, collapse=":"))
+        ## these names refer to the interaction number
+      }
+    }
+    hilf <- c(sammel)  ## array structure removed
+    if (verbose>0) {
+      hilf2 <- expand.grid(rownames(sammel), colnames(sammel))
+      names(hilf) <- paste(hilf2[,1], hilf2[,2], sep="-")
+    }
+    hilf <- hilf[sapply(hilf, function(obj) !is.null(obj))]  ## only diagonal and above populated
+    ## dupto was already covered by allowing the same interaction in the loop over dset columns
+    # if(dupto){
+    #   allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+    #   ## a list-valued entry for each t-factor combination
+    #   ##     length of the list element is the number of possible instances
+    #   ##     of interactions for the specific set of t factors
+    #   hilf <- c(unlist(allrhos, recursive=FALSE), hilf)
+    # }
+    if (verbose==0)
+    return(!any(duplicated(unlist(hilf, recursive=FALSE))))   ## t=2 and d=2
+    else{
+      aus <- !any(duplicated(unlist(hilf, recursive=FALSE)))
+      attr(aus, "liste") <- hilf
+      return(aus)
+    }
+  }else{"This combination of d and t has not yet been implemented."}
+}
+
+is.DA <- function(D, t, d, upto=FALSE, start0=TRUE, dupto=FALSE, verbose=0){
+  hilf <- is.LA(D, t, d, upto=upto, start0=start0, dupto=dupto, verbose=1)
+  if (!hilf){
+    if (verbose>0) return(hilf) else return(FALSE)
+  }
+  hilf <- unlist(attr(hilf, "liste"), recursive = FALSE)
+  ## perhaps have unlisted already as input, or do not unlist here either
+  ordnen <- sort(lengths(hilf), index.return=TRUE)
+  laengen <- ordnen$x
+  hilford <- hilf[ordnen$ix]
+  hilford <- lapply(hilford, as.set)
+  ## it has to be checked whether any of the sets is a proper subset of any other
+  ## there cannot be equal sets because of the LA check
+  isDA <- TRUE
+  ll <- unique(laengen)
+  lluse <- setdiff(ll, max(ll))
+  for (lnow in lluse){
+    hilfl <- hilford[which(laengen==lnow)]
+    hilflonger <- hilford[which(laengen>lnow)]
+    for (ik in 1:length(hilfl))
+      for (il in 1:length(hilflonger))
+        if (set_is_proper_subset(hilfl[[ik]], hilflonger[[il]])){
+          isDA <- FALSE
+          break
+        }
+    if (!isDA) break
+  }
+  if (verbose==0) return(isDA) else{
+    attr(isDA, "liste") <- hilf
+    return(isDA)
+  }
+}
+
+metrics <- function(D, t, constr=NULL, start0=TRUE){
+  if (!is.null(constr)) stop("constr has not yet been implemented")
+  auswert <- is.CA(D, t, verbose=1, start0 = start0)
+  lls <- levels.no(D)
+  m <- ncol(D)
+  hilf <- nchoosek(m,t)
+  denoms_diversity <-
+    pmin(nrow(D), sapply(1:ncol(hilf), function(obj)
+    prod(lls[hilf[,obj]])))
+  no_of_tFIs <- 56*choose(m,t)
+    ##    sum(denoms_diversity)  ## maximum possible number of different 2fis
+    ## given the number of runs and level pattern
+  hilf <- attr(auswert, "frequDistr")
+  hilf2 <- attr(auswert, "proportions")
+  if (names(hilf)[1]=="0"){
+    ave.cover <- mean(hilf2) ## average coverage proportion for t-projections
+    min.cover <- min(hilf2)
+    prop.tot.cover <- mean(hilf2==1)  ## percentage fully-covered t-projections
+    cover <- sum(hilf[-1])/sum(hilf)  ## percentage of covered tFIs
+    divers <- sum(hilf[-1])/no_of_tFIs #sum(denoms_diversity)
+    divers.real <- sum(hilf[-1])/sum(denoms_diversity)
+  } else{
+    ave.cover <- min.cover <- prop.tot.cover <- cover <- 1
+    divers <- sum(hilf)/no_of_tFIs #sum(denoms_diversity)
+    divers.real <- sum(hilf)/sum(denoms_diversity)
+  }
+  to_be_covered <- sum(hilf)
+  return(c(cover=cover, to_be_covered=to_be_covered,
+           prop.tot.cover=prop.tot.cover, ave.cover=ave.cover,
+           min.cover=min.cover,
+           projections=choose(m,t),
+           divers=divers, no_of_tFIs=no_of_tFIs,
+           divers.real=divers.real, no.real=sum(denoms_diversity)))
+}
+
+proportions_slower <- function(D, t, verbose=0){
+  ## slow because of the overhead in function table
+  lls <- levels.no.NA(D)
+  m <- ncol(D)
+  projs <- nchoosek(m,t)
+  nproj <- ncol(projs)
+  tots <- sapply(1:nproj, function(obj) prod(lls[projs[,obj]]))
+  tabs <- lapply(1:nproj, function(obj) do.call(table,
+                        lapply(projs[,obj], function(obj) D[,obj])))
+  ncovereds <- sapply(tabs, function(obj) sum(obj>0))
+  whichnotcovereds <- lapply(tabs, function(obj) which(obj==0, arr.ind=TRUE))
+  total <- sum(ncovereds)/sum(tots)
+  proportions <- ncovereds/tots
+  ave <- mean(proportions)
+  min <- min(proportions)
+  simple <- mean(ncovereds==tots)
+  if (verbose==1)
+    return(list(total=total, ave=ave, min=min, simple=simple,
+              tots=tots, ncovereds=ncovereds, proportions=proportions))
+  if (verbose==2)
+    return(list(total=total, ave=ave, min=min, simple=simple,
+                tots=tots, ncovereds=ncovereds,
+                proportions=proportions,
+                projections=projs,
+                tabs=tabs,
+                notcovereds=whichnotcovereds))
+  ## remaining cases (anything but 1 and 2)
+  return(list(total=total, ave=ave, min=min, simple=simple))
+}
+
+fasttab <- function(mat,
+                    dnn=colnames(mat)){
+  ## mat is a matrix whose columns hold integer values
+  ## starting with 1
+  ## that are to be tabulated
+  ## missing values are ignored
+  stopifnot(is.matrix(mat))
+  stopifnot(all(mat%%1==0, na.rm=TRUE))
+  stopifnot(all(mat>0, na.rm=TRUE))
+  stopifnot(min(mat, na.rm=TRUE)==1)
+  if (ncol(mat)==1) aus <- tabulate(mat)
+  else{
+    bin <- 0L
+    k <- ncol(mat)
+    dims <- levels.no.NA(mat)
+    pd <- cumprod(c(1,dims))
+    dn <- mapply(":", rep(1,k),dims, SIMPLIFY = FALSE)
+    for (i in 1:k){
+      ## ith column
+      a <- mat[,i]
+      bin <- bin + pd[i]*(a - 1L)
+    }
+    if (length(bin)) bin <- bin + 1L
+    names(dn) <- dnn
+    aus <- array(tabulate(bin, pd[k+1]), dims, dimnames = dn)
+    class(aus) <- "table"
+  }
+  aus
+}
+
+## obtain known smallest CA sizes from Colbourn catalogue
+CAN <- function(t,k,v){
+  hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
+  genau <- which(hilf$k==k)
+  if (length(genau)==1)
+    return(hilf$N[genau]) else
+      return(hilf$N[min(which(hilf$k>=k))])
+}
+
+
