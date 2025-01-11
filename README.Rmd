@@ -63,7 +63,6 @@ cat(rd_get_metadata(rd, "description"))
 ```{r authors, results = "asis"}
 x <- rd_get_metadata(rd, "author")
 x <- gsub("Author", "- **Author**", x)
-x <- gsub("Contributor", "\n- **Contributor**", x)
 cat(x)
 ```
 
@@ -74,7 +73,7 @@ cat(x)
 
 ```{r install_option, eval=FALSE, echo=TRUE}
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("bertcarnell/SOAs")
+devtools::install_github("ugroempi/CAs")
 ```
 
 ## Details
