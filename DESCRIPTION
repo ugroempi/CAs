@@ -4,9 +4,10 @@ Title: Creating Covering Arrays
 Version: 0.1.0
 Author: Ulrike Groemping
 Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
-Description: Mathematical constructions of covering arrays, and 
-    functions for assessing coverage properties
-Depends: lhs, DoE.base, prepplot, roxygen2, R (>= 3.5.0)
+Description: Implements mathematical constructions of covering arrays. Provides  
+    diagnostic functions for assessing coverage properties.
+Depends: prepplot, R (>= 3.5.0)
+Imports: lhs, DoE.base, prepplot, roxygen2, parallel, SOAs
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.2.3
