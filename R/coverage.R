@@ -12,8 +12,7 @@
 #' @usage coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
 #' @usage coverplot(D, t, isInteger=TRUE, start0=TRUE,
 #'     type="combinations",
-#'     main=paste0("Coverage chart for t=",t),
-#'     xlab="\% projections", ylab="\% covered",
+#'     main=NULL, xlab=NULL, ylab=NULL,
 #'     col=rgb(0,0,1,0.5), las=1, plot=TRUE, ...)
 #'
 #' @param D array
@@ -23,7 +22,7 @@
 #' @param start0 logical (default \code{TRUE}): do the integers start with 0 ? (irrelevant for \code{!isInteger})
 #' @param verbose 0 (default) returns only four percentages, 1 and 2 return more detail.
 #' Anything apart from 1 and 2 behaves like 0.
-#' @param parallel number of threads to be used (default: 1)
+#' @param parallel number of threads to be used (default: 1); if increased, package parallel must be available
 #' @param type \code{"projections"} (default) or \code{"tuples"}
 #' @param main title of plot
 #' @param xlab,ylab axis titles
@@ -69,6 +68,7 @@
 #' coverplot(plan, 2, type="tuples")
 #'
 
+#' @export
 coverage <- function(D, t, isInteger=TRUE,
                         verbose=0, start0=TRUE, parallel=1){
   ## made faster by custom table function fasttab
@@ -106,14 +106,12 @@ coverage <- function(D, t, isInteger=TRUE,
   if (parallel==1)
     tabs <- lapply(1:nproj, function(obj) fasttab(D[,projs[,obj]]))
   else{
-    stopifnot(require(parallel))
-    #stopifnot(require(foreach))
-    #stopifnot(require(doParallel))
-    stopifnot(parallel <= detectCores())
+    stopifnot(requireNamespace(parallel))
+    stopifnot(parallel <= parallel::detectCores())
     mycl <- parallel::makePSOCKcluster(parallel)
     parallel::clusterExport(mycl,
                             varlist=c("fasttab", "levels.no.NA"))
-    tabs <- parLapply(mycl, 1:nproj,
+    tabs <- parallel::parLapply(mycl, 1:nproj,
                        function(obj) fasttab(D[,projs[,obj]]))
     parallel::stopCluster(mycl); rm(mycl)
   }
@@ -161,11 +159,13 @@ prepcoverplot <- function(ts, type="projections",
   if (is.null(main)) main <- paste0("Coverage plot for t = ", paste(ts, collapse=", "))
   if (is.null(xlab)) xlab <- paste("%", type)
   if (is.null(ylab)) ylab <- "% covered"
-  prepplot(c(0,1), c(0,1), main=main, xlab=xlab, ylab=ylab,
+  prepplot::prepplot(c(0,1), c(0,1), main=main, xlab=xlab, ylab=ylab,
            las=las, xaxs="i", yaxs="i", gridx=9, gridy=9,
            lwd.axis=1)
 
 }
+
+#' @export
 coverplot <- function(D, t, isInteger=TRUE, start0=TRUE,
                       type="combinations",
                       main=NULL,

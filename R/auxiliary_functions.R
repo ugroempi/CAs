@@ -5,6 +5,8 @@
 #'
 #' @rdname auxiliary
 #'
+#' @usage NULL
+#'
 #' @details
 #'
 #' funmakefromstrings: read example designs from copy-pasted strings
@@ -81,7 +83,7 @@ subia <- function(ia1, ia2){
 }
 
 levels.no <- DoE.base:::levels.no
-ord <- DoE.base:::ord
+ord <- DoE.base::ord
 nchoosek <- DoE.base:::nchoosek
 ## check for rows with the interaction in design D
 rho <- function(D, ia, start0=TRUE){
@@ -210,93 +212,9 @@ rhos_for_ints <- function(D, t, upto=FALSE, start0=TRUE){
   return(liste)
 }
 
-is.LA_intersect_probably_wrong <- function(D, t, d, upto=FALSE, start0=TRUE, dupto=FALSE){
-  m <- ncol(D)
-  allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
-  ## a list-valued entry for each t-factor combination
-  ##     length of the list element is the number of possible instances
-  ##     of interactions for the specific set of t factors
-  dups <- duplicated(unlist(allrhos, recursive=FALSE))
-  ## initially, works with d=1 only
-  if (d==1) return(!any(dups))
-  if (d==2 && t==1)
-    stop("d=2 and t=1 is not yet implemented")
-  if (d==2 && t==2){
-    ## have to cover pairs of distinct interactions
-    ## and pairs of interactions with an overlapping factor
-    sammel <- array(data=vector(mode="list"),
-                    dim=c(choose(m,t), choose(m,t)))
-    cases <- nchoosek(m, t)  ## column numbers refer to D
-    rownames(sammel) <- colnames(sammel) <-
-      apply(cases, 2, function(obj) paste(obj, collapse="-"))
-    anzahlen <- lengths(allrhos)
-        ## numbers of instances of the t-way interactions
-
-    vec0s <- mapply(function(obj) 1:obj, levels.no(D))
-    vecs <- mapply(function(obj) 1:obj, anzahlen)
-    ## list of index vectors for looping through the interactions
-    ## not all combinations are physically possible, some are incompatible!
-
-    dset <- nchoosek(length(anzahlen), d)
-        ## length(anzahlen) is choose(m,t) (corresponding pairs in cases)
-    ## nintcombis
-    nintcombis <- choose(choose(m,t),d) ## =ncol(dset)
-    ## determine overlap or not
-    for (i in 1:nintcombis){
-      cols <- dset[,i, drop=FALSE]
-      if (overlapping[i]){
-        ## handle overlapping case
-        hilf <- cases[,cols, drop=FALSE]
-        doppelt <- hilf[which(duplicated(c(hilf)))] ## relies on t=2 and d=2
-        einzeln <- apply(hilf, 2, function(obj) setdiff(obj, doppelt))
-        levsdoppel <- vec0s[doppelt]
-        levseinzeln <- expand.grid(vec0s[einzeln[1]], vec0s[einzeln[2]])
-        ## all level combinations to be inspected
-        x <- expand.grid(levsdoppel, 1:nrow(levseinzeln))
-        x <- cbind(x[,1], levseinzeln[x[,2]], row.names=NULL)
-        sammel[cols[1],cols[2]] <- mapply(intersect,
-                  rhos_for_ints(D[,c(doppelt, einzeln[1])], t, upto=upto, start0=start0),
-                     rhos_for_ints(D[,c(doppelt, einzeln[2])], t, upto=upto, start0=start0),
-                  SIMPLIFY = FALSE
-        )
-      }else
-      {
-      x <- do.call(expand.grid, vecs[cols])  ## the selected combinations
-      sammel[min(cols), max(cols)][[1]] <- lapply(1:nrow(x),
-                     function(obj){## obj is the row no of x
-                       ## obj2 is the list of rho sets for the tfis of dset[,i],
-                       ## j is the list of selections from each list element
-                Reduce(intersect,
-                        mapply(function(obj2, j) obj2[[j]],
-                               obj2=allrhos[dset[,i]], j=x[obj,],
-                               SIMPLIFY = FALSE))
-                     })
-        names(sammel[min(cols), max(cols)][[1]]) <- apply(as.matrix(x), 1,
-                               function(obj) paste(obj, collapse=":"))
-    }
-  }
-    hilf <- c(sammel)
-    if (dupto){
-      allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
-      ## a list-valued entry for each t-factor combination
-      ##     length of the list element is the number of possible instances
-      ##     of interactions for the specific set of t factors
-      hilf <- c(unlist(allrhos, recursive=FALSE), hilf)
-    }
-  ## some cases are duplicates and MUST be the same, e.g.
-  ##     4-5=9, 4-6=9 and 5-6=9 all correspond to the two runs with
-  ##        4=2, 5=2 and 6=2 (12 and 29)
-  ## hence, I have to program this more adequately,
-  ## which is not trivial
-  ## is there a package for doing this more generally ?
-  #print(hilf[which(lengths(hilf)>0 & duplicated(hilf))])
-  return(!any(duplicated(hilf) & lengths(hilf)>0))
-  }else{"This combination of d and t has not yet been implemented."}
-}
-
 is.CA <- function(D, t, index=1, start0=TRUE, verbose=0){
   stopifnot(is.logical(start0))
-  allrhos <- rhos_for_ints(D, t, upto=upto, start0=start0)
+  allrhos <- rhos_for_ints(D, t, upto=TRUE, start0=start0)
   if (verbose==0) return(all(lengths(unlist(allrhos, recursive=FALSE))>=index))
   aus <- all(lengths(unlist(allrhos, recursive=FALSE))>0)
   if (verbose==2) attr(aus, "rowsets") <- allrhos

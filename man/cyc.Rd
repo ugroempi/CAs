@@ -29,31 +29,31 @@ strength \code{t} and the number of runs corresponding to the construction
 }
 \description{
 provides cyclotomy constructions according to Colbourn (2010), which yield
- good high strength arrays for v=2,3,4,6 (see Details section)
+good high strength arrays for v=2,3,4,6 (see Details section)
 }
 \section{Details}{
  The function yields designs with columns in v levels based on
 prime or prime power q as follows:
 
-  for N=k=q=1(mod v) prime power (Construction 4.1)\cr
-  or N=q+v-1, k=q, with q=1(mod v) prime power (Construction 4.2)\cr
-               (add constant rows with elements 1, 2, ..., v-1\cr
-                to construction 4.1, as these are missing)\cr
-  or N=vq, k=q, with q=1(mod v) prime power (Construction 4.3)\cr
-               (juxtapose vertically A, A+1, ..., A+v-1 (mod v);\cr
-                this is called developing modulo v)\cr
-          or 4.3a: k=q+1\cr
-               (extend A by column of 0s before developing)\cr
-          or 4.3b: N=vq+v^2-v, k=q+1\cr
-               (add non-zero constant rows (like in 4.2),\cr
-                then add column of 0s before developing)\cr
-  or N=vq+v, k=q, with q=1(mod v) prime power (Construction 4.4)\cr
-               add constant row of zeroes to A before developing\cr
-          or 4.4a: k=q+1\cr
-               also add constant column of zeroes\cr
-          or 4.4b: N=vq+v^2-v, k=q+1 (same as 3.b)\cr
-               add to A all nonzero constant rows\cr
-               and a column of ones, then develop
+for N=k=q=1(mod v) prime power (Construction 4.1)\cr
+or N=q+v-1, k=q, with q=1(mod v) prime power (Construction 4.2)\cr
+(add constant rows with elements 1, 2, ..., v-1\cr
+to construction 4.1, as these are missing)\cr
+or N=vq, k=q, with q=1(mod v) prime power (Construction 4.3)\cr
+(juxtapose vertically A, A+1, ..., A+v-1 (mod v);\cr
+this is called developing modulo v)\cr
+or 4.3a: k=q+1\cr
+(extend A by column of 0s before developing)\cr
+or 4.3b: N=vq+v^2-v, k=q+1\cr
+(add non-zero constant rows (like in 4.2),\cr
+then add column of 0s before developing)\cr
+or N=vq+v, k=q, with q=1(mod v) prime power (Construction 4.4)\cr
+add constant row of zeroes to A before developing\cr
+or 4.4a: k=q+1\cr
+also add constant column of zeroes\cr
+or 4.4b: N=vq+v^2-v, k=q+1 (same as 3.b)\cr
+add to A all nonzero constant rows\cr
+and a column of ones, then develop
 }
 
 \examples{

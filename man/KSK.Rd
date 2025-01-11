@@ -2,6 +2,7 @@
 % Please edit documentation in R/KSK.R
 \name{N_KSK}
 \alias{N_KSK}
+\alias{KSK}
 \alias{k_KSK}
 \title{function for optimal 2-level CAs of strength 2}
 \usage{

@@ -3,9 +3,6 @@
 \name{funmakefromstrings}
 \alias{funmakefromstrings}
 \title{auxiliary functions}
-\usage{
-funmakefromstrings(stringvec)
-}
 \description{
 non-visible functions to be used in other functions,
 and currently also previous drafts that may be deleted
@@ -20,9 +17,9 @@ ord from DoE.base
 rho: extracts run numbers of D that hold the interaction ia
 allints: function that extracts all interactions for (up to) t factors from a run
 failcands: fail candidates from a test suite with a single failed run
-  failcands2: (failed) attempt to speed up failcands
+failcands2: (failed) attempt to speed up failcands
 rhos_for_ints
 is.CA: checks for covering array properties,
-  can return distribution of covering frequencies or actual row sets
+can return distribution of covering frequencies or actual row sets
 is.LA: checks for locating array properties
 }

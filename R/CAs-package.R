@@ -10,10 +10,10 @@
 #' All references of the package are listed in this file and referenced from the other documentation files.
 #'
 #' Within the package, available CA constructions for specific situations can be queried using
-#' the guide functions \code{\link{guide_CAs}} (not yet implemented, might be changed).
+#' the guide functions \code{guide_CAs} (not yet implemented, might be changed).
 #'
 #' Besides the construction functions, coverage properties of any array can be checked by function
-#' \code{\link{proportions}}.
+#' \code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
 #'
 #' So far, constructions for strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973),
 #' as well as constructions based on cyclotomy (Colbourn 2010) have been implemented.
@@ -32,6 +32,10 @@
 
 #'
 #' @aliases 'CAs-package'
+#' @importFrom grDevices rgb
+#' @importFrom graphics polygon
+#' @importFrom prepplot prepplot
+#' @importFrom sets as.set set_is_proper_subset
 "_PACKAGE"
 
 # The following block is used by usethis to automatically manage

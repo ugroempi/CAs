@@ -11,8 +11,7 @@ coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
 
 coverplot(D, t, isInteger=TRUE, start0=TRUE,
     type="combinations",
-    main=paste0("Coverage chart for t=",t),
-    xlab="\% projections", ylab="\% covered",
+    main=NULL, xlab=NULL, ylab=NULL,
     col=rgb(0,0,1,0.5), las=1, plot=TRUE, ...)
 }
 \arguments{
@@ -28,7 +27,7 @@ Anything apart from 1 and 2 behaves like 0.}
 
 \item{start0}{logical (default \code{TRUE}): do the integers start with 0 ? (irrelevant for \code{!isInteger})}
 
-\item{parallel}{number of threads to be used (default: 1)}
+\item{parallel}{number of threads to be used (default: 1); if increased, package parallel must be available}
 
 \item{type}{\code{"projections"} (default) or \code{"tuples"}}
 

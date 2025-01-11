@@ -54,6 +54,7 @@
 #'
 ################################################################
 
+#' @export
 cyc <- function(k, t, v, q, type=NULL, primitive=NULL){
   ## k is the number of columns
   ## t is the requested coverage

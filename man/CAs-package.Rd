@@ -20,10 +20,10 @@ for which setting.
 All references of the package are listed in this file and referenced from the other documentation files.
 
 Within the package, available CA constructions for specific situations can be queried using
-the guide functions \code{\link{guide_CAs}} (not yet implemented, might be changed).
+the guide functions \code{guide_CAs} (not yet implemented, might be changed).
 
 Besides the construction functions, coverage properties of any array can be checked by function
-\code{\link{proportions}}.
+\code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
 
 So far, constructions for strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973),
 as well as constructions based on cyclotomy (Colbourn 2010) have been implemented.
@@ -36,6 +36,14 @@ Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vo
 Kleitman, D.J. und Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255–262. doi: 10.1016/0012-365X(73)90098-8.
 
 Katona, G. O. H. (1973). Two applications (for search theory and truth functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1, pp. 19–26. doi: 10.1007/BF02018457.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ugroempi/CAs}
+  \item Report bugs at \url{https://github.com/ugroempi/CAs/issues}
+}
+
 }
 \author{
 Author: Ulrike Groemping, BHT Berlin.

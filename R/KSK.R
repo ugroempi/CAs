@@ -4,6 +4,7 @@
 #' which have optimal size
 #'
 #' @rdname KSK
+#' @aliases KSK
 #' @aliases k_KSK
 #' @aliases N_KSK
 #'
@@ -38,10 +39,13 @@
 #' KSK(2)
 #'
 
+#' @export
 N_KSK <- function(k) KSKnk$N[min(which(KSKnk$maxk>=k))]
 
+#' @export
 k_KSK <- function(N) choose(N-1, ceiling(N/2))
 
+#' @export
 KSK <- function(k=NULL, N=NULL){
   ## k is the number of columns
   ## N is the number of rows
