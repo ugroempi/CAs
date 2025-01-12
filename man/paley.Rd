@@ -2,6 +2,8 @@
 % Please edit documentation in R/payley.R
 \name{conference_paley}
 \alias{conference_paley}
+\alias{paley}
+\alias{show_paley}
 \title{Paley constructions}
 \usage{
 paley(q)

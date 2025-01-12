@@ -9,6 +9,10 @@
 #'
 #' @rdname paley
 #'
+#' @aliases paley
+#' @aliases conference_paley
+#' @aliases show_paley
+#'
 #' @usage paley(q)
 #' @usage conference_paley(q)
 #' @usage show_paley(minN=NULL, maxN=NULL)
@@ -64,7 +68,7 @@ conference_paley <- function(q){
   # Ball, W. W. R. and Coxeter, H. S. M.
   # Mathematical Recreations and Essays,
   # 13th ed. New York: Dover, pp. 308-309, 1987.
-  gf <- create_galois_field(q)
+  gf <- lhs::create_galois_field(q)
   squares <- sort(unique(diag(gf$times)))[-1]
   nonsquares <- setdiff(1:(q-1),squares)
   x <- rep(0,q)

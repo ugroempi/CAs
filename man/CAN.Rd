@@ -2,11 +2,12 @@
 % Please edit documentation in R/CAN.R
 \name{CAN}
 \alias{CAN}
+\alias{N_NISTcat}
 \title{functions for N from Colbourn tables and NISTcat}
 \usage{
 CAN(t, k, v)
 
-NISTcat(t, k, v)
+N_NISTcat(t, k, v)
 }
 \arguments{
 \item{t}{coverage strength}

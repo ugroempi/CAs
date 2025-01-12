@@ -5,8 +5,11 @@
 #'
 #' @rdname CAN
 #'
+#' @aliases CAN
+#' @aliases N_NISTcat
+#'
 #' @usage CAN(t, k, v)
-#' @usage NISTcat(t, k, v)
+#' @usage N_NISTcat(t, k, v)
 #'
 #' @param t coverage strength
 #' @param k number of columns
