@@ -47,6 +47,10 @@ So far, constructions for strength 2 2-level CAs by Kleitman and Spencer
 ## References
 
 <p>
+Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations
+and Essays, 13th ed. New York: Dover, pp. 308-309.
+</p>
+<p>
 Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6,
 t≤k ≤10000, 2005–23.
 <a href="https://www.public.asu%20.edu%20/~ccolbou%20/src%20/tabby"><https://www.public.asu>
@@ -65,4 +69,8 @@ Discrete Math., vol. 6, no. 3, pp. 255–262. doi:
 Katona, G. O. H. (1973). Two applications (for search theory and truth
 functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1,
 pp. 19–26. doi: 10.1007/BF02018457.
+</p>
+<p>
+NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
+<a href="https://math.nist.gov/coveringarrays/">https://math.nist.gov/coveringarrays/</a>.
 </p>

@@ -1,7 +1,6 @@
 ---
 output: 
   github_document
-keep_md: true
 ---
 
 ```{r setup, include=FALSE}
