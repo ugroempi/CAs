@@ -9,11 +9,14 @@
 #'
 #' @details
 #'
+#' gf_minus: Galois field subtraction
 #' funmakefromstrings: read example designs from copy-pasted strings
 #' iacheck: check a two-column matrix for correct interaction structure
 #' subia: checks whether ia1 is subset of ia2
 #' levels.no from DoE.base
 #' fasttab: table replacement without using factors
+#' metrics: a function for calculation metrics, likely obsolete
+#' proportions_slower: earlier version of coverage, likely obsolete
 #' ord from DoE.base
 #' rho: extracts run numbers of D that hold the interaction ia
 #' allints: function that extracts all interactions for (up to) t factors from a run
@@ -23,6 +26,17 @@
 #' is.CA: checks for covering array properties,
 #'   can return distribution of covering frequencies or actual row sets
 #' is.LA: checks for locating array properties
+#' is.DA: checks for detecting array properties (not ready)
+
+gf_minus <- function(x,y,gf){
+  ## calculates x - y, after reducing both by a mod operation to
+  ## gf entries
+  q <- gf$q; p <- gf$p
+  x <- x%%q; y <- y%%q
+  yn <- gf$neg[y+1]
+  gf$plus[x+1,yn+1]
+}
+
 
 ## function for reading and arranging copy-pasted strings
 funmakefromstrings <- function(stringvec){
@@ -547,14 +561,3 @@ fasttab <- function(mat,
   }
   aus
 }
-
-## obtain known smallest CA sizes from Colbourn catalogue
-CAN <- function(t,k,v){
-  hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
-  genau <- which(hilf$k==k)
-  if (length(genau)==1)
-    return(hilf$N[genau]) else
-      return(hilf$N[min(which(hilf$k>=k))])
-}
-
-
