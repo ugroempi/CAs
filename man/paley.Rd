@@ -8,9 +8,9 @@
 \usage{
 paley(q)
 
-conference_paley(q)
-
 show_paley(minN=NULL, maxN=NULL)
+
+conference_paley(q)
 }
 \arguments{
 \item{q}{prime or prime power}
@@ -62,12 +62,18 @@ D12II <- paley(5)
 # they are not the same
 table(D12I - D12II)
 # but they have the some coverage properties
-unlist(coverage(D12I, 3))
-unlist(coverage(D12I, 4))
-unlist(coverage(D12II, 3))
-unlist(coverage(D12II, 4))
+coverage(D12I, 3)
+coverage(D12I, 4)
+coverage(D12II, 3)
+coverage(D12II, 4)
+# paley(13) and paley(27) have different coverages
+# for t=4
 
 show_paley(maxN=36)
+  # there is no paley construction for N=16
+  # but there is a CA(3,14,2) in 16 runs based on a
+  # Hadamard matrix in 16 runs, which can be obtained
+  # from package FrF2 as pb(16, nfactors=14)
 show_paley(minN=100, maxN=150)
 
 }

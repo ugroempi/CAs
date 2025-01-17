@@ -6,9 +6,9 @@ Author: Ulrike Groemping
 Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
 Description: Implements mathematical constructions of covering arrays. Provides  
     diagnostic functions for assessing coverage properties.
-Depends: prepplot, R (>= 3.5.0)
-Imports: lhs, DoE.base, SOAs, sets
-Suggests: parallel
+Depends: R (>= 3.5.0)
+Imports: lhs, DoE.base, SOAs, sets, prepplot
+Suggests: parallel, FrF2
 License: GPL-3
 Encoding: UTF-8
 URL: https://github.com/ugroempi/CAs
