@@ -67,8 +67,8 @@
 #' show_paley(minN=100, maxN=150)
 #'
 
-#' @rdname paley
 #' @export
+#' @rdname paley
 conference_paley <- function(q){
   # Ball, W. W. R. and Coxeter, H. S. M.
   # Mathematical Recreations and Essays,
