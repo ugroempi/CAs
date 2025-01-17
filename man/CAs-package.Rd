@@ -2,8 +2,8 @@
 % Please edit documentation in R/CAs-package.R
 \docType{package}
 \name{CAs-package}
+\alias{CAs}
 \alias{CAs-package}
-\alias{_PACKAGE}
 \alias{'CAs-package'}
 \title{Creation of Covering Arrays}
 \description{

@@ -43,6 +43,8 @@ funmakefromstrings <- function(stringvec){
   do.call(rbind, lapply(strsplit(stringvec, "", fixed=TRUE), as.numeric))
 }
 
+#' @exportS3Method NULL
+#'
 levels.no.NA <- function (x){
   xx <- x
   ff <- FALSE
@@ -96,6 +98,8 @@ subia <- function(ia1, ia2){
   all(ia1==ia2compare)
 }
 
+#' @exportS3Method NULL
+#'
 levels.no <- DoE.base:::levels.no
 ord <- DoE.base::ord
 nchoosek <- DoE.base:::nchoosek
