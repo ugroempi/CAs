@@ -56,7 +56,7 @@
 #' Per default, the print method for class \code{coverage} prints the first four
 #' elements only.
 #'
-#' Function \code{coverplot}, with \code{type=combinations}, plots the
+#' Function \code{coverplot}, with \code{type=projections}, plots the
 #' percentage of projections on the horizontal axis and
 #' the coverage on the vertical axis (visualizing the average taken over projections);
 #' with \code{type=tuples}, the percentage of tuples (i.e., projections as weighted by tuples)
@@ -195,7 +195,7 @@ prepcoverplot <- function(ts, type="projections",
 
 #' @export
 coverplot <- function(D, t, isInteger=TRUE, start0=TRUE,
-                      type="combinations",
+                      type="projections",
                       main=NULL,
                       xlab=NULL,
                       ylab=NULL, col=rgb(0,0,1,0.5), las=1,

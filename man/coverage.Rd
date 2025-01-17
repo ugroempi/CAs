@@ -74,7 +74,7 @@ and the identification indices of uncovered tuples \code{uncovereds}.
 Per default, the print method for class \code{coverage} prints the first four
 elements only.
 
-Function \code{coverplot}, with \code{type=combinations}, plots the
+Function \code{coverplot}, with \code{type=projections}, plots the
 percentage of projections on the horizontal axis and
 the coverage on the vertical axis (visualizing the average taken over projections);
 with \code{type=tuples}, the percentage of tuples (i.e., projections as weighted by tuples)
