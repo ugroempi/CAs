@@ -4,7 +4,6 @@
 \alias{coverage}
 \alias{prepcoverplot}
 \alias{coverplot}
-\alias{coverplot_tuples}
 \title{coverage and diagnostic plot functions}
 \usage{
 coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
@@ -44,9 +43,9 @@ Anything apart from 1 and 2 behaves like 0.}
 \item{...}{further arguments to polygon}
 }
 \value{
-\code{coverage} returns a list with elements \code{total},
-\code{ave}, \code{min} and \code{simple}, with increasing detail added for
-verbose 1 or 2.
+\code{coverage} returns an object of class coverage, which is a
+list with elements \code{total}, \code{ave}, \code{min} and \code{simple},
+with increasing detail added for verbose 1 or 2.
 
 The \code{coverplot} functions return a list of \code{x}, \code{y}, \code{t}
 and \code{proportions} (from call with \code{verbose=1}).
@@ -56,17 +55,31 @@ functions for calculating covering proportions for a given strength,
 and for visualizing those
 }
 \section{Details}{
- The proportions calculated are the proportion of covered
+
+The proportions calculated are the proportion of covered
 \code{t}-tuples (\code{total}, taking the tuples as units), the average proportion of covered
 \code{t}-tuples taken over the \code{t}-factor projections (\code{ave}),
 the \code{min}imum proportion of \code{t}-tuples covered taken over the \code{t}-factor
 projections, and the proportion of \code{t}-factor projections that are
 completely covered (\code{simple}).
 
-The plot either plots the percentage of projections on the horizontal axis and
-the coverage on the vertical axis (visualizing the average taken over projections)
-or the percentage of tuples (i.e., projections as weighted by tuples) on the
-horizontal axis, visualizing the total percentage.
+If verbosity is requested, there are additional list elements:
+
+for \code{verbose=1} the number of covered tuples for each projection (\code{ncovereds}),
+the proportion this number represents (\code{proportions}),
+
+for \code{verbose=2} the frequency tables of tuples (\code{tabs})
+and the identification indices of uncovered tuples \code{uncovereds}.
+
+Per default, the print method for class \code{coverage} prints the first four
+elements only.
+
+Function \code{coverplot}, with \code{type=combinations}, plots the
+percentage of projections on the horizontal axis and
+the coverage on the vertical axis (visualizing the average taken over projections);
+with \code{type=tuples}, the percentage of tuples (i.e., projections as weighted by tuples)
+is shown on the horizontal axis, visualizing the total percentage covered.
+Sorting of the combinations on the horizontal axis is from best to worst coverage.
 }
 
 \examples{
@@ -77,13 +90,25 @@ coverage(D, 3)
 ## mixed levels, total and ave are different
 plan <- cbind(rep(0:2, each=3), c(rep(0:1, 4), 1), c(rep(0:1, each=4),0))
 coverage(plan, 2)
+## verbose content not printed per default
 coverage(plan, 2, verbose=1)
-coverage(plan, 2, verbose=2)
+print(coverage(plan, 2, verbose=1), digits=4, verbose=TRUE)
+print(coverage(plan, 2, verbose=2), digits=4, verbose=TRUE)
 ## two of three projections fully covered,
 ## one covered 5/6 only
+
 coverplot(plan, 2, type="projections")
 ## the not fully covered projection involves the 3-level
-## column and thus has 6/(6+6+4)=37.5\\% of the tuples instead of 1/3
+## column and thus has 6/(6+6+4)=37.5 pct of the tuples instead of 1/3
 coverplot(plan, 2, type="tuples")
+
+## the Hadamard based 16 run design for 14 columns
+##    that is available from FrF2::pb;
+##    the design has levels -1 and 1 and columns are factors
+##    therefore, isInteger=FALSE has to be used
+if (require(FrF2)){
+   CA3.2tothe14 <- FrF2::pb(16, 14)
+   print(coverage(CA3.2tothe14, 3, isInteger=FALSE))
+   }
 
 }

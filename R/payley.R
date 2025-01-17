@@ -7,8 +7,6 @@
 #'     Also function for creating a conference matrix,
 #'     and overview function for
 #'
-#' @rdname paley
-#'
 #' @aliases paley
 #' @aliases conference_paley
 #' @aliases show_paley
@@ -54,16 +52,23 @@
 #' # they are not the same
 #' table(D12I - D12II)
 #' # but they have the some coverage properties
-#' unlist(coverage(D12I, 3))
-#' unlist(coverage(D12I, 4))
-#' unlist(coverage(D12II, 3))
-#' unlist(coverage(D12II, 4))
+#' coverage(D12I, 3)
+#' coverage(D12I, 4)
+#' coverage(D12II, 3)
+#' coverage(D12II, 4)
+#' # paley(13) and paley(27) have different coverages
+#' # for t=4
 #'
 #' show_paley(maxN=36)
+#'   # there is no paley construction for N=16
+#'   # but there is a CA(3,14,2) in 16 runs based on a
+#'   # Hadamard matrix in 16 runs, which can be obtained
+#'   # from package FrF2 as pb(16, nfactors=14)
 #' show_paley(minN=100, maxN=150)
 #'
 
 #' @export
+#' @rdname paley
 conference_paley <- function(q){
   # Ball, W. W. R. and Coxeter, H. S. M.
   # Mathematical Recreations and Essays,
@@ -83,6 +88,7 @@ conference_paley <- function(q){
 }
 
 #' @export
+#' @rdname paley
 paley <- function(q){
   stopifnot(q>=5)
   Q <- conference_paley(q)
@@ -116,6 +122,7 @@ paley <- function(q){
 }
 
 #' @export
+#' @rdname paley
 show_paley <- function(minN=NULL, maxN=NULL){
   qs_paleyI <- setdiff(primedat$q[primedat$q %% 4 == 3],c(3,7))
   ## 3 and 7 do not yield coverage strength 3, do all others? tried 31, 127, both OK
