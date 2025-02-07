@@ -9,7 +9,7 @@
 coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
 
 coverplot(D, t, isInteger=TRUE, start0=TRUE,
-    type="combinations",
+    type="projections",
     main=NULL, xlab=NULL, ylab=NULL,
     col=rgb(0,0,1,0.5), las=1, plot=TRUE, ...)
 }
