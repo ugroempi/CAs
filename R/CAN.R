@@ -7,9 +7,11 @@
 #'
 #' @aliases CAN
 #' @aliases N_NISTcat
+#' @aliases N_TJcat
 #'
 #' @usage CAN(t, k, v)
 #' @usage N_NISTcat(t, k, v)
+#' @usage N_TJcat(t, k, v)
 #'
 #' @param t coverage strength
 #' @param k number of columns
@@ -17,13 +19,18 @@
 #'
 #' @returns \code{CAN} returns a data frame with the smallest known run size (CAN)
 #'  and the corresponding source entry (Source), \code{N_NISTcat} returns the
-#'  run size of the corresponding catalogued array of the NIST covering array tables.
+#'  run size of the corresponding catalogued array of the NIST covering array tables,
+#'  and \code{N_TJcat} the same thing for the small catalogue by Jorge Torres-Jimenez.
 #'  In cases for which there is no entry in the Colbourn table or NIST catalogue,
 #'  the returned number is a missing value.
 #'
 #' @examples
 #' CAN(3, 199, 2)
 #' N_NISTcat(3, 199, 2)
+#' N_TJcat(3, 199, 2) ## equals the best-known array
+#'
+#' CAN(4, 199, 2)
+#' N_TJcat(4, 199, 2) ## Colbourn table outdated
 #'
 
 ## obtain known smallest CA sizes from Colbourn catalogue
@@ -48,4 +55,12 @@ N_NISTcat <- function(t,k,v){
   hilf <- NISTcat[NISTcat[,"t"]==t & NISTcat[,"k"]==k & NISTcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(hilf[,"N"])
+}
+
+## obtain size of TJ catalogue entry
+#' @export
+N_TJcat <- function(t,k,v){
+  hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"k"]>=k & TJcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(min(hilf[,"N"]))
 }

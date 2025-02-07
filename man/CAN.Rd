@@ -3,11 +3,14 @@
 \name{CAN}
 \alias{CAN}
 \alias{N_NISTcat}
+\alias{N_TJcat}
 \title{functions for N from Colbourn tables and NISTcat}
 \usage{
 CAN(t, k, v)
 
 N_NISTcat(t, k, v)
+
+N_TJcat(t, k, v)
 }
 \arguments{
 \item{t}{coverage strength}
@@ -19,7 +22,8 @@ N_NISTcat(t, k, v)
 \value{
 \code{CAN} returns a data frame with the smallest known run size (CAN)
 and the corresponding source entry (Source), \code{N_NISTcat} returns the
-run size of the corresponding catalogued array of the NIST covering array tables.
+run size of the corresponding catalogued array of the NIST covering array tables,
+and \code{N_TJcat} the same thing for the small catalogue by Jorge Torres-Jimenez.
 In cases for which there is no entry in the Colbourn table or NIST catalogue,
 the returned number is a missing value.
 }
@@ -30,5 +34,9 @@ according to the Colbourn tables and according to the NIST catalogues.
 \examples{
 CAN(3, 199, 2)
 N_NISTcat(3, 199, 2)
+N_TJcat(3, 199, 2) ## equals the best-known array
+
+CAN(4, 199, 2)
+N_TJcat(4, 199, 2) ## Colbourn table outdated
 
 }
