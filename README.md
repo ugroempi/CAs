@@ -7,9 +7,15 @@ Creates covering arrays).
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 
+## Warning
+
+This is a very preliminary version of R package **CAs**. Changes that
+break backwards compatibility can and will occur without warning.
+
 ## Installation
 
-**CAs** is not yet on [CRAN](https://CRAN.R-project.org). You can
+**CAs** is not yet on [CRAN](https://CRAN.R-project.org). If you want to
+work with this very preliminary version (see above warning), you can
 install the package from this repository with:
 
 ``` r
@@ -73,4 +79,9 @@ pp. 19–26. doi: 10.1007/BF02018457.
 <p>
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 <a href="https://math.nist.gov/coveringarrays/">https://math.nist.gov/coveringarrays/</a>.
+</p>
+<p>
+Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering
+arrays.
+<a href="https://www.tamps.cinvestav.mx/~oc/">https://www.tamps.cinvestav.mx/~oc/</a>.
 </p>

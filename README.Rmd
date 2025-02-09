@@ -67,9 +67,12 @@ cat(x)
 ```
 
 
-## Installation
+## Warning
+This is a very preliminary version of R package **CAs**. 
+Changes that break backwards compatibility can and will occur without warning.
 
-**CAs** is not yet on [CRAN](https://CRAN.R-project.org). You can install the package from this repository with:
+## Installation
+**CAs** is not yet on [CRAN](https://CRAN.R-project.org). If you want to work with this very preliminary version (see above warning), you can install the package from this repository with:
 
 ```{r install_option, eval=FALSE, echo=TRUE}
 if (!require(devtools)) install.packages("devtools")

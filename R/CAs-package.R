@@ -33,8 +33,9 @@
 #'
 #' NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 #'
-
+#' Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
 #'
+
 #' @aliases 'CAs-package'
 #' @importFrom grDevices rgb
 #' @importFrom graphics polygon
