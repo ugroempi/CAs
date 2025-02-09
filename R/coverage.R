@@ -135,8 +135,6 @@ coverage <- function(D, t, isInteger=TRUE,
     stopifnot(requireNamespace("parallel"))
     stopifnot(parallel <= parallel::detectCores())
     mycl <- parallel::makePSOCKcluster(parallel)
-    parallel::clusterExport(mycl,
-                            varlist=c("fasttab", "levels.no.NA"))
     tabs <- parallel::parLapply(mycl, 1:nproj,
                        function(obj) fasttab(D[,projs[,obj]]))
     parallel::stopCluster(mycl); rm(mycl)
