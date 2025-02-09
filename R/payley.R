@@ -136,12 +136,12 @@ show_paley <- function(minN=NULL, maxN=NULL){
   both <- both[ord(both),]
   rownames(both) <- 1:nrow(both)
   if (is.null(minN) && is.null(maxN))
-    return(cbind(both, do.call("rbind", lapply(both$k, function(obj) CAN(3, obj, 2))),
+    return(cbind(both, do.call("rbind", lapply(both$k, function(obj) eCAN(3, obj, 2))),
            N_NISTcat=sapply(both$k, function(obj) N_NISTcat(3, obj, 2))))
   if (!is.null(minN))
     both <- both[both$N>=minN,]
   if (!is.null(maxN))
     both <- both[both$N<=maxN,]
-  cbind(both, do.call("rbind", lapply(both$k, function(obj) CAN(3, obj, 2))),
+  cbind(both, do.call("rbind", lapply(both$k, function(obj) eCAN(3, obj, 2))),
         N_NISTcat=sapply(both$k, function(obj) N_NISTcat(3, obj, 2)))
 }

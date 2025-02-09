@@ -5,11 +5,11 @@
 #'
 #' @rdname CAN
 #'
-#' @aliases CAN
+#' @aliases eCAN
 #' @aliases N_NISTcat
 #' @aliases N_TJcat
 #'
-#' @usage CAN(t, k, v)
+#' @usage eCAN(t, k, v)
 #' @usage N_NISTcat(t, k, v)
 #' @usage N_TJcat(t, k, v)
 #'
@@ -17,25 +17,28 @@
 #' @param k number of columns
 #' @param v number of levels for each column
 #'
-#' @returns \code{CAN} returns a data frame with the smallest known run size (CAN)
-#'  and the corresponding source entry (Source), \code{N_NISTcat} returns the
-#'  run size of the corresponding catalogued array of the NIST covering array tables,
-#'  and \code{N_TJcat} the same thing for the small catalogue by Jorge Torres-Jimenez.
-#'  In cases for which there is no entry in the Colbourn table or NIST catalogue,
-#'  the returned number is a missing value.
+#' @returns \code{eCAN} returns a data frame with the smallest known run size
+#'  (empirical CAN, based on the Colbourn table)
+#'  and the corresponding source entry (Source),
+#'  \code{N_NISTcat} returns the run size of the
+#'  corresponding catalogued array of the NIST covering array library,
+#'  and \code{N_TJcat} the same thing for the small library by
+#'  Jorge Torres-Jimenez.
+#'  In cases for which there is no entry in the respective
+#'  table or library, the returned results are missing values.
 #'
 #' @examples
-#' CAN(3, 199, 2)
+#' eCAN(3, 199, 2)
 #' N_NISTcat(3, 199, 2)
 #' N_TJcat(3, 199, 2) ## equals the best-known array
 #'
-#' CAN(4, 199, 2)
+#' eCAN(4, 199, 2)
 #' N_TJcat(4, 199, 2) ## Colbourn table outdated
 #'
 
 ## obtain known smallest CA sizes from Colbourn catalogue
 #' @export
-CAN <- function(t,k,v){
+eCAN <- function(t,k,v){
   hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
   #  genau <- which(hilf$k==k)
   #  if (length(genau)==1)
