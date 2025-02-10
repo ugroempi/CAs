@@ -1,7 +1,8 @@
-#' functions for N from Colbourn tables and NISTcat
+#' functions for N from Colbourn tables and other libraries
 #'
 #' The functions extract the number of runs needed for a specified setting
-#' according to the Colbourn tables and according to the NIST catalogues.
+#' according to the Colbourn tables, according to the NIST library of CAs
+#' and the Torres-Jimenez library of CAs.
 #'
 #' @rdname CAN
 #'

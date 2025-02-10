@@ -4,7 +4,7 @@
 \alias{eCAN}
 \alias{N_NISTcat}
 \alias{N_TJcat}
-\title{functions for N from Colbourn tables and NISTcat}
+\title{functions for N from Colbourn tables and other libraries}
 \usage{
 eCAN(t, k, v)
 
@@ -32,7 +32,8 @@ table or library, the returned results are missing values.
 }
 \description{
 The functions extract the number of runs needed for a specified setting
-according to the Colbourn tables and according to the NIST catalogues.
+according to the Colbourn tables, according to the NIST library of CAs
+and the Torres-Jimenez library of CAs.
 }
 \examples{
 eCAN(3, 199, 2)
