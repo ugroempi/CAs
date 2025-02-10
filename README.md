@@ -3,9 +3,11 @@
 
 # CAs
 
-Creates covering arrays).
+Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
+
+- **License**: GPL-3
 
 ## Warning
 

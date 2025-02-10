@@ -7,7 +7,7 @@
 \alias{'CAs-package'}
 \title{Creation of Covering Arrays}
 \description{
-Creates covering arrays).
+Creates covering arrays.
 }
 \details{
 This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
