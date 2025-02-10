@@ -1,5 +1,5 @@
 #' Creation of Covering Arrays
-#' @description Creates covering arrays).
+#' @description Creates covering arrays.
 #' @details This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
 #'
