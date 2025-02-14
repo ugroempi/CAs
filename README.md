@@ -74,7 +74,7 @@ Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes
 Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 </p>
 <p>
-Kleitman, D.J. und Spencer, J. (1973). Families of k-independent sets,
+Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets,
 Discrete Math., vol. 6, no. 3, pp. 255–262. doi:
 10.1016/0012-365X(73)90098-8.
 </p>
@@ -91,4 +91,9 @@ NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering
 arrays.
 <a href="https://www.tamps.cinvestav.mx/~oc/">https://www.tamps.cinvestav.mx/~oc/</a>.
+</p>
+<p>
+Zhang, J., Zhang, Z. and Ma, F. (2014). Automatic Generation of
+Combinatorial Test Data. SpringerBriefs in Computer Science. Springer
+Verlag, Berlin.
 </p>
