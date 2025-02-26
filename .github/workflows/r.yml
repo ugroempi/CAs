@@ -22,10 +22,11 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     strategy:
       matrix:
-        - {os: windows-latest, r: 'release'}
-        - {os: windows-latest, r: 'devel'}
-        - {os: ubuntu-latest, r: 'release'}
-        - {os: ubuntu-latest, r: 'devel'}
+        config:
+          - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'devel'}
+          - {os: ubuntu-latest, r: 'release'}
+          - {os: ubuntu-latest, r: 'devel'}
 
     steps:
       - uses: actions/checkout@v4
