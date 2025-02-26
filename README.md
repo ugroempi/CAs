@@ -66,8 +66,7 @@ pp. 217-238. doi: 10.1002/jcd.10002.
 <p>
 Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6,
 t≤k ≤10000, 2005–23.
-<a href="https://www.public.asu%20.edu%20/~ccolbou%20/src%20/tabby"><https://www.public.asu>
-.edu /~ccolbou /src /tabby</a>.
+<a href="https://www.public.asu.edu/~ccolbou/src/tabby">https://www.public.asu.edu/~ccolbou/src/tabby</a>.
 </p>
 <p>
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes

@@ -33,7 +33,7 @@ Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations and Essays
 
 Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
 
-Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu .edu /~ccolbou /src /tabby}.
+Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
 
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 
