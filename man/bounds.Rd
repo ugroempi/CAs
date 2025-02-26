@@ -2,9 +2,6 @@
 % Please edit documentation in R/bounds.R
 \name{lower_bound_CA}
 \alias{lower_bound_CA}
-\alias{lower_bound_CA(t,}
-\alias{k,}
-\alias{v)}
 \title{functions for bounds for CA sizes}
 \usage{
 lower_bound_CA(t, k, v)
@@ -18,7 +15,7 @@ lower_bound_CA(t, k, v)
 a single integer number or a vector of integer numbers of length \code{k}}
 }
 \value{
-\code{lower_bound_CA} returns a positive number
+\code{lower_bound_CA} returns a positive number.
 }
 \description{
 The function(s) provide bounds for CA sizes.

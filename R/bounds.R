@@ -6,14 +6,14 @@
 #'
 #' @aliases lower_bound_CA
 #'
-#' lower_bound_CA(t, k, v)
+#' @usage lower_bound_CA(t, k, v)
 #'
 #' @param t requested strength of CA (positive integer number >= 2)
 #' @param k number of columns, must be at least \code{t}
 #' @param v number of levels for each column:
 #' a single integer number or a vector of integer numbers of length \code{k}
 #'
-#' @returns \code{lower_bound_CA} returns a positive number
+#' @returns \code{lower_bound_CA} returns a positive number.
 #'
 #' @section Details:
 #' Function \code{lower_bound_CA} provides the trivial lower bound which is the
