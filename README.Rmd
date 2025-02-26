@@ -133,6 +133,8 @@ cat(temp)
 
 ## References
 
+The Colbourn tables are currently unavailable at their usual location; temporarily, access is provided [here](https://github.com/ugroempi/CAs/blob/main/ColbournTables.md).
+
 ```{r references, results = "asis"}
 temp <- rd_html_get(rd_html, "References", "See") 
 for (i in seq_along(temp))
