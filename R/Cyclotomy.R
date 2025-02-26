@@ -1,21 +1,31 @@
-#' function for cyclotomy constructions
+#' functions for cyclotomy constructions
 #'
-#' provides cyclotomy constructions according to Colbourn (2010), which yield
-#'  good high strength arrays for v=2,3,4,6 (see Details section)
+#' cyc provides cyclotomy constructions according to Colbourn (2010), which yield
+#'  good high strength arrays for v=2,3,4,6 (see Details section); Ncyc and kcyc
+#'  provide run sizes and maximum numbers of columns for the respective q, v and
+#'  construction type.
 #'
-#' @param k number of columns
-#' @param t requested strength (\code{t} < \code{k})
-#' @param v number of levels for each column
+#' @rdname cyclotomy
+#' @aliases cyc
+#' @aliases N_cyc
+#' @aliases k_cyc
+#'
+#' @usage cyc(q, v, k=NULL, type=NULL, primitive=NULL)
+#' @usage N_cyc(q, v, type)
+#' @usage k_cyc(q, v, type)
+#'
 #' @param q prime or prime power with q=1(mod v)
+#' @param v number of levels for each column
+#' @param k number of columns; default \code{NULL} for maximum possible
 #' @param type the construction type ("1","2","3","3a","3b","4a", or "4b"),
 #' default implies "1"
 #' @param primitive the primitive of the finite field to be used for the construction
 #' (specification should not be needed, except for cases that are not adequately covered
 #' by the internal data.frame \code{primedat})
 #'
-#' @return a matrix with \code{k} columns and values 0 to \code{v-1} with coverage
-#' strength \code{t} and the number of runs corresponding to the construction
-#' (see Details section)
+#' @returns \code{cyc} returns a matrix with \code{k} columns and values 0 to \code{v-1} with the
+#' number of runs corresponding to the construction (see Details section).
+#' \code{k_cyc} and \code{N_cyc} return the maximum possible k and the run size N for the given parameters.
 #'
 #' @section Details: The function yields designs with columns in v levels based on
 #' prime or prime power q as follows:
@@ -40,28 +50,44 @@
 #'                add to A all nonzero constant rows\cr
 #'                and a column of ones, then develop
 #'
+#' The parameters have to be specified by the user. They can, e.g.,
+#' be selected from cyclotomy construction entries of \code{CAs:::colbournBigFrame},
+#' or from the Colbourn (2010) paper.
+#'
+#' @section Warning: For valid parameters, function \code{cyc} always returns an array,
+#' but coverage properties are only guaranteed for well-chosen parameters!
+#'
+#'
 #' @examples
 #' ## construction 1
 #' ## 2-level
-#' CA19.3.19.2 <- cyc(19, 3, 2, 19)
+#' CA19.3.19.2 <- cyc(19, 2) ## q=19, k=19
 #' coverage(CA19.3.19.2, 3)
 #' coverage(CA19.3.19.2, 4)
 #'
 #' # 3-level
-#' CA62.3.32.3 <- cyc(32, 3, 3, 31, type="3a")
-#' coverage(CA62.3.32.3, 3)
-#' coverage(CA62.3.32.3, 4)
+#' CA93.3.32.3 <- cyc(31, 3, type="3a")
+#' coverage(CA93.3.32.3, 3)
+#' dim(CA93.3.32.3)
+#' k_cyc(31,3,"3a")
+#' N_cyc(31,3,"3a")
 #'
+#' ## reduce k versus the default 32
+#' CA93.3.23.3 <- cyc(31, 3, k=23, type="3a")
+#' dim(CA93.3.23.3)
 ################################################################
 
 #' @export
-cyc <- function(k, t, v, q, type=NULL, primitive=NULL){
-  ## k is the number of columns
-  ## t is the requested coverage
-  ## t < k
+cyc <- function(q, v, k=NULL, type=NULL, primitive=NULL){
+  ## k is the number of columns (default: as large as possible)
   ## v is the common number of levels
   ## q is the prime or prime power on which the construction is based
   ## type is the construction type ("1","2","3","3a","3b","4a","4b")
+
+  if (is.null(type)) type <- "1"
+  ## kcyc also checks its inputs
+  hilf <- k_cyc(q, v, type)
+  if (is.null(k)) k <- hilf else if (k>hilf) stop("k can be at most ", hilf)
 
   ## primedat is in sysdata.rda
   qs <- primedat$q
@@ -78,7 +104,6 @@ cyc <- function(k, t, v, q, type=NULL, primitive=NULL){
   gf <- lhs::create_galois_field(q)
   ## start vector is the vector of "logarithms of 1:q" (mod v) w.r.t. the
   ##     base chosen as a primitive element (omega) of the group based on q
-  if (is.null(type)) type <- "1"
   ## retrieve primitive
   if (!is.null(primitive)) p <- primitive else p <- firstprimitive[which(qs==q)]
   ## create start vector
@@ -111,11 +136,37 @@ cyc <- function(k, t, v, q, type=NULL, primitive=NULL){
                                                           nrow=v-1,ncol=q)),
                                              0)+obj)%%v))[,1:k])
   if (type=="4") return(do.call(rbind, lapply(0:(v-1),
-                        function(obj) (rbind(A,0)+obj)%%v)))
+                        function(obj) (rbind(A,0)+obj)%%v))[,1:k])
   if (type=="4a") return(do.call(rbind, lapply(0:(v-1),
-                        function(obj) (cbind(rbind(A,0),0)+obj)%%v)))
+                        function(obj) (cbind(rbind(A,0),0)+obj)%%v))[,1:k])
   if (type=="4b") return(do.call(rbind, lapply(0:(v-1),
                         function(obj) (cbind(rbind(A,
                                                    matrix(1:(v-1),nrow=v-1,ncol=q)),
-                                             1)+obj)%%v)))
+                                             1)+obj)%%v))[,1:k])
 }
+
+#' @export
+## run size
+N_cyc <- function(q, v, type){
+  if (!q%%v==1) stop("q mod v=1 is violated")
+  if (!v<q) stop("v is too large")
+  if (!type %in% c("1","2","3","3a","3b","4","4a","4b")) stop("invalid type")
+  stopifnot(any(primes::is_prime(q^(1/(1:10)))))
+  if (type=="1") return(q)
+  if (type=="2") return(q+v-1)
+  if (type %in% c("3","3a")) return(q*v)
+  if (type %in% c("3b","4b")) return(v*(q+v-1))
+  if (type %in% c("4", "4a")) return(v*(q+1))
+}
+
+#' @export
+## maximum number of columns
+k_cyc <- function(q, v, type){
+  if (!q%%v==1) stop("q mod v=1 is violated")
+  if (!v<q) stop("v is too large")
+  if (!type %in% c("1","2","3","3a","3b","4","4a","4b")) stop("invalid type")
+  stopifnot(any(primes::is_prime(q^(1/(1:10)))))
+  if (type %in% c("1","2","3","4")) return(q) else return(q+1)
+}
+
+

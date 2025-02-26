@@ -2,18 +2,22 @@
 % Please edit documentation in R/Cyclotomy.R
 \name{cyc}
 \alias{cyc}
-\title{function for cyclotomy constructions}
+\alias{N_cyc}
+\alias{k_cyc}
+\title{functions for cyclotomy constructions}
 \usage{
-cyc(k, t, v, q, type = NULL, primitive = NULL)
+cyc(q, v, k=NULL, type=NULL, primitive=NULL)
+
+N_cyc(q, v, type)
+
+k_cyc(q, v, type)
 }
 \arguments{
-\item{k}{number of columns}
-
-\item{t}{requested strength (\code{t} < \code{k})}
+\item{q}{prime or prime power with q=1(mod v)}
 
 \item{v}{number of levels for each column}
 
-\item{q}{prime or prime power with q=1(mod v)}
+\item{k}{number of columns; default \code{NULL} for maximum possible}
 
 \item{type}{the construction type ("1","2","3","3a","3b","4a", or "4b"),
 default implies "1"}
@@ -23,13 +27,15 @@ default implies "1"}
 by the internal data.frame \code{primedat})}
 }
 \value{
-a matrix with \code{k} columns and values 0 to \code{v-1} with coverage
-strength \code{t} and the number of runs corresponding to the construction
-(see Details section)
+\code{cyc} returns a matrix with \code{k} columns and values 0 to \code{v-1} with the
+number of runs corresponding to the construction (see Details section).
+\code{k_cyc} and \code{N_cyc} return the maximum possible k and the run size N for the given parameters.
 }
 \description{
-provides cyclotomy constructions according to Colbourn (2010), which yield
-good high strength arrays for v=2,3,4,6 (see Details section)
+cyc provides cyclotomy constructions according to Colbourn (2010), which yield
+good high strength arrays for v=2,3,4,6 (see Details section); Ncyc and kcyc
+provide run sizes and maximum numbers of columns for the respective q, v and
+construction type.
 }
 \section{Details}{
  The function yields designs with columns in v levels based on
@@ -54,18 +60,32 @@ also add constant column of zeroes\cr
 or 4.4b: N=vq+v^2-v, k=q+1 (same as 3.b)\cr
 add to A all nonzero constant rows\cr
 and a column of ones, then develop
+
+The parameters have to be specified by the user. They can, e.g.,
+be selected from cyclotomy construction entries of \code{CAs:::colbournBigFrame},
+or from the Colbourn (2010) paper.
+}
+
+\section{Warning}{
+ For valid parameters, function \code{cyc} always returns an array,
+but coverage properties are only guaranteed for well-chosen parameters!
 }
 
 \examples{
 ## construction 1
 ## 2-level
-CA19.3.19.2 <- cyc(19, 3, 2, 19)
+CA19.3.19.2 <- cyc(19, 2) ## q=19, k=19
 coverage(CA19.3.19.2, 3)
 coverage(CA19.3.19.2, 4)
 
 # 3-level
-CA62.3.32.3 <- cyc(32, 3, 3, 31, type="3a")
-coverage(CA62.3.32.3, 3)
-coverage(CA62.3.32.3, 4)
+CA93.3.32.3 <- cyc(31, 3, type="3a")
+coverage(CA93.3.32.3, 3)
+dim(CA93.3.32.3)
+k_cyc(31,3,"3a")
+N_cyc(31,3,"3a")
 
+## reduce k versus the default 32
+CA93.3.23.3 <- cyc(31, 3, k=23, type="3a")
+dim(CA93.3.23.3)
 }
