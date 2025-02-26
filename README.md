@@ -54,6 +54,10 @@ So far, constructions for strength 2 2-level CAs by Kleitman and Spencer
 
 ## References
 
+The Colbourn tables are currently unavailable at their usual location;
+temporarily, access is provided
+[here](https://github.com/ugroempi/CAs/blob/main/ColbournTables.md).
+
 <p>
 Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations
 and Essays, 13th ed. New York: Dover, pp. 308-309.
