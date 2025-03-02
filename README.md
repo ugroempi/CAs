@@ -87,6 +87,11 @@ functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1,
 pp. 19–26. doi: 10.1007/BF02018457.
 </p>
 <p>
+Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes
+Cryptogr., vol. 32, no. 2, pp. 323–339. doi:
+10.1023/B:DESI.0000029232.40302.6d.
+</p>
+<p>
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 <a href="https://math.nist.gov/coveringarrays/">https://math.nist.gov/coveringarrays/</a>.
 </p>
