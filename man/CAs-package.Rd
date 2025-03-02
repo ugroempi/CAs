@@ -41,6 +41,8 @@ Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete 
 
 Katona, G. O. H. (1973). Two applications (for search theory and truth functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1, pp. 19–26. doi: 10.1007/BF02018457.
 
+Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. doi: 10.1023/B:DESI.0000029232.40302.6d.
+
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.

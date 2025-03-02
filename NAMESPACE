@@ -3,6 +3,8 @@
 S3method(base::print,coverage)
 export(CK)
 export(KSK)
+export(Martirosyan4)
+export(Martirosyan5)
 export(N_KSK)
 export(N_NISTcat)
 export(N_TJcat)
