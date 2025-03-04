@@ -28,6 +28,61 @@
 #' is.LA: checks for locating array properties
 #' is.DA: checks for detecting array properties (not ready)
 
+## Function definition
+## from https://stackoverflow.com/questions/17683370/how-to-produce-combinations-iteratively-in-r
+gen.next.cbn <- function(cbn, n){
+  ## Generates the combination that follows the one provided as input
+  cbn.bin      <- rep(0, n)
+  cbn.bin[cbn] <- 1
+  if (tail(cbn.bin, 1) == 0){
+    ind <- tail(which(cbn.bin == 1), 1)
+    cbn.bin[c(ind, ind+1)] <- c(0, 1)
+  }else{
+    ind <- 1 + tail(which(diff(cbn.bin) == -1), 1)
+    nb  <- sum(cbn.bin[-c(1:ind)] == 1)
+    cbn.bin[c(ind-1, (n-nb+1):n)] <- 0
+    cbn.bin[ind:(ind+nb)]         <- 1
+  }
+  cbn <- which(cbn.bin == 1)
+}
+
+### Iteration example
+### Example parameters
+#n   <- 6
+#k   <- 3
+#
+#system.time({
+#for (i in 1:choose(n, k)){
+#  if (i == 1){
+#    cbn <- 1:k
+#  }else{
+#    cbn <- gen.next.cbn(cbn, n)
+#  }
+#  #print(cbn)
+#}
+#})
+
+cycvec <- function(v, q, gf=NULL, primitive=NULL){
+  ## t is the requested coverage
+  ## v is the common number of levels
+  ## q is the prime or prime power on which the construction is based
+  if (is.null(gf)) gf <- lhs::create_galois_field(q)
+  ## start vector is the vector of "logarithms of 1:q" (mod v) w.r.t. the
+  ##     base chosen as a primitive element (omega) of the group based on q
+  ## retrieve primitive
+  if (!is.null(primitive)) p <- primitive else p <- primedat[which(primedat[,1]==q),2]
+  ## create start vector
+
+  xstart <- rep(0,q)
+  cur <- p  ## current primitive
+  for (i in 1:(q-1)) {
+    xstart[cur+1] <- i  ## exponent of the primitive is 1
+    cur <- SOAs:::gf_prod(cur, p, gf) # next exponent
+  }
+  if (!all(table(xstart)==1)) stop("wrong primitive")
+  xstart%%v
+}
+
 gf_minus <- function(x,y,gf){
   ## calculates x - y, after reducing both by a mod operation to
   ## gf entries
