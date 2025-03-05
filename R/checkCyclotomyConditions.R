@@ -59,6 +59,8 @@
 
 #' @export
 checkcond1 <- function(t,v,q,iter=FALSE, progress=FALSE){
+  if (!q %% v==1) stop("q mod v = 1 is violated")
+
   ## the implementation with nchoosek does not work
   ## for large values of q and t (e.g., 10007 and 5)
   gf <- lhs::create_galois_field(q)
@@ -112,6 +114,8 @@ return(TRUE)
 
 #' @export
 checkcond2 <- function(t,v,q, iter=FALSE, progress=FALSE){
+  if (!q %% v==1) stop("q mod v = 1 is violated")
+
   ## same as checkcond1, only without the constant non-zero rows of vsets
   gf <- lhs::create_galois_field(q)
   xstart <- cycvec(v,q,gf=gf)
@@ -165,6 +169,7 @@ checkcond2 <- function(t,v,q, iter=FALSE, progress=FALSE){
 
 #' @export
 checkcond3 <- function(t,v,q,iter=FALSE, progress=FALSE){
+  if (!q %% v==1) stop("q mod v = 1 is violated")
   ## 3a cases must pass this check
   ## i.e., checkcond3(4,2,23) must yield TRUE
   gf <- lhs::create_galois_field(q)
@@ -257,6 +262,8 @@ checkcond3b <- function(t,v,q,iter=FALSE, progress=FALSE, type3=TRUE){
 ## needs to become iterative by argument, like checkcond1
 #' @export
 checkcond4 <- function(t,v,q,iter=FALSE, progress=FALSE){
+  if (!q %% v==1) stop("q mod v = 1 is violated")
+
   ## that is 3, but without the constant rows in vsets
   ##              (regardless of zero or non-zero)
   ## 4a cases must pass this check

@@ -72,6 +72,7 @@ cycvec <- function(v, q, gf=NULL, primitive=NULL){
   ## retrieve primitive
   if (!is.null(primitive)) p <- primitive else p <- primedat[which(primedat[,1]==q),2]
   ## create start vector
+  if (!q %% v==1) stop("q mod v = 1 is violated")
 
   xstart <- rep(0,q)
   cur <- p  ## current primitive
