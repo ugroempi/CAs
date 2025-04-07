@@ -7,7 +7,11 @@ February 26, 2025
 
 This file gives access to a November 2024 status of the Colbourn tables,
 as those tables are currently not available to the public at their usual
-location (see references).
+location (see references). In a few places (e.g., for strength $t=3$
+with $v=4$ levels for more than 798 columns; not systematically checked
+for more such instances), this file has more recent content than the
+latest wayback machine crawl of November 2023 at
+<https://web.archive.org/web/20231118015055/https://www.public.asu.edu/~ccolbou/src/tabby>.
 
 # Tables
 
