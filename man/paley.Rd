@@ -2,13 +2,16 @@
 % Please edit documentation in R/payley.R
 \name{conference_paley}
 \alias{conference_paley}
-\alias{paley}
-\alias{show_paley}
+\alias{paleyHad}
+\alias{show_paleyHad}
+\alias{paley_mat}
 \title{Paley constructions}
 \usage{
-paley(q)
+paleyHad(q)
 
-show_paley(minN=NULL, maxN=NULL)
+show_paleyHad(minN=NULL, maxN=NULL)
+
+paley_mat(q)
 
 conference_paley(q)
 }
@@ -20,33 +23,36 @@ the returned data frame has more than 1000 rows.}
 }
 \value{
 Function \code{conference_paley} returns a conference matrix,
-function \code{paley} a strength 3 CA (matrix) in \code{q} or \code{2q+1} 2-level columns
-(see Section Details). Function \code{show_paley} returns a data frame
+function \code{paleyHad} a Hadamard matrix of the Paley construction (matrix)
+in \code{q} or \code{2q+1} 2-level columns
+(see Section Details). Function \code{show_paleyHad} returns a data frame
 with columns N, k, q, constr, CAN, Source (source entry in the Colbourn tables
 for the design with fewest possible runs), and N_NISTcat for q up to 10009.
 Most of the arrays listed can be created;
 exceptions are q that are powers of primes larger than 50.
 }
 \description{
-Function to construct CAs in 2-level columns with
+Function to construct a Hadamard-based 2-level OA with
 number of runs a multiple of 4,
 number of columns one less than runs,
-and coverage strength 3. The arrays are also OAs of strength 2.
+based on the Paley construction.
 Also function for creating a conference matrix,
-and overview function for
+and a Paley matrix that can be used for constructing CAs.
 }
 \section{Details}{
 
-Based on finite fields and conference matrices,
-the Paley construction yields arrays in numbers
-of levels a multiple of 4. Constructions depend on
-the value of \code{q \%\% 4}, which can either be 1 or 3:\cr
-For \code{q \%\% 4 = 3}, a (q+1) x q CA is obtained,\cr
-\code{q \%\% 4 = 1} yields a (2q+2) x (2q+1) CA.\cr
-It may be of interest that the arrays are also orthogonal
-arrays of strength 2.
+Function \code{conference_paley} yields a q x q conference matrix,
+while function \code{paley} yields a q x q Paley matrix that
+is derived from the conference matrix by replacing the "-1" values with zeroes.
 
-\code{show_paley} shows the run sizes that can be obtained
+Based on finite fields and conference matrices,
+function \code{paleyHad} yields OAs in numbers
+of levels a multiple of 4. Hadamard constructions depend on
+the value of \code{q \%\% 4}, which can either be 1 or 3:\cr
+For \code{q \%\% 4 = 3}, a (q+1) x q OA is obtained,\cr
+\code{q \%\% 4 = 1} yields a (2q+2) x (2q+1) OA.\cr
+
+\code{show_paleyHad} shows the run sizes that can be obtained
 with the constructions, and the corresponding values of k and q, as well as
 the smallest number for a strength 3 array in the same number of
 2-level columns according to the Colbourn tables
@@ -55,25 +61,31 @@ and the run size of the NIST catalogued array.
 }
 
 \examples{
+# conference matrix (square q x q matrix with diagonal 0)
+conference_paley(5)
+# paley matrix (square q x q matrix with diagonal 0)
+paley_mat(5)
+
+## Hadamard matrix based OAs
 # paley construction I for N=12
-D12I <- paley(11)
+D12I <- paleyHad(11)
 # paley construction II for N=12
-D12II <- paley(5)
+D12II <- paleyHad(5)
 # they are not the same
 table(D12I - D12II)
-# but they have the some coverage properties
+# but they have the same coverage properties
 coverage(D12I, 3)
 coverage(D12I, 4)
 coverage(D12II, 3)
 coverage(D12II, 4)
-# paley(13) and paley(27) have different coverages
+# paleyHad(13) and paleyHad(27) have different coverages
 # for t=4
 
-show_paley(maxN=36)
+show_paleyHad(maxN=36)
   # there is no paley construction for N=16
   # but there is a CA(3,14,2) in 16 runs based on a
   # Hadamard matrix in 16 runs, which can be obtained
   # from package FrF2 as pb(16, nfactors=14)
-show_paley(minN=100, maxN=150)
+show_paleyHad(minN=100, maxN=150)
 
 }

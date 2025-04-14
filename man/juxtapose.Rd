@@ -34,7 +34,7 @@ If \code{D1} and \code{D2} do not have the same strength, the weaker strength pr
 # create a CA(24,3,2^10 4^1) from two CA(12,3,11,2)
 
 ## do it by hand
-A <- paley(11)
+A <- paleyHad(11)
 A2 <- A
 A2[,11] <- A[,11] + 2
 coverage(rbind(A,A2),3)

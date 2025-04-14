@@ -35,7 +35,7 @@ the designs are at present (13 Feb 2025) best-known for v>=5.
 }
 \examples{
 # create a CA(19,3,22,2) from a CA(12,3,11,2) and a CA(7,2,11,1)
-A <- paley(11)
+A <- paleyHad(11)
 B <- KSK(k=11)
 CK(A, B)  ## explicitly specify B
 CK(A)     ## this B is also used automatically (for v=2 only)

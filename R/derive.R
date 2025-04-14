@@ -23,7 +23,7 @@
 #' @examples
 #' # create a CA(6,2,10,2) from a CA(12,3,11,2)
 #'
-#' A <- paley(11)  ## a CA(12,3,11,2)
+#' A <- paleyHad(11)  ## a CA(12,3,11,2)
 #'
 #' sixdefault <- derive(A)  ## first column of A was 0,
 #'                          ## first column omitted
