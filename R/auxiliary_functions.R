@@ -27,6 +27,8 @@
 #'   can return distribution of covering frequencies or actual row sets
 #' is.LA: checks for locating array properties
 #' is.DA: checks for detecting array properties (not ready)
+#'
+#' @importFrom utils tail
 
 ## Function definition
 ## from https://stackoverflow.com/questions/17683370/how-to-produce-combinations-iteratively-in-r
