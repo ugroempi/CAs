@@ -1,6 +1,6 @@
 #' Functions to construct a strength 4 or strength 5 CA from several input CAs
 #'
-#' based on Martirosyan and Trung (2004). The functions obtain a strength 4
+#' based on Martirosyan and van Trung (2004). The functions obtain a strength 4
 #' or strength 5 CA in 2k columns at v levels each from several smaller arrays.
 #'
 #' @rdname Martirosyan
@@ -16,9 +16,7 @@
 #'
 #' @param B a strength 3 or 4 CA in k columns at v levels (0, ..., v-1 or 1, ..., v)
 #'
-#' @param C a strength 2 or 3 CA in k columns at v levels (0, ..., v-1 or 1, ..., v);
-#' for strength 5, it appears that constant rows can be omitted from C, and at least one rows can always be made
-#' constant by permuting levels of some columns.
+#' @param C a strength 2 or 3 CA in k columns at v levels (0, ..., v-1 or 1, ..., v)
 #'
 #' @param D a strength 2 CA in k columns at v levels (0, ..., v-1 or 1, ..., v).
 #'
@@ -27,17 +25,27 @@
 #' @param ... currently not used
 #'
 #' @returns a strength 4 CA with 2k columns at v levels each (same coding as ingoing CAs)
-#'        in \code{N_A + (v-1)*N_B + 2*N_C^2} rows,\cr
+#'        in at most \code{N_A + (v-1)*N_B + 2*N_C^2} rows,\cr
 #'        or a strength 5 CA with 2k columns at v levels each in
-#'        \code{N_A + (v-1)*N_B + 2*N_C*N_D} rows,\cr
+#'        at most \code{N_A + (v-1)*N_B + 2*N_C*N_D} rows,\cr
 #'        where N_array denotes the run
-#'        sizes of the arrays
+#'        sizes of the arrays. "At most" means that the resulting arrays may contain duplicate rows,
+#'        which can be removed (see examples).
 #'
 #' @details
 #' The functions implement the construction listed for general strength t CAs
-#' in Martirosyan and Trung (2004).
-#' The specifically-stated construction for t=4 also worked and yielded the same run size
-#' for the examples considered.
+#' in Martirosyan and Trung (2004), and subsequently removes duplicate rows.
+#' The number of duplicated rows my be different for different but isomorphic versions
+#' of the same ingoing arrays:
+#' For the examples below, there are actually slightly more constant rows in the result if
+#' one does not increase the number of constant rows in the ingredient matrices
+#' (not shown, 4 or 16 rows less).
+#'
+#' The specifically-stated construction for t=4 also worked and yielded
+#' the same initial run size before removing duplicates for the examples considered;
+#' however, the construction implemented now
+#' has substantially more duplicate rows that can be removed,
+#' so that the final array is much smaller.
 #' The specific construction for t=5 yielded a larger run size and nevertheless did
 #' not yield 5-coverage, i.e., there seems to be something wrong with it.
 #'
@@ -48,29 +56,27 @@
 #' The user is responsible for providing suitable matrices. If the matrices are not adequate, the resulting array may be worse than expected.
 #'
 #' @examples
-#'   A <- lhs::createBusht(5,6,4, bRandom=FALSE)
-#'   B <- lhs::createBusht(5,6,3, bRandom=FALSE)
-#'   C <- lhs::createBusht(5,6,2, bRandom=FALSE)
+#'   A <- lhs::createBusht(5,6,4, bRandom=FALSE) ## strength 4
+#'   B <- lhs::createBusht(5,6,3, bRandom=FALSE) ## strength 3
+#'   C <- lhs::createBusht(5,6,2, bRandom=FALSE) ## strength 2
 #'   E <- Martirosyan4(A, B, C)
 #'   coverage(E, 4)
 #'   dim(E)
-#'   eCAN(4, 12, 5)  ## E is far from optimal
+#'   eCAN(t=4, k=12, v=5)  ## E is far from optimal
 #'
-#'   A <- lhs::createBusht(4,5,5, bRandom=FALSE)
-#'   B <- lhs::createBusht(4,5,4, bRandom=FALSE)
-#'   C <- lhs::createBusht(4,5,3, bRandom=FALSE)
-#'   D <- lhs::createBusht(4,5,2, bRandom=FALSE)
-#'   E <- Martirosyan5(A, B, C[-1,], D)  ## omit constant row
+#'   A <- lhs::createBusht(4,5,5, bRandom=FALSE) ## strength 5
+#'   B <- lhs::createBusht(4,5,4, bRandom=FALSE) ## strength 4
+#'   C <- lhs::createBusht(4,5,3, bRandom=FALSE) ## strength 3
+#'   D <- lhs::createBusht(4,5,2, bRandom=FALSE) ## strength 2
+#'   E <- Martirosyan5(A, B, C, D)  ## omit the all-zero row from C
 #'   coverage(E, 5)
 #'   dim(E)
-#'   eCAN(4, 12, 5)  ## run size of E is far from optimal,
+#'   eCAN(t=5, k=12, v=4)  ## run size of E is far from optimal,
 #'
-
-
 #' @export
 Martirosyan5 <- function(A, B, C, D, start0=TRUE, ...){
-  ## fixed by applying the t variant to strength 5
-  ## the other variant appears to be wrong (and uses more runs)
+  ## based on applying Martiroysian's t variant to strength 5
+  ## the specific strength 5 variant appears to be wrong (and uses more runs)
   if (start0){
     A <- A+1
     B <- B+1
@@ -81,6 +87,10 @@ Martirosyan5 <- function(A, B, C, D, start0=TRUE, ...){
   k <- ncol(A)
   stopifnot(max(B)==v, max(C)==v, max(D)==v)
   stopifnot(ncol(B)==k, ncol(C)==k, ncol(D)==k)  ## here: k columns needed
+  ## experimental
+  ## eliminate constant rows from C
+  #C <- maxconstant(C, remove=TRUE)
+
   ## FD is the family of functions f1 ... fi ... fND that picks the
   ##     ith element from the column specified by the function's argument
   E1 <- cbind(A,A)
@@ -98,6 +108,7 @@ Martirosyan5 <- function(A, B, C, D, start0=TRUE, ...){
                     C[rep(1:nrow(C),nrow(D)),])
   aus <- rbind(E1,E2,E3,E4)
   if (start0) aus <- aus-1
+  aus <- aus[!duplicated(aus),]
   aus
 }
 
@@ -123,6 +134,7 @@ Martirosyan4 <- function(A, B, C, start0=TRUE, ...){
                     C[rep(1:nrow(C),nrow(C)),])
   aus <- rbind(E1,E2,E3,cbind(E3[,(k+1):(2*k)], E3[,1:k]))
   if (start0) aus <- aus-1
+  aus <- aus[!duplicated(aus),]
   aus
 }
 
@@ -130,6 +142,7 @@ Martirosyan4 <- function(A, B, C, start0=TRUE, ...){
 Martirosyant <- function(..., start0=TRUE){
   ### one needs a flexible list of matrices as arguments,
   ### At,...,A2
+  ### no high priority - do different things first
 
   ## not yet implemented
 
@@ -145,12 +158,13 @@ Martirosyant <- function(..., start0=TRUE){
   stopifnot(ncol(A4)==k, ncol(A3)==k, ncol(A2)==v)
   ## FD is the family of functions f1 ... fi ... fND that picks the
   ##     ith element from the column specified by the function's argument
+  ## check which As
   E1 <- cbind(A5,A5)
-  E2 <- cbind(do.call(rbind, lapply(1:(v-1), function(obj) B)),
-              do.call(rbind, lapply(1:(v-1), function(obj) (B-1+obj)%%v + 1)))
-  E3 <- cbind(do.call(rbind, lapply(1:nrow(D), function(obj) C)),
-              do.call(rbind, lapply(1:nrow(D), function(obj)
-                matrix(D[obj,][C], nrow=nrow(C)))))
+  E2 <- cbind(do.call(rbind, lapply(1:(v-1), function(obj) A4)),
+              do.call(rbind, lapply(1:(v-1), function(obj) (A4-1+obj)%%v + 1)))
+  E3 <- cbind(do.call(rbind, lapply(1:nrow(A4), function(obj) A3)),
+              do.call(rbind, lapply(1:nrow(A4), function(obj)
+                matrix(A4[obj,][A3], nrow=nrow(A3)))))
   E4 <- cbind(E3[,(k+1):(2*k)],E3[,1:k])
   aus <- rbind(E1,E2,E3,E4)
   if (start0) aus <- aus-1

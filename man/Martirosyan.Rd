@@ -15,9 +15,7 @@ for k<=3, A can be smaller (see Details section).}
 
 \item{B}{a strength 3 or 4 CA in k columns at v levels (0, ..., v-1 or 1, ..., v)}
 
-\item{C}{a strength 2 or 3 CA in k columns at v levels (0, ..., v-1 or 1, ..., v);
-for strength 5, it appears that constant rows can be omitted from C, and at least one rows can always be made
-constant by permuting levels of some columns.}
+\item{C}{a strength 2 or 3 CA in k columns at v levels (0, ..., v-1 or 1, ..., v)}
 
 \item{D}{a strength 2 CA in k columns at v levels (0, ..., v-1 or 1, ..., v).}
 
@@ -27,21 +25,31 @@ constant by permuting levels of some columns.}
 }
 \value{
 a strength 4 CA with 2k columns at v levels each (same coding as ingoing CAs)
-in \code{N_A + (v-1)*N_B + 2*N_C^2} rows,\cr
+in at most \code{N_A + (v-1)*N_B + 2*N_C^2} rows,\cr
 or a strength 5 CA with 2k columns at v levels each in
-\code{N_A + (v-1)*N_B + 2*N_C*N_D} rows,\cr
+at most \code{N_A + (v-1)*N_B + 2*N_C*N_D} rows,\cr
 where N_array denotes the run
-sizes of the arrays
+sizes of the arrays. "At most" means that the resulting arrays may contain duplicate rows,
+which can be removed (see examples).
 }
 \description{
-based on Martirosyan and Trung (2004). The functions obtain a strength 4
+based on Martirosyan and van Trung (2004). The functions obtain a strength 4
 or strength 5 CA in 2k columns at v levels each from several smaller arrays.
 }
 \details{
 The functions implement the construction listed for general strength t CAs
-in Martirosyan and Trung (2004).
-The specifically-stated construction for t=4 also worked and yielded the same run size
-for the examples considered.
+in Martirosyan and Trung (2004), and subsequently removes duplicate rows.
+The number of duplicated rows my be different for different but isomorphic versions
+of the same ingoing arrays:
+For the examples below, there are actually slightly more constant rows in the result if
+one does not increase the number of constant rows in the ingredient matrices
+(not shown, 4 or 16 rows less).
+
+The specifically-stated construction for t=4 also worked and yielded
+the same initial run size before removing duplicates for the examples considered;
+however, the construction implemented now
+has substantially more duplicate rows that can be removed,
+so that the final array is much smaller.
 The specific construction for t=5 yielded a larger run size and nevertheless did
 not yield 5-coverage, i.e., there seems to be something wrong with it.
 
@@ -52,21 +60,21 @@ For \code{Martirosyan5}: The matrices need the higher of the two strengths, i.e.
 The user is responsible for providing suitable matrices. If the matrices are not adequate, the resulting array may be worse than expected.
 }
 \examples{
-  A <- lhs::createBusht(5,6,4, bRandom=FALSE)
-  B <- lhs::createBusht(5,6,3, bRandom=FALSE)
-  C <- lhs::createBusht(5,6,2, bRandom=FALSE)
+  A <- lhs::createBusht(5,6,4, bRandom=FALSE) ## strength 4
+  B <- lhs::createBusht(5,6,3, bRandom=FALSE) ## strength 3
+  C <- lhs::createBusht(5,6,2, bRandom=FALSE) ## strength 2
   E <- Martirosyan4(A, B, C)
   coverage(E, 4)
   dim(E)
-  eCAN(4, 12, 5)  ## E is far from optimal
+  eCAN(t=4, k=12, v=5)  ## E is far from optimal
 
-  A <- lhs::createBusht(4,5,5, bRandom=FALSE)
-  B <- lhs::createBusht(4,5,4, bRandom=FALSE)
-  C <- lhs::createBusht(4,5,3, bRandom=FALSE)
-  D <- lhs::createBusht(4,5,2, bRandom=FALSE)
-  E <- Martirosyan5(A, B, C[-1,], D)  ## omit constant row
+  A <- lhs::createBusht(4,5,5, bRandom=FALSE) ## strength 5
+  B <- lhs::createBusht(4,5,4, bRandom=FALSE) ## strength 4
+  C <- lhs::createBusht(4,5,3, bRandom=FALSE) ## strength 3
+  D <- lhs::createBusht(4,5,2, bRandom=FALSE) ## strength 2
+  E <- Martirosyan5(A, B, C, D)  ## omit the all-zero row from C
   coverage(E, 5)
   dim(E)
-  eCAN(4, 12, 5)  ## run size of E is far from optimal,
+  eCAN(t=5, k=12, v=4)  ## run size of E is far from optimal,
 
 }
