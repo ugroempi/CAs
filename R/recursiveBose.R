@@ -5,15 +5,24 @@
 #' @rdname recursiveBose
 #'
 #' @aliases recursiveBose
+#' @aliases N_k_recursiveBose_A
+#' @aliases N_k_recursiveBose_d
+#' @aliases N_d_recursiveBose
 #'
 #' @usage recursiveBose(q, A=NULL, d=NULL, ...)
+#' @usage N_k_recursiveBose_A(q, A, ...)
+#' @usage N_k_recursiveBose_d(q, d=2, ...)
+#' @usage N_d_recursiveBose(q, k, ...)
 #'
 #' @param q a prime or prime power number of levels
 #' @param A \code{NULL}, or a uniform CA of strength 2 in N rows and k columns with integer-valued levels (0 to q-1 or 1 to q). \code{A} takes precedence over \code{d}.
-#' @param d \code{NULL}, or a small positive integer; 1 returns the Bose OA (q^2 x (q+1)), d>1 the processed Bose OA in d*(q^2) - (d-1)*q runs and q^d+q^(d-1)+...+q+1 columns.\cr If \code{A} is specified, \code{d} is ignored.
+#' @param d \code{NULL}, or a small positive integer; 1 returns the Bose OA (q^2 x (q+1)), d>1 the processed Bose OA in d*(q^2) - (d-1)*q runs and q^d+q^(d-1)+...+q+1 columns.\cr
+#' For \code{recursiveBose}, if \code{A} is specified, \code{d} is ignored.\cr
+#' For \code{k_recursiveBose}, the default is \code{d=2} for \code{N=2q^2 - q}; it can be increased, if k is too small; each increase by 1 will increase N by \code{q^2 - q}
+#' @param k the number of columns requested
 #' @param ... currently not used
 #'
-#' @returns a uniform strength 2 CA with \code{q} level columns.\cr
+#' @returns \code{recursiveBose} returns a uniform strength 2 CA with \code{q} level columns.\cr
 #' If neither \code{A} nor \code{d} are specified,
 #' the result has \code{2q^2 - q} rows and \code{q^2 + q + 1} columns,
 #' levels are coded from 0 to \code{q - 1}.\cr
@@ -22,6 +31,9 @@
 #' If \code{d} is specified and \code{A=NULL},
 #' the result has \code{d*q^2 - (d-1)*q} rows and \code{sum_i=0^d q^i} columns,
 #' coded from 0 to \code{q}-1.\cr
+#' \code{N_k_recursiveBode_A} returns a named vector with the run size \code{N} and the number of columns \code{k} for given \code{q} and \code{A}.\cr
+#' \code{k_recursiveBode} returns the number of columns k for given \code{q} and \code{d}.\cr
+#' \code{N_d_recursiveBode} returns a named vector with the run size \code{N}, the \code{d} for its creation for the requested number of columns \code{k}, and the maximum possible number of columns \code{kmax} for that construction.\cr
 #'
 #' @section Details:
 #' The function uses a method presented by Hartman (2005) (Theorem 7.1 and Corollary 7.2).
@@ -77,6 +89,11 @@
 #' ## recursive with d=1
 #' recursiveBose(3,d=1)
 #'
+#' ## query functions
+#' N_k_recursiveBose_A(4, lhs::createBose(4, 5))
+#' N_k_recursiveBose_d(4,4)
+#' N_d_recursiveBose(4, 12)
+#'
 #' @export
 recursiveBose <- function(q, A=NULL, d=NULL, ...){
   start0 <- TRUE ## default
@@ -120,4 +137,56 @@ recursiveBose <- function(q, A=NULL, d=NULL, ...){
     }
   }
   D
+}
+
+#' @export
+N_k_recursiveBose_A <- function(q, A, ...){
+  ## check for q prime or prime power
+  qcheck <- try(lhs::createBose(q,q+1,bRandom=FALSE))
+  if ("try-error" %in% class(qcheck))
+    stop("recursiveBode requires q to be a prime or prime power")
+  ## checks for A
+  stopifnot(is.matrix(A))
+  stopifnot(is.numeric(A))
+  if (min(A)==1 && max(A)==q) {
+    start0 <- FALSE
+    A <- A - 1
+  }
+  stopifnot(all(A %in% 0:(q-1)))
+  if(length(unique(levels.no(A)))>1) stop("All columns of A must have the same number of levels.")
+  if (!all(coverage(A,2)==1)) stop("A must be a strength 2 covering array.")
+  N <- nrow(A); k <- ncol(A)  ## ingoing N and k
+  return(c(N=N+q^2-q, k=q*k+1))
+}
+
+#' @export
+N_k_recursiveBose_d <- function(q, d=2, ...){
+  ## check for d
+  stopifnot(is.numeric(d))
+  stopifnot(d>0)
+  stopifnot(d %% 1 == 0)
+  ## check for q prime or prime power
+  qcheck <- try(lhs::createBose(q,q+1,bRandom=FALSE))
+  if ("try-error" %in% class(qcheck))
+    stop("recursiveBode requires q to be a prime or prime power")
+  return(c(N=d*q^2-(d-1)*q, k=sum(q^(0:d))))
+}
+
+#' @export
+N_d_recursiveBose <- function(q, k, ...){
+  ## check for k
+  stopifnot(is.numeric(k))
+  stopifnot(k>1)
+  stopifnot(k %% 1 == 0)
+  ## check for q prime or prime power
+  qcheck <- try(lhs::createBose(q,q+1,bRandom=FALSE))
+  if ("try-error" %in% class(qcheck))
+    stop("recursiveBode requires q to be a prime or prime power")
+  d <- 1
+  kmax <- q+1
+  while(k > kmax){
+    d <- d + 1
+    kmax <- kmax + q^d
+  }
+  return(c(N=d*q^2-(d-1)*q, d=d, kmax=kmax))
 }

@@ -2,21 +2,34 @@
 % Please edit documentation in R/recursiveBose.R
 \name{recursiveBose}
 \alias{recursiveBose}
+\alias{N_k_recursiveBose_A}
+\alias{N_k_recursiveBose_d}
+\alias{N_d_recursiveBose}
 \title{function to increase numbers of columns for strength 2 CA in q levels (q prime power) from k to kq+1}
 \usage{
 recursiveBose(q, A=NULL, d=NULL, ...)
+
+N_k_recursiveBose_A(q, A, ...)
+
+N_k_recursiveBose_d(q, d=2, ...)
+
+N_d_recursiveBose(q, k, ...)
 }
 \arguments{
 \item{q}{a prime or prime power number of levels}
 
 \item{A}{\code{NULL}, or a uniform CA of strength 2 in N rows and k columns with integer-valued levels (0 to q-1 or 1 to q). \code{A} takes precedence over \code{d}.}
 
-\item{d}{\code{NULL}, or a small positive integer; 1 returns the Bose OA (q^2 x (q+1)), d>1 the processed Bose OA in d*(q^2) - (d-1)*q runs and q^d+q^(d-1)+...+q+1 columns.\cr If \code{A} is specified, \code{d} is ignored.}
+\item{d}{\code{NULL}, or a small positive integer; 1 returns the Bose OA (q^2 x (q+1)), d>1 the processed Bose OA in d*(q^2) - (d-1)*q runs and q^d+q^(d-1)+...+q+1 columns.\cr
+For \code{recursiveBose}, if \code{A} is specified, \code{d} is ignored.\cr
+For \code{k_recursiveBose}, the default is \code{d=2} for \code{N=2q^2 - q}; it can be increased, if k is too small; each increase by 1 will increase N by \code{q^2 - q}}
 
 \item{...}{currently not used}
+
+\item{k}{the number of columns requested}
 }
 \value{
-a uniform strength 2 CA with \code{q} level columns.\cr
+\code{recursiveBose} returns a uniform strength 2 CA with \code{q} level columns.\cr
 If neither \code{A} nor \code{d} are specified,
 the result has \code{2q^2 - q} rows and \code{q^2 + q + 1} columns,
 levels are coded from 0 to \code{q - 1}.\cr
@@ -25,6 +38,9 @@ in the same coding as \code{A}.\cr
 If \code{d} is specified and \code{A=NULL},
 the result has \code{d*q^2 - (d-1)*q} rows and \code{sum_i=0^d q^i} columns,
 coded from 0 to \code{q}-1.\cr
+\code{N_k_recursiveBode_A} returns a named vector with the run size \code{N} and the number of columns \code{k} for given \code{q} and \code{A}.\cr
+\code{k_recursiveBode} returns the number of columns k for given \code{q} and \code{d}.\cr
+\code{N_d_recursiveBode} returns a named vector with the run size \code{N}, the \code{d} for its creation for the requested number of columns \code{k}, and the maximum possible number of columns \code{kmax} for that construction.\cr
 }
 \description{
 applies construction principle of Hartman (2005) Thm 7.1 and Corollary 7.2
@@ -84,5 +100,10 @@ eCAN(2,56,5)
 
 ## recursive with d=1
 recursiveBose(3,d=1)
+
+## query functions
+N_k_recursiveBose_A(4, lhs::createBose(4, 5))
+N_k_recursiveBose_d(4,4)
+N_d_recursiveBose(4, 12)
 
 }
