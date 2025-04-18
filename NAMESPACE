@@ -2,7 +2,6 @@
 
 S3method(base::print,coverage)
 export(CK_constrD)
-export(CK_doubling)
 export(Hartman74)
 export(KSK)
 export(Martirosyan4)
