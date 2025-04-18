@@ -3,7 +3,6 @@
 \name{N_Hartman74}
 \alias{N_Hartman74}
 \alias{Hartman74}
-\alias{N_hartman74}
 \alias{Turan}
 \title{Construction in Hartman Theorem 7.4}
 \usage{
