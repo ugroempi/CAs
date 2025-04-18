@@ -14,6 +14,8 @@ iacheck: check a two-column matrix for correct interaction structure
 subia: checks whether ia1 is subset of ia2
 levels.no from DoE.base
 fasttab: table replacement without using factors
+LS_to_D3cols: function for making a latin square into a three column design
+D3cols_to_LS: function for bringing a three column design to latin square format
 metrics: a function for calculation metrics, likely obsolete
 proportions_slower: earlier version of coverage, likely obsolete
 ord from DoE.base

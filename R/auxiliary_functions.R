@@ -15,6 +15,8 @@
 #' subia: checks whether ia1 is subset of ia2
 #' levels.no from DoE.base
 #' fasttab: table replacement without using factors
+#' LS_to_D3cols: function for making a latin square into a three column design
+#' D3cols_to_LS: function for bringing a three column design to latin square format
 #' metrics: a function for calculation metrics, likely obsolete
 #' proportions_slower: earlier version of coverage, likely obsolete
 #' ord from DoE.base
@@ -623,3 +625,47 @@ fasttab <- function(mat,
   }
   aus
 }
+
+LS_to_D3cols <- function(LS, start0=TRUE){
+  ## LS a square v x v matrix with entries from 0 to (v-1) or from 1 to v
+  ## start0 governs the output: which coding should D3cols have?
+  stopifnot(is.matrix(LS))
+  v <- nrow(LS)
+  stopifnot(v==ncol(LS) & v==length(table(LS)))
+  stopifnot(length(unique(table(LS)))==1)
+  stopifnot(all(LS %% 1 == 0))  ## integer entries
+  stopifnot(min(LS)>0 && max(LS)<=v)
+  if (min(LS)==1 && start0) LS <- LS - 1
+  if (min(LS)==0 && !start0) LS <- LS + 1
+  if (start0) levs <- 0:(v-1) else levs <- 1:v
+  cbind(A=rep(levs, each=v), B=rep(levs, v), C=c(LS))
+}
+
+D3cols_to_LS <- function(D, start0=NULL){
+  ## D a latin square in three column notation (matrix)
+  ##   first column taken as column number
+  ##   second column taken as row number
+  ##   third column taken as entry
+  ## start0 logical that governs the output,
+  ##   input is coded as 0 to v-1 or 1 to v
+  ##   for NULL, same as input
+  stopifnot(is.matrix(D))
+  stopifnot(is.numeric(D))
+  stopifnot(all(D %% 1 == 0))
+  levs <- levels.no(D)
+  stopifnot(length(unique(levs))==1)
+  v <- levs[1]
+  stopifnot(min(D)>=0)
+  stopifnot(max(D) <= v - 1 + min(D))
+  if (is.null(start0)) start0 <- min(D)==0
+  if (min(D)==0) D <- D + 1
+  stopifnot(all(DoE.base::GWLP(D)==c(1,0,0,v-1)))
+  LS <- matrix(NA,v,v)
+  for (j in 1:v)
+    for (i in 1:v)
+      LS[i,j] <- D[D[,1]==j & D[,2]==i ,3]
+  if (start0) LS <- LS - 1
+  dimnames(LS) <- list(rows=1:v-start0, columns=1:v-start0)
+  LS
+}
+
