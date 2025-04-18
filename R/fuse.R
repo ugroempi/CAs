@@ -17,7 +17,7 @@
 #' @param ... currently not used
 #'
 #' @returns an array of the same coverage properties and the same number of columns
-#' as \code{D} and \code{nrow(D) - 2 * (vprior - vpost)} rows
+#' as \code{D} and at most \code{nrow(D) - 2 * (vprior - vpost)} rows
 #' with \code{vpost} levels per column
 #'
 #' @examples
@@ -44,7 +44,7 @@ swapvals <- function(M, c, val1, val2){
 #'@export
 fuse <- function(D, vprior, vpost, ...){
   stopifnot(is.numeric(vprior))
-  stopifnot(is.numeric(vprior))
+  stopifnot(is.numeric(vpost))
   if (!vpost < vprior) stop("function fuse reduces number of levels, \n vprior <= vpost is inadequate")
   if (!is.matrix(D)) D <- as.matrix(D)
   stopifnot(is.numeric(D))  ## D must have levels 0 to vprior-1 or 1 to vprior
@@ -55,6 +55,9 @@ fuse <- function(D, vprior, vpost, ...){
   if (!nlev==vprior) stop("D does not have vprior levels per column")
   for (j in 1:(vprior-vpost)){
     maxlev <- max(D)
+    ## how can it be made sure that the 3 run reduction is achieved
+    ## for strength 2 with k < maxlev and maxlev-1 a prime power?
+    ## according to CKRS Lemma 3.1
     for (c in 1:k){
       if (!D[1,c]==maxlev)
       D <- swapvals(D, c, D[1,c], maxlev) ## first row has maximum number of levels

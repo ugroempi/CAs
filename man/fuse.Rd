@@ -18,7 +18,7 @@ fuse(D, vprior, vpost, ...)
 }
 \value{
 an array of the same coverage properties and the same number of columns
-as \code{D} and \code{nrow(D) - 2 * (vprior - vpost)} rows
+as \code{D} and at most \code{nrow(D) - 2 * (vprior - vpost)} rows
 with \code{vpost} levels per column
 }
 \description{
