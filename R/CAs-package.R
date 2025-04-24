@@ -37,6 +37,12 @@
 #'
 #' Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. doi: 10.1023/B:DESI.0000029232.40302.6d.
 #'
+#' Meagher, K., Stevens, B., 2005. Group construction of covering arrays. J of Combinatorial Designs 13, 70–77. https://doi.org/10.1002/jcd.20035
+#'
+#' Meagher, K., 2005a. Group Construction of Covering Arrays | Part 2 (Unpublished). Ottawa.
+#'
+#' Meagher, K., 2005b. Covering Arrays on Graphs: Qualitative Independence Graphs and Extremal Set Partition Theory. University of Ottawa, Ottawa.
+#'
 #' NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 #'
 #' Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
