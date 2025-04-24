@@ -11,11 +11,11 @@
 #'
 #' @usage CK_doubling(D3, D2=NULL, check=FALSE, start0=TRUE, ...)
 #'
-#' @param D3 a strength 3 CA, integers 0, ..., v-1 or 1,...,v
-#' @param D2 a strength 2 CA, integers 0, ..., v-1 or 1,...,v, same coding as \code{D3}; for v=2, \code{NULL} implies automatic creation with function \code{\link{KSK}}.
+#' @param D3 a strength 3 CA with k columns in v levels, coded as integers 0, ..., v-1 or 1,...,v
+#' @param D2 a strength 2 CA with k columns in v levels, coded as integers 0, ..., v-1 or 1,...,v, same coding as \code{D3}; for v=2, \code{NULL} implies automatic creation with function \code{\link{KSK}}.
 #' @param check a logical: if TRUE, the strength requirements are verified
 #' (may take very long for large arrays, therefore defaults to FALSE)
-#' @param start0 logical: Do integer values start with 0 ?
+#' @param start0 logical: Do integer values start with 0 ?  (\code{D3} and \code{D2} must be compatible)
 #' @param ... further arguments to function \code{\link{coverage}}
 #'
 #' @details
@@ -43,21 +43,13 @@
 #' coverage(E, 3)  ## successful
 #' eCAN(3,22,2)   ## optimal
 #'
-#' ## Thm 4.5
-#' D3 <- cyc(37,4,type="4a")
-#' dim(D3)
-#' ## do not have good strength 2 4-level CA of strength 2
-#'
+#' ## Thm 4.5, 4 levels
 #' D3 <- DoE.base::L64.4.6 - 1 ## 6 columns are not created from lhs::createBush
-#' D2 <- lhs::createBose(5,6,bRandom=FALSE)
-#' ## fix 1 symbols (Meagher-Stevens) is best
-#' ##    according to the Colbourn tables, with 19 runs
-#' ## applying fuse to the above D2 yields 25-2=23 runs
-#' D2 <- fuse(D2, 5, 4)  ## 64 + 3*23, 12 more than necessary
-#' dim(D2)
+#' D2 <- CS_MS(6, 4)           ## 19 runs, optimal
+#' eCAN(2, 6, 4)
 #' E <- CK_doubling(D3, D2)
-#' dim(E)
-#' coverage(E, 3)
+#' coverage(E, 3)   ## has worked
+#' dim(E)           ## size almost optimal
 #' eCAN(3, 12, 4)
 #'
 #' @export
