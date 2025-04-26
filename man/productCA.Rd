@@ -3,31 +3,66 @@
 \name{productCA1}
 \alias{productCA1}
 \alias{productCA2}
+\alias{productPCA}
+\alias{SCA_Bose}
+\alias{CA_to_PCA}
 \title{Product constructions}
 \usage{
-productCA1(D1, D2, check=TRUE, ...)
+productCA1(D1, D2, check=TRUE, checklevels=TRUE, dupremove=TRUE, ...)
 
 productCA2(A, B, t, check=FALSE, ...)
+
+productPCA(D1, D2=NULL, k1=NULL, l1=NULL, start0=TRUE, ...)
+
+SCA_Bose(q, ...)
+
+CA_to_PCA(D, ...)
 }
 \arguments{
-\item{D1}{an N x k CA of strength 2 with v levels}
+\item{D1}{an N x k CA of strength 2 with v levels, split into k1 + k2 columns for \code{productPCA}}
 
-\item{D2}{an N x l CA of strength 2 with v levels}
+\item{D2}{an N x l CA of strength 2 with v levels, split into l1 + l2 columns for \code{productPCA}}
 
 \item{check}{logical, if TRUE, checks required strength of ingoing CAs (may substantially increase run time for larger CAs, especially for \code{t}>2)}
 
+\item{checklevels}{logical, if TRUE, checks that levels of \code{D1} and \code{D2} coincide; this check may be switched off, in order to support interim steps for other constructions}
+
+\item{dupremove}{logical, if TRUE, removes duplicated rows}
+
 \item{...}{currently not used}
+
+\item{D}{an N x k CA of strength 2 with v levels}
 
 \item{A}{an N x k CA of strength \code{t} with v levels,}
 
 \item{B}{an M x k CA of strength \code{t} with w levels,}
 
 \item{t}{strength of \code{A} and \code{B}}
+
+\item{k1}{width of P block in \code{D1} (see Details section)}
+
+\item{l1}{width of P block in \code{D2} (see Details section)}
+
+\item{start0}{logical: do the integer levels start with 0 or with 1?}
+
+\item{q}{a prime power for the Bose construction}
 }
 \value{
 Function \code{productCA1} returns a CA(N+M, 2, k\emph{l, v) (N+M x k}l matrix).\cr
 Function \code{productCA2} yields a CA(N\emph{M, t, k, v}w) (N*M x k matrix).\cr
 The returned matrices have their levels coded as the ingoing matrices, i.e., integers starting with 0 or 1.
+
+Function \code{CA_to_PCA} returns an equivalent CA with columns, rows and levels swapped such that\cr
+the matrix is partitioned into a PCA structure (Colbourn et al. 2006), arranged here
+(different from Colbourn et al.) such that\cr
+the \code{v x k1} matrix P (with each column consisting of a permutation of all levels) makes up the top left block,\cr
+the top right \code{v x k2} block is constant with all elements equal to the smallest level (for an SCA, which is a special case of a PCA) or has arbitrary levels (for a PCA),\cr
+and the remaining blocks may have arbitrary elements.\cr
+Function\code{SCA_Bose} rearranges the columns of a Bose array from \code{\link[lhs]{createBose}} into the column order needed for this package and adds the \code{type} attribute (see below).
+
+Function {\code{productPCA}} returns a new PCA in \code{k1*l1 + k1*l2 + k2*l1} columns and \code{N + M - 2} rows.\cr
+
+The results of functions \code{CA_to_PCA}, \code{SCA_Bose} and {\code{prodPCA}} have an attribute \code{type}, which is a list with elements \code{type} (PCA or SCA), \code{k1} and \code{k2}.
 }
 \description{
 Functions to construct a CA from a product construction of two ingoing CAs
@@ -63,8 +98,30 @@ tail(E)
 coverage(E,3)
 eCAN(3,4,12)   ## the CA is optimal (as of April 2025)
 
+## utility CA_to_PCA
+SCA61.2..9.1..7 <- CA_to_PCA(CS_MS(10, 7))
+attributes(SCA61.2..9.1..7)
+
+CA_to_PCA(DoE.base::L36.2.8.6.3[,-(1:8)])
+
+## utility SCA_Bose
+SCA_Bose(3)
+
+## apply PCA construction
+productPCA(SCA_Bose(3))
+
+## for non-prime power case
+## use optimum CA(46,2,9,6)
+MS6 <- CS_MS(k=9, v=6)
+MS6 <- CA_to_PCA(MS6)
+head(MS6)  ## it is an SCA with k1=8 and k2=9
+dim(CA.86.6.80 <- productPCA(MS6, MS6))
+head(DoE.base::L36.2.8.6.3[,-(1:8)]) ## it is an SCA with k1=3 and k2=0
+eCAN(2,80,6)
+dim(productPCA(MS6, DoE.base::L36.2.8.6.3[,-(1:8)] - 1, l1=3))
+eCAN(2,27,6)
 
 }
 \references{
-Torres-Jimenez et al. (2019), Chateauneuf and Kreher (2002)
+Chateauneuf and Kreher (2002), Colbourn et al. (2006), Torres-Jimenez et al. (2019)
 }
