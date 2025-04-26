@@ -66,12 +66,35 @@ gen.next.cbn <- function(cbn, n){
 #}
 #})
 
+matcheck <- function(mat, start0=NULL, uniform=TRUE, PCAcheck=FALSE, ...){
+  stopifnot(is.matrix(mat))
+  stopifnot(is.numeric(mat))
+  stopifnot(all(mat%%1==0))
+  if (is.null(start0)) stopifnot(min(mat) %in% c(0,1)) else{
+    if (start0) stopifnot(min(mat)==0) else stopifnot(min(mat)==1)
+  }
+  ll <- levels.no(mat)
+  if (PCAcheck){
+    PCAstatus <- attr(mat, "type")
+    if (is.null(PCAstatus)) PCAstatus <- "unavailable"
+  }
+  if (uniform){
+    stopifnot(length(unique(ll))==1)
+    aus <- list(v=ll[1], k=ncol(mat), N=nrow(mat))
+    if (PCAcheck) aus <- c(aus, PCAstatus=list(PCAstatus))
+  } else{
+    aus <- list(vs=ll, k=ncol(mat), N=nrow(mat))
+    if (PCAcheck) aus <- c(aus, PCAstatus=list(PCAstatus))
+  }
+  aus
+}
+
 cycvec <- function(v, q, gf=NULL, primitive=NULL){
   ## t is the requested coverage
   ## v is the common number of levels
   ## q is the prime or prime power on which the construction is based
   if (is.null(gf)) gf <- lhs::create_galois_field(q)
-  ## start vector is the vector of "logarithms of 1:q" (mod v) w.r.t. the
+  ## start vector is the vector of "logarithms of 1:q" (mod v) <w.r.t. the
   ##     base chosen as a primitive element (omega) of the group based on q
   ## retrieve primitive
   if (!is.null(primitive)) p <- primitive else p <- primedat[which(primedat[,1]==q),2]
