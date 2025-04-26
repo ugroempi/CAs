@@ -10,15 +10,19 @@
 #' @usage maxconstant(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...)
 #'
 #' @param D a uniform CA without duplicated rows, unless dupcheck is set to TRUE
-#' @param verbose 0 for no comments, 1 for printing messages with the row numbers used for the constant rows,
-#' 2 for additionally adding the list of possible row sets (that could have been made constant) as an attribute to the returned object
+#' @param verbose 0 for neither comments nor attributes added to output objects,\cr
+#' 1 for printing messages with the row numbers used for the constant rows,\cr
+#' 2 for not printing anything but adding the list of possible row sets (that could have been made constant) as an attribute to the returned object,\cr
+#' 12 for combining both
 #' @param remove logical, should constant rows be removed? If TRUE, the function returns a matrix with fewer rows than \code{D}.
 #' @param dupcheck logical, should duplicate rows be checked and removed? If FALSE, the function assumes that there are no duplicate rows.
 #' @param ... currently not used
 #'
 #' @returns an equivalent version of \code{D} that has as many constant rows as possible,
-#' located at the start of the array, or removed in case of \code{remove=TRUE}. For \code{verbose=2}, a list of the design name and the list of possible rows
-#' to be made constant is attached as the attribute \code{potential_constant_rows} to the returned object
+#' located at the start of the array, or removed in case of \code{remove=TRUE}. \cr
+#' For \code{verbose=2}, the attribute \code{constant_rows} is attached to the returned object;
+#' it is a list with elements \code{design_name} and \code{row_set}, where the latter
+#' contains the row numbers in the original design of the rows that were moved to the front.
 #'
 #' @section Details:
 #' The function uses a method presented by Torres-Jimenez at NIST that identifies the maximum
@@ -91,7 +95,7 @@ permvals <- function(D,c,from,to,check=TRUE,...){
 #' @export
 maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
    Dnam <- deparse(substitute(D))
-   stopifnot(verbose %in% c(0,1,2))
+   stopifnot(verbose %in% c(0,1,2,12))
    stopifnot(is.matrix(D))
    stopifnot(is.numeric(D))
    if (dupcheck){
@@ -112,6 +116,9 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
        D <- D[setdiff(1:N, posconsts),]
      else
        D <- D[c(posconsts, setdiff(1:N, posconsts)),]
+     if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
+         list(design_name=Dnam, row_set_list=posconsts)
+     return(D)
    }else{
      ## not yet maximum conceivable number of constant rows
    levs <- sort(unique(D[,1]))
@@ -125,26 +132,26 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
          edges <- c(edges, paare[,i])
    G <- igraph::add_edges(G, edges=edges)
    ## determine all largest cliques
-   maxcliques <- igraph::largest_cliques(G)
+   maxcliques <- igraph::largest_cliques(G)  ## all have same length
    nmaxconst <- length(maxcliques[[1]])
    if (nconstant>0){
      ## determine whether any clique holds all existing constant rows
      candcliques <- which(lengths(lapply(maxcliques, function(obj)
        setdiff(obj, posconsts)))==nmaxconst-nconstant)
      if (length(candcliques)>0) maxclique <- unclass(maxcliques[[candcliques[1]]]) else
-       maxclique <- unclass(maxcliques[[1]])
+       maxclique <- unclass(rev(maxcliques)[[1]])
    }else {
      ## if only one constant row possible and none is currently constant,
      ## make first row constant
      ## otherwise use the first largest clique
      if (nmaxconst==1) maxclique <- 1 else
-     maxclique <- as.numeric(maxcliques[[1]])
+     maxclique <- as.numeric(rev(maxcliques)[[1]])  ## changed to rev, because most natural choice usually at the end
    }
-   if (verbose>0)
-     message(paste("used largest clique: ", paste0(maxclique, collapse=c(", "))))
+   if (verbose %in% c(1,12))
+     message(paste("used largest clique: ", paste0(unclass(maxclique), collapse=c(", "))))
    if (length(maxclique)==nconstant){
      ## use the existing constant rows
-     if (verbose>0) {
+     if (verbose %in% c(1,12)) {
        message("No additional constant rows found, existing constant rows moved")
        message(paste0("  to rows 1:", nconstant))
      }
@@ -152,6 +159,9 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
        D <- D[setdiff(1:N, posconsts),]
      else
        D <- D[c(posconsts, setdiff(1:N, posconsts)),]
+     if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
+         list(design_name=Dnam, row_set_list=posconsts)
+     return(D)
    }else{## additional constant row(s) found
      if (length(maxclique)>1){
      tolevs <- D[maxclique, 1] ## bring all other columns to this combination
@@ -169,9 +179,9 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
          D <- swapvals(D,j,D[1,1],D[1,j])
        }}
    }}
- if (verbose==2) {
-   if (nconstant==nlev) attr(D, "possible_constant_rows") <- list(design_name=Dnam, row_set_list=maxclique) else
-   attr(D, "possible_constant_rows") <- list(design_name=Dnam, row_set_list=maxcliques)
- }
+ if (verbose %in% c(2,12))
+     attr(D, "constant_rows") <-
+       list(design_name=Dnam, row_set_list=unclass(maxclique))
  D
 }
+

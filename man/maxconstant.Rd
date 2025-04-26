@@ -12,8 +12,10 @@ maxconstant(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...)
 
 \item{...}{currently not used}
 
-\item{verbose}{0 for no comments, 1 for printing messages with the row numbers used for the constant rows,
-2 for additionally adding the list of possible row sets (that could have been made constant) as an attribute to the returned object}
+\item{verbose}{0 for neither comments nor attributes added to output objects,\cr
+1 for printing messages with the row numbers used for the constant rows,\cr
+2 for not printing anything but adding the list of possible row sets (that could have been made constant) as an attribute to the returned object,\cr
+12 for combining both}
 
 \item{remove}{logical, should constant rows be removed? If TRUE, the function returns a matrix with fewer rows than \code{D}.}
 
@@ -21,8 +23,10 @@ maxconstant(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...)
 }
 \value{
 an equivalent version of \code{D} that has as many constant rows as possible,
-located at the start of the array, or removed in case of \code{remove=TRUE}. For \code{verbose=2}, a list of the design name and the list of possible rows
-to be made constant is attached as the attribute \code{potential_constant_rows} to the returned object
+located at the start of the array, or removed in case of \code{remove=TRUE}. \cr
+For \code{verbose=2}, the attribute \code{constant_rows} is attached to the returned object;
+it is a list with elements \code{design_name} and \code{row_set}, where the latter
+contains the row numbers in the original design of the rows that were moved to the front.
 }
 \description{
 applies maximum clique search for making maximally many rows constant, which
