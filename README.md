@@ -48,14 +48,61 @@ Besides the construction functions, coverage properties of any array can
 be checked by function <code>coverage</code> and plotted by function
 <code>coverplot</code>.
 
-So far, constructions for strength 2 2-level CAs by Kleitman and Spencer
-(1973) and Katona (1973), as well as constructions based on cyclotomy
-(Colbourn 2010) have been implemented.
+So far, the following constructions have been implemented:
+<ul>
+
+<li>
+
+strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973)
+in function <code>KSK</code>,
+</li>
+
+<li>
+
+strength 3 2-level constructions via Paley-based Hadamard matrices
+(function <code>paleyHad</code>)
+</li>
+
+<li>
+
+constructions based on cyclotomy (Colbourn 2010) in function
+<code>cyc</code>,
+</li>
+
+<li>
+
+Chateauneuf and Kreher (2002) doubling in function
+<code>CK_doubling</code>, and also construction D from the basics part
+of that paper (function <code>CK_constrD</code>)
+</li>
+
+<li>
+
+recursive Bose constructions of Hartman (2005) in function
+<code>recursiveBose</code>
+</li>
+
+<li>
+
+the group-based construction by Meagher and Stevens (2005) which uses
+starter vectors and a group of cycling permutations that leaves one
+value fixed
+</li>
+
+<li>
+
+product constructions (work in progress) in functions
+<code>productCA1</code>, <code>productCA2</code> and
+<code>productPCA</code>; especially the latter constructs many very good
+CAs (Colbourn et al. 2006).
+</li>
+
+</ul>
 
 ## References
 
-The Colbourn tables are currently unavailable at their usual location;
-temporarily, access is provided
+**The Colbourn Covering array tables are currently unavailable at their
+usual location; temporarily, access is provided**
 [here](https://github.com/ugroempi/CAs/blob/main/ColbournTables.md).
 
 <p>
@@ -76,6 +123,14 @@ pp. 217-238. doi: 10.1002/jcd.10002.
 Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6,
 t≤k ≤10000, 2005–23.
 <a href="https://www.public.asu.edu/~ccolbou/src/tabby">https://www.public.asu.edu/~ccolbou/src/tabby</a>.
+</p>
+
+<p>
+
+Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood,
+G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength
+two. <em>J of Combinatorial Designs</em> <strong>14</strong>, 124-138.
+doi: 10.1002/jcd.20065
 </p>
 
 <p>
@@ -115,20 +170,22 @@ Cryptogr., vol. 32, no. 2, pp. 323–339. doi:
 
 <p>
 
-Meagher, K., Stevens, B., 2005. Group construction of covering arrays. J
-of Combinatorial Designs 13, 70–77. <https://doi.org/10.1002/jcd.20035>
+Meagher, K., Stevens, B., (2005). Group construction of covering arrays.
+J of Combinatorial Designs 13, 70–77.
+<https://doi.org/10.1002/jcd.20035>
 </p>
 
 <p>
 
-Meagher, K., 2005a. Group Construction of Covering Arrays \| Part 2
-(Unpublished). Ottawa.
+Meagher, K., (2005a). Group Construction of Covering Arrays: Part 2.
+(Unpublished technical report). Ottawa.
 </p>
 
 <p>
 
-Meagher, K., 2005b. Covering Arrays on Graphs: Qualitative Independence
-Graphs and Extremal Set Partition Theory. University of Ottawa, Ottawa.
+Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative
+Independence Graphs and Extremal Set Partition Theory. PhD thesis.
+University of Ottawa, Ottawa.
 </p>
 
 <p>

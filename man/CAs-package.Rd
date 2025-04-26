@@ -25,8 +25,16 @@ the guide functions \code{guide_CAs} (not yet implemented, might be changed).
 Besides the construction functions, coverage properties of any array can be checked by function
 \code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
 
-So far, constructions for strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973),
-as well as constructions based on cyclotomy (Colbourn 2010) have been implemented.
+So far, the following constructions have been implemented:
+\itemize{
+\item strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973) in function \code{\link{KSK}},
+\item strength 3 2-level constructions via Paley-based Hadamard matrices (function \code{\link{paleyHad}})
+\item constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyc}},
+\item Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
+\item recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
+\item the group-based construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed
+\item product constructions (work in progress) in functions \code{\link{productCA1}}, \code{\link{productCA2}} and \code{\link{productPCA}}; especially the latter constructs many very good CAs (Colbourn et al. 2006).
+}
 }
 \references{
 Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations and Essays, 13th ed. New York: Dover, pp. 308-309.
@@ -34,6 +42,8 @@ Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations and Essays
 Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
 
 Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
+
+Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. \emph{J of Combinatorial Designs} \strong{14}, 124-138. doi: 10.1002/jcd.20065
 
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 
@@ -45,11 +55,11 @@ Katona, G. O. H. (1973). Two applications (for search theory and truth functions
 
 Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. doi: 10.1023/B:DESI.0000029232.40302.6d.
 
-Meagher, K., Stevens, B., 2005. Group construction of covering arrays. J of Combinatorial Designs 13, 70–77. https://doi.org/10.1002/jcd.20035
+Meagher, K., Stevens, B., (2005). Group construction of covering arrays. J of Combinatorial Designs 13, 70–77. https://doi.org/10.1002/jcd.20035
 
-Meagher, K., 2005a. Group Construction of Covering Arrays | Part 2 (Unpublished). Ottawa.
+Meagher, K., (2005a). Group Construction of Covering Arrays: Part 2. (Unpublished technical report). Ottawa.
 
-Meagher, K., 2005b. Covering Arrays on Graphs: Qualitative Independence Graphs and Extremal Set Partition Theory. University of Ottawa, Ottawa.
+Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative Independence Graphs and Extremal Set Partition Theory. PhD thesis. University of Ottawa, Ottawa.
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 
