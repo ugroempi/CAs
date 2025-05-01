@@ -85,8 +85,16 @@ head(Dc <- maxconstant(CA.22.3.12.2, verbose=12))
 ## which rows of design CA.22.3.12.2 were used ?
 attributes(Dc)
 
-D <- KSK(k=12)
-maxconstant(D, verbose=1)
+## example of Colbourn and Torres-Jimenez (2013)
+## Figure 2 of the paper
+hilf <- strsplit(c("2222001", "0022222", "1121201", "0120110",
+                        "2210202", "2102122", "1200020", "0211121",
+                        "1012100", "2001210", "0000001", "1111012",
+                        "2222222", "2222011"), "")
+plan <- do.call(rbind, lapply(hilf, as.numeric))
+table(nvals <- lengths(lapply(1:14, function(obj) unique(plan[obj,]))))
+## one row is already constant, two rows can be made constant
+maxconstant(plan)
 
 }
 \references{

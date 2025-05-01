@@ -76,10 +76,18 @@
 #' ## which rows of design CA.22.3.12.2 were used ?
 #' attributes(Dc)
 #'
-#' D <- KSK(k=12)
-#' maxconstant(D, verbose=1)
+#' ## example of Colbourn and Torres-Jimenez (2013)
+#' ## Figure 2 of the paper
+#' hilf <- strsplit(c("2222001", "0022222", "1121201", "0120110",
+#'                         "2210202", "2102122", "1200020", "0211121",
+#'                         "1012100", "2001210", "0000001", "1111012",
+#'                         "2222222", "2222011"), "")
+#' plan <- do.call(rbind, lapply(hilf, as.numeric))
+#' table(nvals <- lengths(lapply(1:14, function(obj) unique(plan[obj,]))))
+#' ## one row is already constant, two rows can be made constant
+#' maxconstant(plan)
 #'
-permvals <- function(D,c,from,to,check=TRUE,...){
+permvals <- function(D, c, from, to, check=TRUE, ...){
   if (check){
     k <- ncol(D)
     stopifnot(c%%1==0)
@@ -125,8 +133,10 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
    }
 
    ## not yet maximum conceivable number of constant rows
+   ## this should not be needed, but does not do harm
    levs <- setdiff(sort(unique(D[,1])), NA) ## removes NA in case of flexible runs
    ## so far, relies on NA values not being in the first few rows
+
 
    ## graph with rows as vertices and edges between everywhere distinct rows
    G <- igraph::make_empty_graph(n=N, directed=FALSE)
@@ -184,7 +194,6 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
      if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
          list(design_name=Dnam, row_set_list=posconsts)
      return(D)
-
    }else{
      ## now use maxclique, which potentially contains old constant rows
      ## additional constant row(s) found
@@ -193,19 +202,21 @@ maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
        D <- D[setdiff(1:N, maxclique),]
      else{
        ## rearrange rows
-       D <- D[c(maxclique,setdiff(1:N, maxclique)),]
+       D <- D[c(maxclique, setdiff(1:N, maxclique)),]
        ## bring first few levels to ascending order
-       if (length(maxclique)>1){
-         tolevs <- levs[1:length(maxclique)] ## bring all other columns to this combination
+       if (length(maxclique)==nlev){
+         ## can use permvals
+         tolevs <- levs[1:nlev]
          for (j in 1:k){
            ## bring all maxclique rows to constant value of first column
-           D <- permvals(D, j, D[1:nmaxconst,j], tolevs, check=FALSE)
+           D <- permvals(D, j, D[1 : nmaxconst, j], tolevs, check=FALSE)
          }
          }else{
-       ## length of maxclique is = 1
-       for (j in 1:k){
-         D <- swapvals(D, j, D[1,j], levs[1]) ## bring first row to lowest level
-       }
+         ## must use swapvals
+         for (j in 1:k)
+           for (l in 1:length(maxclique)){
+             D <- swapvals(D, j, D[l,j], levs[l]) ## bring first rows to lowest levels
+         }
        }
    }}
  if (verbose %in% c(2,12))
