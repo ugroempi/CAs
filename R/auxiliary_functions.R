@@ -9,6 +9,7 @@
 #'
 #' @details
 #'
+#' matcheck: checks a matrix for suitability
 #' gf_minus: Galois field subtraction
 #' funmakefromstrings: read example designs from copy-pasted strings
 #' iacheck: check a two-column matrix for correct interaction structure
@@ -66,26 +67,78 @@ gen.next.cbn <- function(cbn, n){
 #}
 #})
 
-matcheck <- function(mat, start0=NULL, uniform=TRUE, PCAcheck=FALSE, ...){
+
+matcheck <- function(mat, start0=NULL, uniform=TRUE,
+                     PCAcheck=FALSE, flexible=NULL, ...){
+  ## PCAcheck checks for the attribute
+  ##    (a check for a PCA structure is done with is.PCA, but only picking up on the unchanged array)
+  ## flexible=NULL does check for NA values and treats these as flexible
+  ##    other values must be declared
+
+  ## flexible (for the don't care value symbol) must be NA or numeric, I suspect that it is v for Torres-Jimenez
   stopifnot(is.matrix(mat))
   stopifnot(is.numeric(mat))
-  stopifnot(all(mat%%1==0))
-  if (is.null(start0)) stopifnot(min(mat) %in% c(0,1)) else{
-    if (start0) stopifnot(min(mat)==0) else stopifnot(min(mat)==1)
+  stopifnot(all(mat%%1==0, na.rm = TRUE))
+
+  ## flexible is taken from an attribute, if present
+  if (is.null(flexible)){
+    if (!is.null(flexibleAttr <- attr(mat,"flexible")))
+      flexible <- flexibleAttr$value
+  }
+  if (is.null(flexible)){
+    if (any(is.na(mat))) flexible <- NA
+  }
+  if (!is.null(flexible)){
+    ## flexible values are fixed for the rest of the check
+    stopifnot(is.na(flexible) || is.numeric(flexible))
+    stopifnot(length(flexible)==1)
+    anyflex <- FALSE
+        ## fixed level
+           if (is.na(flexible)){
+               if (any(is.na(mat))){
+                 anyflex <- TRUE
+                 mat[is.na(mat)] <- 1
+               }
+             }else
+               if (any(mat==flexible)){
+                 anyflex <- TRUE
+                 mat[mat==flexible] <- 1
+               }
+           ## still length(flexible)==1
+           if (!anyflex) flexible <- NULL
+    ## for DECLARED flexible values:
+    ## now there is a valid entry instead of NA (or whatever else),
+    ## flexible has been set NULL, if no such values occur
+    ## flexible mat values have been replaced with 1
+  }
+  if (is.null(start0)){
+       stopifnot(min(mat) %in% c(0,1))
+       if (all(apply(mat,2,function(obj) min(obj))==0))
+         start0 <- TRUE else
+           if (all(apply(mat,2,min)==1)) start0 <- FALSE
+    }else{
+    if (start0) stopifnot(min(mat)==0) else
+      stopifnot(min(mat)==1)
   }
   ll <- levels.no(mat)
   if (PCAcheck){
     PCAstatus <- attr(mat, "type")
-    if (is.null(PCAstatus)) PCAstatus <- "unavailable"
+    if (is.null(PCAstatus)) {
+      PCAstatus <- is.PCA(mat)
+      if (PCAstatus) PCAstatus <- attr(PCAstatus, "PCAstatus")
+      ## otherwise FALSE anyway
+      }
   }
   if (uniform){
-    stopifnot(length(unique(ll))==1)
+      stopifnot(length(unique(ll))==1)
     aus <- list(v=ll[1], k=ncol(mat), N=nrow(mat))
-    if (PCAcheck) aus <- c(aus, PCAstatus=list(PCAstatus))
   } else{
     aus <- list(vs=ll, k=ncol(mat), N=nrow(mat))
-    if (PCAcheck) aus <- c(aus, PCAstatus=list(PCAstatus))
   }
+  if (PCAcheck) aus <- c(aus, PCAstatus=list(PCAstatus))
+  if (!is.null(flexible)) aus <- c(aus, flexvalue=flexible)
+  if (is.null(start0)) aus <- c(aus, start0="mixed") else
+                       aus <- c(aus, start0=start0)
   aus
 }
 

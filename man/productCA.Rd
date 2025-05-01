@@ -6,17 +6,20 @@
 \alias{productPCA}
 \alias{SCA_Bose}
 \alias{CA_to_PCA}
+\alias{is.PCA}
 \title{Product constructions}
 \usage{
 productCA1(D1, D2, check=TRUE, checklevels=TRUE, dupremove=TRUE, ...)
 
 productCA2(A, B, t, check=FALSE, ...)
 
-productPCA(D1, D2=NULL, k1=NULL, l1=NULL, start0=TRUE, ...)
+productPCA(D1, D2=NULL, k1=NULL, l1=NULL, ...)
 
 SCA_Bose(q, ...)
 
-CA_to_PCA(D, ...)
+CA_to_PCA(D, tryhard=FALSE, ...)
+
+is.PCA(D, start0=NULL, ...)
 }
 \arguments{
 \item{D1}{an N x k CA of strength 2 with v levels, split into k1 + k2 columns for \code{productPCA}}
@@ -43,26 +46,29 @@ CA_to_PCA(D, ...)
 
 \item{l1}{width of P block in \code{D2} (see Details section)}
 
-\item{start0}{logical: do the integer levels start with 0 or with 1?}
-
 \item{q}{a prime power for the Bose construction}
+
+\item{tryhard}{logical: if \code{TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.}
+
+\item{start0}{\code{NULL}, or logical: do the values start with 0 (otherwise with 1)?}
 }
 \value{
-Function \code{productCA1} returns a CA(N+M, 2, k\emph{l, v) (N+M x k}l matrix).\cr
-Function \code{productCA2} yields a CA(N\emph{M, t, k, v}w) (N*M x k matrix).\cr
+Function \code{productCA1} returns a CA(N+M, 2, k\emph{l, v) (N+M x k}l matrix of class \code{ca}) (to be reduced to guaranteed N+M-2 asap).\cr
+Function \code{productCA2} yields a CA(N\emph{M, t, k, v}w) (N*M x k matrix of class \code{ca}).\cr
 The returned matrices have their levels coded as the ingoing matrices, i.e., integers starting with 0 or 1.
 
-Function \code{CA_to_PCA} returns an equivalent CA with columns, rows and levels swapped such that\cr
-the matrix is partitioned into a PCA structure (Colbourn et al. 2006), arranged here
-(different from Colbourn et al.) such that\cr
-the \code{v x k1} matrix P (with each column consisting of a permutation of all levels) makes up the top left block,\cr
-the top right \code{v x k2} block is constant with all elements equal to the smallest level (for an SCA, which is a special case of a PCA) or has arbitrary levels (for a PCA),\cr
-and the remaining blocks may have arbitrary elements.\cr
-Function\code{SCA_Bose} rearranges the columns of a Bose array from \code{\link[lhs]{createBose}} into the column order needed for this package and adds the \code{type} attribute (see below).
+Function \code{CA_to_PCA} returns an equivalent CA of S3 class \code{ca} that has PCA (or SCA) structure (see Section "Partitioned Covering Array (PCA)").
 
-Function {\code{productPCA}} returns a new PCA in \code{k1*l1 + k1*l2 + k2*l1} columns and \code{N + M - 2} rows.\cr
+Function\code{SCA_Bose} creates a Bose array from \code{\link[lhs]{createBose}} and rearranges its columns
+into SCA structure (see Section "Partitioned Covering Array (PCA)").
 
-The results of functions \code{CA_to_PCA}, \code{SCA_Bose} and {\code{prodPCA}} have an attribute \code{type}, which is a list with elements \code{type} (PCA or SCA), \code{k1} and \code{k2}.
+Function {\code{productPCA}} returns a new PCA in \code{k1*l1 + k1*l2 + k2*l1} columns and \code{N + M - 2} rows (matrix of class \code{ca}).\cr
+
+The results of functions \code{CA_to_PCA}, \code{SCA_Bose} and {\code{prodPCA}} have an attribute \code{PCAstatus},
+which is a list with elements \code{type} (PCA or SCA), \code{k1} and \code{k2}.
+
+Function \code{is.PCA} returns a logical with the analogous attribute; it can be (mis)used for checking
+consistency between the codings of designs by specifying \code{start0}.
 }
 \description{
 Functions to construct a CA from a product construction of two ingoing CAs
@@ -71,8 +77,38 @@ Functions to construct a CA from a product construction of two ingoing CAs
 
 \bold{I don't like the function names, they will likely change.}
 
-Function \code{productCA1} yields a CA(N+M, 2, kl, v) from a product construction, as, e.g., described in Torres-Jimènez et al. (2019).\cr
-Function \code{productCA2} yields a CA(N\emph{M, t, k, v}w) by combining the corresponding columns of the two CAs into \code{v*w} levels, according to Theorem 3.2 of Chateauneuf, Colbourn and Kreher (.\cr
+Function \code{productCA1} yields a CA(N+M, 2, kl, v) from a product construction, as, e.g., described in Torres-Jimènez et al. (2019). (improvable to guaranteed N+M-2, to be implemented asap; removal of duplicates may reduce run size further, depending on the ingoing arrays)
+
+Function \code{productCA2} yields a CA(N\emph{M, t, k, v}w) by combining the corresponding columns of the two CAs into \code{v*w} levels, according to Theorem 3.2 of Chateauneuf, Colbourn and Kreher (2002).
+
+Function \code{productPCA} exploits a partitioned structure of the two CAs it combines (see \bold{to be explained somewhere}); the construction can be viewed as a kind of product, but is sometimes also called "cut-and-paste". It is described, e.g., in Colbourn and Torres-Jimenez (2013).
+
+Functions \code{productCA1} and \code{productPCA} also serve as work horse function for combining to CAs in the \code{\link{CAEX}} construction.
+
+\code{CA_to_PCA} rearranges \code{D} into a PCA structure (see Section "Partitioned Covering Array (PCA)")
+by rearranging columns, swapping symbols, and in case of \code{tryhard=TRUE} also rearranging rows.\cr
+In case of \code{tryhard=TRUE}, it is tried to achieve PCA status \code{k2=1} or \code{k2=2}; in that case,
+if it is possible to achieve \code{v} constant rows (i.e., \code{k2=0}), the function finds these.\cr
+Without \code{tryhard=TRUE}, the resulting PCA will have \code{k1} as the number of columns with \code{v} different
+levels in the first \code{v} rows.\cr
+\code{tryhard=TRUE} may be useful for small designs, but may substantially increase run times for \code{D} with many rows or many columns.
+
+Functions \code{SCA_Bose} and bring their argument into the best possible PCA shape by swapping columns only.
+If the argument \code{tryhard} is invoked, \code{CA_to_PCA} tries to achieve \code{k1=k-1} or \code{k1=k-2} by trying \code{\link{maxconstant}} on
+subsets of columns. Function \code{is.PCA} checks the PCA status of its argument without modifying it in any way.
+}
+
+\section{Partitioned Covering Array (PCA)}{
+
+For an \code{N x k} CA(N, t, k, v) to be a PCA, the number of columns is split into \code{k = k1 + k2}, with \code{k1>0} (otherwise no PCA),
+the number of rows is split into \code{N = v + (N - v)}; such a PCA is denoted as PCA(N, t, (k1,k2), v).\cr
+The PCA structure, in this package, is arranged with top and bottom parts swapped versus
+partitioning of Colbourn et al. (2006). Parts are arranged here such that\cr
+the \code{v x k1} matrix P (with each column consisting of the identity permutation of all levels)
+makes up the top left block,\cr
+the top right \code{v x k2} block (which may be empty) is constant with all elements equal to the smallest level (for an SCA, which is a special case of a PCA)
+or has arbitrary levels (for a PCA),\cr
+and the remaining two blocks (bottom left and bottom right) may arbitrary elements.
 }
 
 \examples{
@@ -99,9 +135,10 @@ coverage(E,3)
 eCAN(3,4,12)   ## the CA is optimal (as of April 2025)
 
 ## utility CA_to_PCA
-SCA61.2..9.1..7 <- CA_to_PCA(CS_MS(10, 7))
+SCA61.2..9.1..7 <- CA_to_PCA(CS_MS(10, 7), tryhard=TRUE)
 attributes(SCA61.2..9.1..7)
 
+is.PCA(DoE.base::L36.2.8.6.3[,-(1:8)])
 CA_to_PCA(DoE.base::L36.2.8.6.3[,-(1:8)])
 
 ## utility SCA_Bose
@@ -113,15 +150,32 @@ productPCA(SCA_Bose(3))
 ## for non-prime power case
 ## use optimum CA(46,2,9,6)
 MS6 <- CS_MS(k=9, v=6)
-MS6 <- CA_to_PCA(MS6)
+MS6 <- CA_to_PCA(MS6, tryhard=TRUE)
 head(MS6)  ## it is an SCA with k1=8 and k2=9
 dim(CA.86.6.80 <- productPCA(MS6, MS6))
 head(DoE.base::L36.2.8.6.3[,-(1:8)]) ## it is an SCA with k1=3 and k2=0
 eCAN(2,80,6)
-dim(productPCA(MS6, DoE.base::L36.2.8.6.3[,-(1:8)] - 1, l1=3))
+dim(productPCA(MS6, CA_to_PCA(DoE.base::L36.2.8.6.3[,-(1:8)] - 1)))
 eCAN(2,27,6)
+
+## the functions also work for designs with flexible values (which are denoted by NA)
+## productCA1
+D <- productCA1(CAEX(N=16), CAEX(N=16))
+dim(D)
+eCAN(2,441,3) ## slightly worse than the best CA, which is obtained as CAEX(N=28)
+is.PCA(D)     ## has PCA structure with rather small k1
+Dmod <- CA_to_PCA(D)  ## modify to better PCA structure
+is.PCA(Dmod)  ## much improved
+\dontrun{coverage(Dmod, 2)}  ## slightly longer run time
+
+## productPCA
+D <- productPCA(CAEX(N=16), CAEX(N=16))
+dim(D)
+eCAN(2,405,3) ## slightly worse than the best CA, which is obtained as CAEX(N=27)
+is.PCA(D) ## is already good and cannot be further improved by the simple method used in CA_to_PCA
+\dontrun{coverage(D, 2)} ## slightly longer run time
 
 }
 \references{
-Chateauneuf and Kreher (2002), Colbourn et al. (2006), Torres-Jimenez et al. (2019)
+Chateauneuf and Kreher (2002), Colbourn et al. (2006), Colbourn and Torres-Jimenez (2013), Torres-Jimenez et al. (2019)
 }
