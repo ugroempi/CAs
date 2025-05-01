@@ -67,8 +67,11 @@
 #'
 #' ## example of Colbourn and Torres-Jimenez (2013)
 #' ## Figure 2 of the paper
-#' hilf <- unlist(strsplit("2222001 0022222 1121201 0120110 2210202 2102122 1200020 0211121 1012100 2001210 0000001 1111012 2222222 2222011", " "))
-#' plan <- do.call(rbind, lapply(strsplit(hilf, "", fixed=TRUE), as.numeric))
+#' hilf <- strsplit(c("2222001", "0022222", "1121201", "0120110",
+#'                         "2210202", "2102122", "1200020", "0211121",
+#'                         "1012100", "2001210", "0000001", "1111012",
+#'                         "2222222", "2222011"), "")
+#' plan <- do.call(rbind, lapply(hilf, as.numeric))
 #' dim(plan)
 #' (planMod <- markflex(plan, 2))  ## last two rows can be removed
 #' coverage(planMod[1:12,], 2)     ## now optimal
