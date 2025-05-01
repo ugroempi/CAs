@@ -48,8 +48,8 @@ these are again moved to the first runs (or removed).\cr
 If there are constant rows that are all together in one of the largest cliques,
 the first such clique is used.\cr
 If there are no constant rows and only one constant row is possible, the first row is made constant.\cr
-For all other cases, the first largest clique is used.\cr
-Making rows constant changes all levels to those of the first column.
+For all other cases, the last largest clique is used.\cr
+The constant rows have ascending levels, starting with the lowest level.
 }
 
 \section{Warning}{
@@ -81,11 +81,14 @@ CA.22.3.12.2 <- cyc(11,2, type="3a") ## N=22, k=12, q=11, type 3a, t=3
 table(nvals <- lengths(lapply(1:12, function(obj) unique(CA.22.3.12.2[obj,]))))
 ## no row is already constant (all have 2 distinct values)
 ## two constant rows are achievable
-head(Dc <- maxconstant(CA.22.3.12.2, verbose=2))
-## which rows of design CA.22.3.12.2 could have been used (including the ones that were used)?
+head(Dc <- maxconstant(CA.22.3.12.2, verbose=12))
+## which rows of design CA.22.3.12.2 were used ?
 attributes(Dc)
 
 D <- KSK(k=12)
 maxconstant(D, verbose=1)
 
+}
+\references{
+Torres-Jimenez, Acevedo-Juarez and Avila-George (2021) for the mention of the largest clique idea
 }
