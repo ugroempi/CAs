@@ -166,7 +166,7 @@ paley_mat <- function(q){
   stopifnot(q>=5)
   gf <- lhs::create_galois_field(q)
   ## cycvec checks v and q and retrieves the primitive
-  xstart <- CAs:::cycvec(2,q)
+  xstart <- cycvec(2,q)
   A <- matrix(NA,q,q)
   for (i in 1:q)
     for (j in 1:q){
