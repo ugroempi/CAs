@@ -24,6 +24,8 @@
 #' * recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
 #' * the group-based construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed
 #' * product constructions (work in progress) in functions \code{\link{productCA1}}, \code{\link{productCA2}} and \code{\link{productPCA}}; especially the latter constructs many very good CAs (Colbourn et al. 2006).
+#' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future).
+#' * identification of flexible values as in Colbourn and Torres-Jimenez (2013)
 #'
 #' @author Author: Ulrike Groemping, BHT Berlin.
 #'
@@ -37,6 +39,8 @@
 #' Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. *J of Combinatorial Designs* **14**, 124-138. doi: 10.1002/jcd.20065
 #'
 #' Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
+#'
+#' Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
 #'
 #' Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) *Graph Theory, Combinatorics and Algorithms*. Operations Research/Computer Science Interfaces Series, vol 34. Springer-Verlag, New York.
 #'
@@ -55,6 +59,8 @@
 #' NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 #'
 #' Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
+#'
+#' Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. doi: 10.1016/j.amc.2021.126122
 #'
 #' Zhang, J., Zhang, Z. and Ma, F. (2014). Automatic Generation of Combinatorial Test Data. SpringerBriefs in Computer Science. Springer Verlag, Berlin.
 #'

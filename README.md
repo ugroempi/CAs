@@ -97,6 +97,20 @@ product constructions (work in progress) in functions
 CAs (Colbourn et al. 2006).
 </li>
 
+<li>
+
+the CA EXtender for strength 2 3-level CAs (Torres-Jimenez,
+Acevedo-Juarez and Avila-George 2021), which yields the current best
+arrays for all scenarii (but, contrary to the 2-level case, these are
+not theoretically optimal and might improve in the future).
+</li>
+
+<li>
+
+identification of flexible values as in Colbourn and Torres-Jimenez
+(2013)
+</li>
+
 </ul>
 
 ## References
@@ -137,6 +151,12 @@ doi: 10.1002/jcd.20065
 
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes
 Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
+</p>
+
+<p>
+
+Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays
+of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
 </p>
 
 <p>
@@ -199,6 +219,13 @@ NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering
 arrays.
 <a href="https://www.tamps.cinvestav.mx/~oc/">https://www.tamps.cinvestav.mx/~oc/</a>.
+</p>
+
+<p>
+
+Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021).
+Covering array EXtender. Applied Mathematics and Computation 402,
+126122. doi: 10.1016/j.amc.2021.126122
 </p>
 
 <p>
