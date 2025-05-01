@@ -32,12 +32,15 @@
 #' coverage(D10, 3)
 #'
 swapvals <- function(M, c, val1, val2){
+  ## c can be a single integer
+  ## or a vector of integers
   hilf <- M[,c]
   stopifnot(all(c(val1,val2) %in% hilf))
   eins <- which(hilf==val1)
   zwei <- which(hilf==val2)
-  M[eins,c] <- val2
-  M[zwei,c] <- val1
+  hilf[eins] <- val2
+  hilf[zwei] <- val1
+  M[,c] <- hilf
   M
 }
 
