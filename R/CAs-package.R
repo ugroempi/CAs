@@ -23,7 +23,9 @@
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
 #' * recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
 #' * the group-based construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed
-#' * product constructions (work in progress) in functions \code{\link{productCA1}}, \code{\link{productCA2}} and \code{\link{productPCA}}; especially the latter constructs many very good CAs (Colbourn et al. 2006).
+#' * direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
+#' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
+#' * cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
 #' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future).
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013)
 #'

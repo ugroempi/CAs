@@ -6,13 +6,16 @@
 Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
-
 - **License**: GPL-3
+- **Version**: 0.2.0
 
 ## Warning
 
 This is a very preliminary version of R package **CAs**. Changes that
 break backwards compatibility can and will occur without warning.
+Important changes/bug fixes are stated in the
+[NEWS](https://github.com/ugroempi/CAs/blob/main/inst/NEWS.md) file, but
+no guarantees!
 
 ## Installation
 
@@ -91,10 +94,22 @@ value fixed
 
 <li>
 
-product constructions (work in progress) in functions
-<code>productCA1</code>, <code>productCA2</code> and
-<code>productPCA</code>; especially the latter constructs many very good
-CAs (Colbourn et al. 2006).
+direct product construction for strength 2 CAs in function
+<code>productCA</code>, with generalizations for slightly reducing the
+number of runs
+</li>
+
+<li>
+
+product construction for strength 2 PCAs in <code>productPCA</code>,
+proposed by Colbourn et al. (2006), improved later; this is behind
+various current best CAs of the Colbourn tables.
+</li>
+
+<li>
+
+cross product of levels for arbitrary strength (e.g., Theorem 2.8 of
+Zhang et al. 2014), <code>crossCAs</code>
 </li>
 
 <li>
