@@ -153,8 +153,8 @@ productPCA <- function(D1, D2=NULL, k1=NULL, l1=NULL, ...){
     stop("D1 does not seem to be a PCA")
   type1 <- hilf$PCAstatus$type
   if (!is.null(k1)){
-      if (!k1==k1_stored) stop("conflicting information on k1")
-    }else
+    if (!k1==k1_stored) stop("conflicting information on k1")
+  }else
     k1 <- k1_stored
 
   ## should not happen any more
@@ -203,34 +203,34 @@ productPCA <- function(D1, D2=NULL, k1=NULL, l1=NULL, ...){
   P1 <- matrix(1:v-as.numeric(start0), v, k1)
   A1 <- D1[(v+1):N, 1:k1, drop=FALSE];
   if (k1 < k){
-      ## lower right block of D1
-      A2 <- D1[(v+1):N, (k1+1):k, drop=FALSE]
-      ## upper right block of D1
-      X <- D1[1:v,(k1+1):k, drop=FALSE]
-    }else{
-      ## empty matrices in the two right-hand side blocks
-      A2 <- matrix(1, N-v, 0)
-      X <- matrix(1, v, 0)
-    }
+    ## lower right block of D1
+    A2 <- D1[(v+1):N, (k1+1):k, drop=FALSE]
+    ## upper right block of D1
+    X <- D1[1:v,(k1+1):k, drop=FALSE]
+  }else{
+    ## empty matrices in the two right-hand side blocks
+    A2 <- matrix(1, N-v, 0)
+    X <- matrix(1, v, 0)
+  }
   ## left blocks of D2
   P2 <- matrix(1:v-as.numeric(start0), v, l1)
   B1 <- D2[(v+1):M,1:l1, drop=FALSE];
   if (l1 < l){
-      ## lower right block of D2
-      B2 <- D2[(v+1):M,(l1+1):l, drop=FALSE]
-      ## upper right block of D2
-      Y <- D2[1:v,(l1+1):l, drop=FALSE]
-    } else{
-      ## empty matrices on the two right-hand side blocks
-      B2 <- matrix(1, M-v, 0)
-      Y <- matrix(1, v, 0)
-    }
+    ## lower right block of D2
+    B2 <- D2[(v+1):M,(l1+1):l, drop=FALSE]
+    ## upper right block of D2
+    Y <- D2[1:v,(l1+1):l, drop=FALSE]
+  } else{
+    ## empty matrices on the two right-hand side blocks
+    B2 <- matrix(1, M-v, 0)
+    Y <- matrix(1, v, 0)
+  }
   ## first part, assuming k1>0 and l1>0
   ## left block, width k1*l1
   block1 <- rbind(
-      matrix(1:v-as.numeric(start0), v, k1*l1), ## P
-      productCA_raw(A1, B1)
-    )
+    matrix(1:v-as.numeric(start0), v, k1*l1), ## P
+    productCA_raw(A1, B1)
+  )
   ## middle block
   if (k==k1) block2 <- matrix(0, N+M-v, 0) else
     block2 <- rbind(
@@ -282,7 +282,7 @@ is.PCA <- function(D, start0=NULL, ...){
   }else aus <- FALSE
   ## return TRUE with info attached
   if (aus) attr(aus, "PCAstatus") <- list(type=type, k1=k1, k2=k2) else attr(aus, "PCAstatus") <- FALSE
- # if (!is.null(flexible)) attr(aus, "flexible") <- list(value=flexible, profile=profile)
+  # if (!is.null(flexible)) attr(aus, "flexible") <- list(value=flexible, profile=profile)
   aus
 }
 
@@ -331,12 +331,19 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
     ## with distinct values in the first v rows
     ## to the left
     D <- D[,c(good, setdiff(1:k, good))]
-    for (i in 1:kcheap){
-
-    }
+    if (kcheap > 0){
+      for (i in 1:kcheap){
+          D <- permvals(D, i, D[1:v, i], 1:v - as.numeric(start0))
+      }
     PCAstatus <- is.PCA(D, start0=start0, flexible=NA)
     attr(D, "PCAstatus") <- attr(PCAstatus, "PCAstatus")
     attr(D, "flexible") <- attr(PCAstatus, "flexible")
+    }else{
+      if (!tryhard) {
+        message("The first ", v, " rows do not have any columns that can serve as the k1-part of a PCA.")
+        attr(D, "PCAstatus") <- FALSE
+      }
+    }
     if (!tryhard) return(D)
 
 
