@@ -1,6 +1,7 @@
 # NEWS
 
 05 May 2025: Version 0.2.0 
+
     - renamed function `productCA1` to `productCA` and function `productCA2` to `crossCAs`;
       separated the documentation file `productCA.Rd` into three files, corresponding 
       to function names
