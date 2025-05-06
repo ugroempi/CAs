@@ -1,4 +1,4 @@
-#' function to make the maximumm possible number of rows constant
+#' Function to make the maximum possible number of rows constant
 #'
 #' applies maximum clique search for making maximally many rows constant, which
 #' may be useful when using an array in a product or power based construction; the constant rows are moved to the front or removed (if requested)
@@ -7,7 +7,7 @@
 #'
 #' @aliases maxconstant
 #'
-#' @usage maxconstant(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...)
+#' @usage maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...)
 #'
 #' @param D a uniform CA without duplicated rows, unless dupcheck is set to TRUE
 #' @param verbose 0 for neither comments nor attributes added to output objects,\cr
@@ -15,6 +15,7 @@
 #' 2 for not printing anything but adding the list of possible row sets (that could have been made constant) as an attribute to the returned object,\cr
 #' 12 for combining both
 #' @param remove logical, should constant rows be removed? If TRUE, the function returns a matrix with fewer rows than \code{D}.
+#' @param one_is_enough logical; should the algorithm limit itself to making one row constant?
 #' @param dupcheck logical, should duplicate rows be checked and removed? If FALSE, the function assumes that there are no duplicate rows.
 #' @param ... currently not used
 #'
@@ -103,125 +104,153 @@ permvals <- function(D, c, from, to, check=TRUE, ...){
 #' @importFrom igraph add_edges
 #' @importFrom igraph largest_cliques
 #' @export
-maxconstant <- function(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...){
-   Dnam <- deparse(substitute(D))
-   stopifnot(verbose %in% c(0,1,2,12))
-   stopifnot(is.matrix(D))
-   stopifnot(is.numeric(D))
-   if (dupcheck){
-     D <- D[!dupcheck(D),, drop=FALSE]
-   }
-   N <- nrow(D); k <- ncol(D)
-   lev <- levels.no.NA(D)
-   if (length(table(lev))>1)
-     stop("function maxconstant works for symmetric CAs only")
-   nlev <- lev[1]
-   consts <- lengths(lapply(1:N, function(obj) unique(D[obj,])))==1
-   ## TRUE for constant rows
-   nconstant <- sum(consts)
-   if (nconstant > 0) posconsts <- which(consts==1)
-   if (nconstant > 1) posconsts <- posconsts[sort(D[posconsts,1], index.return=TRUE)$ix]
-   ## move the existing maximum possible number of constant rows to the front
-   if (nconstant == nlev){
-     if (remove)
-       D <- D[setdiff(1:N, posconsts),]
-     else
-       D <- D[c(posconsts, setdiff(1:N, posconsts)),]
-     if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
-         list(design_name=Dnam, row_set_list=posconsts)
-     return(D)
-   }
+maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...){
+  Dnam <- deparse(substitute(D))
+  stopifnot(verbose %in% c(0,1,2,12))
+  stopifnot(is.matrix(D))
+  stopifnot(is.numeric(D))
+  if (dupcheck){
+    D <- D[!dupcheck(D),, drop=FALSE]
+  }
+  N <- nrow(D); k <- ncol(D)
+  lev <- levels.no.NA(D)
+  if (length(table(lev))>1)
+    stop("function maxconstant works for symmetric CAs only")
+  v <- nlev <- lev[1]
+  consts <- lengths(lapply(1:N, function(obj) unique(D[obj,])))==1
+  ## TRUE for constant rows
+  nconstant <- sum(consts)
+  if (nconstant > 0) posconsts <- which(consts==1)
+  if (nconstant > 1) posconsts <- posconsts[sort(D[posconsts,1], index.return=TRUE)$ix]
+  ## move the existing maximum possible number of constant rows to the front
+  if (nconstant == nlev){
+    if (remove)
+      D <- D[setdiff(1:N, posconsts),]
+    else
+      D <- D[c(posconsts, setdiff(1:N, posconsts)),]
+    if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
+        list(design_name=Dnam, row_set_list=posconsts)
+    return(D)
+  }
 
-   ## not yet maximum conceivable number of constant rows
-   ## this should not be needed, but does not do harm
-   levs <- setdiff(sort(unique(D[,1])), NA) ## removes NA in case of flexible runs
-   ## so far, relies on NA values not being in the first few rows
+  if (one_is_enough && nconstant==0){
+    reflev <- min(D, na.rm=TRUE)
+    ## loop over values from second largest to largest
+    for (s in (reflev+1):(reflev+v-1)){
+      ## treat columns with the value s
+      ## setting them to the lowest level
+      cs <- which(D[1,]==s)
+      if (length(cs) > 0)
+        D <- swapvals(D, cs, s, reflev)
+    }
+    ## now, D has one constant row
+    nconstant <- 1
+    posconsts <- 1
+    ## now handled like the constant row was there already
+  }
+  if (one_is_enough){
+    ## work is finished
+    ## more than 1 possible, but only, if already in ingoing D
+    nmaxconst <- nconstant
+    maxclique <- posconsts
+  }else{
+    ## further activity is needed
+    ## (not yet maximum conceivable number of constant rows,
+    ##     and one row was already made constant for one_is_enough)
 
+    ## this should not be needed and might be incomplete, when used in productPCA
+    levs <- setdiff(sort(unique(D[,1])), NA) ## removes NA in case of flexible runs
+    ## so far, relies on NA values not being in the first few rows
 
-   ## graph with rows as vertices and edges between everywhere distinct rows
-   G <- igraph::make_empty_graph(n=N, directed=FALSE)
-   paare <- nchoosek(N, 2)
-   ## rows of D are vertices
-   ## adjacent, if they differ in all columns
-   edges <- numeric(0)
-   for (i in 1:ncol(paare))
-     if (min(abs(D[paare[1,i],]-D[paare[2,i],]), na.rm = TRUE) > 0)
-         edges <- c(edges, paare[,i])
-   G <- igraph::add_edges(G, edges=edges)
+    ## graph with rows as vertices and edges between everywhere distinct rows
+    G <- igraph::make_empty_graph(n=N, directed=FALSE)
+    paare <- nchoosek(N, 2)
+    ## rows of D are vertices
+    ## adjacent, if they differ in all columns
+    edges <- numeric(0)
+    for (i in 1:ncol(paare))
+      if (min(abs(D[paare[1,i],]-D[paare[2,i],]), na.rm = TRUE) > 0)
+        edges <- c(edges, paare[,i])
+    G <- igraph::add_edges(G, edges=edges)
 
-   ## determine all largest cliques
-   maxcliques <- igraph::largest_cliques(G)  ## all have same length
-   nmaxconst <- length(maxcliques[[1]])
+    ## determine all largest cliques
+    maxcliques <- igraph::largest_cliques(G)  ## all have same length
+    nmaxconst <- length(maxcliques[[1]])
 
-   ## determine the largest clique that will be used
-   if (nconstant > 0){
-     ## if possible, select a clique that holds all existing constant rows
-     candcliques <- which(lengths(lapply(maxcliques, function(obj)
-       setdiff(obj, posconsts))) == nmaxconst - nconstant)
-     if (length(candcliques)>0) maxclique <- as.numeric(maxcliques[[candcliques[1]]]) else
-       maxclique <- as.numeric(rev(maxcliques)[[1]])
-   }else{
-     ## if only one constant row possible and none is currently constant,
-     ## make first row constant
-     ## otherwise use the first largest clique
-     if (nmaxconst==1) maxclique <- 1 else
-     maxclique <- as.numeric(rev(maxcliques)[[1]])  ## changed to rev, because most natural choice usually at the end
-   }
-   maxclique <- sort(maxclique)
+    ## determine the largest clique that will be used
+    if (nconstant > 0){
+      ## if possible, select a clique that holds all existing constant rows
+      candcliques <- which(lengths(lapply(maxcliques, function(obj)
+        setdiff(obj, posconsts))) == nmaxconst - nconstant)
+      if (length(candcliques)>0) maxclique <- as.numeric(maxcliques[[candcliques[1]]]) else
+        maxclique <- as.numeric(rev(maxcliques)[[1]])
+    }else{
+      ## if only one constant row possible and none is currently constant,
+      ## make first row constant
+      ## otherwise use the last largest clique
+      if (nmaxconst==1) maxclique <- 1 else
+        maxclique <- as.numeric(rev(maxcliques)[[1]])  ## rev, because most natural choice usually at the end
+    }
+    maxclique <- sort(maxclique)
+  } ## identification of maxclique finished
 
-   ## general verbosity message
-   if (verbose %in% c(1,12))
-     message(paste("used largest clique: ", paste0(maxclique, collapse=c(", "))))
+  ## general verbosity message
+  if (verbose %in% c(1,12))
+    message(paste("used largest clique: ", paste0(maxclique, collapse=c(", "))))
 
-   ## no additional constant rows found
-   if (length(maxclique)==nconstant){
-     ## use posconsts, which was resorted above to have rows in ascending order
-     if (verbose %in% c(1,12)){
-        ## additional verbosity message
-           message("No additional constant rows found, existing constant rows moved")
-           message(paste0("  to rows 1:", nconstant))
-        }
+  ## no additional constant rows found
+  if (nmaxconst==nconstant){
+    ## use posconsts, which was resorted above to have rows in ascending order
+    ## additional verbosity message
+    if (verbose %in% c(1,12)){
+      ## additional verbosity message
+      message("No additional constant rows found, existing constant rows moved")
+      message(paste0("  to rows 1:", nconstant))
+    }
 
     ## output object creation without additional constant rows
     ## but also not v constant rows
-     if (remove)
-       D <- D[setdiff(1:N, posconsts),]
-     else{
-       ## sort the output rows to be from lowest to highest
-       D <- D[c(posconsts, setdiff(1:N, posconsts)),]
-     }
-     ## verbosity attributes for output object
-     if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
-         list(design_name=Dnam, row_set_list=posconsts)
-     return(D)
-   }else{
-     ## now use maxclique, which potentially contains old constant rows
-     ## additional constant row(s) found
-     ## move all constant rows to start
-     if (remove)
-       D <- D[setdiff(1:N, maxclique),]
-     else{
-       ## rearrange rows
-       D <- D[c(maxclique, setdiff(1:N, maxclique)),]
-       ## bring first few levels to ascending order
-       if (length(maxclique)==nlev){
-         ## can use permvals
-         tolevs <- levs[1:nlev]
-         for (j in 1:k){
-           ## bring all maxclique rows to constant value of first column
-           D <- permvals(D, j, D[1 : nmaxconst, j], tolevs, check=FALSE)
-         }
-         }else{
-         ## must use swapvals
-         for (j in 1:k)
-           for (l in 1:length(maxclique)){
-             D <- swapvals(D, j, D[l,j], levs[l]) ## bring first rows to lowest levels
-         }
-       }
-   }}
- if (verbose %in% c(2,12))
-     attr(D, "constant_rows") <-
-       list(design_name = Dnam, row_set_list = maxclique)
- D
+    if (remove)
+      D <- D[setdiff(1:N, posconsts),]
+    else{
+      ## place constant rows in front
+      D <- D[c(posconsts, setdiff(1:N, posconsts)),]
+    }
+    ## verbosity attributes for output object
+    if (verbose %in% c(2,12)) attr(D, "constant_rows") <-
+        list(design_name=Dnam, row_set_list=posconsts)
+    return(D)
+  }else{
+    ## now use maxclique, which potentially contains old constant rows
+    ## additional constant row(s) found
+    ## move all constant rows to start
+    if (remove)
+      D <- D[setdiff(1:N, maxclique),]
+    else{
+      ## rearrange rows
+      D <- D[c(maxclique, setdiff(1:N, maxclique)),]
+      ## bring first few levels to ascending order
+      ## levs is always complete, i.e. nlev==v
+      if (nmaxconst == nlev){
+        ## can use permvals
+        tolevs <- levs[1:nlev]
+        for (j in 1:k){
+          ## bring all maxclique rows to increasing levels
+          D <- permvals(D, j, D[1 : nlev, j], tolevs, check=FALSE)
+        }
+      }else{
+        ## must use swapvals
+        for (l in 1:nmaxconst){
+          for (j in 1:nlev){
+            whichnow <- which(D[l,] == levs[j])
+            if (j==l || length(whichnow)==0) next
+            D <- swapvals(D, whichnow, levs[j], levs[l]) ## bring first rows to lowest levels
+          }
+        }
+      }}}
+  if (verbose %in% c(2,12))
+    attr(D, "constant_rows") <-
+    list(design_name = Dnam, row_set_list = maxclique)
+  D
 }
 

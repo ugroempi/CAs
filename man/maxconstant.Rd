@@ -3,9 +3,9 @@
 \name{permvals}
 \alias{permvals}
 \alias{maxconstant}
-\title{function to make the maximumm possible number of rows constant}
+\title{Function to make the maximum possible number of rows constant}
 \usage{
-maxconstant(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...)
+maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...)
 }
 \arguments{
 \item{D}{a uniform CA without duplicated rows, unless dupcheck is set to TRUE}
@@ -18,6 +18,8 @@ maxconstant(D, verbose=0, remove=FALSE, dupcheck=FALSE, ...)
 12 for combining both}
 
 \item{remove}{logical, should constant rows be removed? If TRUE, the function returns a matrix with fewer rows than \code{D}.}
+
+\item{one_is_enough}{logical; should the algorithm limit itself to making one row constant?}
 
 \item{dupcheck}{logical, should duplicate rows be checked and removed? If FALSE, the function assumes that there are no duplicate rows.}
 }
