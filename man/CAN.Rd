@@ -4,13 +4,22 @@
 \alias{eCAN}
 \alias{N_NISTcat}
 \alias{N_TJcat}
-\title{functions for N from Colbourn tables and other libraries}
+\alias{eCAK}
+\alias{k_NISTcat}
+\alias{k_TJcat}
+\title{Functions for N and k from Colbourn tables and other libraries}
 \usage{
 eCAN(t, k, v)
 
 N_NISTcat(t, k, v)
 
 N_TJcat(t, k, v)
+
+eCAK(t, N, v)
+
+k_NISTcat(t, N, v)
+
+k_TJcat(t, N, v)
 }
 \arguments{
 \item{t}{coverage strength}
@@ -18,22 +27,33 @@ N_TJcat(t, k, v)
 \item{k}{number of columns}
 
 \item{v}{number of levels for each column}
+
+\item{N}{number of runs}
 }
 \value{
 \code{eCAN} returns a data frame with the smallest known run size
 (empirical CAN, based on the Colbourn table)
-and the corresponding source entry (Source),
-\code{N_NISTcat} returns the run size of the
-corresponding catalogued array of the NIST covering array library,
-and \code{N_TJcat} the same thing for the small library by
-Jorge Torres-Jimenez.
+and the corresponding source entry (Source),\cr
+\code{eCAK} does the same with the largest possible number of columns \code{k},\cr
+\code{N_NISTcat} returns the smallest run size for the requested \code{k} of a
+catalogued array from the NIST covering array library,\cr
+\code{k_NISTcat} returns the maximum column size for the requested \code{N} of a
+catalogued array from the NIST covering array library,\cr
+and \code{N_TJcat} returns the smallest run size for the requested \code{k} of a
+catalogued array from the Jose Torres-Jimenez library (as of Feb 6 2025, small
+selection, which is expected to grow),\cr
+and \code{k_TJcat} returns the largest number of columns \code{k} for the requested \code{N}
+of a catalogued array from the Jose Torres-Jimenez library (as of Feb 6 2025, small
+selection, which is expected to grow)
+.
 In cases for which there is no entry in the respective
 table or library, the returned results are missing values.
 }
 \description{
 The functions extract the number of runs needed for a specified setting
 according to the Colbourn tables, according to the NIST library of CAs
-and the Torres-Jimenez library of CAs.
+and the Torres-Jimenez library of CAs. Or they extract the number of columns
+achievable for a specified number of runs.
 }
 \examples{
 eCAN(3, 199, 2)
@@ -42,5 +62,9 @@ N_TJcat(3, 199, 2) ## equals the best-known array
 
 eCAN(4, 199, 2)
 N_TJcat(4, 199, 2) ## Colbourn table outdated
+
+eCAK(2,11,3)  ## also obtained by CAEX
+k_NISTcat(2,11,3)
+k_TJcat(2,11,3) ## equals the best-known array
 
 }
