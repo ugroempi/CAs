@@ -2,20 +2,41 @@
 % Please edit documentation in R/derive.R
 \name{derive}
 \alias{derive}
+\alias{deriveto}
+\alias{derivefrom}
 \title{Function to derive a strength t+1 CA into a smaller strength t array}
 \usage{
-derive(D, dcol=1, dval=NULL, start0=TRUE, ...)
+derive(D, dcol=1, dval=NULL, ...)
+
+deriveto(N, k, v, ...)
+
+derivefrom(N, k, v, ...)
 }
 \arguments{
 \item{D}{a CA with levels as integers 0, ..., v-1 or 1,...,v}
 
 \item{dcol}{the id of the column to be deleted (default: 1)}
 
-\item{dval}{the value to be used for filtering (default: the first value that has minimum frequency in column \code{jcol})}
-
-\item{start0}{logical: Do integer valued levels start with 0 ? (Otherwise, they must start with 1.)}
+\item{dval}{the value to be used for filtering (default: the first value that has minimum frequency in column \code{dcol})}
 
 \item{...}{currently unused}
+
+\item{N}{integer: run size;\cr
+for \code{deriveto}: the size that should result from derivation;\cr
+for \code{derivefrom}: the size of the array that is to be derived}
+
+\item{k}{integer: number of columns;\cr
+for \code{deriveto}: the number of columns that should result from derivation;\cr
+for \code{derivefrom}: the number of columns of the array that is to be derived}
+
+\item{v}{integer: the number of levels (same for ingoing and resulting array)}
+}
+\value{
+\code{derive} returns a matrix with class \code{ca}, which has strength one
+less than \code{D}; its levels are coded in the same way as those of \code{D}.\cr
+\code{deriveto} returns a named vector with integer-valued elements \code{N} and \code{k}.\cr
+\code{derievefrom} returns a list with elements \code{N} (an integer-valued vector)
+and \code{k} (an integer number).
 }
 \description{
 A CA D of strength t+1 is reduced to a single level of a particular column,
@@ -23,7 +44,17 @@ which is subsequently omitted from the array.
 The resulting CA has strength t.
 }
 \details{
-The name \code{derive} was taken from Zhang et al. (2014).
+The name \code{derive} was taken from Zhang et al. (2014).  \code{derive} returns a strength t
+CA from a strength t+1 array by\cr
+picking one column and selecting only the runs for a single level of that column
+(if not balanced, use the least frequent level for obtaining the smallest run size)\cr
+and subsequently omitting that column.\cr
+\code{deriveto} predicts the dimensions of a derived array, when deriving a CA(N,t+1,k,v),
+assuming maximum possible balance in the column to derive on (which is worst case).\cr
+\code{derivefrom} provides the dimensions of a CA from which the specified parameters
+can be obtained by derivation; note that the run size is not unique, because, e.g.,
+deriving a 20 run Ca or a 21 run CA with \code{v}=2 will both yield 10 runs. The result
+for \code{N} is therefore a vector of possibilities.
 }
 \examples{
 # create a CA(6,2,10,2) from a CA(12,3,11,2)
@@ -34,14 +65,29 @@ sixdefault <- derive(A)  ## first column of A was 0,
                          ## first column omitted
 dim(sixdefault)
 coverage(sixdefault, 2)
+eCAN(2,10,2)  ## the array is optimal
 
+## default construction can be modified:
 ## select all the runs with 11th column at level 1
 ## keep first 10 columns for these
 six <- derive(A, dcol=11, dval=1)
 dim(six)
 ## strength 3 was reduced to strength 2
 coverage(six, 2)
-eCAN(2,10,2)  ## the array is optimal
 
+deriveto(24, 12, 2)
+derivefrom(24, 12, 2)
+
+# t=3 v=2 k=5
+eCAN(3,5,2) ## N=10, Derive from strength 4
+derivefrom(10, 5, 2)
+# t=4, v=2, k=6, N in 20 or 21
+eCAN(4,6,2) ## N=21, Derive from strength 5
+derivefrom(21, 6, 2)
+# t=5, v=2, k=7, N in 42 or 23
+eCAN(5,7,2)
+## has 42 runs, Source "Special (Yan Jun)"
+# this or equivalent CA is available in TJ library
+N_TJcat(5, 7, 2)
 
 }
