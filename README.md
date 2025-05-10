@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.2.0
+- **Version**: 0.2.1
 
 ## Warning
 
@@ -87,9 +87,23 @@ recursive Bose constructions of Hartman (2005) in function
 
 <li>
 
-the group-based construction by Meagher and Stevens (2005) which uses
-starter vectors and a group of cycling permutations that leaves one
-value fixed
+a projection construction for a Bose matrix, from Colbourn (2008), in
+function <code>projectionBose</code>
+</li>
+
+<li>
+
+the group-based strength 2 construction by Meagher and Stevens (2005)
+which uses starter vectors and a group of cycling permutations that
+leaves one value fixed (function <code>CS_MS</code>)
+</li>
+
+<li>
+
+the strength 2 cover starter construction by Lobb et al. (2012) which
+works similarly to Meagher and Stevens (2005) but fix one or more
+symbols using the additive group on the non-fixed symbols (function
+<code>CS_LCDST</code>)
 </li>
 
 <li>
@@ -117,13 +131,15 @@ Zhang et al. 2014), <code>crossCAs</code>
 the CA EXtender for strength 2 3-level CAs (Torres-Jimenez,
 Acevedo-Juarez and Avila-George 2021), which yields the current best
 arrays for all scenarii (but, contrary to the 2-level case, these are
-not theoretically optimal and might improve in the future).
+not theoretically optimal and might improve in the future) in function
+<code>CAEX</code>.
 </li>
 
 <li>
 
 identification of flexible values as in Colbourn and Torres-Jimenez
-(2013)
+(2013), and the Nayeri et al. (2013) postprocessing in function
+<code>postopNCK</code>
 </li>
 
 </ul>
@@ -164,6 +180,13 @@ doi: 10.1002/jcd.20065
 
 <p>
 
+Colbourn, C.J., (2008). Strength two covering arrays: Existence tables
+and projection. Discrete Math., vol. 308, 772-786.
+<https://doi.org/10.1016/j.disc.2007.07.050>
+</p>
+
+<p>
+
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes
 Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 </p>
@@ -172,6 +195,13 @@ Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 
 Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays
 of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
+</p>
+
+<p>
+
+Dwyer, A., (2024). CA Database: Data base of covering arrays and related
+objects.
+<a href="https://github.com/aadwyer/CA_Database">https://github.com/aadwyer/CA_Database</a>.
 </p>
 
 <p>
@@ -185,7 +215,7 @@ Science Interfaces Series, vol 34. Springer-Verlag, New York.
 <p>
 
 Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets,
-Discrete Math., vol. 6, no. 3, pp. 255–262. doi:
+Discrete Math., vol. 6, no. 3, pp. 255-262. doi:
 10.1016/0012-365X(73)90098-8.
 </p>
 
@@ -198,6 +228,13 @@ pp. 19–26. doi: 10.1007/BF02018457.
 
 <p>
 
+Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez,
+J., (2012). Cover starters for covering arrays of strength two. Discrete
+Math. vol. 312, 943-956. <https://doi.org/10.1016/j.disc.2011.10.026>
+</p>
+
+<p>
+
 Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes
 Cryptogr., vol. 32, no. 2, pp. 323–339. doi:
 10.1023/B:DESI.0000029232.40302.6d.
@@ -206,7 +243,7 @@ Cryptogr., vol. 32, no. 2, pp. 323–339. doi:
 <p>
 
 Meagher, K., Stevens, B., (2005). Group construction of covering arrays.
-J of Combinatorial Designs 13, 70–77.
+J of Combinatorial Designs 13, 70-77.
 <https://doi.org/10.1002/jcd.20035>
 </p>
 
@@ -221,6 +258,13 @@ Meagher, K., (2005a). Group Construction of Covering Arrays: Part 2.
 Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative
 Independence Graphs and Extremal Set Partition Theory. PhD thesis.
 University of Ottawa, Ottawa.
+</p>
+
+<p>
+
+Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized
+post-optimization of covering arrays. European Journal of Combinatorics
+34, 91-103. <https://doi.org/10.1016/j.ejc.2012.07.017>
 </p>
 
 <p>
@@ -241,6 +285,15 @@ arrays.
 Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021).
 Covering array EXtender. Applied Mathematics and Computation 402,
 126122. doi: 10.1016/j.amc.2021.126122
+</p>
+
+<p>
+
+Wagner, M., Kampel, L., Simos, D.E., (2021). Heuristically Enhanced IPO
+Algorithms for Covering Array Generation, in: Flocchini, P., Moura, L.
+(Eds.), Combinatorial Algorithms, Lecture Notes in Computer Science.
+Springer International Publishing, Cham, pp. 571–586.
+<https://doi.org/10.1007/978-3-030-79987-8_40>
 </p>
 
 <p>

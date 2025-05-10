@@ -32,12 +32,14 @@ So far, the following constructions have been implemented:
 \item constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyc}},
 \item Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
 \item recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
-\item the group-based construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed
+\item a projection construction for a Bose matrix, from Colbourn (2008), in function \code{\link{projectionBose}}
+\item the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
+\item the strength 2 cover starter construction by Lobb et al. (2012) which works similarly to Meagher and Stevens (2005) but fix one or more symbols using the additive group on the non-fixed symbols (function \code{\link{CS_LCDST}})
 \item direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
 \item product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
 \item cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
-\item the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future).
-\item identification of flexible values as in Colbourn and Torres-Jimenez (2013)
+\item the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
+\item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }
 }
 \references{
@@ -49,29 +51,39 @@ Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, 
 
 Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. \emph{J of Combinatorial Designs} \strong{14}, 124-138. doi: 10.1002/jcd.20065
 
+Colbourn, C.J., (2008). Strength two covering arrays: Existence tables and projection. Discrete Math., vol. 308, 772-786. https://doi.org/10.1016/j.disc.2007.07.050
+
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 
 Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
 
+Dwyer, A., (2024). CA Database: Data base of covering arrays and related objects. \url{https://github.com/aadwyer/CA_Database}.
+
 Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) \emph{Graph Theory, Combinatorics and Algorithms}. Operations Research/Computer Science Interfaces Series, vol 34. Springer-Verlag, New York.
 
-Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255–262. doi: 10.1016/0012-365X(73)90098-8.
+Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255-262. doi: 10.1016/0012-365X(73)90098-8.
 
 Katona, G. O. H. (1973). Two applications (for search theory and truth functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1, pp. 19–26. doi: 10.1007/BF02018457.
 
+Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez, J., (2012). Cover starters for covering arrays of strength two. Discrete Math. vol. 312, 943-956. https://doi.org/10.1016/j.disc.2011.10.026
+
 Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. doi: 10.1023/B:DESI.0000029232.40302.6d.
 
-Meagher, K., Stevens, B., (2005). Group construction of covering arrays. J of Combinatorial Designs 13, 70–77. https://doi.org/10.1002/jcd.20035
+Meagher, K., Stevens, B., (2005). Group construction of covering arrays. J of Combinatorial Designs 13, 70-77. https://doi.org/10.1002/jcd.20035
 
 Meagher, K., (2005a). Group Construction of Covering Arrays: Part 2. (Unpublished technical report). Ottawa.
 
 Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative Independence Graphs and Extremal Set Partition Theory. PhD thesis. University of Ottawa, Ottawa.
+
+Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized post-optimization of covering arrays. European Journal of Combinatorics 34, 91-103. https://doi.org/10.1016/j.ejc.2012.07.017
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
 
 Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. doi: 10.1016/j.amc.2021.126122
+
+Wagner, M., Kampel, L., Simos, D.E., (2021). Heuristically Enhanced IPO Algorithms for Covering Array Generation, in: Flocchini, P., Moura, L. (Eds.), Combinatorial Algorithms, Lecture Notes in Computer Science. Springer International Publishing, Cham, pp. 571–586. https://doi.org/10.1007/978-3-030-79987-8_40
 
 Zhang, J., Zhang, Z. and Ma, F. (2014). Automatic Generation of Combinatorial Test Data. SpringerBriefs in Computer Science. Springer Verlag, Berlin.
 }

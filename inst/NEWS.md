@@ -1,5 +1,21 @@
 # NEWS
 
+10 May 2025: Version 0.2.1
+
+ - added function `CS_LCDST` for strength 2 cover starter constructions of Lobb et al. 2012,
+   with internal list `LCDSTStarters` and internal data.frame object `LCDSTCombis` with 
+   information on what these construct. 
+ - exported function `SCA_MS` for a rearranged Meagher/Stevens Cover Starter array.
+ - added function `projectionBose` to construct array in q^2-3 runs for q+1 factors
+   in q-1 levels (q prime power), according to Colbourn 2008, with corresponding N- 
+   and k-functions
+ - implemented `postopNCK` to remove rows according to the proposal of Nayeri, Colbourn 
+   and Konjevod (2013)
+ - added internal data.frame `DWYERcat` with information about the DWYER (2024) CAs database
+   (not yet in any productive use)
+ - Bug fix: `Hartman74` returned fewer than `k^2` columns, due to unnecessary removal of 
+   constant rows in `B`
+
 05 May 2025: Version 0.2.0 
 
   - renamed function `productCA1` to `productCA` and function `productCA2` to `crossCAs`;
