@@ -345,7 +345,8 @@ find_clique <- function(D, target, v=NULL, ...){
   N <- nrow(D); k <- ncol(D)
   if (is.null(v)) v <- max(D, na.rm=TRUE) + 1
   stopifnot(v > 1)
-  sets <- nchoosek(N, v)
+
+  #sets <- nchoosek(N, v)
   ## would this be better?
   ## so far did not seem so.
   fun <- function(x){
@@ -353,10 +354,12 @@ find_clique <- function(D, target, v=NULL, ...){
   }
   best <- 1:v
   k1best <- sum(apply(D[1:v,], 2, fun)) #function(obj) length(unique(obj))==v))
-  for (i in 2:ncol(sets)){
-    cur <- sum(apply(D[sets[,i],], 2, fun)) #function(obj) length(unique(obj))==v))
+  curcbn <- 1:v
+  for (i in 2:choose(N,v)){
+    curcbn <- gen.next.cbn(curcbn, N)
+    cur <- sum(apply(D[curcbn,], 2, fun)) #function(obj) length(unique(obj))==v))
     if (cur > k1best) {
-      best <- sets[,i]
+      best <- curcbn
       k1best <- cur
     }
     if (k1best >= target) break
