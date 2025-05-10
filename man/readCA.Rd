@@ -5,7 +5,7 @@
 \title{Function for reading a covering array from a text file}
 \usage{
 readCA(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
-origin=NULL, ...)
+ninstruct=1, ignore.chars=NULL, origin=NULL, ...)
 }
 \arguments{
 \item{path}{a character string that specifies the path}
@@ -15,6 +15,10 @@ origin=NULL, ...)
 \item{flexible.symbols}{characters to be treated as flexible values (will be set to NA)}
 
 \item{comment.symbol}{character that starts a comment line}
+
+\item{ninstruct}{integer, number of lines with instructions (1 or 0)}
+
+\item{ignore.chars}{\code{NULL}, or characters to be removed from data lines (e.g., [ and ])}
 
 \item{origin}{character string to be attached to the output array as origin-attribute;
 if \code{NULL}, the path and filename information is used}
@@ -30,12 +34,12 @@ reads a text file into a matrix of class ca (for covering array)
 }
 \section{Details}{
 
-The file \code{fn} must start with comment lines that begin with a comment symbol.\cr
-The first line after the comments lines contains instructions about the file content,
+The file \code{fn} may start with comment lines that begin with a comment symbol, and an instruction line.\cr
+The first line after removing the comments lines contains instructions about the file content,
 in the form N k v1^k1 v2^k2 ... It is permissible for the instructions line
 to have a single string without blanks or \code{^} (e.g., for the strength)
 after the exponential notation for the columns; this will be ignored in the
-reading process.\cr
-All columns of the file must have the same starting value, i.e., start all with 0 or all with 1.
+reading process. \code{ninstruct=0} indicates that there is no instruction line.\cr
+All columns of the array must have the same starting value, i.e., start all with 0 or all with 1.
 }
 

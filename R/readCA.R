@@ -7,12 +7,14 @@
 #' @aliases readCA
 #'
 #' @usage readCA(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
-#' origin=NULL, ...)
+#' ninstruct=1, ignore.chars=NULL, origin=NULL, ...)
 #'
 #' @param path a character string that specifies the path
 #' @param fn a character string that specifies the file name; see Section Details for requirements the file must satisfy.
 #' @param flexible.symbols characters to be treated as flexible values (will be set to NA)
 #' @param comment.symbol character that starts a comment line
+#' @param ninstruct integer, number of lines with instructions (1 or 0)
+#' @param ignore.chars \code{NULL}, or characters to be removed from data lines (e.g., \[ and \])
 #' @param origin character string to be attached to the output array as origin-attribute;
 #' if \code{NULL}, the path and filename information is used
 #' @param ... further arguments for function \code{\link{read.table}},
@@ -21,41 +23,50 @@
 #' @returns The output object is a matrix of class \code{ca}.
 #'
 #' @section Details:
-#' The file \code{fn} must start with comment lines that begin with a comment symbol.\cr
-#' The first line after the comments lines contains instructions about the file content,
+#' The file \code{fn} may start with comment lines that begin with a comment symbol, and an instruction line.\cr
+#' The first line after removing the comments lines contains instructions about the file content,
 #' in the form N k v1^k1 v2^k2 ... It is permissible for the instructions line
 #' to have a single string without blanks or \code{^} (e.g., for the strength)
 #' after the exponential notation for the columns; this will be ignored in the
-#' reading process.\cr
-#' All columns of the file must have the same starting value, i.e., start all with 0 or all with 1.
+#' reading process. \code{ninstruct=0} indicates that there is no instruction line.\cr
+#' All columns of the array must have the same starting value, i.e., start all with 0 or all with 1.
 #'
 
 #' @importFrom utils read.table
 #' @export
-readCA <- function(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C", origin=NULL, ...){
+readCA <- function(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
+                   ninstruct=1, ignore.chars=NULL, origin=NULL, ...){
   zeilen <- readLines(con=paste0(path, "\\", fn))
   zeilen <- zeilen[!nchar(zeilen)==0]
   zeilen <- zeilen[!substr(zeilen,1,1)==comment.symbol]
-  instruct <- strsplit(zeilen[1], " ", fixed=TRUE)
-  N <- as.numeric(instruct[[1]][[1]])
-  k <- as.numeric(instruct[[1]][[2]])
-  hilf <- lapply(instruct[[1]][-(1:2)], function(obj)
-    as.numeric(unlist(strsplit(obj, "^", fixed=TRUE))))
-  hilf <- hilf[lengths(hilf)==2]
-  if (length(hilf)==1) uniform <- TRUE else uniform <- FALSE
-  if (uniform){
-    v <- hilf[[1]][1]
-    if (!hilf[[1]][2]==k) stop("contradictory information on k")
-  }else{
-    v <- sapply(hilf, function(obj) obj[1])
-    ks <- sapply(hilf, function(obj) obj[2])
-    if (!sum(ks)==k) stop("individual ks do not sum to the total k")
+  stopifnot(ninstruct %in% c(0,1))
+  v <- NULL
+  if (ninstruct==1){
+    instruct <- strsplit(zeilen[1], " ", fixed=TRUE)
+    N <- as.numeric(instruct[[1]][[1]])
+    k <- as.numeric(instruct[[1]][[2]])
+    hilf <- lapply(instruct[[1]][-(1:2)], function(obj)
+      as.numeric(unlist(strsplit(obj, "^", fixed=TRUE))))
+    hilf <- hilf[lengths(hilf)==2]
+    if (length(hilf)==1) uniform <- TRUE else uniform <- FALSE
+    if (uniform){
+      v <- hilf[[1]][1]
+      if (!hilf[[1]][2]==k) stop("contradictory information on k")
+    }else{
+      v <- sapply(hilf, function(obj) obj[1])
+      ks <- sapply(hilf, function(obj) obj[2])
+      if (!sum(ks)==k) stop("individual ks do not sum to the total k")
+    }
+    # v <- as.numeric(strsplit(instruct[[1]][[3]],"^", fixed=TRUE)[[1]][[1]])
+    zeilen <- zeilen[-1]
+    stopifnot(length(zeilen)==N)
   }
-  # v <- as.numeric(strsplit(instruct[[1]][[3]],"^", fixed=TRUE)[[1]][[1]])
-  zeilen <- zeilen[-1]
-  stopifnot(length(zeilen)==N)
 
   ## zeilen is a character vector
+  if (!is.null(ignore.chars)){
+    for (C in ignore.chars)
+      zeilen <- gsub(C, "", zeilen, fixed=TRUE)
+  }
   zeilen <- t(sapply(zeilen,
                      function(obj) as.matrix(read.table(text=obj,
                                     na.strings=flexible.symbols, ...))))
@@ -64,6 +75,13 @@ readCA <- function(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C"
   pfad <- paste0(path, "\\", fn)
   if (is.null(origin)) attr(zeilen, "origin") <- pfad else
     attr(zeilen, "origin") <- origin
+  if (is.null(v)) {
+    v <- levels.no.NA(zeilen)
+    if (length(table(v))==1){
+      uniform <- TRUE
+      v <- v[1]
+    }
+  }
   if (uniform){
      mini <- min(zeilen, na.rm=TRUE);
      maxi <- max(zeilen, na.rm=TRUE)
