@@ -4,6 +4,7 @@
 \alias{markflex}
 \alias{flexpos}
 \alias{flexprofile}
+\alias{postopNCK}
 \title{Redundancy checks and profile}
 \usage{
 flexpos(D, t, ...)
@@ -11,6 +12,8 @@ flexpos(D, t, ...)
 markflex(D, t, fixrows=0, verbose=0, ...)
 
 flexprofile(D, ...)
+
+postopNCK(D, t, fixrows=0, verbose=0, ...)
 }
 \arguments{
 \item{D}{an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}}
@@ -29,6 +32,8 @@ flexible positions of \code{D}. Any position that is already \code{NA} in \code{
 Function \code{markflex} returns the ingoing CA, with values denoted as before,
 with rows potentially reordered (for facilitating all-flexible rows),
 and with flexible positions changed to NA. \bold{this may change}\cr
+Function \code{postopNCK} returns \code{D} after removal of as many as possible flexible
+rows, as created by \code{markflex}.
 }
 \description{
 Functions for manipulating flexible values: determination of flexible positions (flexpos),
@@ -82,15 +87,33 @@ hilf <- strsplit(c("2222001", "0022222", "1121201", "0120110",
                         "2222222", "2222011"), "")
 plan <- do.call(rbind, lapply(hilf, as.numeric))
 dim(plan)
-(planMod <- markflex(plan, 2))  ## last two rows can be removed
+
+## flexpos marks all positions that are not involved in any unique pairs
+flexpos(plan, 2)
+## these cannot be simultaneously made flexible
+
+## markflex creates actual flexible values (=don't care values)
+## and moves flexible rows to the end
+(planMod <- markflex(plan, 2))
+## there are two rows with all values flexible (can be omitted)
+
 coverage(planMod[1:12,], 2)     ## now optimal
 eCAN(2,7,3)
+
 ## fixing the first two rows from being moved
 ## prevents the second constant row,
 ## i.e., fixing rows may have a price
 (planMod2 <- markflex(plan, 2, fixrows=2))
 
-## to accommodate one additional 2-level column
+## if removal of rows is the goal,
+## postopNCK does the entire job automatically
+plan_postopNCK <- postopNCK(plan, 2)
+dim(plan_postopNCK)
+coverage(plan_postopNCK, 2)
+
+plan_postopNCKfixtworows <- postopNCK(plan, 2, fixrows=2)
+dim(plan_postopNCKfixtworows)
+coverage(plan_postopNCKfixtworows, 2)
 
 }
 \references{

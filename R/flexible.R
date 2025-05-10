@@ -8,10 +8,12 @@
 #' @aliases flexpos
 #' @aliases markflex
 #' @aliases flexprofile
+#' @aliases postopNCK
 #'
 #' @usage flexpos(D, t, ...)
 #' @usage markflex(D, t, fixrows=0, verbose=0, ...)
 #' @usage flexprofile(D, ...)
+#' @usage postopNCK(D, t, fixrows=0, verbose=0, ...)
 #'
 #' @param D an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}
 #' @param t integer-valued (>=2), the strength of \code{D}
@@ -39,6 +41,8 @@
 #' Function \code{markflex} returns the ingoing CA, with values denoted as before,
 #' with rows potentially reordered (for facilitating all-flexible rows),
 #' and with flexible positions changed to NA. \bold{this may change}\cr
+#' Function \code{postopNCK} returns \code{D} after removal of as many as possible flexible
+#' rows, as created by \code{markflex}.
 #'
 #' @references Nayeri, Colbourn and Konjevod (2013)
 #'
@@ -73,73 +77,92 @@
 #'                         "2222222", "2222011"), "")
 #' plan <- do.call(rbind, lapply(hilf, as.numeric))
 #' dim(plan)
-#' (planMod <- markflex(plan, 2))  ## last two rows can be removed
+#'
+#' ## flexpos marks all positions that are not involved in any unique pairs
+#' flexpos(plan, 2)
+#' ## these cannot be simultaneously made flexible
+#'
+#' ## markflex creates actual flexible values (=don't care values)
+#' ## and moves flexible rows to the end
+#' (planMod <- markflex(plan, 2))
+#' ## there are two rows with all values flexible (can be omitted)
+#'
 #' coverage(planMod[1:12,], 2)     ## now optimal
 #' eCAN(2,7,3)
+#'
 #' ## fixing the first two rows from being moved
 #' ## prevents the second constant row,
 #' ## i.e., fixing rows may have a price
 #' (planMod2 <- markflex(plan, 2, fixrows=2))
 #'
-#' ## to accommodate one additional 2-level column
+#' ## if removal of rows is the goal,
+#' ## postopNCK does the entire job automatically
+#' plan_postopNCK <- postopNCK(plan, 2)
+#' dim(plan_postopNCK)
+#' coverage(plan_postopNCK, 2)
+#'
+#' plan_postopNCKfixtworows <- postopNCK(plan, 2, fixrows=2)
+#' dim(plan_postopNCKfixtworows)
+#' coverage(plan_postopNCKfixtworows, 2)
+
 #'
 
 #' @export
 markflex <- function(D, t, fixrows=0, verbose=0, ...){
-   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
-   v <- hilf$v ## vector of length k;
-   k <- hilf$k; N <- hilf$N
-   uniform <- FALSE
-   if (length(unique(v))==1){
-     uniform <- TRUE
-     v <- v[1]
-   }
-   stopifnot(fixrows %in% 0:N)
-   flexPositions <- flexpos(D, t, verbose=verbose, ...)
-   ## move rows with many flexible positions to bottom
-   ## goal: be able to eliminate rows
-   rowOrder <- 1:N
-   if (fixrows==0)
-     rowOrder <- sort(rowSums(flexPositions), index.return=TRUE)$ix
-   else if (fixrows < N-1)
-     rowOrder <- c(1:fixrows,
-                   sort(rowSums(flexPositions[(fixrows+1):N,]), index.return=TRUE)$ix + fixrows)
-   D <- D[rowOrder,]
+  hilf <- matcheck(D, uniform=FALSE, flexible=NA)
+  v <- hilf$v ## vector of length k;
+  k <- hilf$k; N <- hilf$N
+  uniform <- FALSE
+  if (length(unique(v))==1){
+    uniform <- TRUE
+    v <- v[1]
+  }
+  stopifnot(fixrows %in% 0:N)
+  flexPositions <- flexpos(D, t, verbose=verbose, ...)
+  ## move rows with many flexible positions to bottom
+  ## goal: be able to eliminate rows
+  rowOrder <- 1:N
+  if (fixrows==0)
+    rowOrder <- sort(rowSums(flexPositions), index.return=TRUE)$ix
+  else if (fixrows < N-1)
+    rowOrder <- c(1:fixrows,
+                  sort(rowSums(flexPositions[(fixrows+1):N,]), index.return=TRUE)$ix + fixrows)
+  D <- D[rowOrder,]
 
-   start0 <- hilf$start0
-   vstart <- as.numeric(!start0)   ## number
-   vend <- v - as.numeric(start0)  ## number or vector
+  start0 <- hilf$start0
+  vstart <- as.numeric(!start0)   ## number
+  vend <- v - as.numeric(start0)  ## number or vector
 
-   flexval <- NA
-   hilf <- matrix(TRUE, N, k)
-   tuples <- nchoosek(k,t)
-   if (uniform) {
-     cands <- do.call(expand.grid, rep(list(vstart:vend), t))
-     ncands <- v^t
-   }
-   for (i in 1:ncol(tuples)){
-     ## handles non-uniform arrays (cands depends on tuple)
-     if (!uniform){
-       cands <- do.call(expand.grid, mapply(":", rep(vstart,t), vend[tuples[,i]], SIMPLIFY = FALSE))
-       ncands <- nrow(cands)
-     }
-     ticked <- rep(FALSE, nrow(cands))
-      for (j in 1:N){
-        nowrow <- D[j,tuples[,i]]
-        if (flexval %in% nowrow) next   ## skips tuples that already hold an NA value
-        now <- matrix(D[j,tuples[,i]], ncands, t, byrow=TRUE) ## t-vector of combinations to be covered
-        nowcov <- which(apply(cands==now, 1, all))  ## or anyDuplicated(rbind(nowcov, cands)) - 1 better?
-        if (!ticked[nowcov]){
-          hilf[j, tuples[,i]] <- FALSE
-          ticked[nowcov] <- TRUE
-        }
+  flexval <- NA
+  hilf <- matrix(TRUE, N, k)
+  tuples <- nchoosek(k,t)
+  if (uniform) {
+    cands <- do.call(expand.grid, rep(list(vstart:vend), t))
+    ncands <- v^t
+  }
+  for (i in 1:ncol(tuples)){
+    ## handles non-uniform arrays (cands depends on tuple)
+    if (!uniform){
+      cands <- do.call(expand.grid, mapply(":", rep(vstart,t), vend[tuples[,i]], SIMPLIFY = FALSE))
+      ncands <- nrow(cands)
+    }
+    ticked <- rep(FALSE, nrow(cands))
+    for (j in 1:N){
+      nowrow <- D[j,tuples[,i]]
+      if (flexval %in% nowrow) next   ## skips tuples that already hold an NA value
+      now <- matrix(D[j,tuples[,i]], ncands, t, byrow=TRUE) ## t-vector of combinations to be covered
+      nowcov <- which(apply(cands==now, 1, all))  ## or anyDuplicated(rbind(nowcov, cands)) - 1 better?
+      if (!ticked[nowcov]){
+        hilf[j, tuples[,i]] <- FALSE
+        ticked[nowcov] <- TRUE
       }
-   }
-   aus <- D; aus[hilf] <- NA
-   ## profile not calculated with hilf, because D might already have NA entries
-   attr(aus, "flexible") <- list(value=NA,
-                                 profile=flexprofile(aus))
-   aus
+    }
+  }
+  aus <- D; aus[hilf] <- NA
+  ## profile not calculated with hilf, because D might already have NA entries
+  attr(aus, "flexible") <- list(value=NA,
+                                profile=flexprofile(aus))
+  aus
 }
 
 #' @export
@@ -169,7 +192,7 @@ flexpos <- function(D, t, ...){
     now <- D[,tuples[,i]]
     ## incomparables does not work (would have liked to declare NA incomparable)
     dups <- union(which(duplicated(now)),
-                       which(duplicated(now, fromLast=TRUE)))
+                  which(duplicated(now, fromLast=TRUE)))
     needed <- setdiff(1:N, dups)
     ## make non-duplicates non-flexible
     flexposition[needed, tuples[,i]] <- FALSE
@@ -189,4 +212,26 @@ flexprofile <- function(D, ...){
     v <- v[1]
   }
   colSums(apply(D, 2, is.na))
+}
+
+#' @export
+postopNCK <- function(D, t, fixrows=0, verbose=0, ...){
+  aus <- markflex(D, t, fixrows=fixrows, verbose=verbose, ...)
+  k <- ncol(aus)
+  N <- nrow(aus)
+  hilf <- rowSums(is.na(aus))
+  toremove <- which(hilf==k)
+  if (length(toremove)>0){
+    if (verbose>0) message("postopNCK removed ", length(toremove), " rows,\n",
+                           N - length(toremove), " rows returned")
+    aus <- aus[-toremove,]
+  }else{
+    if (verbose>0) message("postopNCK could not remove any rows\n D was not changed")
+    return(D)
+  }
+  class(aus) <- c("ca", class(aus))
+  if (any(is.na(aus)))
+  attr(aus, "flexible") <- list(value=NA,
+                                profile=flexprofile(aus))
+  aus
 }
