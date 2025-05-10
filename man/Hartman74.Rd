@@ -3,12 +3,15 @@
 \name{N_Hartman74}
 \alias{N_Hartman74}
 \alias{Hartman74}
+\alias{k_Hartman74}
 \alias{Turan}
 \title{Construction in Hartman Theorem 7.4}
 \usage{
 Hartman74(A, v, t, B=NULL, ...)
 
 N_Hartman74(N_A, k_A, v, t, ...)
+
+k_Hartman74(N_A, k_A, v, t, ...)
 
 Turan(t, v)
 }
@@ -23,14 +26,19 @@ Turan(t, v)
 
 \item{...}{currently not used}
 
-\item{A}{an N x k CA of strength \code{t} columns in \code{v} levels each, denoted as 0 to v-1 or 1 to v}
+\item{A}{an N x k CA of strength \code{t} with columns in \code{v} levels each, denoted as 0 to v-1 or 1 to v}
 
 \item{B}{NULL, or a strength 2 CA in at least \code{Turan(t,v)} columns with levels from 1 to k (levels from 0 to (k-1) are acceptable too). If not specified by the user, the Bose construction from \code{\link[lhs]{createBose}} is used, which yields at most k+1 columns, for a prime power k. If k is not a prime power or k+1 columns are not enough, the user must provide a suitable \code{B} or an \code{A} with more columns (may not be easy, at least not for achieving acceptable run sizes).}
 }
 \value{
-function \code{Hartman74} returns a strength \code{t} CA with \code{k^2} columns,\cr
-function \code{N_Hartman74} returns the achievable run size from using A, provided that a suitable B exists (warning, if this is not the case for the Bose construction for prime power k),\cr
-and function \code{Turan} returns the maximum number of edges in a \code{v}-partite graph with \code{t} vertices.
+function \code{Hartman74} returns a strength \code{t} CA with \code{k^2} columns (matrix of class \code{ca}),\cr
+the identical functions \code{N_Hartman74} and \code{k_Hartman74} return a named vector with
+the run size \code{N}, the number of columns \code{k}, the strength \code{t} and the number of levels \code{v}\cr
+from using an \code{N_A} x \code{k_A} matrix \code{A} of strength \code{t} in \code{v} levels,\cr
+assuming this matrix and a suitable B exists (warning, if this is not the case for the Bose
+construction for prime power k),\cr
+and function \code{Turan} returns the maximum number of edges in a \code{v}-partite graph
+with \code{t} vertices, which is used in the construction.
 }
 \description{
 The number of columns of an N x k design A can be squared; the design size is usually not optimal.
@@ -61,7 +69,7 @@ eCAN(3,25,4) ## D is far from optimal (roughly factor 1.6)
 A <- lhs::createBusht(3,4,4,bRandom=FALSE) ## 81 x 4
 A5 <- derive(DoE.base::L243.3.6-1)         ## 81 x 5
      ## optimal CA for strength 4 in 5 3-level columns according to Colbourn tables
-# D <- Hartman74(A, v=3, t=4) ## would yield an error
+# D <- Hartman74(A, v=3, t=4) ## would yield an error, too few columns in Bose design
 D <- Hartman74(A5, v=3, t=4)
 # coverage(D, 4)  ## commented out because of check time
 dim(D)
