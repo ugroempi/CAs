@@ -2,11 +2,14 @@
 % Please edit documentation in R/CS_MS.R
 \name{CS_MS}
 \alias{CS_MS}
+\alias{SCA_MS}
 \alias{N_CS_MS}
 \alias{k_CS_MS}
 \title{Strength 2 CAs constructed by cover starters (Meagher and Stevens)}
 \usage{
 CS_MS(k, v, start0=TRUE, starter=NULL, ...)
+
+SCA_MS(k, v, start0=TRUE, starter=NULL, ...)
 
 N_CS_MS(k, v, theoretical=FALSE)
 
@@ -32,6 +35,7 @@ change to \code{TRUE} for the size assuming existence of a cover starter for \co
 }
 \value{
 \code{CS_MS} returns the smallest possible strength 2 CA from the Meagher/Stevens construction for \code{k} experimental factors in \code{v} levels; it is an \code{N x k} matrix with entries from 0 to \code{v-1} or from 1 to \code{v}, depending on \code{start0}.\cr
+\code{SCA_MS} does the same, but arranges the result as an SCA (see Section "Partitioned Covering Array (PCA)" in \code{\link{productPCA}}).\cr
 \code{N_CS_MS} returns the minimum run size needed for the Meagher/Stevens construction with \code{k} factors at \code{v} levels, or \code{NA}, if no such construction exists.\cr
 \code{k_CS_MS} returns the maximum number of \code{v}-level factors that can be accommodated in at most \code{N} runs, or \code{NA}, if no such construction exists.
 }

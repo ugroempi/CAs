@@ -10,10 +10,12 @@
 #' @rdname CS_MS
 #'
 #' @aliases CS_MS
+#' @aliases SCA_MS
 #' @aliases N_CS_MS
 #' @aliases k_CS_MS
 #'
 #' @usage CS_MS(k, v, start0=TRUE, starter=NULL, ...)
+#' @usage SCA_MS(k, v, start0=TRUE, starter=NULL, ...)
 #' @usage N_CS_MS(k, v, theoretical=FALSE)
 #' @usage k_CS_MS(N, v)
 #'
@@ -29,6 +31,7 @@
 #' @param ... currently not used
 #'
 #' @returns \code{CS_MS} returns the smallest possible strength 2 CA from the Meagher/Stevens construction for \code{k} experimental factors in \code{v} levels; it is an \code{N x k} matrix with entries from 0 to \code{v-1} or from 1 to \code{v}, depending on \code{start0}.\cr
+#' \code{SCA_MS} does the same, but arranges the result as an SCA (see Section "Partitioned Covering Array (PCA)" in \code{\link{productPCA}}).\cr
 #' \code{N_CS_MS} returns the minimum run size needed for the Meagher/Stevens construction with \code{k} factors at \code{v} levels, or \code{NA}, if no such construction exists.\cr
 #' \code{k_CS_MS} returns the maximum number of \code{v}-level factors that can be accommodated in at most \code{N} runs, or \code{NA}, if no such construction exists.
 #'
@@ -239,4 +242,10 @@ search_CS <- function(v){
     }
           }
   message("The search for k =", k, "columns in v =", v, "levels was not successful.")
+}
+
+#' @export
+SCA_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
+  hilf <- CS_MS(k, v, start0=start0, starter=starter, ...)
+  CA_to_PCA(hilf)
 }
