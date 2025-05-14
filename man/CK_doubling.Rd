@@ -7,14 +7,19 @@
 CK_doubling(D3, D2=NULL, check=FALSE, start0=TRUE, ...)
 }
 \arguments{
-\item{D3}{a strength 3 CA with k columns in v levels, coded as integers 0, ..., v-1 or 1,...,v}
+\item{D3}{a strength 3 CA with k columns in v levels, coded as integers
+0, ..., v-1 or 1,...,v}
 
-\item{D2}{a strength 2 CA with k columns in v levels, coded as integers 0, ..., v-1 or 1,...,v, same coding as \code{D3}; for v=2, \code{NULL} implies automatic creation with function \code{\link{KSK}}.}
+\item{D2}{a strength 2 CA with k columns in v levels, coded as integers
+0, ..., v-1 or 1,...,v, same coding as \code{D3};\cr
+for v=2 or v=3, \code{NULL} implies automatic creation with function
+\code{\link{KSK}} (v=2) or function \code{\link{CAEX}} (v=3).}
 
 \item{check}{a logical: if TRUE, the strength requirements are verified
 (may take very long for large arrays, therefore defaults to FALSE)}
 
-\item{start0}{logical: Do integer values start with 0 ?  (\code{D3} and \code{D2} must be compatible)}
+\item{start0}{logical: Do integer values start with 0 ?  (\code{D3} and \code{D2}
+must be compatible)}
 
 \item{...}{further arguments to function \code{\link{coverage}}}
 }
@@ -30,7 +35,7 @@ strength 3 CAs to the Colbourn tables; in particular, where v is a prime
 or prime power and thus fulfills the conditions for the Bose
 construction of a strength 2 OA and the Bush
 construction of a strength 3 OA (as implemented in R package lhs),
-the designs are at present (13 Feb 2025) best-known for v>=5
+the designs are at present (13 Feb 2025) best-known for v >= 5
 }
 \examples{
 L8.2.4 <- cbind(rep(1:2,each=4), rep(1:2, each=2,times=2), rep(1:2,4), c(1,2,2,1,2,1,1,2))
@@ -55,6 +60,31 @@ E <- CK_doubling(D3, D2)
 coverage(E, 3)   ## has worked
 dim(E)           ## size almost optimal
 eCAN(3, 12, 4)
+
+## 3 levels, with default CAEX-design
+## D3 is the current best-known CA(42, 3, 8, 3) from a cross-summing construction
+##     by Colbourn et al. (2010, CKRS)
+eCAN(3, 8, 3)
+
+CA42.3.8.3 <- rbind(
+c(0,0,0,0,0,0,0,0), c(1,1,1,1,1,1,1,1), c(2,2,2,2,2,2,2,2), c(1,2,2,0,1,1,0,1),
+c(1,0,0,2,1,2,2,2), c(1,0,1,1,0,2,0,1), c(2,2,2,2,0,0,0,0), c(0,2,1,1,1,0,0,2),
+c(0,2,1,0,2,2,1,1), c(0,2,0,2,0,2,1,2), c(0,1,0,1,2,0,1,0), c(2,0,1,2,0,0,1,1),
+c(1,1,0,2,2,0,0,1), c(2,2,1,2,1,2,1,0), c(1,1,2,0,0,2,1,0), c(2,0,1,1,0,1,2,0),
+c(2,0,0,1,2,2,1,2), c(2,1,1,0,2,0,0,0), c(2,1,2,2,1,0,1,2), c(0,0,0,0,1,1,1,1),
+c(1,0,2,2,2,1,1,0), c(1,0,2,1,0,0,2,2), c(1,0,1,0,1,0,2,0), c(1,2,1,2,0,1,2,1),
+c(0,1,2,0,1,1,2,2), c(2,2,1,0,0,1,1,2), c(0,0,2,0,2,0,2,1), c(2,2,0,1,1,0,2,1),
+c(0,1,2,2,1,2,0,1), c(0,1,1,2,0,0,2,0), c(0,2,2,1,0,1,1,1), c(0,2,0,0,2,1,2,0),
+c(1,1,1,1,2,2,2,2), c(2,1,0,0,0,2,2,1), c(2,1,0,2,1,1,0,0), c(2,1,2,1,2,1,0,1),
+c(2,0,2,0,1,2,0,2), c(1,2,0,1,2,2,0,0), c(0,0,2,1,1,2,2,0), c(1,1,0,1,0,1,0,2),
+c(0,0,1,2,2,1,0,2), c(1,2,0,0,2,0,1,2)
+)
+
+## D2=NULL implies use of CAEX(k=8), which has 13 runs
+E <- CK_doubling(CA42.3.8.3)
+dim(E)    ## 42 + 2*13 = 68 runs with 16 columns
+# coverage(E, 3)  ## commented out because of example run time
+eCAN(3, 16, 3)  ## run size too large by factor 4/3 versus the current optimum 51
 
 }
 \references{
