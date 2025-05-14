@@ -212,6 +212,7 @@ k_WKScat <- function(t,N,v){
   else return(max(hilf[,"k"]))
 }
 
+#' @export
 k_CKRScat <- function(t,N,v){
   hilf <- CKRScat[CKRScat[,"t"]==t & CKRScat[,"N"]<=N & CKRScat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
