@@ -130,13 +130,13 @@ coverage <- function(D, t, isInteger=TRUE,
 
   tots <- sapply(1:nproj, function(obj) prod(lls[projs[,obj]]))
   if (parallel==1)
-    tabs <- lapply(1:nproj, function(obj) fasttab(D[,projs[,obj]]))
+    tabs <- lapply(1:nproj, function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
   else{
     stopifnot(requireNamespace("parallel"))
     stopifnot(parallel <= parallel::detectCores())
     mycl <- parallel::makePSOCKcluster(parallel)
     tabs <- parallel::parLapply(mycl, 1:nproj,
-                       function(obj) fasttab(D[,projs[,obj]]))
+                       function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
     parallel::stopCluster(mycl); rm(mycl)
   }
   ncovereds <- sapply(tabs, function(obj) sum(obj>0))
