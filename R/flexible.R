@@ -6,19 +6,23 @@
 #' @rdname flexible
 #'
 #' @aliases flexpos
+#' @aliases uniquecount
 #' @aliases markflex
 #' @aliases flexprofile
 #' @aliases postopNCK
 #'
 #' @usage flexpos(D, t, ...)
+#' @usage uniquecount(D, t, ...)
 #' @usage markflex(D, t, fixrows=0, verbose=0, ...)
 #' @usage flexprofile(D, ...)
-#' @usage postopNCK(D, t, fixrows=0, verbose=0, ...)
+#' @usage postopNCK(D, t, fixrows=0, verbose=0, maxnochange=25, retrymax=10, ...)
 #'
 #' @param D an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}
 #' @param t integer-valued (>=2), the strength of \code{D}
 #' @param fixrows integer from 0 to \code{N} for preventing the top \code{fixrows} rows from being moved
 #' @param verbose integer-valued degree of verbosity; not yet implemented; intended for documenting the row permutations that were conducted
+#' @param maxnochange integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements
+#' @param retrymax integer-valued number of retries for escaping local optimum, if \code{trymax} iterations were not successful
 #' @param ... currently not used
 #'
 #' @section Details:
@@ -40,9 +44,18 @@
 #' flexible positions of \code{D}. Any position that is already \code{NA} in \code{D} is set to \code{TRUE}.\cr
 #' Function \code{markflex} returns the ingoing CA, with values denoted as before,
 #' with rows potentially reordered (for facilitating all-flexible rows),
-#' and with flexible positions changed to NA. \bold{this may change}\cr
-#' Function \code{postopNCK} returns \code{D} after removal of as many as possible flexible
-#' rows, as created by \code{markflex}.
+#' and with flexible positions changed to NA. \bold{this may change}
+#'
+#' Function \code{postopNCK} attempts to remove rows by trying to make entire rows
+#' contain flexible values. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
+#' If successful, it returns \code{D} after removal of as many as possible flexible
+#' rows, as created by \code{markflex}. If that immediate and cheap approach does not
+#' work, the function tries to iteratively improve the number of flexible values in the
+#' last row, until the row has flexible entries only. It that is not successful in a given
+#' number of iterations (\code{trymax}),
+#' a retry step switches to a different last row to make flexible
+#' (at most \code{retrymax} attempts).
+#' If no attempt is successful, the function returns a list with the last states of each retry.
 #'
 #' @references Nayeri, Colbourn and Konjevod (2013)
 #'
@@ -104,8 +117,9 @@
 #' plan_postopNCKfixtworows <- postopNCK(plan, 2, fixrows=2)
 #' dim(plan_postopNCKfixtworows)
 #' coverage(plan_postopNCKfixtworows, 2)
-
 #'
+#' ## postopNCK is fast on trivial problems like the above,
+#' ## but may be hard to make successful otherwise
 
 #' @export
 markflex <- function(D, t, fixrows=0, verbose=0, ...){
@@ -162,6 +176,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
   ## profile not calculated with hilf, because D might already have NA entries
   attr(aus, "flexible") <- list(value=NA,
                                 profile=flexprofile(aus))
+  attr(aus, "rowOrder") <- rowOrder
   aus
 }
 
@@ -186,6 +201,7 @@ flexpos <- function(D, t, ...){
   flexval <- NA
   ## start from all positions being redundant
   flexposition <- matrix(TRUE, N, k)
+  ## perhaps change to iteration later
   tuples <- nchoosek(k,t)
   for (i in 1:ncol(tuples)){
     ## find duplicated entries
@@ -215,23 +231,149 @@ flexprofile <- function(D, ...){
 }
 
 #' @export
-postopNCK <- function(D, t, fixrows=0, verbose=0, ...){
+postopNCK <- function(D, t, fixrows=0, verbose=0, maxnochange=25, retrymax=10, ...){
   aus <- markflex(D, t, fixrows=fixrows, verbose=verbose, ...)
+  orig_row <- attr(aus, "rowOrder")
   k <- ncol(aus)
   N <- nrow(aus)
+  vs <- levels.no.NA(aus)
   hilf <- rowSums(is.na(aus))
   toremove <- which(hilf==k)
   if (length(toremove)>0){
     if (verbose>0) message("postopNCK removed ", length(toremove), " rows,\n",
                            N - length(toremove), " rows returned")
+    orig_row <- orig_row[-toremove]
     aus <- aus[-toremove,]
+    attr(aus, "rowOrder") <- orig_row
   }else{
-    if (verbose>0) message("postopNCK could not remove any rows\n D was not changed")
-    return(D)
-  }
+    auslist <- vector(mode="list", length=retrymax)
+    exhausted <- rep(FALSE, N)
+    flexrows <- numeric(0)
+    for (r in 1:retrymax){
+      print(r)
+      count <- 0
+      pick <- which.max(hilf[!exhausted])
+      pick <- pick + sum(exhausted[1:pick])
+      lastmax <- max(hilf)
+      while (count <= maxnochange){
+      #if (hilf[pick] <= hilf[N]) pick <- N
+      ## do the mixing, regardless whether moved or not
+      mix <- sample(setdiff(1:N,pick))
+      exhausted <- exhausted[c(mix, pick)]
+      orig_row <- orig_row[c(mix, pick)]
+      aus <- aus[c(mix, pick), ]
+      pick <- N ## now stays on this N for the entire r
+
+      ## mixing rows helps to avoid stalls
+      ## track exhausted row indicators along with matrix shuffles
+
+      ## flexible positions of last row
+      flexlast <- which(is.na(aus[N,]))
+      ## put last row value into the flexible positions, where possible
+      for (j in setdiff(1:k, flexlast)){
+        if (any(is.na(aus[,j])))
+        aus[which(is.na(aus[,j])),j] <- aus[N,j]
+      }
+      ## put random value into the flexible positions,
+      ## where last row is flexible
+        # assuming start0=TRUE
+
+      for (j in flexlast){
+        naj <- which(is.na(aus[,j]))
+        aus[,j][naj] <- sample(0:(vs[j]-1), length(naj), replace=TRUE)
+      }
+
+      aus <- markflex(aus, t, fixrows=ifelse(!any(exhausted), 0, max(which(exhausted))), ...)
+      orig_row <- orig_row[attr(aus, "rowOrder")]
+      exhausted <- exhausted[attr(aus, "rowOrder")]
+         if (exhausted[N]) cat("returned to exhausted last row ", orig_row[N],"\n")
+      hilf <- rowSums(is.na(aus))
+      curmax <- hilf[N] # max(hilf)
+      pick <- N #which.max(hilf)
+      if (curmax <=  lastmax){
+        count <- count+1
+        if (count==maxnochange) cat(count, " changes did not increase beyond ", curmax, " flexible values\n")
+        } else {
+        lastmax <- curmax
+        count <- 0
+        }
+      toremove <- which(hilf==k)
+      if (length(toremove)>0){
+        if (verbose>0) message("postopNCK removed ", length(toremove), " rows,\n",
+                               N - length(toremove), " rows returned")
+        aus <- aus[-toremove,]
+        break
+      }
+    } ## end of while loop
+      if (length(toremove) > 0) {
+        attr(aus, "rowOrder") <- orig_row[-toremove]
+        break ## return the aus from above
+      }
+      ## not yet successful, retry with different candidate row
+      auslist[[r]] <- aus
+      exhausted[N] <- TRUE
+      flexrows <- which(rowSums(is.na(aus)) > 0)
+      aus <- aus[c(flexrows, setdiff(1:N,flexrows)),]
+      orig_row <- orig_row[c(flexrows, setdiff(1:N,flexrows))]
+      exhausted <- exhausted[c(flexrows, setdiff(1:N,flexrows))]
+
+      ## replace missing values with random entries from 0 to vs[j]-1
+      for (j in 1:k){
+        aus[is.na(aus[,j]),j] <- sample(0:(vs[j]-1), sum(is.na(aus[,j])), replace=TRUE)
+      }
+      ## create new flexible set
+      aus <- markflex(aus,2, fixrows=ifelse(!any(exhausted), 0, max(which(exhausted))))
+      orig_row <- orig_row[attr(aus, "rowOrder")]
+      exhausted <- exhausted[attr(aus, "rowOrder")]
+      print(orig_row[which(exhausted)])
+      print(orig_row[N])
+      hilf <- rowSums(is.na(aus))
+    }## end of loop over r
+  }## end of else
+  if (length(toremove)==0) return(auslist)
   class(aus) <- c("ca", class(aus))
   if (any(is.na(aus)))
-  attr(aus, "flexible") <- list(value=NA,
-                                profile=flexprofile(aus))
+    attr(aus, "flexible") <- list(value=NA,
+                                  profile=flexprofile(aus))
   aus
+}
+
+
+#' @export
+uniquecount <- function(D, t, ...){
+  ## creates logical matrix with flexible positions set to TRUE
+  if (any(is.na(D))) {
+    message("All flexible positions were fixed at 0.")
+    D[is.na(D)] <- 0
+  }
+
+  hilf <- matcheck(D, uniform=FALSE, flexible=NA)
+  v <- hilf$v ## vector of length k;
+  k <- hilf$k; N <- hilf$N
+  uniform <- FALSE
+  if (length(unique(v))==1){
+    uniform <- TRUE
+    v <- v[1]
+  }
+
+  start0 <- hilf$start0
+  vstart <- as.numeric(!start0)   ## number
+  vend <- v - as.numeric(start0)  ## number or vector
+
+  flexval <- NA
+  ## start from all positions being redundant
+  uniquecount <- matrix(0, N, k)
+  ## perhaps change to iteration later
+  tuples <- nchoosek(k,t)
+  for (i in 1:ncol(tuples)){
+    ## find duplicated entries
+    now <- D[,tuples[,i]]
+    ## incomparables does not work (would have liked to declare NA incomparable)
+    dups <- union(which(duplicated(now)),
+                  which(duplicated(now, fromLast=TRUE)))
+    needed <- setdiff(1:N, dups)
+    ## make non-duplicates non-flexible
+    uniquecount[needed, tuples[,i]] <- uniquecount[needed, tuples[,i]] + 1
+  }
+  uniquecount
 }

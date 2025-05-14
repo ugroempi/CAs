@@ -3,17 +3,20 @@
 \name{markflex}
 \alias{markflex}
 \alias{flexpos}
+\alias{uniquecount}
 \alias{flexprofile}
 \alias{postopNCK}
 \title{Redundancy checks and profile}
 \usage{
 flexpos(D, t, ...)
 
+uniquecount(D, t, ...)
+
 markflex(D, t, fixrows=0, verbose=0, ...)
 
 flexprofile(D, ...)
 
-postopNCK(D, t, fixrows=0, verbose=0, ...)
+postopNCK(D, t, fixrows=0, verbose=0, maxnochange=25, retrymax=10, ...)
 }
 \arguments{
 \item{D}{an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}}
@@ -25,15 +28,28 @@ postopNCK(D, t, fixrows=0, verbose=0, ...)
 \item{verbose}{integer-valued degree of verbosity; not yet implemented; intended for documenting the row permutations that were conducted}
 
 \item{...}{currently not used}
+
+\item{maxnochange}{integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements}
+
+\item{retrymax}{integer-valued number of retries for escaping local optimum, if \code{trymax} iterations were not successful}
 }
 \value{
 Function \code{flexpos} returns a logical matrix with \code{TRUE} values indicating
 flexible positions of \code{D}. Any position that is already \code{NA} in \code{D} is set to \code{TRUE}.\cr
 Function \code{markflex} returns the ingoing CA, with values denoted as before,
 with rows potentially reordered (for facilitating all-flexible rows),
-and with flexible positions changed to NA. \bold{this may change}\cr
-Function \code{postopNCK} returns \code{D} after removal of as many as possible flexible
-rows, as created by \code{markflex}.
+and with flexible positions changed to NA. \bold{this may change}
+
+Function \code{postopNCK} attempts to remove rows by trying to make entire rows
+contain flexible values. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
+If successful, it returns \code{D} after removal of as many as possible flexible
+rows, as created by \code{markflex}. If that immediate and cheap approach does not
+work, the function tries to iteratively improve the number of flexible values in the
+last row, until the row has flexible entries only. It that is not successful in a given
+number of iterations (\code{trymax}),
+a retry step switches to a different last row to make flexible
+(at most \code{retrymax} attempts).
+If no attempt is successful, the function returns a list with the last states of each retry.
 }
 \description{
 Functions for manipulating flexible values: determination of flexible positions (flexpos),
@@ -115,6 +131,8 @@ plan_postopNCKfixtworows <- postopNCK(plan, 2, fixrows=2)
 dim(plan_postopNCKfixtworows)
 coverage(plan_postopNCKfixtworows, 2)
 
+## postopNCK is fast on trivial problems like the above,
+## but may be hard to make successful otherwise
 }
 \references{
 Nayeri, Colbourn and Konjevod (2013)
