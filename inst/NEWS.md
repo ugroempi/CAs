@@ -1,5 +1,18 @@
 # NEWS
 
+14 May 2025, still Version 0.2.1
+ - made function `CK_doubling` use the `CAEX` designs per default for 3-level cases
+   (i.e., `D2=NULL` now works for v=2 and v=3)
+ - updated function `postopNCK` from a very naive version to a more serious implementation
+   of the algorithm (which has still not been successful in any challenging case)
+ - added functions `crossSum` and `directSum`
+ - modified `readCA` to also read data without separators, where levels 10, 11, ... 
+   are coded as lower case letters a, b, ...
+ - modified `coverage` to also work with `t=1`
+ - added data.frame `CKRScat` and list `CKRS_CAs`
+ - added several query functions: `N_DWYERcat`, `N_WKScat`, `N_CKRScat`, 
+   `k_DWYERcat`, `k_WKScat`, `k_CKRScat`
+
 10 May 2025: Version 0.2.1
 
  - added function `CS_LCDST` for strength 2 cover starter constructions of Lobb et al. 2012,

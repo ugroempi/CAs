@@ -21,6 +21,7 @@
 #' * strength 3 2-level constructions via Paley-based Hadamard matrices (function \code{\link{paleyHad}})
 #' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyc}},
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
+#' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
 #' * recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
 #' * a projection construction for a Bose matrix, from Colbourn (2008), in function \code{\link{projectionBose}}
 #' * the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
@@ -45,6 +46,8 @@
 #' Colbourn, C.J., (2008). Strength two covering arrays: Existence tables and projection. Discrete Math., vol. 308, 772-786. https://doi.org/10.1016/j.disc.2007.07.050
 #'
 #' Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
+#'
+#' Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C., (2010). Covering and radius-covering arrays: constructions and classification. Discrete Appl. Math 158, 1158-1180. https://doi.org/10.1016/j.dam.2010.03.008
 #'
 #' Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
 #'

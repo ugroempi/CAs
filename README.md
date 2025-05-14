@@ -81,6 +81,13 @@ of that paper (function <code>CK_constrD</code>)
 
 <li>
 
+Colbourn et al. (2010, CKRS) cross-sum of an <code>N x k</code> code
+with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it
+3 only?) CA
+</li>
+
+<li>
+
 recursive Bose constructions of Hartman (2005) in function
 <code>recursiveBose</code>
 </li>
@@ -189,6 +196,14 @@ and projection. Discrete Math., vol. 308, 772-786.
 
 Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes
 Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
+</p>
+
+<p>
+
+Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C.,
+(2010). Covering and radius-covering arrays: constructions and
+classification. Discrete Appl. Math 158, 1158-1180.
+<https://doi.org/10.1016/j.dam.2010.03.008>
 </p>
 
 <p>
