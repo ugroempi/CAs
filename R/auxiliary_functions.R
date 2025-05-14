@@ -176,7 +176,21 @@ gf_minus <- function(x,y,gf){
 
 ## function for reading and arranging copy-pasted strings
 funmakefromstrings <- function(stringvec){
-  do.call(rbind, lapply(strsplit(stringvec, "", fixed=TRUE), as.numeric))
+  hilf <- strsplit(stringvec, "", fixed=TRUE)
+  symbs <- unique(unlist(hilf))
+  if ("a" %in% symbs){
+    ## take care of lowercase letters as replacements for two digit numbers
+    tobereplaced <- intersect(letters, symbs)
+    replacements <- 10:(9+length(tobereplaced))
+    for (i in 1:length(tobereplaced)){
+      hilf <- lapply(hilf, function(obj){
+        obj[which(obj==tobereplaced[i])] <- replacements[i]
+        obj
+      })
+    }
+  }
+  ## now, all elements of hilf can be made numeric
+  do.call(rbind, lapply(hilf, as.numeric))
 }
 
 #' @exportS3Method NULL

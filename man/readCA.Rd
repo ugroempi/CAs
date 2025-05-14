@@ -5,7 +5,7 @@
 \title{Function for reading a covering array from a text file}
 \usage{
 readCA(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
-ninstruct=1, ignore.chars=NULL, origin=NULL, ...)
+ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
 }
 \arguments{
 \item{path}{a character string that specifies the path}
@@ -19,6 +19,8 @@ ninstruct=1, ignore.chars=NULL, origin=NULL, ...)
 \item{ninstruct}{integer, number of lines with instructions (1 or 0)}
 
 \item{ignore.chars}{\code{NULL}, or characters to be removed from data lines (e.g., [ and ])}
+
+\item{nosep}{logical; set to TRUE, if the data lines do not contain separators and each character is a data value}
 
 \item{origin}{character string to be attached to the output array as origin-attribute;
 if \code{NULL}, the path and filename information is used}
