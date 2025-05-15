@@ -30,8 +30,6 @@
 #' 2222222222222222 0000000000000000 2222222222222222 0000000000000000
 #' 1111111111111111 for the above RC with itself),
 #' or a DRC extended by a few constant columns EDRC.
-#' coincides with Chateauneuf and Kreher doubling (see \code{\link{CK_doubling}}).
-#' Other choices of \code{A} reproduce other special constructions.
 #'
 #' @returns \code{directSum} returns an \code{N*M x (k+l)} matrix.\cr
 #' \code{crossSum} returns an \code{N*M x k} matrix, which has its levels

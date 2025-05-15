@@ -41,8 +41,6 @@ a direct sum of repetition codes (DRC, e.g., rows
 2222222222222222 0000000000000000 2222222222222222 0000000000000000
 1111111111111111 for the above RC with itself),
 or a DRC extended by a few constant columns EDRC.
-coincides with Chateauneuf and Kreher doubling (see \code{\link{CK_doubling}}).
-Other choices of \code{A} reproduce other special constructions.
 }
 
 \examples{
