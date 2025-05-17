@@ -22,6 +22,7 @@
 #' @aliases DWYERcat
 #' @aliases NISTcat
 #' @aliases TJcat
+#' @aliases PALEYcat
 #'
 #' @format \code{CAEX_lineages} contains a list (labeled by strengths, currently only strength t=2)\cr
 #' of a list (labeled by number of levels, currently only v=3)\cr
@@ -49,8 +50,10 @@
 #' \code{LCDSTStarters} is a list of lists, with a list entry for each \code{v}
 #' that holds a list of the starters for the relevant values of \code{k}.
 #'
-#' \code{DWYERcat}, \code{CKRScat}, \code{WKScat}, \code{NISTcat} and \code{TJcat} are data.frame objects (\code{DWYERcat},
-#' \code{CKRScat} and \code{WKScat}) or matrices with columns \code{t}, \code{k}, \code{v} and \code{N}
+#' \code{PALEYcat}, \code{DWYERcat}, \code{CKRScat}, \code{WKScat}, \code{NISTcat} and \code{TJcat}
+#' are data.frame objects (\code{PALEYcat}, \code{DWYERcat},
+#' \code{CKRScat} and \code{WKScat}) or matrices with columns
+#' \code{t}, \code{k}, \code{v} and \code{N}
 #' (in different order, may change, always address via name!),
 #' \code{DWYERcat} also with a \code{Source} column and \code{CKRScat} with a column \code{fn} for the file name
 #' (that also indicates by containing x that the CA was constructed by cross-summing).\cr
@@ -64,8 +67,10 @@
 #'
 #' @source The Source for CAEX-related information is Torres-Jimenez et al. (2021),
 #' the source for Meagher and Stevens related information is Meagher and Stevens (2005),
-#' the source for LCDST cover starters is Lobb et al. (2012), the source for `WKScat` is
-#' Wagner et al. (2021), and the source for `CKRScat` is Colbourn et al. (2010).
+#' the source for LCDST cover starters is Lobb et al. (2012), the source for
+#' \code{WKScat} is
+#' Wagner et al. (2021), the source for \code{CKRScat} is Colbourn et al. (2010),
+#' and the source for \code{PALEYcat} is Colbourn (2015).
 #'
 #' The original web sources for both the Colbourn catalogue and the Torres-Jimenez
 #' catalogue are currently unavailable; the November 2024 status of the Colbourn catalogue

@@ -2,11 +2,14 @@
 % Please edit documentation in R/payley.R
 \name{conference_paley}
 \alias{conference_paley}
+\alias{paleyCA}
 \alias{paleyHad}
 \alias{show_paleyHad}
 \alias{paley_mat}
 \title{Paley constructions}
 \usage{
+paleyCA(t, k, ...)
+
 paleyHad(q)
 
 show_paleyHad(minN=NULL, maxN=NULL)
@@ -16,12 +19,20 @@ paley_mat(q)
 conference_paley(q)
 }
 \arguments{
-\item{q}{prime or prime power}
+\item{q}{prime or odd prime power}
+
+\item{k}{integer number: number of columns of the CA}
+
+\item{t}{integer number: strength of the CA, 3 to 6}
 
 \item{minN, maxN}{bounds for the run size N. Without specified bounds,
 the returned data frame has more than 1000 rows.}
+
+\item{...}{currently not used}
 }
 \value{
+Function \code{paleyCA} returns a matrix of class \code{ca} with levels 0 and 1 in
+\code{k} columns and \code{N_PAYLEYcat(t, k, 2)} rows.\cr
 Function \code{conference_paley} returns a conference matrix,
 function \code{paleyHad} a Hadamard matrix of the Paley construction (matrix)
 in \code{q} or \code{2q+1} 2-level columns
@@ -32,14 +43,36 @@ Most of the arrays listed can be created;
 exceptions are q that are powers of primes larger than 50.
 }
 \description{
-Function to construct a Hadamard-based 2-level OA with
-number of runs a multiple of 4,
-number of columns one less than runs,
-based on the Paley construction.
-Also function for creating a conference matrix,
-and a Paley matrix that can be used for constructing CAs.
+Functions to construct Paley-based CAs as well as
+to construct further objects related to a Paley construction
 }
+\section{Background on Paley-based covering arrays}{
+
+Function \code{paleyCA} uses numerical experiments of
+Colbourn (2015) to provide the smallest possible strength \code{t} CA
+for 2-level columns that can be obtained using a Paley construction.
+Results are based on numeric searches of Paley constructions regarding
+coverage properties of Paley matrices with or without adding a row of ones,
+as well as doubled such matrices, where doubling a matrix M means
+vertically stacking M and 1-M, and adding an indicator column for the
+two halves.\cr
+Colbourn (2015) worked out
+the minimum numbers of replicates for each t-tuple, and where these exceed 1,
+proposed to remove rows without deteriorating coverage. This package contains
+a data.frame \code{PALEYcat}, which contains an executable code string
+from processing the results of Colbourn (2015). For strength 3, only
+constructions without doubling are included, as CAs from doubling are
+very uncompetitive (small corrections to Colbourn's Table 1 were needed
+for primes 7, 13 (strength 3 not possible) and 17 (no row can be removed)).
+}
+
 \section{Details}{
+
+Function \code{paleyCA} provides a covering array of strength \code{t} for 2-level columns.\cr
+Function \code{\link{N_PALEYcat}} shows the CA run sizes that can be obtained
+with the paley construction using function \code{paleyCA},\cr
+function \code{\link{k_PALEYcat}} shows the number of columns that can be accommodated
+in \code{N} runs using function \code{paleyCA}.
 
 Function \code{conference_paley} yields a q x q conference matrix,
 while function \code{paley} yields a q x q Paley matrix that
@@ -50,17 +83,62 @@ function \code{paleyHad} yields OAs in numbers
 of levels a multiple of 4. Hadamard constructions depend on
 the value of \code{q \%\% 4}, which can either be 1 or 3:\cr
 For \code{q \%\% 4 = 3}, a (q+1) x q OA is obtained,\cr
-\code{q \%\% 4 = 1} yields a (2q+2) x (2q+1) OA.\cr
+\code{q \%\% 4 = 1} yields a (2q+2) x (2q+1) OA.
 
-\code{show_paleyHad} shows the run sizes that can be obtained
+\code{show_paleyHad} shows the Hadamard matrix run sizes that can be obtained
 with the constructions, and the corresponding values of k and q, as well as
 the smallest number for a strength 3 array in the same number of
 2-level columns according to the Colbourn tables
-(currently-known upper bound for CAN) with the corresponding source entry,
-and the run size of the NIST catalogued array.
+(currently-known upper bound for CAN) with the corresponding source entry.
 }
 
 \examples{
+## examples for paleyCA
+
+## Paley-based CA that is optimal
+D <- paleyCA(t=4, k=67)
+dim(D)
+# coverage(D, 4) ## commented out, as it runs too long
+eCAN(4, 67, 2)
+# as good as the optimum cyclotomy construction
+# (and actually the same)
+
+D <- paleyCA(t=3, k=10)
+dim(D)
+coverage(D, 3)
+eCAN(3, 10, 2)
+eCAK(3, 12, 2)
+k_PALEYcat(3, 12, 2)
+# as good as optimum (first columns of Hadamard matrix)
+
+D <- paleyCA(t=5, k=300)
+dim(D)
+eCAN(5, 300, 2)
+eCAK(5, 359, 2)
+k_PALEYcat(5, 359, 2)
+## as good as the derived design from the Colbourn / Keri construction
+
+D <- paleyCA(t=5, k=400)
+dim(D)
+eCAN(5, 400, 2) ## current best-known
+
+D <- paleyCA(t=5, k=80)
+dim(D)
+eCAN(5, 80, 2) ## current best-known slightly better
+
+D <- paleyCA(t=5, k=192)
+dim(D)
+eCAN(5, 192, 2) ## current best-known 13 fewer runs
+
+D <- paleyCA(t=6, k=29)
+dim(D)
+N_PALEYcat(t=6, k=29)
+eCAN(6, 29, 2) ## current best-known much better
+k_PALEYcat(t=6, N=720) ## good for larger number of factors
+eCAN(6, 360, 2) ## as good as the current-best
+eCAK(6, 720, 2) ## design from the Colbourn / Keri construction
+
+## other Paley-related functions
 # conference matrix (square q x q matrix with diagonal 0)
 conference_paley(5)
 # paley matrix (square q x q matrix with diagonal 0)
@@ -88,4 +166,7 @@ show_paleyHad(maxN=36)
   # from package FrF2 as pb(16, nfactors=14)
 show_paleyHad(minN=100, maxN=150)
 
+}
+\references{
+Colbourn (2015), Colbourn and Keri (2009)
 }
