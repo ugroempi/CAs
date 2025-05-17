@@ -62,8 +62,8 @@ in function <code>KSK</code>,
 
 <li>
 
-strength 3 2-level constructions via Paley-based Hadamard matrices
-(function <code>paleyHad</code>)
+strength 3 to 6 2-level constructions via Paley matrices according to
+Colbourn (2015) in function <code>paleyCA</code>,
 </li>
 
 <li>
@@ -179,14 +179,6 @@ t≤k ≤10000, 2005–23.
 
 <p>
 
-Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood,
-G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength
-two. <em>J of Combinatorial Designs</em> <strong>14</strong>, 124-138.
-doi: 10.1002/jcd.20065
-</p>
-
-<p>
-
 Colbourn, C.J., (2008). Strength two covering arrays: Existence tables
 and projection. Discrete Math., vol. 308, 772-786.
 <https://doi.org/10.1016/j.disc.2007.07.050>
@@ -200,10 +192,36 @@ Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 
 <p>
 
+Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays,
+and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory
+and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics.
+Springer International Publishing, Cham, pp. 29–42.
+<https://doi.org/10.1007/978-3-319-17729-8_3>
+</p>
+
+<p>
+
+Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and
+Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H.,
+Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer
+Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22–33.
+<https://doi.org/10.1007/978-3-642-01877-0_3>
+</p>
+
+<p>
+
 Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C.,
 (2010). Covering and radius-covering arrays: constructions and
 classification. Discrete Appl. Math 158, 1158-1180.
 <https://doi.org/10.1016/j.dam.2010.03.008>
+</p>
+
+<p>
+
+Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood,
+G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength
+two. <em>J of Combinatorial Designs</em> <b>14</b>, 124-138. doi:
+10.1002/jcd.20065
 </p>
 
 <p>

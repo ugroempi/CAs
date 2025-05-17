@@ -18,7 +18,7 @@
 #' So far, the following constructions have been implemented:
 #'
 #' * strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973) in function \code{\link{KSK}},
-#' * strength 3 2-level constructions via Paley-based Hadamard matrices (function \code{\link{paleyHad}})
+#' * strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
 #' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyc}},
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
@@ -41,13 +41,17 @@
 #'
 #' Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
 #'
-#' Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. *J of Combinatorial Designs* **14**, 124-138. doi: 10.1002/jcd.20065
-#'
 #' Colbourn, C.J., (2008). Strength two covering arrays: Existence tables and projection. Discrete Math., vol. 308, 772-786. https://doi.org/10.1016/j.disc.2007.07.050
 #'
 #' Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 #'
+#' Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays, and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics. Springer International Publishing, Cham, pp. 29–42. https://doi.org/10.1007/978-3-319-17729-8_3
+#'
+#' Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H., Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22–33. https://doi.org/10.1007/978-3-642-01877-0_3
+#'
 #' Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C., (2010). Covering and radius-covering arrays: constructions and classification. Discrete Appl. Math 158, 1158-1180. https://doi.org/10.1016/j.dam.2010.03.008
+#'
+#' Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. \emph{J of Combinatorial Designs} \bold{14}, 124-138. doi: 10.1002/jcd.20065
 #'
 #' Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
 #'

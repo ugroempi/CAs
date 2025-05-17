@@ -1,5 +1,8 @@
 # NEWS
 
+17 May 2025, still Version 0.2.1
+ - added Paley constructions according to Colbourn (2015)
+
 14 May 2025, still Version 0.2.1
  - made function `CK_doubling` use the `CAEX` designs per default for 3-level cases
    (i.e., `D2=NULL` now works for v=2 and v=3)
