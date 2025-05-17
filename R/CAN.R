@@ -13,25 +13,29 @@
 #' @aliases N_WKScat
 #' @aliases N_CKRScat
 #' @aliases N_DWYERcat
+#' @aliases N_PALEYcat
 #' @aliases eCAK
 #' @aliases k_NISTcat
 #' @aliases k_TJcat
 #' @aliases k_WKScat
 #' @aliases k_CKRScat
 #' @aliases k_DWYERcat
+#' @aliases k_PALEYcat
 #'
 #' @usage eCAN(t, k, v)
 #' @usage N_NISTcat(t, k, v)
 #' @usage N_TJcat(t, k, v)
-#' @usage N_WKScat(t, k, v)
+#' @usage N_WKScat(t=6, k, v=2)
 #' @usage N_CKRScat(t, k, v)
 #' @usage N_DWYERcat(t, k, v)
+#' @usage N_PALEYcat(t, k, v=2)
 #' @usage eCAK(t, N, v)
 #' @usage k_NISTcat(t, N, v)
 #' @usage k_TJcat(t, N, v)
-#' @usage k_WKScat(t, N, v)
+#' @usage k_WKScat(t=6, N, v=2)
 #' @usage k_CKRScat(t, N, v)
 #' @usage k_DWYERcat(t, N, v)
+#' @usage k_PALEYcat(t, N, v=2)
 #'
 #' @param t coverage strength
 #' @param k number of columns
@@ -171,6 +175,14 @@ N_DWYERcat <- function(t,k,v){
   else return(min(hilf[,"N"]))
 }
 
+## obtain size of PAYLEY catalogue entry
+#' @export
+N_PALEYcat <- function(t,k,v=2){
+  hilf <- PALEYcat[PALEYcat[,"t"]==t & PALEYcat[,"k"]>=k & PALEYcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(min(hilf[,"N"]))
+}
+
 ## obtain size of CKRS catalogue entry
 #' @export
 N_CKRScat <- function(t,k,v){
@@ -203,7 +215,14 @@ k_DWYERcat <- function(t,N,v){
 }
 
 #' @export
-k_WKScat <- function(t,N,v){
+k_PALEYcat <- function(t,N,v=2){
+  hilf <- PALEYcat[PALEYcat[,"t"]==t & PALEYcat[,"N"]<=N & PALEYcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(max(hilf[,"k"]))
+}
+
+#' @export
+k_WKScat <- function(t=6,N,v=2){
   if (!v==2) return(NA)
   if (t>6) return(NA)
   if (t<6) message("The WKS catalogue has strength 6 CAs only.")

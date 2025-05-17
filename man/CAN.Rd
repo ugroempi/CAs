@@ -7,12 +7,14 @@
 \alias{N_WKScat}
 \alias{N_CKRScat}
 \alias{N_DWYERcat}
+\alias{N_PALEYcat}
 \alias{eCAK}
 \alias{k_NISTcat}
 \alias{k_TJcat}
 \alias{k_WKScat}
 \alias{k_CKRScat}
 \alias{k_DWYERcat}
+\alias{k_PALEYcat}
 \title{Functions for N and k from Colbourn tables and other libraries}
 \usage{
 eCAN(t, k, v)
@@ -21,11 +23,13 @@ N_NISTcat(t, k, v)
 
 N_TJcat(t, k, v)
 
-N_WKScat(t, k, v)
+N_WKScat(t=6, k, v=2)
 
 N_CKRScat(t, k, v)
 
 N_DWYERcat(t, k, v)
+
+N_PALEYcat(t, k, v=2)
 
 eCAK(t, N, v)
 
@@ -33,11 +37,13 @@ k_NISTcat(t, N, v)
 
 k_TJcat(t, N, v)
 
-k_WKScat(t, N, v)
+k_WKScat(t=6, N, v=2)
 
 k_CKRScat(t, N, v)
 
 k_DWYERcat(t, N, v)
+
+k_PALEYcat(t, N, v=2)
 }
 \arguments{
 \item{t}{coverage strength}
