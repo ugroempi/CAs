@@ -30,6 +30,7 @@
 #'   can return distribution of covering frequencies or actual row sets
 #' is.LA: checks for locating array properties
 #' is.DA: checks for detecting array properties (not ready)
+#' Double: doubles a 0/1 matrix M by stacking M with 1-M and adding first column of 0/1
 #'
 #' @importFrom utils tail
 
@@ -759,3 +760,4 @@ D3cols_to_LS <- function(D, start0=NULL){
   LS
 }
 
+Double <- function(M) rbind(cbind(0,M), 1-(cbind(0,M)))
