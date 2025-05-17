@@ -2,7 +2,7 @@
 % Please edit documentation in R/CK_doubling.R
 \name{CK_doubling}
 \alias{CK_doubling}
-\title{#' Function to create a strength 3 CA with Chateauneuf-Kreher doubling}
+\title{Function to create a strength 3 CA with Chateauneuf-Kreher doubling}
 \usage{
 CK_doubling(D3, D2=NULL, check=FALSE, start0=TRUE, ...)
 }

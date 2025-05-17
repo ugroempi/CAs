@@ -1,4 +1,4 @@
-#' #' Function to create a strength 3 CA with Chateauneuf-Kreher doubling
+#' Function to create a strength 3 CA with Chateauneuf-Kreher doubling
 #'
 #' A strength 3 CA in k v-level columns and N runs is extented
 #' to 2k v-level columns in N + M*(v-1) runs
