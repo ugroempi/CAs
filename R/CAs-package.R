@@ -1,5 +1,37 @@
 #' Creation of Covering Arrays
 #' @description Creates covering arrays.
+#' @export  CAEX_CAs
+#' @export  CAEX_lineages
+#' @export  colbournBigFrame
+#' @export  colbournCatalogue
+#' @export  MeagherStevensCombis
+#' @export  MeagherStevensStarters
+#' @export  LCDSTCombis
+#' @export  LCDSTStarters
+#' @export  CKRScat
+#' @export  CKRS_CAs
+#' @export  WKScat
+#' @export  WKS_CAs
+#' @export  DWYERcat
+#' @export  NISTcat
+#' @export  TJcat
+#' @export  PALEYcat
+#' @aliases  CAEX_CAs
+#' @aliases  CAEX_lineages
+#' @aliases  colbournBigFrame
+#' @aliases  colbournCatalogue
+#' @aliases  MeagherStevensCombis
+#' @aliases  MeagherStevensStarters
+#' @aliases  LCDSTCombis
+#' @aliases  LCDSTStarters
+#' @aliases  CKRScat
+#' @aliases  CKRS_CAs
+#' @aliases  WKScat
+#' @aliases  WKS_CAs
+#' @aliases  DWYERcat
+#' @aliases  NISTcat
+#' @aliases  TJcat
+#' @aliases  PALEYcat
 #' @details This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
 #'
@@ -31,6 +63,13 @@
 #' * cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
 #' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
+#'
+#' @section Exported catalogue objects:
+#' The constructions are based on various catalogue objects that can be inspected by expert users, but are mainly meant to be used by the package functions:
+#' \code{CAEX_CAs}, \code{CAEX_lineages}, \code{colbournBigFrame}, \code{colbournCatalogue},
+#' \code{MeagherStevensCombis}, \code{MeagherStevensStarters}, \code{LCDSTCombis}, \code{LCDSTStarters},
+#' \code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat}, \code{NISTcat}, \code{TJcat},
+#' \code{PALEYcat}
 #'
 #' @author Author: Ulrike Groemping, BHT Berlin.
 #'

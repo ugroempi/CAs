@@ -4,6 +4,22 @@
 \name{CAs-package}
 \alias{CAs}
 \alias{CAs-package}
+\alias{CAEX_CAs}
+\alias{CAEX_lineages}
+\alias{colbournBigFrame}
+\alias{colbournCatalogue}
+\alias{MeagherStevensCombis}
+\alias{MeagherStevensStarters}
+\alias{LCDSTCombis}
+\alias{LCDSTStarters}
+\alias{CKRScat}
+\alias{CKRS_CAs}
+\alias{WKScat}
+\alias{WKS_CAs}
+\alias{DWYERcat}
+\alias{NISTcat}
+\alias{TJcat}
+\alias{PALEYcat}
 \alias{'CAs-package'}
 \title{Creation of Covering Arrays}
 \description{
@@ -43,6 +59,15 @@ So far, the following constructions have been implemented:
 \item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }
 }
+\section{Exported catalogue objects}{
+
+The constructions are based on various catalogue objects that can be inspected by expert users, but are mainly meant to be used by the package functions:
+\code{CAEX_CAs}, \code{CAEX_lineages}, \code{colbournBigFrame}, \code{colbournCatalogue},
+\code{MeagherStevensCombis}, \code{MeagherStevensStarters}, \code{LCDSTCombis}, \code{LCDSTStarters},
+\code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat}, \code{NISTcat}, \code{TJcat},
+\code{PALEYcat}
+}
+
 \references{
 Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations and Essays, 13th ed. New York: Dover, pp. 308-309.
 

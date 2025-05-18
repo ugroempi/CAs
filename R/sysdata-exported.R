@@ -1,30 +1,12 @@
-#' Internal data of package CAs
+#' Support data of package CAs
+#' @description
+#'  This documentation file documents objects that ship in
+#' sysdata.rda but are nevertheless exported, because they are of interest to
+#' expert users. I have still not figured out how to get roxygen to export this.
 #'
-#' This documentation file documents the internal objects that ship in
-#' sysdata.rda. I have not yet found out how to make it part of the
-#' official documentation, when using roxygen.
-#'
-#' @rdname internal-data
-#' @docType data
-#'
-#' @aliases CAEX_CAs
-#' @aliases CAEX_lineages
-#' @aliases colbournBigFrame
-#' @aliases colbournCatalogue
-#' @aliases MeagherStevensCombis
-#' @aliases MeagherStevensStarters
-#' @aliases LCDSTCombis
-#' @aliases LCDSTStarters
-#' @aliases CKRScat
-#' @aliases CKRS_CAs
-#' @aliases WKScat
-#' @aliases WKS_CAs
-#' @aliases DWYERcat
-#' @aliases NISTcat
-#' @aliases TJcat
-#' @aliases PALEYcat
-#'
-#' @format \code{CAEX_lineages} contains a list (labeled by strengths, currently only strength t=2)\cr
+#' NULL
+#' @rawRD
+#' \code{CAEX_lineages} contains a list (labeled by strengths, currently only strength t=2)\cr
 #' of a list (labeled by number of levels, currently only v=3)\cr
 #' of entries for each relevant run size N (labeled by this N, which ranges from 11 to 50 in the only implemented case);
 #' list entries are character strings or lists of construction details.
@@ -65,7 +47,7 @@
 #' (currently non-public; planned to grow and make public, no timeline known).
 #' The CAs in \code{CAEX_CAs} are from that catalogue.
 #'
-#' @source The Source for CAEX-related information is Torres-Jimenez et al. (2021),
+#'  The Source for CAEX-related information is Torres-Jimenez et al. (2021),
 #' the source for Meagher and Stevens related information is Meagher and Stevens (2005),
 #' the source for LCDST cover starters is Lobb et al. (2012), the source for
 #' \code{WKScat} is
@@ -75,4 +57,3 @@
 #' The original web sources for both the Colbourn catalogue and the Torres-Jimenez
 #' catalogue are currently unavailable; the November 2024 status of the Colbourn catalogue
 #' is temporarily provided at \url{https://github.com/ugroempi/CAs/blob/main/ColbournTables.md}.
-#'
