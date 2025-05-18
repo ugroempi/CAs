@@ -10,9 +10,9 @@
 #' @usage crossSum(A, B, ...)
 #' @usage directSum(A, B, ...)
 #'
-#' @param A  an N x k code with (up to) \code{v} levels; for \code{v=Inf},
-#'           elements of \code{A} and \code{B} must not be negative (otherwise, \code{directSum} may return {Inf} elements).
-#' @param B  an M x l code with (up to) \code{v} levels; for function \code{crossSum}, \code{l=k} is needed.
+#' @param A  an N x k code with (up to) \code{v} non-negative levels.
+#' @param B  an M x l code with (up to) \code{v} non-negative levels;\cr
+#'           for function \code{crossSum}, \code{l=k} is needed.
 #' @param ... currently not used
 #'
 #' @section Details:

@@ -10,10 +10,10 @@ crossSum(A, B, ...)
 directSum(A, B, ...)
 }
 \arguments{
-\item{A}{an N x k code with (up to) \code{v} levels; for \code{v=Inf},
-elements of \code{A} and \code{B} must not be negative (otherwise, \code{directSum} may return {Inf} elements).}
+\item{A}{an N x k code with (up to) \code{v} non-negative levels.}
 
-\item{B}{an M x l code with (up to) \code{v} levels; for function \code{crossSum}, \code{l=k} is needed.}
+\item{B}{an M x l code with (up to) \code{v} non-negative levels;\cr
+for function \code{crossSum}, \code{l=k} is needed.}
 
 \item{...}{currently not used}
 }
