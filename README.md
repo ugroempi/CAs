@@ -151,6 +151,18 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 
 </ul>
 
+## Exported catalogue objects
+
+The constructions are based on various catalogue objects that can be
+inspected by expert users, but are mainly meant to be used by the
+package functions: <code>CAEX_CAs</code>, <code>CAEX_lineages</code>,
+<code>colbournBigFrame</code>, <code>colbournCatalogue</code>,
+<code>MeagherStevensCombis</code>, <code>MeagherStevensStarters</code>,
+<code>LCDSTCombis</code>, <code>LCDSTStarters</code>,
+<code>CKRScat</code>, <code>CKRS_CAs</code>, <code>WKScat</code>,
+<code>WKS_CAs</code>, <code>DWYERcat</code>, <code>NISTcat</code>,
+<code>TJcat</code>, <code>PALEYcat</code>
+
 ## References
 
 **The Colbourn Covering array tables are currently unavailable at their
