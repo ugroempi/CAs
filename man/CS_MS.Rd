@@ -11,9 +11,9 @@ CS_MS(k, v, start0=TRUE, starter=NULL, ...)
 
 SCA_MS(k, v, start0=TRUE, starter=NULL, ...)
 
-N_CS_MS(k, v, theoretical=FALSE)
+N_CS_MS(t=2, k, v, theoretical=FALSE)
 
-k_CS_MS(N, v)
+k_CS_MS(t=2, N, v)
 }
 \arguments{
 \item{k}{number of factors}
@@ -27,6 +27,8 @@ This may be useful for cases with k larger than implemented in the stored cover 
 CAUTION: Responsibility for achieving the coverage rests with the user, please check!}
 
 \item{...}{currently not used}
+
+\item{t}{requested strength (must be 2, added of unified interface with other N_ and k_ functions)}
 
 \item{theoretical}{logical: default requests size available from using stored cover starters,\cr
 change to \code{TRUE} for the size assuming existence of a cover starter for \code{k} and \code{v}}
@@ -96,16 +98,16 @@ CAs:::MeagherStevensStarters[["6"]][["9"]]
 ## use k=8, which is not directly in the starter table
 D <- CS_MS(8, 6)
 dim(D)    ## works by finding the smallest k that is in the table for v=6
-N_CS_MS(8, 6)
-N_CS_MS(8, 6, theoretical=TRUE)  ## in this case unachievability is proven
-N_CS_MS(15, 6) ## not implemented with stored cover starter
-N_CS_MS(15, 6, theoretical=TRUE) ## if a cover starter is found and provided,
+N_CS_MS(k=8, v=6)
+N_CS_MS(k=8, v=6, theoretical=TRUE)  ## in this case unachievability is proven
+N_CS_MS(k=15, v=6) ## not implemented with stored cover starter
+N_CS_MS(k=15, v=6, theoretical=TRUE) ## if a cover starter is found and provided,
                                  ## 76 runs are possible with the construction
 
 try(D <- CS_MS(14, 6))  ## not implemented
                         ## (though a starter might exist,
                         ## but likely unattractive result)
-N_CS_MS(15, 6, theoretical=TRUE) ## 76 runs possible, if suitable starter provided
+N_CS_MS(k=15, v=6, theoretical=TRUE) ## 76 runs possible, if suitable starter provided
 CAs:::MeagherStevensStarters[["6"]][["14"]] ## trying a guess for a starter
 starter15 <- c(0,1,1,1,1,1,1,1,1,1,2,4,3,1,2)
 D <- CS_MS(15, 6, starter=starter15)

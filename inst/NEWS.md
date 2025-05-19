@@ -1,6 +1,10 @@
 # NEWS
 
- 19 May 2025, still Version 0.2.1
+19 May 2025, still Version 0.2.1
+ - added functions Ns and ks
+ - modified N and k functions, so that most have compatible arguments
+   renamed prior function k_CAEX to k_detail_CAEX
+ - added names to list entries in WKS_CAs
  - added data.frame CYCLOTOMYcat and functions cyclotomyCA, N_CYCLOTOMYcat and k_CYCLOTOMYcat
  - augmented the internal object primedat with a few more primes in support of CYCLOTOMYcat
 

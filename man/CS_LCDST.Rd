@@ -8,9 +8,9 @@
 \usage{
 CS_LCDST(k, v, start0=TRUE, starter=NULL, ...)
 
-N_CS_LCDST(k, v)
+N_CS_LCDST(t=2, k, v)
 
-k_CS_LCDST(N, v)
+k_CS_LCDST(t=2, N, v)
 }
 \arguments{
 \item{k}{number of factors}
@@ -24,6 +24,8 @@ This may be useful for cases with k larger than implemented in the stored cover 
 CAUTION: Responsibility for achieving the coverage rests with the user, please check!}
 
 \item{...}{currently not used}
+
+\item{t}{requested strength (must be 2, added of unified interface with other N_ and k_ functions)}
 
 \item{N}{affordable number of runs}
 }
@@ -73,8 +75,8 @@ CA115.2.20.8 <- CS_LCDST(20, 8) ## 115 runs, 20 columns
 dim(CA115.2.20.8)   ## (v-f)*k + nrow(addfix) = (8 - 3)*20 + 15 rows
 coverage(CA115.2.20.8,2)
 
-N_CS_LCDST(20, 8)  ## 115 runs are needed for 20 8-level columns
-k_CS_LCDST(120, 8) ## with up to 120 runs, 20 8-level columns are possible
+N_CS_LCDST(k=20, v=8)  ## 115 runs are needed for 20 8-level columns
+k_CS_LCDST(N=120, v=8) ## with up to 120 runs, 20 8-level columns are possible
 eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 
 }

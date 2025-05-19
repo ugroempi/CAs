@@ -16,8 +16,8 @@
 #'
 #' @usage CS_MS(k, v, start0=TRUE, starter=NULL, ...)
 #' @usage SCA_MS(k, v, start0=TRUE, starter=NULL, ...)
-#' @usage N_CS_MS(k, v, theoretical=FALSE)
-#' @usage k_CS_MS(N, v)
+#' @usage N_CS_MS(t=2, k, v, theoretical=FALSE)
+#' @usage k_CS_MS(t=2, N, v)
 #'
 #' @param k number of factors
 #' @param v number of levels, \code{v} >= 3
@@ -25,6 +25,7 @@
 #' @param starter an optional cover starter vector.\cr
 #' This may be useful for cases with k larger than implemented in the stored cover starters.\cr
 #' CAUTION: Responsibility for achieving the coverage rests with the user, please check!
+#' @param t requested strength (must be 2, added of unified interface with other N_ and k_ functions)
 #' @param theoretical logical: default requests size available from using stored cover starters,\cr
 #' change to \code{TRUE} for the size assuming existence of a cover starter for \code{k} and \code{v}
 #' @param N affordable number of runs
@@ -87,16 +88,16 @@
 #' ## use k=8, which is not directly in the starter table
 #' D <- CS_MS(8, 6)
 #' dim(D)    ## works by finding the smallest k that is in the table for v=6
-#' N_CS_MS(8, 6)
-#' N_CS_MS(8, 6, theoretical=TRUE)  ## in this case unachievability is proven
-#' N_CS_MS(15, 6) ## not implemented with stored cover starter
-#' N_CS_MS(15, 6, theoretical=TRUE) ## if a cover starter is found and provided,
+#' N_CS_MS(k=8, v=6)
+#' N_CS_MS(k=8, v=6, theoretical=TRUE)  ## in this case unachievability is proven
+#' N_CS_MS(k=15, v=6) ## not implemented with stored cover starter
+#' N_CS_MS(k=15, v=6, theoretical=TRUE) ## if a cover starter is found and provided,
 #'                                  ## 76 runs are possible with the construction
 #'
 #' try(D <- CS_MS(14, 6))  ## not implemented
 #'                         ## (though a starter might exist,
 #'                         ## but likely unattractive result)
-#' N_CS_MS(15, 6, theoretical=TRUE) ## 76 runs possible, if suitable starter provided
+#' N_CS_MS(k=15, v=6, theoretical=TRUE) ## 76 runs possible, if suitable starter provided
 #' CAs:::MeagherStevensStarters[["6"]][["14"]] ## trying a guess for a starter
 #' starter15 <- c(0,1,1,1,1,1,1,1,1,1,2,4,3,1,2)
 #' D <- CS_MS(15, 6, starter=starter15)
@@ -118,9 +119,9 @@ CS_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
     stopifnot(all(starter[-1] %in% 1:(v-1)))
   }
   if (is.null(starter)){
-    N <- N_CS_MS(k, v)
+    N <- N_CS_MS(t=2, k, v)
     if (is.na(N)) stop("This combination of k and v cannot be accommodated.")
-    k_lookup <- k_CS_MS(N,v)
+    k_lookup <- k_CS_MS(t=2,N,v)
     if (is.na(k_lookup)) stop("Unexpected error.")
     ## retrieve starter
     vc <- as.character(v)
@@ -134,7 +135,8 @@ CS_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
 }
 
 #'@export
-N_CS_MS <- function(k, v, theoretical=FALSE){
+N_CS_MS <- function(t=2, k, v, theoretical=FALSE){
+  if (!t==2) return(NA)
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
   stopifnot(k>=2, v>=3)
@@ -150,7 +152,8 @@ N_CS_MS <- function(k, v, theoretical=FALSE){
 }
 
 #'@export
-k_CS_MS <- function(N, v){
+k_CS_MS <- function(t=2, N, v){
+  if (!t==2) return(NA)
   stopifnot(is.numeric(N), is.numeric(v))
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the maximum number of factors, which is ", k_KSK(N), "."))
   hilf <- MeagherStevensCombis[MeagherStevensCombis[,"v"]==v & MeagherStevensCombis[,"N"]<=N,,drop=FALSE]

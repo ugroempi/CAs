@@ -2,12 +2,12 @@
 % Please edit documentation in R/CAEX.R
 \name{CAEX}
 \alias{CAEX}
-\alias{k_CAEX}
+\alias{k_detail_CAEX}
 \title{CAEX: current optimal CAs of strength 2 with v=3}
 \usage{
 CAEX(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...)
 
-k_CAEX(N=NULL, t=2, v=3, ...)
+k_detail_CAEX(t=2, N=NULL, v=3)
 }
 \arguments{
 \item{k}{positive integer or \code{NULL}; the requested number of factors;\cr

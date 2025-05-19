@@ -16,8 +16,8 @@
 #' @aliases k_CS_LCDST
 #'
 #' @usage CS_LCDST(k, v, start0=TRUE, starter=NULL, ...)
-#' @usage N_CS_LCDST(k, v)
-#' @usage k_CS_LCDST(N, v)
+#' @usage N_CS_LCDST(t=2, k, v)
+#' @usage k_CS_LCDST(t=2, N, v)
 #'
 #' @param k number of factors
 #' @param v number of levels, \code{v} >= 3
@@ -25,6 +25,7 @@
 #' @param starter an optional cover starter vector that starts with a fixed value, denoted by a number larger than 100.\cr
 #' This may be useful for cases with k larger than implemented in the stored cover starters.\cr
 #' CAUTION: Responsibility for achieving the coverage rests with the user, please check!
+#' @param t requested strength (must be 2, added of unified interface with other N_ and k_ functions)
 #' @param N affordable number of runs
 #' @param ... currently not used
 #'
@@ -67,8 +68,8 @@
 #' dim(CA115.2.20.8)   ## (v-f)*k + nrow(addfix) = (8 - 3)*20 + 15 rows
 #' coverage(CA115.2.20.8,2)
 #'
-#' N_CS_LCDST(20, 8)  ## 115 runs are needed for 20 8-level columns
-#' k_CS_LCDST(120, 8) ## with up to 120 runs, 20 8-level columns are possible
+#' N_CS_LCDST(k=20, v=8)  ## 115 runs are needed for 20 8-level columns
+#' k_CS_LCDST(N=120, v=8) ## with up to 120 runs, 20 8-level columns are possible
 #' eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 #'
 
@@ -111,7 +112,8 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
 
 ## the N and k functions
 #' @export
-N_CS_LCDST <- function(k, v){
+N_CS_LCDST <- function(t=2, k, v){
+  if (!t==2 || v==2) return(NA)
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
   stopifnot(k>=2, v>=3)
@@ -125,7 +127,8 @@ N_CS_LCDST <- function(k, v){
 }
 
 #' @export
-k_CS_LCDST <- function(N, v){
+k_CS_LCDST <- function(t=2, N, v){
+  if (!t==2) return(NA)
   stopifnot(is.numeric(N), is.numeric(v))
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the maximum number of factors, which is ", k_KSK(N), "."))
   hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v & LCDSTCombis[,"N"]<=N & LCDSTCombis[,"f"]<=3,,drop=FALSE]

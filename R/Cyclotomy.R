@@ -213,7 +213,7 @@ cyc <- function(q, v, k=NULL, type=NULL, primitive=NULL){
 #' @export
 ## run size
 N_cyc <- function(q, v, type){
-  if (!q%%v==1) stop("q mod v=1 is violated")
+  #if (!q%%v==1) stop("q mod v=1 is violated")
   if (!v<q) stop("v is too large")
   if (!type %in% c("1","2","3","3a","3b","4","4a","4b")) stop("invalid type")
   stopifnot(any(primes::is_prime(q^(1/(1:10)))))

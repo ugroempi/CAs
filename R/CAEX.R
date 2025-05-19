@@ -9,10 +9,10 @@
 #' @rdname CAEX
 #'
 #' @aliases CAEX
-#' @aliases k_CAEX
+#' @aliases k_detail_CAEX
 #'
 #' @usage CAEX(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...)
-#' @usage k_CAEX(N=NULL, t=2, v=3, ...)
+#' @usage k_detail_CAEX(t=2, N=NULL, v=3)
 #'
 #' @param k positive integer or \code{NULL}; the requested number of factors;\cr
 #' if both \code{k} and \code{N} are specified, \code{k} takes precedence;\cr
@@ -293,7 +293,8 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
 }
 
 #' @export
-k_CAEX <- function(N=NULL, t=2, v=3, ...){
+k_detail_CAEX <- function(t=2, N=NULL, v=3){
+  if (t>2 || !v==3) return(NA)
   ## prepare
   states <- cbind(k=c(4,5,7,9,10,20,21,29,46,49,63,93,107,138,199,216,288,435,449,610,878,964,1308,1964,2116,2700,
                       3918,4457,5763,8329,9207,11898,17895,20010,25317,37071,42174,54531,80789,90344,112770),
