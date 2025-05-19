@@ -32,8 +32,9 @@
 #' \code{LCDSTStarters} is a list of lists, with a list entry for each \code{v}
 #' that holds a list of the starters for the relevant values of \code{k}.
 #'
-#' \code{PALEYcat}, \code{DWYERcat}, \code{CKRScat}, \code{WKScat}, \code{NISTcat} and \code{TJcat}
-#' are data.frame objects (\code{PALEYcat}, \code{DWYERcat},
+#' \code{PALEYcat}, \code{CYCLOTOMYcat}, \code{DWYERcat}, \code{CKRScat}, \code{WKScat},
+#' \code{NISTcat} and \code{TJcat}
+#' are data.frame objects (\code{PALEYcat}, \code{CYCLOTOMYcat}, \code{DWYERcat},
 #' \code{CKRScat} and \code{WKScat}) or matrices with columns
 #' \code{t}, \code{k}, \code{v} and \code{N}
 #' (in different order, may change, always address via name!),
@@ -45,9 +46,13 @@
 #' in the NIST (2008) library of CAs
 #' (not in the package, but publicly downloadable) or the Torres-Jimenez catalogue as of Feb 6, 2025
 #' (currently non-public; planned to grow and make public, no timeline known).
-#' The CAs in \code{CAEX_CAs} are from that catalogue.
+#' The CAs in \code{CAEX_CAs} are from that catalogue.\cr
+#' \code{PALEYcat} and \code{CYCLOTOMYcat} permit an overview of what can be constructed with the help of
+#' functions \code{paley_mat} or \code{cyc}, and have a column \code{code} that
+#' makes it straightforward for the respective user interface functions
+#' \code{\link{paleyCA}} and \code{\link{cyclotomyCA}} to create the requested CAs.
 #'
-#'  The Source for CAEX-related information is Torres-Jimenez et al. (2021),
+#' The Source for CAEX-related information is Torres-Jimenez et al. (2021),
 #' the source for Meagher and Stevens related information is Meagher and Stevens (2005),
 #' the source for LCDST cover starters is Lobb et al. (2012), the source for
 #' \code{WKScat} is
@@ -57,3 +62,9 @@
 #' The original web sources for both the Colbourn catalogue and the Torres-Jimenez
 #' catalogue are currently unavailable; the November 2024 status of the Colbourn catalogue
 #' is temporarily provided at \url{https://github.com/ugroempi/CAs/blob/main/ColbournTables.md}.
+#'
+#' The source for \code{\link{CYCLOTOMYcat}} is Colbourn (2010) for the construction
+#' and the Colbourn catalogue for the claim to the respective coverage; tables of the paper
+#' have not been used for that purpose, as several mistakes in those were found.
+#' One instance from the Colbourn tables was removed, as its apparent underlying q is not a prime,
+#' but 13*229 so that either a different construction was used or the entry carries wrong information.

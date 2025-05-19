@@ -1,5 +1,9 @@
 # NEWS
 
+ 19 May 2025, still Version 0.2.1
+ - added data.frame CYCLOTOMYcat and functions cyclotomyCA, N_CYCLOTOMYcat and k_CYCLOTOMYcat
+ - augmented the internal object primedat with a few more primes in support of CYCLOTOMYcat
+
 17 May 2025, still Version 0.2.1
  - added Paley constructions according to Colbourn (2015)
 

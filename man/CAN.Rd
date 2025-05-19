@@ -8,6 +8,7 @@
 \alias{N_CKRScat}
 \alias{N_DWYERcat}
 \alias{N_PALEYcat}
+\alias{N_CYCLOTOMYcat}
 \alias{eCAK}
 \alias{k_NISTcat}
 \alias{k_TJcat}
@@ -15,6 +16,7 @@
 \alias{k_CKRScat}
 \alias{k_DWYERcat}
 \alias{k_PALEYcat}
+\alias{k_CYCLOTOMYcat}
 \title{Functions for N and k from Colbourn tables and other libraries}
 \usage{
 eCAN(t, k, v)
@@ -31,6 +33,8 @@ N_DWYERcat(t, k, v)
 
 N_PALEYcat(t, k, v=2)
 
+N_CYCLOTOMYcat(t, k, v)
+
 eCAK(t, N, v)
 
 k_NISTcat(t, N, v)
@@ -44,6 +48,8 @@ k_CKRScat(t, N, v)
 k_DWYERcat(t, N, v)
 
 k_PALEYcat(t, N, v=2)
+
+k_CYCLOTOMYcat(t, N, v)
 }
 \arguments{
 \item{t}{coverage strength}
@@ -111,4 +117,11 @@ eCAK(2,11,3)  ## also obtained by CAEX
 k_NISTcat(2,11,3)
 k_TJcat(2,11,3) ## equals the best-known array
 
+N_CYCLOTOMYcat(3, 45, 3) ## t=3 and v=3 not implemented
+N_CYCLOTOMYcat(4, 45, 3) ## quite large!
+k_CYCLOTOMYcat(4, 669, 3) ## can accommodate 224 columns
+N_CYCLOTOMYcat(4, 5, 3) ## is the smallest *implemented*
+                        ## cyclotomy strength 4 CA for 3 levels
+N_CYCLOTOMYcat(4, 670, 3) ## the next smallest is for 1051 columns
+eCAN(4, 670, 3)           ## which is a current optimum
 }

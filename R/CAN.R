@@ -14,6 +14,7 @@
 #' @aliases N_CKRScat
 #' @aliases N_DWYERcat
 #' @aliases N_PALEYcat
+#' @aliases N_CYCLOTOMYcat
 #' @aliases eCAK
 #' @aliases k_NISTcat
 #' @aliases k_TJcat
@@ -21,6 +22,7 @@
 #' @aliases k_CKRScat
 #' @aliases k_DWYERcat
 #' @aliases k_PALEYcat
+#' @aliases k_CYCLOTOMYcat
 #'
 #' @usage eCAN(t, k, v)
 #' @usage N_NISTcat(t, k, v)
@@ -29,6 +31,7 @@
 #' @usage N_CKRScat(t, k, v)
 #' @usage N_DWYERcat(t, k, v)
 #' @usage N_PALEYcat(t, k, v=2)
+#' @usage N_CYCLOTOMYcat(t, k, v)
 #' @usage eCAK(t, N, v)
 #' @usage k_NISTcat(t, N, v)
 #' @usage k_TJcat(t, N, v)
@@ -36,6 +39,7 @@
 #' @usage k_CKRScat(t, N, v)
 #' @usage k_DWYERcat(t, N, v)
 #' @usage k_PALEYcat(t, N, v=2)
+#' @usage k_CYCLOTOMYcat(t, N, v)
 #'
 #' @param t coverage strength
 #' @param k number of columns
@@ -93,6 +97,13 @@
 #' k_NISTcat(2,11,3)
 #' k_TJcat(2,11,3) ## equals the best-known array
 #'
+#' N_CYCLOTOMYcat(3, 45, 3) ## t=3 and v=3 not implemented
+#' N_CYCLOTOMYcat(4, 45, 3) ## quite large!
+#' k_CYCLOTOMYcat(4, 669, 3) ## can accommodate 224 columns
+#' N_CYCLOTOMYcat(4, 5, 3) ## is the smallest *implemented*
+#'                         ## cyclotomy strength 4 CA for 3 levels
+#' N_CYCLOTOMYcat(4, 670, 3) ## the next smallest is for 1051 columns
+#' eCAN(4, 670, 3)           ## which is a current optimum
 
 ## obtain known smallest CA sizes from Colbourn catalogue
 #' @export
@@ -175,6 +186,15 @@ N_DWYERcat <- function(t,k,v){
   else return(min(hilf[,"N"]))
 }
 
+## obtain size of CYCLOTOMY catalogue entry
+#' @export
+N_CYCLOTOMYcat <- function(t,k,v){
+  hilf <- CYCLOTOMYcat[CYCLOTOMYcat[,"t"]==t & CYCLOTOMYcat[,"k"]>=k &
+                         CYCLOTOMYcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(min(hilf[,"N"]))
+}
+
 ## obtain size of PAYLEY catalogue entry
 #' @export
 N_PALEYcat <- function(t,k,v=2){
@@ -210,6 +230,13 @@ k_TJcat <- function(t,N,v){
 #' @export
 k_DWYERcat <- function(t,N,v){
   hilf <- DWYERcat[DWYERcat[,"t"]==t & DWYERcat[,"N"]<=N & DWYERcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(max(hilf[,"k"]))
+}
+
+#' @export
+k_CYCLOTOMYcat <- function(t,N,v){
+  hilf <- CYCLOTOMYcat[CYCLOTOMYcat[,"t"]==t & CYCLOTOMYcat[,"N"]<=N & CYCLOTOMYcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(max(hilf[,"k"]))
 }

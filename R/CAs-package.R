@@ -16,6 +16,7 @@
 #' @export  NISTcat
 #' @export  TJcat
 #' @export  PALEYcat
+#' @export  CYCLOTOMYcat
 #' @aliases  CAEX_CAs
 #' @aliases  CAEX_lineages
 #' @aliases  colbournBigFrame
@@ -32,6 +33,7 @@
 #' @aliases  NISTcat
 #' @aliases  TJcat
 #' @aliases  PALEYcat
+#' @aliases  CYCLOTOMYcat
 #' @details This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
 #'
@@ -51,7 +53,7 @@
 #'
 #' * strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973) in function \code{\link{KSK}},
 #' * strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
-#' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyc}},
+#' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
 #' * recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
@@ -65,11 +67,14 @@
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 #'
 #' @section Exported catalogue objects:
-#' The constructions are based on various catalogue objects that can be inspected by expert users, but are mainly meant to be used by the package functions:
+#' The constructions are based on various catalogue objects that can be inspected by expert users,
+#' but are mainly meant to be used by the package functions:
 #' \code{CAEX_CAs}, \code{CAEX_lineages}, \code{colbournBigFrame}, \code{colbournCatalogue},
-#' \code{MeagherStevensCombis}, \code{MeagherStevensStarters}, \code{LCDSTCombis}, \code{LCDSTStarters},
-#' \code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat}, \code{NISTcat}, \code{TJcat},
-#' \code{PALEYcat}
+#' \code{MeagherStevensCombis}, \code{MeagherStevensStarters},
+#' \code{LCDSTCombis}, \code{LCDSTStarters},
+#' \code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat},
+#' \code{NISTcat}, \code{TJcat},
+#' \code{PALEYcat}, \code{CYCLOTOMYcat}.
 #'
 #' @author Author: Ulrike Groemping, BHT Berlin.
 #'

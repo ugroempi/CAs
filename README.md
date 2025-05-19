@@ -69,7 +69,9 @@ Colbourn (2015) in function <code>paleyCA</code>,
 <li>
 
 constructions based on cyclotomy (Colbourn 2010) in function
-<code>cyc</code>,
+<code>cyclotomyCA</code> for practitioners (based on arrays listed in
+the Colbourn tables), and function <code>cyc</code> for experts who know
+which prime power and construction type to request for which strength.
 </li>
 
 <li>
@@ -161,7 +163,7 @@ package functions: <code>CAEX_CAs</code>, <code>CAEX_lineages</code>,
 <code>LCDSTCombis</code>, <code>LCDSTStarters</code>,
 <code>CKRScat</code>, <code>CKRS_CAs</code>, <code>WKScat</code>,
 <code>WKS_CAs</code>, <code>DWYERcat</code>, <code>NISTcat</code>,
-<code>TJcat</code>, <code>PALEYcat</code>
+<code>TJcat</code>, <code>PALEYcat</code>, <code>CYCLOTOMYcat</code>.
 
 ## References
 
