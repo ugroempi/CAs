@@ -60,10 +60,17 @@ recBoseCA applies productCA or productPCA recursively to Bose CAs. The number of
 The function \code{recBoseCA} uses function \code{recursiveBose}, which in turn uses
 \code{\link{SCA_Bose}} for creating the \code{q^2 x (q+1)} ingredient matrix,
 and either function \code{\link{productPCA}} or \code{\link{productCA}}
-for obtaining the recursive product (depending on the choice for argument \code{type}).\cr
-For a given $\code{v}$, the function can construct\cr
-up to \code{v^d+d*v^(d-1)} columns in \code{d*v^2-(d-1)*v} runs (\code{type=="PCA"})\cr
-or up to \code{(v+1)^d} columns in up to \code{d*v^2-(d-1)*2} runs (\code{type=="CA"}),\cr
+for obtaining the recursive product (depending on the choice for argument \code{type}).
+
+\code{type=PCA}: For a given \code{v}, the function can construct
+up to \code{v*(D(d,v) + D(d-1,v))} columns in \code{d*v^2-(d-1)*v} runs,
+where \code{d} is the number of Bose CAs that are combined, and \code{D(d,v)} is recursively
+defined as \code{D(0,v)=0}, \code{D(1,v)=1}, \code{D(d+1,v)=v*(D(d,v) + D(d-1,v))}. Note that this is the
+construction following Lemma 3.5 of Colbourn et al. (2006); in that Lemma, there is an erroneous claim regarding
+the split into partition parts k1 and k2, which claims too many columns for k1 whenever \code{d>2}.
+
+For \code{type=="CA"}: For a given \code{v}, the function can construct up to \code{(v+1)^d}
+columns in up to \code{d*v^2-(d-1)*2} runs (\code{type=="CA"}),
 where \code{d} is the number of Bose CAs that are combined.
 }
 
@@ -96,4 +103,7 @@ N_k_recursiveBose(4)      ## d=2
 N_k_recursiveBose(4, 3)   ## d=3
 N_d_recursiveBose(4, 12)  ## k=12
 
+}
+\references{
+Colbourn et al. (2006)
 }

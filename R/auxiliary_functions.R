@@ -761,3 +761,17 @@ D3cols_to_LS <- function(D, start0=NULL){
 }
 
 Double <- function(M) rbind(cbind(0,M), 1-(cbind(0,M)))
+
+Dd <- function(d, q){
+  ## calculates multiplier for Lemma 3.5 of Colbourn et al. 2006
+  ## d corresponds to r
+  Dm2=0; Dm1=1;
+  if (d==0) return(0)
+  if (d==1) return(1)
+  for (i in 2:d){
+    cur <- q*(Dm2 + Dm1);
+    Dm2 <- Dm1;
+    Dm1 <- cur
+    }
+  return(cur)
+}

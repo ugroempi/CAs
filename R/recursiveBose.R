@@ -35,10 +35,17 @@
 #' The function \code{recBoseCA} uses function \code{recursiveBose}, which in turn uses
 #' \code{\link{SCA_Bose}} for creating the \code{q^2 x (q+1)} ingredient matrix,
 #' and either function \code{\link{productPCA}} or \code{\link{productCA}}
-#' for obtaining the recursive product (depending on the choice for argument \code{type}).\cr
-#' For a given $\code{v}$, the function can construct\cr
-#' up to \code{v^d+d*v^(d-1)} columns in \code{d*v^2-(d-1)*v} runs (\code{type=="PCA"})\cr
-#' or up to \code{(v+1)^d} columns in up to \code{d*v^2-(d-1)*2} runs (\code{type=="CA"}),\cr
+#' for obtaining the recursive product (depending on the choice for argument \code{type}).
+#'
+#' \code{type=PCA}: For a given \code{v}, the function can construct
+#' up to \code{v*(D(d,v) + D(d-1,v))} columns in \code{d*v^2-(d-1)*v} runs,
+#' where \code{d} is the number of Bose CAs that are combined, and \code{D(d,v)} is recursively
+#' defined as \code{D(0,v)=0}, \code{D(1,v)=1}, \code{D(d+1,v)=v*(D(d,v) + D(d-1,v))}. Note that this is the
+#' construction following Lemma 3.5 of Colbourn et al. (2006); in that Lemma, there is an erroneous claim regarding
+#' the split into partition parts k1 and k2, which claims too many columns for k1 whenever \code{d>2}.
+#'
+#' For \code{type=="CA"}: For a given \code{v}, the function can construct up to \code{(v+1)^d}
+#' columns in up to \code{d*v^2-(d-1)*2} runs (\code{type=="CA"}),
 #' where \code{d} is the number of Bose CAs that are combined.
 #'
 #' @returns \code{recBoseCA} returns a uniform CA strength 2 CA with \code{k} \code{v} level columns
@@ -52,6 +59,8 @@
 #' \code{N_k_recursiveBose} returns a named vector with the number of rows and the number of columns k
 #' for given \code{q} and \code{d}.\cr
 #' \code{N_d_recursiveBose} returns a named vector with the run size \code{N}, the \code{d} for its creation for the requested number of columns \code{k}, and the maximum possible number of columns \code{kmax} for that construction.\cr
+#'
+#' @references Colbourn et al. (2006)
 #'
 #' @examples
 #' D <- recBoseCA(k=12)   ## v=4 is the default, and type="PCA"
@@ -117,22 +126,27 @@ recursiveBose <- function(q, d=NULL, k=NULL, type="PCA", ...){
     stopifnot(k>0)
     stopifnot(k %% 1 == 0)
     if (type=="CA") d <- ceiling(log(k, base=q+1)) else{
-      hilf <- q^(1:6) + (1:6)*q^((1:6)-1)
+      hilf <- sapply(1:8, function(obj) (q+1) * Dd(obj,q) + q * Dd(obj-1,q))
+        #hilf <- q^(1:6) + (1:6)*q^((1:6)-1)
       d <- min(which(hilf>=k))
     }
     }
     if (d==1) return(SCA_Bose(q))
     A <- SCA_Bose(q)
     for (i in 2:d){
-      if (type=="CA") A <- productCA(A, SCA_Bose(q)) else
+      if (type=="CA") A <- productCA(A, SCA_Bose(q)) else{
         A <- productPCA(A, SCA_Bose(q))
+        nA <- nrow(A)
+        A <- CA_to_PCA(A[c((nA-q+1):nA, 1:(nA-q)),])
+      }
     }
   class(A) <- c("ca", class(A))
   attr(A, "Call") <- Call
   attr(A, "origin") <- c("recursiveBose", type)
   attr(A, "t") <- 2
-  A
+  if (!is.null(k)) A <- A[,1:k]
 }
+
 #' @export
 N_k_recursiveBose <- function(q, d=2, type="PCA", ...){
   if (!q %in% primedat$q)
@@ -143,7 +157,7 @@ N_k_recursiveBose <- function(q, d=2, type="PCA", ...){
   stopifnot(d > 0)
   stopifnot(d %% 1 == 0)
   if (type=="PCA"){
-    return(c(N=d*q^2-(d-1)*q, k=q^d + d*q^(d-1)))
+    return(c(N=d*q^2-(d-1)*q, k=(q+1)*Dd(d,q) + q*Dd(d-1,q)))
   } else{
     message("N can be slightly smaller because of constant rows")
     return(c(N=d*q^2-(d-1)*2, k=(q+1)^d))
@@ -165,10 +179,10 @@ N_d_recursiveBose <- function(q, k, type="PCA", ...){
     kmax <- q+1
     while(k > kmax){
       d <- d + 1
-      kmax <- q^d + d*q^(d-1)
+      kmax <- (q+1)*Dd(d,q) + q*Dd(d-1,q)
     }
   }
-  if (type=="PCA") return(c(N=d*q^2-(d-1)*q, d=d, kmax= q^d + d*q^(d-1))) else{
+  if (type=="PCA") return(c(N=d*q^2-(d-1)*q, d=d, kmax= kmax)) else{
     message("N can be slightly smaller because of constant rows")
     return(c(N=d*q^2-(d-1)*2, d=d, kmax=(q+1)^d))
   }
