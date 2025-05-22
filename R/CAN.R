@@ -8,6 +8,8 @@
 #'
 #' @rdname CAN
 #'
+#' @importFrom dplyr bind_rows
+#'
 #' @aliases Ns
 #' @aliases Ns_derive
 #' @aliases Ns_fuse
