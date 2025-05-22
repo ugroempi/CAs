@@ -2,6 +2,10 @@
 % Please edit documentation in R/CAN.R
 \name{Ns}
 \alias{Ns}
+\alias{Ns_derive}
+\alias{Ns_fuse}
+\alias{Ns_CK_doubling}
+\alias{Ns_productCA}
 \alias{eCAN}
 \alias{N_NISTcat}
 \alias{N_TJcat}
@@ -11,7 +15,9 @@
 \alias{N_PALEYcat}
 \alias{N_CYCLOTOMYcat}
 \alias{N_CAEX}
+\alias{N_recBoseCA}
 \alias{ks}
+\alias{ks_productCA}
 \alias{eCAK}
 \alias{k_NISTcat}
 \alias{k_TJcat}
@@ -21,9 +27,18 @@
 \alias{k_PALEYcat}
 \alias{k_CYCLOTOMYcat}
 \alias{k_CAEX}
+\alias{k_recBoseCA}
 \title{Functions for N and k from Colbourn tables, other libraries, and implemented constructions}
 \usage{
 Ns(t, k, v)
+
+Ns_derive(t, k, v)
+
+Ns_fuse(t, k, v, maxfuse = 1)
+
+Ns_CK_doubling(t=3, k, v)
+
+Ns_productCA(t=2, k, v)
 
 eCAN(t, k, v)
 
@@ -43,7 +58,13 @@ N_CYCLOTOMYcat(t, k, v)
 
 N_CAEX(t=2, k, v=3)
 
+N_recBoseCA(t=2, k, v, type="PCA")
+
 ks(t, N, v)
+
+Ns(t, k, v)
+
+ks_productCA(t=2, N, v)
 
 eCAK(t, N, v)
 
@@ -62,6 +83,8 @@ k_PALEYcat(t, N, v=2)
 k_CYCLOTOMYcat(t, N, v)
 
 k_CAEX(t=2, N, v=3)
+
+k_recBoseCA(t=2, N, v, type="PCA")
 }
 \arguments{
 \item{t}{coverage strength}
@@ -70,7 +93,11 @@ k_CAEX(t=2, N, v=3)
 
 \item{v}{number of levels for each column}
 
+\item{maxfuse}{integer number of levels to fuse (i.e., difference between number of levels before and after fusing)}
+
 \item{N}{number of runs}
+
+\item{type}{character string: \code{"PCA"} or \code{"CA"}}
 }
 \value{
 \code{eCAN} returns a data frame with the smallest known run size
@@ -88,7 +115,7 @@ and \code{k_TJcat} returns the largest number of columns \code{k} for the reques
 of a catalogued array from the Jose Torres-Jimenez library (as of Feb 6 2025, small
 selection, which is expected to grow; partly available in this package)\cr
 The analogous functionality holds for \code{N_} and \code{k_} functions for
-\code{DWYERcat}, \code{CKRScat} and \code{WKScat}.
+\code{DWYERcat}, \code{CKRScat}, \code{WKScat} and \code{CYCLOTOMYcat}.
 .
 In cases for which there is no entry in the respective
 table or library, the returned results are missing values.
@@ -103,13 +130,27 @@ achievable for a specified number of runs.
 \details{
 Functions \code{Ns} and \code{ks} take into account all available
 catalogues and constructions, for which sizes can be easily provided; their
-scope will grow with time. Specific functions for run sizes \code{N} and
-numbers of columns \code{k} can also be inspected separately.
+scope will grow with time. They provide the respective run sizes for
+a requested number of columns \code{k} (\code{Ns}) or the affordable numbers
+of columns from an affordable run size \code{N} (\code{ks}).\cr
+Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling}, \code{Ns_productCA}
+provide run sizes from deriving, fusing, doubling or taking the product with
+the smallest possible strength 2 CA for the requested \code{v}
+in comparison to run sizes without applying such techniques. In case of doubling,
+the function is restricted to strength $t=3$ (the only strength for which
+Chateauneuf-Kreher doubling works) with $v=2,3$, for which a natural choice of a
+the strength 2 design \code{D2} for \code{\link{CK_doubling}} is known (implemented
+in functions \code{\link{KSK}} and \code{\link{CAEX}}, respectively).\cr
+Functions \code{ks_derive} and \code{ks_fuse} provide affordable
+numbers of columns from an affordable run size \code{N};
+for doubling, this is more complicated and has not yet been implemented.
+
+Specific functions for run sizes \code{N} and
+numbers of columns \code{k} can also be inspected separately.\cr
 The functions typically look for a value of \code{k} for \emph{at most}
-\code{N} runs, but a value of \code{N} for exactly \code{k} columns.
-Most functions look for
-exact strength \code{t}, except for those for \code{WKScat}, which also return a
-value for at most strength \code{t}, with a message.
+\code{N} runs, and a value of \code{N} for at least \code{k} columns.\cr
+The functions look for the exact strength \code{t}; this implies that a CA for a higher strength may exist,
+where none is implemented for a lower strength.
 
 At present, the individual functions,
 except for \code{eCAN} and \code{eCAK}, return a number only.
@@ -142,7 +183,11 @@ eCAN(4, 670, 3)           ## which is a current optimum
 # overview of available constructions
 Ns(2, 45, 2)  ## function KSK is known to yield the overall optimum
 Ns(3, 45, 2)  ## the best array is in the DWYER-catalogue
-   # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_26_3_46_2.txt
+   # readable with internet connection
+   # pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
+   # the instruction line starts with a comment character and is ignored, therefore ninstruct=0
+   # D <- readCA(paste0(pathGH, "/CA_26_3_46_2.txt"), ignore.chars=c("]", "["),
+   #        ninstruct=0, sep=",")
 Ns(3, 400, 2) ## at present, the best easily available array
               ## is in the NIST catalogue
    # https://math.nist.gov/coveringarrays/ipof/cas/t=3/v=2/ca.3.2\%5E400.txt.zip
@@ -167,4 +212,11 @@ Ns(6, 200, 2) ## Paley is optimal
 Ns(6, 2000, 2) ## Cyclotomy is optimal
 Ns(6, 200, 3) ## not easily available at present
 
+Ns_CK_doubling(3, 22, 2)
+## with doubling a Paley design for ceiling(22/2) columns,
+## the optimum run size can be achieved
+
+Ns_CK_doubling(3, 12, 3)
+## with doubling a Paley design for ceiling(22/2) columns,
+## the optimum run size can be achieved
 }
