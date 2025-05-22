@@ -1,6 +1,28 @@
 # NEWS
 
+22 May 2025, still version 0.2.1
+
+ - added a function PHF2CA, in support of later implementation of Power 
+   constructions
+ - added a function recBoseCA for creating CAs from recursive processing 
+   of several SCA_Bose CAs; 
+   that recursive processing was changed from the method by Hartman 2005 
+   (which is still there as recursiveBoseHartman) to 
+   using either productPCA (which has the same number of rows but more 
+   columns as the Hartman method) 
+   or productCA (which has both more rows and more columns), 
+   governed by a type argument in functions recBoseCA and recursiveBose
+ - added further Ns and ks functions for post-processing methods
+ - changed readCA to take a single path argument including the file name
+ - added names to the entries of list CKRS_CAs
+ - bug fix for documentation of productCA and productPCA: 
+   run size for D2 was equal to run size for D1, changed it from N to M
+ - BUG FIX: productCA with generalized=TRUE sometimes failed to make the 
+   constant rows distinct, which led to violation of coverage (CAEX was not affected).
+
+
 19 May 2025, still Version 0.2.1
+
  - added functions Ns and ks
  - modified N and k functions, so that most have compatible arguments
    renamed prior function k_CAEX to k_detail_CAEX
@@ -8,10 +30,14 @@
  - added data.frame CYCLOTOMYcat and functions cyclotomyCA, N_CYCLOTOMYcat and k_CYCLOTOMYcat
  - augmented the internal object primedat with a few more primes in support of CYCLOTOMYcat
 
+
 17 May 2025, still Version 0.2.1
+
  - added Paley constructions according to Colbourn (2015)
+ 
 
 14 May 2025, still Version 0.2.1
+
  - made function `CK_doubling` use the `CAEX` designs per default for 3-level cases
    (i.e., `D2=NULL` now works for v=2 and v=3)
  - updated function `postopNCK` from a very naive version to a more serious implementation
@@ -23,6 +49,7 @@
  - added data.frame `CKRScat` and list `CKRS_CAs`
  - added several query functions: `N_DWYERcat`, `N_WKScat`, `N_CKRScat`, 
    `k_DWYERcat`, `k_WKScat`, `k_CKRScat`
+
 
 10 May 2025: Version 0.2.1
 

@@ -56,7 +56,7 @@
 #' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
-#' * recursive Bose constructions of Hartman (2005) in function \code{\link{recursiveBose}}
+#' * recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in function \code{\link{recursiveBose}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 #' * a projection construction for a Bose matrix, from Colbourn (2008), in function \code{\link{projectionBose}}
 #' * the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
 #' * the strength 2 cover starter construction by Lobb et al. (2012) which works similarly to Meagher and Stevens (2005) but fix one or more symbols using the additive group on the non-fixed symbols (function \code{\link{CS_LCDST}})
@@ -90,6 +90,8 @@
 #' Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 #'
 #' Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays, and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics. Springer International Publishing, Cham, pp. 29–42. https://doi.org/10.1007/978-3-319-17729-8_3
+#'
+#' Colbourn, C.J., Dougherty, R.E., Horsley, D. (2019). Distributing hash families with few rows. Theoretical Computer Science 800, 31-41. doi: 10.1016/j.tcs.2019.10.014
 #'
 #' Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H., Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22–33. https://doi.org/10.1007/978-3-642-01877-0_3
 #'

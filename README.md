@@ -90,8 +90,11 @@ with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it
 
 <li>
 
-recursive Bose constructions of Hartman (2005) in function
-<code>recursiveBose</code>
+recursive Bose constructions using <code>productPCA</code> or
+<code>productCA</code>, implemented in function
+<code>recursiveBose</code>; the variant with
+<code>link{productPCA}</code> is uniformly better than a similar
+construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 </li>
 
 <li>
@@ -211,6 +214,13 @@ and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory
 and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics.
 Springer International Publishing, Cham, pp. 29–42.
 <https://doi.org/10.1007/978-3-319-17729-8_3>
+</p>
+
+<p>
+
+Colbourn, C.J., Dougherty, R.E., Horsley, D. (2019). Distributing hash
+families with few rows. Theoretical Computer Science 800, 31-41. doi:
+10.1016/j.tcs.2019.10.014
 </p>
 
 <p>
