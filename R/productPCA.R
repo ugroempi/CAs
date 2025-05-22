@@ -17,7 +17,7 @@
 #' @usage is.PCA(D, start0=NULL, ...)
 #'
 #' @param D1 an N x k CA of strength 2 with v levels, split into k1 + k2 columns for \code{productPCA}
-#' @param D2 an N x l CA of strength 2 with v levels, split into l1 + l2 columns for \code{productPCA}
+#' @param D2 an M x l CA of strength 2 with v levels, split into l1 + l2 columns for \code{productPCA}
 #' @param D an N x k CA of strength 2 with v levels
 #' @param k1 width of P block in \code{D1} (see Details section)
 #' @param l1 width of P block in \code{D2} (see Details section)

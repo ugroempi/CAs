@@ -18,7 +18,7 @@ is.PCA(D, start0=NULL, ...)
 \arguments{
 \item{D1}{an N x k CA of strength 2 with v levels, split into k1 + k2 columns for \code{productPCA}}
 
-\item{D2}{an N x l CA of strength 2 with v levels, split into l1 + l2 columns for \code{productPCA}}
+\item{D2}{an M x l CA of strength 2 with v levels, split into l1 + l2 columns for \code{productPCA}}
 
 \item{k1}{width of P block in \code{D1} (see Details section)}
 
