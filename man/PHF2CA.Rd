@@ -82,5 +82,5 @@ aus <- PHF2CA(P, D)
 
 }
 \references{
-Colbourn, Doughterty and Horsley (2021) and references therein
+Colbourn, Doughterty and Horsley (2019) and references therein
 }

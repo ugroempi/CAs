@@ -26,7 +26,7 @@
 #' @returns a CA(rho + (N-rho) * M, t, k, v) (matrix, not of class \code{ca}, as there are no
 #' guarantees regarding the strength, because guarding this is left to the user or to calling functions).
 #'
-#' @references Colbourn, Doughterty and Horsley (2021) and references therein
+#' @references Colbourn, Doughterty and Horsley (2019) and references therein
 #'
 #' @examples
 #' #########################################
