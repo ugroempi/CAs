@@ -11,8 +11,8 @@
 #' @usage productCA_raw(D1, D2)
 #'
 #' @param D1 an N x k CA of strength 2 with v levels
-#' @param D2 an N x l CA of strength 2 with v levels
-#' @param check logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for larger CAs, especially for \code{t}>2)
+#' @param D2 an M x l CA of strength 2 with v levels
+#' @param check logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for large CAs)
 #' @param dupremove logical; if TRUE, removes duplicated rows
 #' @param generalized logical; if TRUE, exploits constant rows, which implies that function \code{\link{maxconstant}} is used to maximize constant rows,
 #' which can reduce \code{N+M} by up to \code{v} (and at least by two); the price is run time.
@@ -92,6 +92,7 @@
 productCA_raw <- function(D1, D2){
   ## function for use in productPCA
   ## skips all the checks, except for matrix
+  ## omit all constant row processing
   stopifnot(is.matrix(D1), is.matrix(D2))
   stopifnot(is.numeric(D1), is.numeric(D2))
   rbind(
@@ -124,26 +125,27 @@ productCA <- function(D1, D2, check=TRUE, dupremove=TRUE, generalized=TRUE, ...)
     if (nc1 == v){
       D1 <- D1[-(1:v),,drop=FALSE]
       nc2 <- sum(apply(D2, 1, function(obj) length(unique(obj))==1))
-    }else{
+    }else{ ## nc1 < v
       D2 <- maxconstant(D2, verbose=2, ...)
       nc2 <- length(attr(D2, "constant_rows")$row_set_list)
-      ## reduce numbers of rows
-      if (nc1 + nc2 <= v){
-        for (r in 1:nc2){
-          ## achieve disjoint constant rows
-          D2 <- swapvals(D2, 1:l, D2[r,1], v - as.numeric(start0) + 1 - r)
-          D1 <- D1[-(1:nc1),]; D2 <- D2[-(1:nc2),]
-        }}else{
-          D1 <- D1[-(1:nc1),]
-          if (nc1<v){
-            for (r in 1:(v-nc1)){
-              ## achieve disjoint constant rows
-              D2 <- swapvals(D2, 1:l, D2[r,1], v - as.numeric(start0) + 1 - r)
-              D2 <- D2[-(1:(v-nc1)),]
-            }
 
-    }
-  }}}
+      ## ensure disjoint constant rows
+      constvals1 <- D1[1:nc1, 1, drop=TRUE]
+      constvals2 <- D2[1:nc2, 1, drop=TRUE]
+      targetconstvals2 <- setdiff((1:v) - as.numeric(start0), constvals1)
+      if (length(union(constvals1, constvals2))==min(v, nc1+nc2)){
+        ## maximum possible disjoint rows already
+        D1 <- D1[-(1:nc1),]
+        D2 <- D2[-(which(constvals2 %in% targetconstvals2)),]
+      }else{
+        D1 <- D1[-(1:nc1),]   ## assuming these rows are disjoint
+        ## achieve disjoint constant rows in D2
+        for (r in 1:min(nc2,length(targetconstvals2)))
+          D2 <- swapvals(D2, 1:l, D2[r,1], targetconstvals2[r])
+        D2 <- D2[-(1:min(nc2,length(targetconstvals2))),]
+      }
+    }## end of nc1 < v
+    }## end of if (generalized)
 
   ## product with up to v disjoint constant rows removed
   aus <- productCA_raw(D1, D2)

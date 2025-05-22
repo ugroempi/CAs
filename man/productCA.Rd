@@ -12,9 +12,9 @@ productCA_raw(D1, D2)
 \arguments{
 \item{D1}{an N x k CA of strength 2 with v levels}
 
-\item{D2}{an N x l CA of strength 2 with v levels}
+\item{D2}{an M x l CA of strength 2 with v levels}
 
-\item{check}{logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for larger CAs, especially for \code{t}>2)}
+\item{check}{logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for large CAs)}
 
 \item{dupremove}{logical; if TRUE, removes duplicated rows}
 
