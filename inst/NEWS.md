@@ -1,6 +1,6 @@
 # NEWS
 
-22 May 2025, still version 0.2.1
+22 May 2025, version 0.2.2
 
  - added a function PHF2CA, in support of later implementation of Power 
    constructions

@@ -1,13 +1,13 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.2.1
+Version: 0.2.2
 Author: Ulrike Groemping
 Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
 Description: Implements mathematical constructions of covering arrays. Provides  
     diagnostic functions for assessing coverage properties.
 Depends: R (>= 3.5.0)
-Imports: lhs, DoE.base, SOAs, sets, prepplot, primes, utils, igraph, permutations
+Imports: lhs, DoE.base, SOAs, sets, prepplot, primes, utils, igraph, permutations, dplyr
 Suggests: parallel, FrF2
 License: GPL-3
 Encoding: UTF-8
