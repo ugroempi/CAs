@@ -145,6 +145,7 @@ recursiveBose <- function(q, d=NULL, k=NULL, type="PCA", ...){
   attr(A, "origin") <- c("recursiveBose", type)
   attr(A, "t") <- 2
   if (!is.null(k)) A <- A[,1:k]
+  A
 }
 
 #' @export
