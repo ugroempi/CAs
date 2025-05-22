@@ -38,7 +38,8 @@
 #' \code{CKRScat} and \code{WKScat}) or matrices with columns
 #' \code{t}, \code{k}, \code{v} and \code{N}
 #' (in different order, may change, always address via name!),
-#' \code{DWYERcat} also with a \code{Source} column and \code{CKRScat} with a column \code{fn} for the file name
+#' \code{DWYERcat} also with a \code{Source} column and \code{CKRScat} with a column \code{fn}
+#' for the file name that can be used for selecting the suitable element from \code{CKRS_CAs}
 #' (that also indicates by containing x that the CA was constructed by cross-summing).\cr
 #' They indicate the information on CAs that are available in the DWYER (2024) repository on Github,\cr
 #' in this package downloaded from the Keri website accompanying the Colbourn et al. (2010) paper,\cr
@@ -68,3 +69,10 @@
 #' have not been used for that purpose, as several mistakes in those were found.
 #' One instance from the Colbourn tables was removed, as its apparent underlying q is not a prime,
 #' but 13*229 so that either a different construction was used or the entry carries wrong information.
+#'
+#' @examples
+#' # usage examples
+#' head(CKRScat)
+#' CKRS_CAs[["CA(116;2,11,10)"]]
+#' table(v=CKRScat$v, t=CKRScat$t)
+#'
