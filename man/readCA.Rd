@@ -4,13 +4,11 @@
 \alias{readCA}
 \title{Function for reading a covering array from a text file}
 \usage{
-readCA(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
+readCA(path, flexible.symbols=c("*","-","."), comment.symbol="C",
 ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
 }
 \arguments{
-\item{path}{a character string that specifies the path}
-
-\item{fn}{a character string that specifies the file name; see Section Details for requirements the file must satisfy.}
+\item{path}{a character string that specifies the path, including the file name; see Section Details for requirements the file must satisfy.}
 
 \item{flexible.symbols}{characters to be treated as flexible values (will be set to NA)}
 

@@ -6,11 +6,10 @@
 #'
 #' @aliases readCA
 #'
-#' @usage readCA(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
+#' @usage readCA(path, flexible.symbols=c("*","-","."), comment.symbol="C",
 #' ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
 #'
-#' @param path a character string that specifies the path
-#' @param fn a character string that specifies the file name; see Section Details for requirements the file must satisfy.
+#' @param path a character string that specifies the path, including the file name; see Section Details for requirements the file must satisfy.
 #' @param flexible.symbols characters to be treated as flexible values (will be set to NA)
 #' @param comment.symbol character that starts a comment line
 #' @param ninstruct integer, number of lines with instructions (1 or 0)
@@ -35,9 +34,9 @@
 
 #' @importFrom utils read.table
 #' @export
-readCA <- function(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C",
+readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
                    ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...){
-  zeilen <- readLines(con=paste0(path, "\\", fn))
+  zeilen <- readLines(con=path)
   zeilen <- zeilen[!nchar(zeilen)==0]
   zeilen <- zeilen[!substr(zeilen,1,1)==comment.symbol]
   stopifnot(ninstruct %in% c(0,1))
@@ -68,8 +67,9 @@ readCA <- function(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C"
 
   ## zeilen is a character vector
   if (!is.null(ignore.chars)){
-    for (C in ignore.chars)
-      zeilen <- gsub(C, "", zeilen, fixed=TRUE)
+    for (ch in ignore.chars){
+      zeilen <- gsub(ch, "", zeilen, fixed=TRUE)
+    }
   }
   if (nosep){
     zeilen <- funmakefromstrings(zeilen)
@@ -82,8 +82,7 @@ readCA <- function(path, fn, flexible.symbols=c("*","-","."), comment.symbol="C"
     rownames(zeilen) <- NULL
   }
   class(zeilen) <- c("ca", class(zeilen))
-  pfad <- paste0(path, "\\", fn)
-  if (is.null(origin)) attr(zeilen, "origin") <- pfad else
+  if (is.null(origin)) attr(zeilen, "origin") <- path else
     attr(zeilen, "origin") <- origin
   if (is.null(v)) {
     v <- levels.no.NA(zeilen)
