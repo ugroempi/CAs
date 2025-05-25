@@ -1,6 +1,15 @@
 # NEWS
 
-22 May 2025, version 0.2.2
+25 May 2025, still Version 0.2.2
+ 
+ - added function kd for calculating the k for recursiveBose constructions
+   of type PCA (in some instances based on experimental results), 
+   exported this function and function Dd
+ - made function recursiveBose (and thus recBoseCA) fully exploit the 2PCA 
+   structure of the SCA_Bose array
+ - did the same for function productPCA, if D2=NULL
+
+22 May 2025, Version 0.2.2
 
  - added a function PHF2CA, in support of later implementation of Power 
    constructions

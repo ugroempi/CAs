@@ -5,6 +5,8 @@
 \alias{recursiveBose}
 \alias{N_k_recursiveBose}
 \alias{N_d_recursiveBose}
+\alias{Dd}
+\alias{kd}
 \title{function to create a strength 2 CA based on recursive multiplication of Bose CAs}
 \usage{
 recBoseCA(t=2, k=NULL, v=4, type="PCA", ...)
@@ -14,6 +16,10 @@ recursiveBose(q, d=NULL, k=NULL, type="PCA", ...)
 N_k_recursiveBose(q, d=2, type="PCA", ...)
 
 N_d_recursiveBose(q, k, type="PCA", ...)
+
+Dd(d, q)
+
+kd(d, q)
 }
 \arguments{
 \item{t}{the requested strength; must be 2}
@@ -63,11 +69,17 @@ and either function \code{\link{productPCA}} or \code{\link{productCA}}
 for obtaining the recursive product (depending on the choice for argument \code{type}).
 
 \code{type=PCA}: For a given \code{v}, the function can construct
-up to \code{v*(D(d,v) + D(d-1,v))} columns in \code{d*v^2-(d-1)*v} runs,
-where \code{d} is the number of Bose CAs that are combined, and \code{D(d,v)} is recursively
-defined as \code{D(0,v)=0}, \code{D(1,v)=1}, \code{D(d+1,v)=v*(D(d,v) + D(d-1,v))}. Note that this is the
-construction following Lemma 3.5 of Colbourn et al. (2006); in that Lemma, there is an erroneous claim regarding
-the split into partition parts k1 and k2, which claims too many columns for k1 whenever \code{d>2}.
+up to \code{kd(d,v)} columns in \code{d*v^2-(d-1)*v} runs,
+where \code{d} is the number of Bose CAs that are combined,
+and \code{k(d,v)} has been determined by experimentation; for \code{d=2,3},
+\code{k(d,v)} coincides with the value stated in Colbourn et al. (2006) Lemma 3.5,
+which uses a recursively defined \code{Dd(0,v)=0}, \code{Dd(1,v)=1}, \code{Dd(d+1,v)=v*(Dd(d,v) + Dd(d-1,v))}
+to yield \code{k=(v+1)*Dd(d,v) + v*Dd(d-1,v)}. Different from the construction
+underlying Lemma 3.5 of Colbourn et al. (2006), this function improves the
+size of the left-hand side partition in each interim step; this is achieved by
+applying function \code{\link{CA_to_PCA}} after moving the first block of \code{v} rows
+Experimentation showed that this choice yielded the overall optimum result among
+blocks of \code{v} rows in all cases that were investigated.
 
 For \code{type=="CA"}: For a given \code{v}, the function can construct up to \code{(v+1)^d}
 columns in up to \code{d*v^2-(d-1)*2} runs (\code{type=="CA"}),
@@ -94,13 +106,15 @@ dim(D)
 dim(D <- recursiveBose(3))
 eCAN(2,15,3)  ## optimal
 dim(recursiveBose(3, d=3))
-eCAN(2,54,3)  ## reasonably close to optimal
+eCAN(2,57,3)  ## reasonably close to optimal
 dim(recursiveBose(3, d=3, type="CA"))
 eCAN(2,64,3)  ## reasonably close to optimal
 
 ## query functions
 N_k_recursiveBose(4)      ## d=2
 N_k_recursiveBose(4, 3)   ## d=3
+kd(3,4)   ## work horse function for k for default type PCA
+N_k_recursiveBose(4, 3, type="CA")
 N_d_recursiveBose(4, 12)  ## k=12
 
 }
