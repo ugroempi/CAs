@@ -61,9 +61,23 @@ Function \code{productPCA} exploits a partitioned structure of the two CAs it co
 (see Section "Partitioned Covering Array (PCA)"). The construction can be viewed as a kind of product,
 but is sometimes also called "cut-and-paste". It was proposed in Colbourn et al. (2006)
 and was slightly generalized later, see, e.g., in Colbourn and Torres-Jimenez (2013).
-
 Function \code{productPCA} also serves as work horse function for combining two CAs in many instances of
-the \code{\link{CAEX}} construction.
+the \code{\link{CAEX}} and \code{\link{recBoseCA}} constructions.
+
+If two matrices \code{D1} and \code{D2} are specified, the function \code{productPCA}
+does a conventional PCAxPCA construction according to Theorem 3.2 of Colbourn et al. (2006).\cr
+If \code{D2=NULL}, the function uses the SCA constructed by function \code{link{SCA_Bose}}
+and exploits the fact that the sub matrix B1 of that SCA is itself a PCA (i.e., the SCA is
+a 2PCA in the notation of the Colbourn tables); for such cases,
+Theorem 3.3 of Colbourn et al. (2006) states that the number of columns of the
+first part in the result can be increased (which becomes relevant whenever using the
+result as the in-going matrix in another \code{productPCA} call).
+This is implemented by moving the bottom-most block of \code{v} rows from the resulting matrix
+to the top and applying function \code{CA_to_PCA} to the result; for avoiding this from happening,
+explicitly specify \code{SCA_Bose(v)} as the second matrix. Likewise, for any other 2PCA
+(i.e., PCA whose bottom left block is a PCA) in the role of \code{D2},
+the user can postprocess the result of function \code{productPCA} in order to benefit from the
+properties of that matrix.
 
 \code{CA_to_PCA} rearranges \code{D} into a PCA structure (see Section "Partitioned Covering Array (PCA)")
 by rearranging columns, swapping symbols, and in case of \code{tryhard=TRUE} also rearranging rows.\cr
@@ -74,9 +88,11 @@ levels in the first \code{v} rows.\cr
 \code{tryhard=TRUE} may be useful for small designs, but may substantially increase run times for \code{D} with many rows or many columns.
 
 Function \code{SCA_Bose} obtains the strength 2 Bose constructed CA (q+1 columns in q levels, q^2 runs, q a prime power)
-and rearranges it into SCA shape.
+and rearranges it into SCA shape. The array actually is a 2PCA, in the sense that its bottom left \code{(q^2-q)xq} block is itself a PCA
+with width of the left parts equal to \code{q} (and thus width of the right-hand side equal to zero). Every consecutive \code{qxq} block
+of the matrix consists of columns whose elements are a permutation of the number 0 to \code{q-1}.
 
-Function \code{CA_to_PCA} brings its argument into the best possible PCA shape by swapping columns only.
+Function \code{CA_to_PCA} brings its argument into the best possible PCA shape by swapping columns only, working on the first \code{q} rows.
 If the argument \code{tryhard} is invoked, the function tries to achieve \code{k1=k-1} or \code{k1=k-2} by trying \code{\link{maxconstant}} on
 subsets of columns. Function \code{is.PCA} checks the PCA status of its argument without modifying it in any way.
 }
@@ -91,7 +107,10 @@ the \code{v x k1} matrix P (with each column consisting of the identity permutat
 makes up the top left block,\cr
 the top right \code{v x k2} block (which may be empty) is constant with all elements equal to the smallest level (for an SCA, which is a special case of a PCA)
 or has arbitrary levels (for a PCA),\cr
-and the remaining two blocks (bottom left and bottom right) may arbitrary elements.
+and the remaining two blocks (bottom left and bottom right) may contain arbitrary elements.\cr
+It is beneficial for the number of columns in a product, if the left-hand side block is as wide as possible.\cr
+It is beneficial for recursively taking products, if the bottom left block is itself a PCA, i.e., contains \code{q} rows
+for which a large number of columns consists of permutations of the values 0 to \code{q-1} (also called a 2PCA).
 }
 
 \examples{
@@ -104,6 +123,13 @@ coverage(EPCA, 2)
 dim(EPCA)  ## 24 columns only, 28 runs only
 eCAN(2, 24, 4) ## optimal, this construction!
 eCAK(2, 28, 4) ## optimal, this construction
+attr(EPCA, "PCAstatus")
+## better, if D2 is left unspecified, because
+## the structure of SCA_Bose(4) in the role of D2
+## is exploited
+EPCA2 <- productPCA(A)
+attr(EPCA2, "PCAstatus")
+
 
 ########################################
 ## utilities CA_to_PCA and is.PCA
