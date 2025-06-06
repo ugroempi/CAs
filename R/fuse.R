@@ -20,6 +20,15 @@
 #' as \code{D} and at most \code{nrow(D) - 2 * (vprior - vpost)} rows
 #' with \code{vpost} levels per column
 #'
+#' @section Details:
+#' Note that there is a variant of fusion, implemented in function \code{\link{fuseBose}},
+#' for which the number of runs can be reduced by three; this is applicable for strength 2
+#' with \code{vprior} a prime or prime power and up to \code{vprior + 1} columns in \code{D}.
+#'
+#' @seealso [fuseBose()] for the case mentioned in the Details section
+#'
+#' @references Colbourn et al. (2010, CKRS; Lemma 3.1)
+#'
 #' @examples
 #' set.seed(1212) ## for array randomization
 #' D <- lhs::createBush(11, 12)

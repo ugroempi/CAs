@@ -1,5 +1,14 @@
 # NEWS
 
+05 June 2025, still Version 0.2.2
+ 
+ - renamed previous function projectionBose to fuseBose, as it does a specific type
+   of fusing in line with Colbourn et al. (2010) rather than a projection
+ - added new function projectionBose that does indeed obtain a projection
+   from a Bose array (Theorem 2.3 of Colbourn 2008; output CA can be uniform or mixed level)
+ - added new function projBoseCA that allows to input k and v and obtain a projection 
+   based uniform CA (uses projectionBose as workhorse function)
+
 25 May 2025, still Version 0.2.2
  
  - added function kd for calculating the k for recursiveBose constructions

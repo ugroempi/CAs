@@ -37,7 +37,8 @@ for which setting.
 All references of the package are listed in this file and referenced from the other documentation files.
 
 Within the package, available CA constructions for specific situations can be queried using
-the guide functions \code{guide_CAs} (not yet implemented, might be changed).
+the function \code{Ns}, which provides sizes from available constructions, as well as the current known optimum size; it is not guaranteed that all implemented constructions are incorporated, as this is not trivial for constructions with intricate ingoing quantities.
+An analogous function \code{ks} has not been implemented yet.
 
 Besides the construction functions, coverage properties of any array can be checked by function
 \code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
@@ -49,13 +50,14 @@ So far, the following constructions have been implemented:
 \item constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
 \item Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doubling}}, and also construction D from the basics part of that paper (function \code{\link{CK_constrD}})
 \item Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
-\item recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in function \code{\link{recursiveBose}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
-\item a projection construction for a Bose matrix, from Colbourn (2008), in function \code{\link{projectionBose}}
+\item recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
+\item a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBose}}
+\item a projection construction based on a Bose matrix, from Colbourn (2008), in functions \code{\link{projectionBose}} and \code{\link{projBoseCA}}
 \item the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
 \item the strength 2 cover starter construction by Lobb et al. (2012) which works similarly to Meagher and Stevens (2005) but fix one or more symbols using the additive group on the non-fixed symbols (function \code{\link{CS_LCDST}})
 \item direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
 \item product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
-\item cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
+\item composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
 \item the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
 \item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }

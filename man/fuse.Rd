@@ -27,6 +27,13 @@ achieving a reduction of the number of rows by 2.
 fuse can also reduce the number of levels by more than 1,
 reducing the number of rows by 2 for each reduction of 1 level.
 }
+\section{Details}{
+
+Note that there is a variant of fusion, implemented in function \code{\link{fuseBose}},
+for which the number of runs can be reduced by three; this is applicable for strength 2
+with \code{vprior} a prime or prime power and up to \code{vprior + 1} columns in \code{D}.
+}
+
 \examples{
 set.seed(1212) ## for array randomization
 D <- lhs::createBush(11, 12)
@@ -38,4 +45,10 @@ dim(D10)
 coverage(D, 3)
 coverage(D10, 3)
 
+}
+\references{
+Colbourn et al. (2010, CKRS; Lemma 3.1)
+}
+\seealso{
+\code{\link[=fuseBose]{fuseBose()}} for the case mentioned in the Details section
 }

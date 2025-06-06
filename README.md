@@ -44,8 +44,12 @@ All references of the package are listed in this file and referenced
 from the other documentation files.
 
 Within the package, available CA constructions for specific situations
-can be queried using the guide functions <code>guide_CAs</code> (not yet
-implemented, might be changed).
+can be queried using the function <code>Ns</code>, which provides sizes
+from available constructions, as well as the current known optimum size;
+it is not guaranteed that all implemented constructions are
+incorporated, as this is not trivial for constructions with intricate
+ingoing quantities. An analogous function <code>ks</code> has not been
+implemented yet.
 
 Besides the construction functions, coverage properties of any array can
 be checked by function <code>coverage</code> and plotted by function
@@ -91,16 +95,22 @@ with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it
 <li>
 
 recursive Bose constructions using <code>productPCA</code> or
-<code>productCA</code>, implemented in function
-<code>recursiveBose</code>; the variant with
+<code>productCA</code>, implemented in functions
+<code>recursiveBose</code> and <code>recBoseCA</code>; the variant with
 <code>link{productPCA}</code> is uniformly better than a similar
 construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 </li>
 
 <li>
 
-a projection construction for a Bose matrix, from Colbourn (2008), in
-function <code>projectionBose</code>
+a fusion construction based on a Bose matrix, from Colbourn (2008), in
+function <code>fuseBose</code>
+</li>
+
+<li>
+
+a projection construction based on a Bose matrix, from Colbourn (2008),
+in functions <code>projectionBose</code> and <code>projBoseCA</code>
 </li>
 
 <li>
@@ -134,8 +144,8 @@ various current best CAs of the Colbourn tables.
 
 <li>
 
-cross product of levels for arbitrary strength (e.g., Theorem 2.8 of
-Zhang et al. 2014), <code>crossCAs</code>
+composition of arrays, i.e., cross product of levels for arbitrary
+strength (e.g., Theorem 2.8 of Zhang et al. 2014), <code>crossCAs</code>
 </li>
 
 <li>
