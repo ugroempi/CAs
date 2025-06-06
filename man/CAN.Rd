@@ -16,6 +16,7 @@
 \alias{N_CYCLOTOMYcat}
 \alias{N_CAEX}
 \alias{N_recBoseCA}
+\alias{N_projBoseCA}
 \alias{ks}
 \alias{ks_productCA}
 \alias{eCAK}
@@ -60,6 +61,8 @@ N_CAEX(t=2, k, v=3)
 
 N_recBoseCA(t=2, k, v, type="PCA")
 
+N_projBoseCA(t=2, k, v, cmax=3)
+
 ks(t, N, v)
 
 Ns(t, k, v)
@@ -98,6 +101,9 @@ k_recBoseCA(t=2, N, v, type="PCA")
 \item{N}{number of runs}
 
 \item{type}{character string: \code{"PCA"} or \code{"CA"}}
+
+\item{cmax}{integer number: maximum \code{c} to consider for projection (\code{N_projBoseCA} returns \code{NA},
+if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)}
 }
 \value{
 \code{eCAN} returns a data frame with the smallest known run size
@@ -182,6 +188,11 @@ eCAN(4, 670, 3)           ## which is a current optimum
 
 # overview of available constructions
 Ns(2, 45, 2)  ## function KSK is known to yield the overall optimum
+              ## projBoseCA is very unsuitable, but Ns uses N_projBoseCA with cmax=Inf
+N_projBoseCA(2, 45, 2, cmax=25)
+N_projectionBose(45, 2)
+Ns(2, 16, 11) ## CS_LCDST is the best,
+              ## projBoseCA and CS_MS are competitive
 Ns(3, 45, 2)  ## the best array is in the DWYER-catalogue
    # readable with internet connection
    # pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
@@ -217,6 +228,9 @@ Ns_CK_doubling(3, 22, 2)
 ## the optimum run size can be achieved
 
 Ns_CK_doubling(3, 12, 3)
-## with doubling a Paley design for ceiling(22/2) columns,
-## the optimum run size can be achieved
+## the direct CKRS construction is best
+## it is available under the name given in CKRScat
+## in the list CKRS_CAs
+CKRScat[CKRScat$t==3 & CKRScat$k==12 & CKRScat$v==3,]
+## CKRS_CAs["CA(15x3;3,12,3)"]
 }

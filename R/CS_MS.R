@@ -137,6 +137,7 @@ CS_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
 #'@export
 N_CS_MS <- function(t=2, k, v, theoretical=FALSE){
   if (!t==2) return(NA)
+  if (!v>=3) return(NA)
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
   stopifnot(k>=2, v>=3)

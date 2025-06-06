@@ -25,6 +25,7 @@
 #' @aliases N_CYCLOTOMYcat
 #' @aliases N_CAEX
 #' @aliases N_recBoseCA
+#' @aliases N_projBoseCA
 #' @aliases ks
 #' @aliases ks_productCA
 #' @aliases eCAK
@@ -53,6 +54,7 @@
 #' @usage N_CYCLOTOMYcat(t, k, v)
 #' @usage N_CAEX(t=2, k, v=3)
 #' @usage N_recBoseCA(t=2, k, v, type="PCA")
+#' @usage N_projBoseCA(t=2, k, v, cmax=3)
 #' @usage ks(t, N, v)
 #' @usage Ns(t, k, v)
 #' @usage ks_productCA(t=2, N, v)
@@ -73,6 +75,8 @@
 #' @param maxfuse integer number of levels to fuse (i.e., difference between number of levels before and after fusing)
 #' @param N number of runs
 #' @param type character string: \code{"PCA"} or \code{"CA"}
+#' @param cmax integer number: maximum \code{c} to consider for projection (\code{N_projBoseCA} returns \code{NA},
+#' if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)
 #'
 #' @details
 #' Functions \code{Ns} and \code{ks} take into account all available
@@ -150,6 +154,11 @@
 #'
 #' # overview of available constructions
 #' Ns(2, 45, 2)  ## function KSK is known to yield the overall optimum
+#'               ## projBoseCA is very unsuitable, but Ns uses N_projBoseCA with cmax=Inf
+#' N_projBoseCA(2, 45, 2, cmax=25)
+#' N_projectionBose(45, 2)
+#' Ns(2, 16, 11) ## CS_LCDST is the best,
+#'               ## projBoseCA and CS_MS are competitive
 #' Ns(3, 45, 2)  ## the best array is in the DWYER-catalogue
 #'    # readable with internet connection
 #'    # pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
@@ -185,8 +194,11 @@
 #' ## the optimum run size can be achieved
 #'
 #' Ns_CK_doubling(3, 12, 3)
-#' ## with doubling a Paley design for ceiling(22/2) columns,
-#' ## the optimum run size can be achieved
+#' ## the direct CKRS construction is best
+#' ## it is available under the name given in CKRScat
+#' ## in the list CKRS_CAs
+#' CKRScat[CKRScat$t==3 & CKRScat$k==12 & CKRScat$v==3,]
+#' ## CKRS_CAs["CA(15x3;3,12,3)"]
 
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
@@ -199,9 +211,10 @@ Ns <- function(t, k, v){
     CKRS=N_CKRScat(t,k,v),
     recBoseCA_PCA=unname(N_recBoseCA(t,k,v,type="PCA")),
     recBoseCA_CA=unname(N_recBoseCA(t,k,v,type="CA")),
+    projBoseCA=unname(N_projBoseCA(t,k,v,cmax=Inf)),
     WKS=N_WKScat(t,k,v),
-    CS_MS=N_CS_MS(k,v),
-    CS_LCDST=N_CS_LCDST(k,v),
+    CS_MS=N_CS_MS(t,k,v),
+    CS_LCDST=N_CS_LCDST(t,k,v),
     DWYER=N_DWYERcat(t,k,v),
     NIST=N_NISTcat(t,k,v),
     TJ=N_TJcat(t,k,v),
@@ -356,6 +369,12 @@ N_CAEX <- function(t=2,k,v=3){
 N_recBoseCA <- function(t=2,k,v, type="PCA"){
   if (t>2 || !v%in% primedat$q) return(NA)
   suppressMessages(N_d_recursiveBose(v, k, type=type))[1]
+}
+
+#' @export
+N_projBoseCA <- function(t=2,k,v,cmax=3){
+  if (!t==2) return(NA)
+  suppressMessages(N_projectionBose(k=k, v=v, cmax=cmax))[1]
 }
 
 ## obtain size of WKS catalogue entry
