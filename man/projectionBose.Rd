@@ -13,7 +13,7 @@ projectionBose(q, c=1, s=q-c, fixNA=FALSE, ...)
 
 N_projectionBose(k, v, cmax=Inf, ...)
 
-k_projectionBose(N, v, ...)
+k_projectionBose(N, v, cmax=Inf, ...)
 }
 \arguments{
 \item{k}{\code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.}
@@ -43,7 +43,8 @@ if this is reasonably possible by projection of a strength 2 Bose OA, which shou
 \code{projectionBose} returns a (\code{q^2-c} x \code{q+1+c} matrix with the first \code{q+1} columns
 in \code{q-c} levels (labeled from 0 to \code{q-c-1}) and the last \code{c} columns in \code{s} levels (labeled from 0 to \code{s-1})
 that is a covering array of strength 2.\cr
-\code{N_projectionBose} and \code{k_projectionBose} return a named vector with elements \code{N}, \code{k}, \code{kmax}, \code{v}, \code{q} and \code{c}.
+\code{N_projectionBose} and \code{k_projectionBose} return a named
+vector with elements \code{N}, \code{k}, \code{kmax}, \code{v}, \code{q} and \code{c}.
 }
 \description{
 A strength 2 CA with q^2-c runs with q+1 (q-c)-level columns and c s-level columns is created from a q-level Bose array arranged as SCA
@@ -68,7 +69,8 @@ dim(projBoseCA(15,12))
 eCAN(2, 15, 12)  ## optimal
 
 # querying k or N
-N_projectionBose(k=21, v=15) ## not a good use case
+N_projectionBose(k=21, v=15)
+k_projectionBose(N=357, v=15)
 eCAN(2, 21, 15) ## the above design is the basis
 eCAK(2, 357, 15) ## four more columns
 

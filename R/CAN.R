@@ -10,12 +10,13 @@
 #'
 #' @importFrom dplyr bind_rows
 #'
+#' @aliases eCAN
+#' @aliases eCAK
 #' @aliases Ns
 #' @aliases Ns_derive
 #' @aliases Ns_fuse
 #' @aliases Ns_CK_doubling
 #' @aliases Ns_productCA
-#' @aliases eCAN
 #' @aliases N_NISTcat
 #' @aliases N_TJcat
 #' @aliases N_WKScat
@@ -28,7 +29,6 @@
 #' @aliases N_projBoseCA
 #' @aliases ks
 #' @aliases ks_productCA
-#' @aliases eCAK
 #' @aliases k_NISTcat
 #' @aliases k_TJcat
 #' @aliases k_WKScat
@@ -39,12 +39,13 @@
 #' @aliases k_CAEX
 #' @aliases k_recBoseCA
 #'
+#' @usage eCAN(t, k, v)
+#' @usage eCAK(t, N, v)
 #' @usage Ns(t, k, v)
 #' @usage Ns_derive(t, k, v)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
 #' @usage Ns_CK_doubling(t=3, k, v)
 #' @usage Ns_productCA(t=2, k, v)
-#' @usage eCAN(t, k, v)
 #' @usage N_NISTcat(t, k, v)
 #' @usage N_TJcat(t, k, v)
 #' @usage N_WKScat(t=6, k, v=2)
@@ -56,9 +57,7 @@
 #' @usage N_recBoseCA(t=2, k, v, type="PCA")
 #' @usage N_projBoseCA(t=2, k, v, cmax=3)
 #' @usage ks(t, N, v)
-#' @usage Ns(t, k, v)
 #' @usage ks_productCA(t=2, N, v)
-#' @usage eCAK(t, N, v)
 #' @usage k_NISTcat(t, N, v)
 #' @usage k_TJcat(t, N, v)
 #' @usage k_WKScat(t=6, N, v=2)
@@ -79,12 +78,16 @@
 #' if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)
 #'
 #' @details
-#' Functions \code{Ns} and \code{ks} take into account all available
-#' catalogues and constructions, for which sizes can be easily provided; their
-#' scope will grow with time. They provide the respective run sizes for
+#' Functions \code{eCAN} and \code{eCAK} provide the current best \code{N} for a given \code{k}
+#' and vice versa, according to the Colbourn tables, including source information as stated in those tables.\cr
+#' Functions \code{Ns} and \code{ks} provide the respective run sizes for
 #' a requested number of columns \code{k} (\code{Ns}) or the affordable numbers
-#' of columns from an affordable run size \code{N} (\code{ks}).\cr
-#' Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling}, \code{Ns_productCA}
+#' of columns from an affordable run size \code{N} (\code{ks}). They take into account all available
+#' catalogues and constructions, for which sizes can be easily provided; their
+#' scope will grow with time, and \code{Ns} is prioritized over \code{ks}, as it is considered
+#' more important for applications.\cr
+#' Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling},
+#' \code{Ns_productCA}
 #' provide run sizes from deriving, fusing, doubling or taking the product with
 #' the smallest possible strength 2 CA for the requested \code{v}
 #' in comparison to run sizes without applying such techniques. In case of doubling,

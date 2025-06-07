@@ -2,11 +2,12 @@
 % Please edit documentation in R/CAN.R
 \name{Ns}
 \alias{Ns}
+\alias{eCAN}
+\alias{eCAK}
 \alias{Ns_derive}
 \alias{Ns_fuse}
 \alias{Ns_CK_doubling}
 \alias{Ns_productCA}
-\alias{eCAN}
 \alias{N_NISTcat}
 \alias{N_TJcat}
 \alias{N_WKScat}
@@ -19,7 +20,6 @@
 \alias{N_projBoseCA}
 \alias{ks}
 \alias{ks_productCA}
-\alias{eCAK}
 \alias{k_NISTcat}
 \alias{k_TJcat}
 \alias{k_WKScat}
@@ -31,6 +31,10 @@
 \alias{k_recBoseCA}
 \title{Functions for N and k from Colbourn tables, other libraries, and implemented constructions}
 \usage{
+eCAN(t, k, v)
+
+eCAK(t, N, v)
+
 Ns(t, k, v)
 
 Ns_derive(t, k, v)
@@ -40,8 +44,6 @@ Ns_fuse(t, k, v, maxfuse = 1)
 Ns_CK_doubling(t=3, k, v)
 
 Ns_productCA(t=2, k, v)
-
-eCAN(t, k, v)
 
 N_NISTcat(t, k, v)
 
@@ -65,11 +67,7 @@ N_projBoseCA(t=2, k, v, cmax=3)
 
 ks(t, N, v)
 
-Ns(t, k, v)
-
 ks_productCA(t=2, N, v)
-
-eCAK(t, N, v)
 
 k_NISTcat(t, N, v)
 
@@ -134,12 +132,16 @@ and available catalogues. Or they extract the number of columns
 achievable for a specified number of runs.
 }
 \details{
-Functions \code{Ns} and \code{ks} take into account all available
-catalogues and constructions, for which sizes can be easily provided; their
-scope will grow with time. They provide the respective run sizes for
+Functions \code{eCAN} and \code{eCAK} provide the current best \code{N} for a given \code{k}
+and vice versa, according to the Colbourn tables, including source information as stated in those tables.\cr
+Functions \code{Ns} and \code{ks} provide the respective run sizes for
 a requested number of columns \code{k} (\code{Ns}) or the affordable numbers
-of columns from an affordable run size \code{N} (\code{ks}).\cr
-Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling}, \code{Ns_productCA}
+of columns from an affordable run size \code{N} (\code{ks}). They take into account all available
+catalogues and constructions, for which sizes can be easily provided; their
+scope will grow with time, and \code{Ns} is prioritized over \code{ks}, as it is considered
+more important for applications.\cr
+Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling},
+\code{Ns_productCA}
 provide run sizes from deriving, fusing, doubling or taking the product with
 the smallest possible strength 2 CA for the requested \code{v}
 in comparison to run sizes without applying such techniques. In case of doubling,

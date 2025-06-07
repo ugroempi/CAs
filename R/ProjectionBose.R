@@ -12,7 +12,7 @@
 #' @usage projBoseCA(k, v, fixNA=TRUE, ...)
 #' @usage projectionBose(q, c=1, s=q-c, fixNA=FALSE, ...)
 #' @usage N_projectionBose(k, v, cmax=Inf, ...)
-#' @usage k_projectionBose(N, v, ...)
+#' @usage k_projectionBose(N, v, cmax=Inf, ...)
 #'
 #' @param k \code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.
 #' @param v \code{NULL} or number of levels; if \code{NULL}, inferred from \code{k} as \code{v=k+2} or from \code{N} as \code{sqrt(N+3)-1}; if \code{k} is also specified, it takes precedence.
@@ -31,7 +31,8 @@
 #' @returns \code{projectionBose} returns a (\code{q^2-c} x \code{q+1+c} matrix with the first \code{q+1} columns
 #' in \code{q-c} levels (labeled from 0 to \code{q-c-1}) and the last \code{c} columns in \code{s} levels (labeled from 0 to \code{s-1})
 #' that is a covering array of strength 2.\cr
-#' \code{N_projectionBose} and \code{k_projectionBose} return a named vector with elements \code{N}, \code{k}, \code{kmax}, \code{v}, \code{q} and \code{c}.
+#' \code{N_projectionBose} and \code{k_projectionBose} return a named
+#' vector with elements \code{N}, \code{k}, \code{kmax}, \code{v}, \code{q} and \code{c}.
 #'
 #' @references Colbourn (2008, Theorem 2.3), Torres-Jimenez et al. (2019, Fig. 25)
 #'
@@ -55,7 +56,8 @@
 #' eCAN(2, 15, 12)  ## optimal
 #'
 #' # querying k or N
-#' N_projectionBose(k=21, v=15) ## not a good use case
+#' N_projectionBose(k=21, v=15)
+#' k_projectionBose(N=357, v=15)
 #' eCAN(2, 21, 15) ## the above design is the basis
 #' eCAK(2, 357, 15) ## four more columns
 #'
@@ -161,24 +163,26 @@ N_projectionBose <- function(k, v, cmax=Inf, ...){
 }
 
 #' @export
-k_projectionBose <- function(N, v=NULL, ...){
-  ## not yet implemented
+k_projectionBose <- function(N, v=NULL, cmax=Inf, ...){
+  ## v=NULL is interpreted as 2
   primpotenzen <- primedat$q
-  hilf <- primpotenzen^2 - 3
-  if (!(N %in% (primpotenzen^2-3))){
-    N <- max(hilf[hilf <= N ])
+  if (is.null(v)) v <- 2
+  stopifnot(is.numeric(v), is.numeric(N))
+  stopifnot(N%%1==0, v%%1==0)
+  hilfc <- primpotenzen - v
+  hilf <- primpotenzen^2 - hilfc
+
+  if (!(N %in% hilf)){
+    pos <- which.max(hilf[hilf <= N ])
+    N <- hilf[pos]
+    c <- hilfc[pos]
     message("Invalid N was reduced to closest valid N")
+  }else{
+    pos <- which(hilf==N)
+    c <- hilfc[pos]
   }
-  q <- round(as.integer(sqrt(N+3)))
-  if (!is.null(v)){
-    stopifnot(is.numeric(v))
-    stopifnot(v %% 1==0)
-    if (!(v+1) %in% primedat$q)
-      message("v is invalid and was ignored.")
-    if (!(v+1 == q))
-      message("v is not compatible with N and was ignored.")
-    }
-   v <- q-1
-   c(N=q^2-3, k=q+1, v=v, q=q)
+  if (c<0 || c>cmax) return(NA)
+  q <- v + c
+  c(N=q^2-c, k=q+1+c, v=v, q=q, c=c)
 }
 
