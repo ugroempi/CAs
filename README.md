@@ -159,6 +159,15 @@ not theoretically optimal and might improve in the future) in function
 
 <li>
 
+a preliminary technical implementation of the Power construction as
+proposed in Colbourn and Torres-Jimenez (2010), in function
+<code>PHF2CA</code> (homogeneous PHF only, implementation for
+heterogeneous is in progress, as well as implementation for Colbourn and
+Zhou 2012).
+</li>
+
+<li>
+
 identification of flexible values as in Colbourn and Torres-Jimenez
 (2013), and the Nayeri et al. (2013) postprocessing in function
 <code>postopNCK</code>
@@ -222,7 +231,7 @@ Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays,
 and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory
 and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics.
-Springer International Publishing, Cham, pp. 29–42.
+Springer International Publishing, Cham, pp. 29-42.
 <https://doi.org/10.1007/978-3-319-17729-8_3>
 </p>
 
@@ -238,7 +247,7 @@ families with few rows. Theoretical Computer Science 800, 31-41. doi:
 Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and
 Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H.,
 Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer
-Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22–33.
+Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22-33.
 <https://doi.org/10.1007/978-3-642-01877-0_3>
 </p>
 
@@ -260,13 +269,28 @@ two. <em>J of Combinatorial Designs</em> <b>14</b>, 124-138. doi:
 
 <p>
 
-Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays
+Colbourn, C.J., Torres-Jimenez, J. (2010). Heterogeneous hash families
+and covering arrays, in: Bruen, A.A., Wehlau, D.L. (Eds.), Contemporary
+Mathematics. American Mathematical Society, Providence, Rhode Island,
+pp. 3-15. <https://doi.org/10.1090/conm/523/10309>
+</p>
+
+<p>
+
+Colbourn, C.J., Torres-Jimenez, J. (2013). Profiles of covering arrays
 of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
 </p>
 
 <p>
 
-Dwyer, A., (2024). CA Database: Data base of covering arrays and related
+Colbourn, C.J., Zhou, J. (2012). Improving Two Recursive Constructions
+for Covering Arrays. Journal of Statistical Theory and Practice 6,
+30-47. <https://doi.org/10.1080/15598608.2012.647489>
+</p>
+
+<p>
+
+Dwyer, A. (2024). CA Database: Data base of covering arrays and related
 objects.
 <a href="https://github.com/aadwyer/CA_Database">https://github.com/aadwyer/CA_Database</a>.
 </p>

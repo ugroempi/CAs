@@ -1,5 +1,14 @@
 # NEWS
 
+18 June 2025, still Version 0.2.2
+
+ - renamed file CK.R to CK_constrD.R, in line with its content and its documentation file
+ - fixed a bug in projectionBose (two many rows were made constant)
+ - fixed a bug in cyclotomyCA (it always returned the maximum number of columns instead of 
+   the requested k columns)
+ - improved PHF2CA to better take advantage of constant rows, in the sense of corollary 2.4
+   of Colbourn and Torres-Jimenez 2010
+
 05 June 2025, still Version 0.2.2
  
  - renamed previous function projectionBose to fuseBose, as it does a specific type

@@ -66,6 +66,7 @@
 #' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
 #' * composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
 #' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
+#' * a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in function \code{\link{PHF2CA}} (homogeneous PHF only, implementation for heterogeneous is in progress, as well as implementation for Colbourn and Zhou 2012).
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 #'
 #' @section Exported catalogue objects:
@@ -91,19 +92,23 @@
 #'
 #' Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vol. 55, no. 2, pp. 201–219. doi: 10.1007/s10623-009-9333-8.
 #'
-#' Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays, and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics. Springer International Publishing, Cham, pp. 29–42. https://doi.org/10.1007/978-3-319-17729-8_3
+#' Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays, and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics. Springer International Publishing, Cham, pp. 29-42. https://doi.org/10.1007/978-3-319-17729-8_3
 #'
 #' Colbourn, C.J., Dougherty, R.E., Horsley, D. (2019). Distributing hash families with few rows. Theoretical Computer Science 800, 31-41. doi: 10.1016/j.tcs.2019.10.014
 #'
-#' Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H., Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22–33. https://doi.org/10.1007/978-3-642-01877-0_3
+#' Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H., Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22-33. https://doi.org/10.1007/978-3-642-01877-0_3
 #'
 #' Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C., (2010). Covering and radius-covering arrays: constructions and classification. Discrete Appl. Math 158, 1158-1180. https://doi.org/10.1016/j.dam.2010.03.008
 #'
 #' Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. \emph{J of Combinatorial Designs} \bold{14}, 124-138. doi: 10.1002/jcd.20065
 #'
-#' Colbourn, C.J., Torres-Jimenez, J., (2013). Profiles of covering arrays of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
+#' Colbourn, C.J., Torres-Jimenez, J. (2010). Heterogeneous hash families and covering arrays, in: Bruen, A.A., Wehlau, D.L. (Eds.), Contemporary Mathematics. American Mathematical Society, Providence, Rhode Island, pp. 3-15. https://doi.org/10.1090/conm/523/10309
 #'
-#' Dwyer, A., (2024). CA Database: Data base of covering arrays and related objects. \url{https://github.com/aadwyer/CA_Database}.
+#' Colbourn, C.J., Torres-Jimenez, J. (2013). Profiles of covering arrays of strength two. J. Alg. Comput. 44, 31-59. doi: 10.22059/jac.2013.7914.
+#'
+#' Colbourn, C.J., Zhou, J. (2012). Improving Two Recursive Constructions for Covering Arrays. Journal of Statistical Theory and Practice 6, 30-47. https://doi.org/10.1080/15598608.2012.647489
+#'
+#' Dwyer, A. (2024). CA Database: Data base of covering arrays and related objects. \url{https://github.com/aadwyer/CA_Database}.
 #'
 #' Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) *Graph Theory, Combinatorics and Algorithms*. Operations Research/Computer Science Interfaces Series, vol 34. Springer-Verlag, New York.
 #'
