@@ -4,18 +4,21 @@
 \alias{PHF2CA}
 \title{Make a larger CA from a PHF and a smaller CA}
 \usage{
-PHF2CA(P, D, ...)
+PHF2CA(P, D, v = max(D) + 1, ...)
 }
 \arguments{
 \item{P}{an M x k PHF of strength t with w levels
 (or a DHF of strength t for partition size p=min(t,v) with w levels)}
 
-\item{D}{an N x w CA of strength t with v levels}
+\item{D}{an N x w CA of strength t with \code{v} levels}
+
+\item{v}{number of levels of \code{D},
+automatically detected in case of coding as 0,...,\code{v}-1}
 
 \item{...}{further arguments to function \code{\link{maxconstant}}}
 }
 \value{
-a CA(rho + (N-rho) * M, t, k, v) (matrix, not of class \code{ca}, as there are no
+a CA(chi + (N-rho) * M, t, k, v) (matrix, not of class \code{ca}, as there are no
 guarantees regarding the strength, because guarding this is left to the user or to calling functions).
 }
 \description{
@@ -23,11 +26,12 @@ Function to construct a larger CA by replacing levels of a PHF with columns of a
 }
 \section{Details}{
 
-A PHF is a perfect hash family, a DHF a distributed perfect hash family (weaker condition).\cr
-Function \code{PHF2CA} yields a CA(rho + (N-rho)*M, t, k, v) from replacing the levels
-of the PHF with the columns of the CA, leaving out the constant rows of the CA
-and adding them back in only once;\cr
-the function uses function \code{maxconstant} to maximize the constant rows of the CA.
+A PHF is a perfect hash family, a DHF a distributed hash family (weaker condition).\cr
+Function \code{PHF2CA} yields a CA(chi + (N-rho)*M, t, k, v) from replacing the levels
+of the PHF (or the DHF) with the columns of the CA, leaving out the constant rows of the CA
+and adding a few (chi) back in, if needed, where chi=max(0, rho - (M - 1)(v − rho)),
+according to Corollary 2.4 of Colbourn and Torres-Jimenez (2010).\cr
+The function uses function \code{maxconstant} to maximize the constant rows of the CA.
 
 The function does not check for the strengths of the ingoing arrays. Hence, it is the users
 responsibility to ensure that these are as needed.
@@ -38,6 +42,18 @@ responsibility to ensure that these are as needed.
 ## PHF2CA
 #########################################
 
+## example from Table 1 of Colbourn and Torres-Jimenez
+P <- t(SCA_Bose(11)[,1:3])
+dim(P) ## levels 0, ..., 10
+D <- paleyCA(3,11) ## 2-level, one constant row
+dim(D)
+(chi <- max(0, 1 - 2*(2-1)))
+aus <- PHF2CA(P, D)
+dim(aus)  ## 0 + 3*(12-1) rows, 121 columns
+eCAN(3, 121, 2)  ## optimal
+
+# further examples are demos only, they are not for good use cases
+
 # a DHF[4,10,4,4,2], i.e., 4 rows, 10 columns, 4 levels, strength 4, 2 partitions
 # from Colbourn et al. 2021, Table 1
 P <- cbind(rep(1,4), c(1, rep(2,3)), c(1, rep(3,3)),
@@ -46,9 +62,14 @@ P <- cbind(rep(1,4), c(1, rep(2,3)), c(1, rep(3,3)),
            rep(4,4))
 ## CA with v=2 levels, 4 columns, strength 4 (--> full factorial)
 D <- as.matrix(expand.grid(0:1,0:1,0:1,0:1))    ## two rows can be made constant
+(chi <- max(0, 2 - 3*(2-2)))
+aus <- PHF2CA(P, D, unique=FALSE)
+dim(aus)     ## 2 + 4*(16-2)= 58 rows, 10 columns
 aus <- PHF2CA(P, D)
-dim(aus)     ## 4*(16-2) + 2 = 58 rows, 10 columns
-coverage(aus, 4)
+dim(aus)     ## 52 x 10
+             ## 6 duplicate rows removed
+             ## (this happens for poorly chosen ingredients)
+coverage(aus, 4)  ## works
 
 # a PHF(4,4,19,9) from the Dwyer catalogue
 P <- rbind(c(4, 2, 3, 7, 4, 0, 1, 2, 5, 3, 4, 5, 7, 6, 1, 0, 1, 8, 8),
@@ -56,31 +77,30 @@ P <- rbind(c(4, 2, 3, 7, 4, 0, 1, 2, 5, 3, 4, 5, 7, 6, 1, 0, 1, 8, 8),
            c(7, 1, 4, 0, 2, 5, 8, 5, 1, 7, 5, 3, 6, 4, 0, 3, 2, 6, 8),
            c(4, 8, 5, 0, 0, 1, 2, 5, 1, 1, 7, 7, 2, 4, 3, 8, 6, 3, 0))
 # we need a strength 4 CA with nine columns
-D <- paleyCA(4, 9)
+D <- paleyCA(4, 9)   ## is current best, has two constant rows
+aus <- PHF2CA(P, D, unique=FALSE)
+(chi <- max(0, 2 - (4-1)*(2-2)))
+dim(aus)     ## not competitive, although D is optimal 2 + (24-2)*4
 aus <- PHF2CA(P, D)
-dim(aus)     ## not competitive, although D is optimal (24-2)*4+2
-eCAN(4, 19, 2)
+dim(aus)     ## 38 duplicate rows removed, still relevantly worse than current best
+Ns(4, 19, 2)
 
-## a CPHF(2,3,42,64)
-P <- rbind(c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-         18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-         35, 36, 37, 38, 39, 40, 41),
-         c(0, 1, 8, 9, 20, 21, 28, 29, 2, 3, 10, 11, 22, 23, 30, 31, 17,
-         16, 25, 24, 5, 4, 13, 12, 19, 18, 27, 26, 7, 6, 15, 14, 50, 51,
-         58, 59, 38, 39, 46, 47, 48, 49))
-## need strength 3 with 60 columns, arbitrary v
-Ns(3, 60, 2)
-## best for 2-level is in DWYERcat
+## best for 6-level is in DWYERcat, 2768 runs for 9 columns in 6 levels
 \dontrun{
-pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
-   # the instruction line starts with a comment character and is ignored,
-   # therefore ninstruct=0
-D <- readCA(paste0(pathGH, "/CA_31_3_68_2.txt"), ignore.chars=c("]", "["),
-           ninstruct=0, sep=",")
-aus <- PHF2CA(P, D)
+  pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
+  # the instruction line starts with a comment character and is ignored,
+  # therefore ninstruct=0
+  D <- readCA(paste0(pathGH, "/CA_2768_4_9_6.txt"), ignore.chars=c("]", "["),
+              ninstruct=0, sep=",")
+  ## PHF2CA needs quite a while for this case
+  ## activated one_is_enough argument for maxconstant for run time reasons
+  aus <- PHF2CA(P, D, one_is_enough=TRUE)  ##
+  (chi <- max(0, 1 - (2-1)*(6-1)))
+  dim(aus)  ## 4*2767 = 11068, much more than the 5422 in the Colbourn tables
+  coverage(aus, 4)
 }
 
 }
 \references{
-Colbourn, Doughterty and Horsley (2019) and references therein
+Colbourn, Doughterty and Horsley (2019) and references therein, as well as Colbourn and Torres-Jimenez 2010.
 }
