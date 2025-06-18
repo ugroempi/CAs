@@ -113,7 +113,7 @@ cyclotomyCA <- function(t, k, v, ...){
                                 hilf$type)
   attr(aus, "Call") <- Call
   attr(aus, "t") <- t
-  aus
+  aus[,1:k]
 }
 
 #' @export
