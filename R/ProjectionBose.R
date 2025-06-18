@@ -14,8 +14,8 @@
 #' @usage N_projectionBose(k, v, cmax=Inf, ...)
 #' @usage k_projectionBose(N, v, cmax=Inf, ...)
 #'
-#' @param k \code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.
-#' @param v \code{NULL} or number of levels; if \code{NULL}, inferred from \code{k} as \code{v=k+2} or from \code{N} as \code{sqrt(N+3)-1}; if \code{k} is also specified, it takes precedence.
+#' @param k requested number of columns
+#' @param v number of levels
 #' @param q a prime power
 #' @param c an integer number, 0 <= c <= \code{q-2}; for \code{c=0}, the unchanged array created by \code{\link{SCA_Bose}} is returned.
 #' @param s an integer number, 2 <= s <= \code{q-c}; for \code{c=0}, \code{s} is irrelevant.
@@ -92,7 +92,6 @@ projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
 
   ## immediately use final symbols only for the first s columns
   replacesel <- setdiff(0:(q-1), 0:(c-1))
-
   for (j in 1:c){
     ## loop through the first c rows (rows to be removed)
 
@@ -108,7 +107,7 @@ projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
         replace <- sample(
           c( replacesel, rep(NA, length(hilf)-length(replacesel)) )
           )
-      else replace <- replacesel
+      else replace <- sample(replacesel)
              ## permutation of target values (starting with c)
       newmat[hilf, k] <- replace
     }
@@ -117,14 +116,13 @@ projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
     newmat[(c+1):(q^2),(s+1):(q+1)][which(newmat[(c+1):(q^2),(s+1):(q+1)]==j-1)] <- NA
   }
 
-
   aus <- newmat[-(1:c),] - c
   ## make first rows constant
-  for (i in 1:q){
-    if (s==q-c || i <= s)
-      aus[i, (q+1):(q+1+c)] <- i-1
-    else
-      aus[i, (q+1)] <- i-1
+  for (i in 1:(q-c)){
+     if (s==q-c || i <= s)
+       aus[i, (q+1):(q+1+c)] <- i-1
+     else
+       aus[i, (q+1)] <- i-1
   }
   missings1 <- which(is.na(aus[,1:(q+1)]))
   missings2 <- which(is.na(aus[,(q+2):(q+1+c)]))
@@ -150,7 +148,9 @@ N_projectionBose <- function(k, v, cmax=Inf, ...){
       }
     c <- (k-v-1)/2
     q <- NA
-    while(v+c < k){
+    ## allows q=v+c>k, since there are instances where this is the current best array
+    ## in the Colbourn tables
+    while(v+c <= k + 1){
     if ((v+c) %in% primpotenzen){
       q <- v+c
       break

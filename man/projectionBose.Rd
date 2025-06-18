@@ -16,9 +16,9 @@ N_projectionBose(k, v, cmax=Inf, ...)
 k_projectionBose(N, v, cmax=Inf, ...)
 }
 \arguments{
-\item{k}{\code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.}
+\item{k}{requested number of columns}
 
-\item{v}{\code{NULL} or number of levels; if \code{NULL}, inferred from \code{k} as \code{v=k+2} or from \code{N} as \code{sqrt(N+3)-1}; if \code{k} is also specified, it takes precedence.}
+\item{v}{number of levels}
 
 \item{fixNA}{logical; if FALSE, keeps flexible values; if TRUE, flexible values are arbitrarily fixed.}
 
