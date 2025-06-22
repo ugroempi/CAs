@@ -1,24 +1,25 @@
-#' Make a larger CA from a PHF and a smaller CA
+#' Make a larger CA from a DHF and a smaller CA
 #'
-#' Function to construct a larger CA by replacing levels of a PHF with columns of a smaller CA
+#' Function to construct a larger CA by replacing levels of a DHF with columns of a smaller CA
 #'
-#' @rdname PHF2CA
+#' @rdname DHF2CA
 #'
-#' @aliases PHF2CA
+#' @aliases DHF2CA
 #'
-#' @usage PHF2CA(P, D, v = max(D) + 1, ...)
+#' @usage DHF2CA(P, D, v = max(D) + 1, unique=TRUE, ...)
 #'
-#' @param P an M x k PHF of strength t with w levels
-#'          (or a DHF of strength t for partition size p=min(t,v) with w levels)
+#' @param P an M x k DHF of strength t with w levels and at least v classes
+#'          (a PHF of strength t with w levels is a special case)
 #' @param D an N x w CA of strength t with \code{v} levels
 #' @param v number of levels of \code{D},
-#'          automatically detected in case of coding as 0,...,\code{v}-1
+#'          automatically detected in case of coding as 0,...,\code{v}-
+#' @param unique logical; if \code{FALSE}, does not remove non-unique rows from the outcome
 #' @param ... further arguments to function \code{\link{maxconstant}}
 #'
 #' @section Details:
 #' A PHF is a perfect hash family, a DHF a distributed hash family (weaker condition).\cr
-#' Function \code{PHF2CA} yields a CA(chi + (N-rho)*M, t, k, v) from replacing the levels
-#' of the PHF (or the DHF) with the columns of the CA, leaving out the constant rows of the CA
+#' Function \code{DHF2CA} yields a CA(chi + (N-rho)*M, t, k, v) from replacing the levels
+#' of the DHF (or the PHF) with the columns of the CA, leaving out the constant rows of the CA
 #' and adding a few (chi) back in, if needed, where chi=max(0, rho - (M - 1)(v − rho)),
 #' according to Corollary 2.4 of Colbourn and Torres-Jimenez (2010).\cr
 #' The function uses function \code{maxconstant} to maximize the constant rows of the CA.
@@ -33,7 +34,7 @@
 #'
 #' @examples
 #' #########################################
-#' ## PHF2CA
+#' ## DHF2CA
 #' #########################################
 #'
 #' ## example from Table 1 of Colbourn and Torres-Jimenez
@@ -42,7 +43,7 @@
 #' D <- paleyCA(3,11) ## 2-level, one constant row
 #' dim(D)
 #' (chi <- max(0, 1 - 2*(2-1)))
-#' aus <- PHF2CA(P, D)
+#' aus <- DHF2CA(P, D)
 #' dim(aus)  ## 0 + 3*(12-1) rows, 121 columns
 #' eCAN(3, 121, 2)  ## optimal
 #'
@@ -57,9 +58,9 @@
 #' ## CA with v=2 levels, 4 columns, strength 4 (--> full factorial)
 #' D <- as.matrix(expand.grid(0:1,0:1,0:1,0:1))    ## two rows can be made constant
 #' (chi <- max(0, 2 - 3*(2-2)))
-#' aus <- PHF2CA(P, D, unique=FALSE)
+#' aus <- DHF2CA(P, D, unique=FALSE)
 #' dim(aus)     ## 2 + 4*(16-2)= 58 rows, 10 columns
-#' aus <- PHF2CA(P, D)
+#' aus <- DHF2CA(P, D)
 #' dim(aus)     ## 52 x 10
 #'              ## 6 duplicate rows removed
 #'              ## (this happens for poorly chosen ingredients)
@@ -72,10 +73,10 @@
 #'            c(4, 8, 5, 0, 0, 1, 2, 5, 1, 1, 7, 7, 2, 4, 3, 8, 6, 3, 0))
 #' # we need a strength 4 CA with nine columns
 #' D <- paleyCA(4, 9)   ## is current best, has two constant rows
-#' aus <- PHF2CA(P, D, unique=FALSE)
+#' aus <- DHF2CA(P, D, unique=FALSE)
 #' (chi <- max(0, 2 - (4-1)*(2-2)))
 #' dim(aus)     ## not competitive, although D is optimal 2 + (24-2)*4
-#' aus <- PHF2CA(P, D)
+#' aus <- DHF2CA(P, D)
 #' dim(aus)     ## 38 duplicate rows removed, still relevantly worse than current best
 #' Ns(4, 19, 2)
 #'
@@ -86,9 +87,9 @@
 #'   # therefore ninstruct=0
 #'   D <- readCA(paste0(pathGH, "/CA_2768_4_9_6.txt"), ignore.chars=c("]", "["),
 #'               ninstruct=0, sep=",")
-#'   ## PHF2CA needs quite a while for this case
+#'   ## DHF2CA needs quite a while for this case
 #'   ## activated one_is_enough argument for maxconstant for run time reasons
-#'   aus <- PHF2CA(P, D, one_is_enough=TRUE)  ##
+#'   aus <- DHF2CA(P, D, one_is_enough=TRUE)  ##
 #'   (chi <- max(0, 1 - (2-1)*(6-1)))
 #'   dim(aus)  ## 4*2767 = 11068, much more than the 5422 in the Colbourn tables
 #'   coverage(aus, 4)
@@ -96,7 +97,7 @@
 #'
 
 #' @export
-PHF2CA <- function(P, D, v=max(D)+1, unique=TRUE, ...){
+DHF2CA <- function(P, D, v=max(D)+1, unique=TRUE, ...){
   ## function for use by other functions
   ## skips all the checks, except for matrix
   stopifnot(is.matrix(P), is.matrix(D))
