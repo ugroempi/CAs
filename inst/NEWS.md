@@ -1,5 +1,15 @@
 # NEWS
 
+22 June 2025, still Version 0.2.2
+
+ - renamed PHF2CA to DHF2CA, as a PHF is a special case of a DHF
+ - added TJ2level_CAs in support of CT constructions
+ - made TJcat into data.frame with info column on element name for TJ2level_CAs
+ - implemented DHHF2CA for heterogeneous DHF CT construction
+ - added oa1728.12.6 (OA of strength 3 with six 12-level columns based on 
+   Ji/Ying construction); this may eventually be moved supplemented with 
+   other Ji/Ying OAs, and moved to DoE.base
+
 18 June 2025, still Version 0.2.2
 
  - renamed file CK.R to CK_constrD.R, in line with its content and its documentation file

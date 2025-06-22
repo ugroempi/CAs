@@ -15,8 +15,10 @@
 #' @export  DWYERcat
 #' @export  NISTcat
 #' @export  TJcat
+#' @export  TJ2level_CAs
 #' @export  PALEYcat
 #' @export  CYCLOTOMYcat
+#' @export  oa1728.12.6
 #' @aliases  CAEX_CAs
 #' @aliases  CAEX_lineages
 #' @aliases  colbournBigFrame
@@ -32,8 +34,10 @@
 #' @aliases  DWYERcat
 #' @aliases  NISTcat
 #' @aliases  TJcat
+#' @aliases  TJ2level_CAs
 #' @aliases  PALEYcat
 #' @aliases  CYCLOTOMYcat
+#' @aliases  oa1728.12.6
 #' @details This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
 #'
@@ -66,18 +70,18 @@
 #' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
 #' * composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
 #' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
-#' * a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in function \code{\link{PHF2CA}} (homogeneous PHF only, implementation for heterogeneous is in progress, as well as implementation for Colbourn and Zhou 2012).
+#' * a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in functions \code{\link{DHF2CA}} (homogeneous DHF) and \code{\link{DHHF2CA}} (heterogeneous); a more practical approach an N functions for these are not yet available.
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 #'
-#' @section Exported catalogue objects:
-#' The constructions are based on various catalogue objects that can be inspected by expert users,
+#' @section Exported objects:
+#' The constructions are based on various catalogue objects and occasional arrays that can be inspected by expert users,
 #' but are mainly meant to be used by the package functions:
 #' \code{CAEX_CAs}, \code{CAEX_lineages}, \code{colbournBigFrame}, \code{colbournCatalogue},
 #' \code{MeagherStevensCombis}, \code{MeagherStevensStarters},
 #' \code{LCDSTCombis}, \code{LCDSTStarters},
 #' \code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat},
-#' \code{NISTcat}, \code{TJcat},
-#' \code{PALEYcat}, \code{CYCLOTOMYcat}.
+#' \code{NISTcat}, \code{TJcat}, \code{TJ2level_CAs},
+#' \code{PALEYcat}, \code{CYCLOTOMYcat}, and \code{oa1728.12.6}.
 #'
 #' @author Author: Ulrike Groemping, BHT Berlin.
 #'

@@ -160,10 +160,10 @@ not theoretically optimal and might improve in the future) in function
 <li>
 
 a preliminary technical implementation of the Power construction as
-proposed in Colbourn and Torres-Jimenez (2010), in function
-<code>PHF2CA</code> (homogeneous PHF only, implementation for
-heterogeneous is in progress, as well as implementation for Colbourn and
-Zhou 2012).
+proposed in Colbourn and Torres-Jimenez (2010), in functions
+<code>DHF2CA</code> (homogeneous DHF) and <code>DHHF2CA</code>
+(heterogeneous); a more practical approach an N functions for these are
+not yet available.
 </li>
 
 <li>
@@ -175,17 +175,19 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 
 </ul>
 
-## Exported catalogue objects
+## Exported objects
 
-The constructions are based on various catalogue objects that can be
-inspected by expert users, but are mainly meant to be used by the
-package functions: <code>CAEX_CAs</code>, <code>CAEX_lineages</code>,
-<code>colbournBigFrame</code>, <code>colbournCatalogue</code>,
-<code>MeagherStevensCombis</code>, <code>MeagherStevensStarters</code>,
-<code>LCDSTCombis</code>, <code>LCDSTStarters</code>,
-<code>CKRScat</code>, <code>CKRS_CAs</code>, <code>WKScat</code>,
-<code>WKS_CAs</code>, <code>DWYERcat</code>, <code>NISTcat</code>,
-<code>TJcat</code>, <code>PALEYcat</code>, <code>CYCLOTOMYcat</code>.
+The constructions are based on various catalogue objects and occasional
+arrays that can be inspected by expert users, but are mainly meant to be
+used by the package functions: <code>CAEX_CAs</code>,
+<code>CAEX_lineages</code>, <code>colbournBigFrame</code>,
+<code>colbournCatalogue</code>, <code>MeagherStevensCombis</code>,
+<code>MeagherStevensStarters</code>, <code>LCDSTCombis</code>,
+<code>LCDSTStarters</code>, <code>CKRScat</code>, <code>CKRS_CAs</code>,
+<code>WKScat</code>, <code>WKS_CAs</code>, <code>DWYERcat</code>,
+<code>NISTcat</code>, <code>TJcat</code>, <code>TJ2level_CAs</code>,
+<code>PALEYcat</code>, <code>CYCLOTOMYcat</code>, and
+<code>oa1728.12.6</code>.
 
 ## References
 

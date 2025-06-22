@@ -19,8 +19,10 @@
 \alias{DWYERcat}
 \alias{NISTcat}
 \alias{TJcat}
+\alias{TJ2level_CAs}
 \alias{PALEYcat}
 \alias{CYCLOTOMYcat}
+\alias{oa1728.12.6}
 \alias{'CAs-package'}
 \title{Creation of Covering Arrays}
 \description{
@@ -59,20 +61,20 @@ So far, the following constructions have been implemented:
 \item product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
 \item composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
 \item the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
-\item a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in function \code{\link{PHF2CA}} (homogeneous PHF only, implementation for heterogeneous is in progress, as well as implementation for Colbourn and Zhou 2012).
+\item a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in functions \code{\link{DHF2CA}} (homogeneous DHF) and \code{\link{DHHF2CA}} (heterogeneous); a more practical approach an N functions for these are not yet available.
 \item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }
 }
-\section{Exported catalogue objects}{
+\section{Exported objects}{
 
-The constructions are based on various catalogue objects that can be inspected by expert users,
+The constructions are based on various catalogue objects and occasional arrays that can be inspected by expert users,
 but are mainly meant to be used by the package functions:
 \code{CAEX_CAs}, \code{CAEX_lineages}, \code{colbournBigFrame}, \code{colbournCatalogue},
 \code{MeagherStevensCombis}, \code{MeagherStevensStarters},
 \code{LCDSTCombis}, \code{LCDSTStarters},
 \code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat},
-\code{NISTcat}, \code{TJcat},
-\code{PALEYcat}, \code{CYCLOTOMYcat}.
+\code{NISTcat}, \code{TJcat}, \code{TJ2level_CAs},
+\code{PALEYcat}, \code{CYCLOTOMYcat}, and \code{oa1728.12.6}.
 }
 
 \references{
