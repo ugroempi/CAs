@@ -1,5 +1,18 @@
 # NEWS
 
+24 June 2025, Version 0.3
+ 
+ - implemented function bestCA for obtaining the best CA from 
+   the currently implemented constructions, based on function Ns
+ - implemented functions ckrsCA, dwyerCA, nistCA 
+   and tjCA for creating designs from catalogues
+ - added an internal utility function labelToCode that 
+   created the suitable code line for function bestCA
+ - fixed a bug in Ns that led to a deep recursion
+ - adapted the print method for class ca to new attributes
+ - added an argument skiplines to readCA
+ 
+
 22 June 2025, still Version 0.2.2
 
  - renamed PHF2CA to DHF2CA, as a PHF is a special case of a DHF

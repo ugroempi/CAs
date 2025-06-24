@@ -48,8 +48,14 @@
 #' All references of the package are listed in this file and referenced from the other documentation files.
 #'
 #' Within the package, available CA constructions for specific situations can be queried using
-#' the function \code{Ns}, which provides sizes from available constructions, as well as the current known optimum size; it is not guaranteed that all implemented constructions are incorporated, as this is not trivial for constructions with intricate ingoing quantities.
+#' the function \code{\link{Ns}}, which provides sizes from available constructions, as well as the current known optimum size;
+#' it is not guaranteed that all implemented constructions are incorporated, as this is not trivial for constructions with
+#' intricate ingoing quantities.
 #' An analogous function \code{ks} has not been implemented yet.
+#'
+#' Function \code{\link{bestCA}} makes use of function \code{\link{Ns}} (with the above-stated limitations)
+#' and produces the best currently implemented design, including a download from internet libraries,
+#' where applicable.
 #'
 #' Besides the construction functions, coverage properties of any array can be checked by function
 #' \code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
@@ -116,13 +122,15 @@
 #'
 #' Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) *Graph Theory, Combinatorics and Algorithms*. Operations Research/Computer Science Interfaces Series, vol 34. Springer-Verlag, New York.
 #'
-#' Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255-262. doi: 10.1016/0012-365X(73)90098-8.
+#' Ji, L. and Yin, J., 2010. Constructions of new orthogonal arrays and covering arrays of strength three. Journal of Combinatorial Theory, Series A 117, 236-247. https://doi.org/10.1016/j.jcta.2009.06.002
 #'
-#' Katona, G. O. H. (1973). Two applications (for search theory and truth functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1, pp. 19–26. doi: 10.1007/BF02018457.
+#' Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255-262. https://doi.org/10.1016/0012-365X(73)90098-8.
+#'
+#' Katona, G. O. H. (1973). Two applications (for search theory and truth functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1, pp. 19-26. https://doi.org/10.1007/BF02018457.
 #'
 #' Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez, J., (2012). Cover starters for covering arrays of strength two. Discrete Math. vol. 312, 943-956. https://doi.org/10.1016/j.disc.2011.10.026
 #'
-#' Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. doi: 10.1023/B:DESI.0000029232.40302.6d.
+#' Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. https://doi.org/10.1023/B:DESI.0000029232.40302.6d.
 #'
 #' Meagher, K., Stevens, B., (2005). Group construction of covering arrays. J of Combinatorial Designs 13, 70-77. https://doi.org/10.1002/jcd.20035
 #'
