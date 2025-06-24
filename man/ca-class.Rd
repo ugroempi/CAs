@@ -20,7 +20,10 @@ The print method for class \code{ca} suppresses printing of most attributes,
 but indicates which attributes are available.
 
 The S3 class \code{ca} is for a matrix with attributes.
-Common attributes are \code{origin}, \code{Call}, \code{flexible} or \code{PCAstatus}.
+Common attributes are \code{origin}, \code{t}, \code{Call},
+\code{eCAN}, \code{date}, \code{CAs-version}, \code{flexible} or \code{PCAstatus}.
+Not all attributes are present for all \code{ca} objects.
+
 The matrix elements are consecutive non-negative integers starting with 0 or 1,
 and possibly missing values that stand for flexible values, i.e.,
 values that can be arbitrarily chosen without deteriorating the strength of the CA.

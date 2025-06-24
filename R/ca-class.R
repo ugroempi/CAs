@@ -16,7 +16,10 @@
 #' but indicates which attributes are available.
 #'
 #' The S3 class \code{ca} is for a matrix with attributes.
-#' Common attributes are \code{origin}, \code{Call}, \code{flexible} or \code{PCAstatus}.
+#' Common attributes are \code{origin}, \code{t}, \code{Call},
+#' \code{eCAN}, \code{date}, \code{CAs-version}, \code{flexible} or \code{PCAstatus}.
+#' Not all attributes are present for all \code{ca} objects.
+#'
 #' The matrix elements are consecutive non-negative integers starting with 0 or 1,
 #' and possibly missing values that stand for flexible values, i.e.,
 #' values that can be arbitrarily chosen without deteriorating the strength of the CA.
@@ -26,8 +29,7 @@ print.ca <- function(x, ...){
    xnam <- deparse(substitute(x))
     if (!"ca" %in% class(x))
       stop("this print method is for class ca only")
-    attrs <- setdiff(names(attributes(x)), c("origin", "class",
-                                             "dim", "dimnames"))
+    attrs <- setdiff(names(attributes(x)), c("origin", "class", "t"))
     for (a in attrs) attr(x, a) <- NULL
     print.default(x, ...)
     if (length(attrs) > 0) {
