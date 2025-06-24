@@ -1,0 +1,294 @@
+#' Function to obtain the best uniform CA for a combination of t, k and v
+#'
+#' The function uses function Ns to find the best currently implemented
+#' CA for the requested scenario.
+#'
+#' @rdname bestCA
+#'
+#' @importFrom utils download.file
+#' @importFrom utils packageVersion
+#'
+#' @aliases bestCA
+#' @aliases ckrsCA
+#' @aliases dwyerCA
+#' @aliases nistCA
+#' @aliases tjCA
+#'
+#' @usage bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
+#' @usage ckrsCA(t, k, v, ...)
+#' @usage dwyerCA(t, k, v, ...)
+#' @usage nistCA(t, k, v, ...)
+#' @usage tjCA(t, k, v, ...)
+#'
+#' @param t integer: the strength
+#' @param k integer: the number of columns
+#' @param v integer: the number of levels for each column
+#' @param fixNA logical: should flexible values be fixed?\cr
+#'       If the ingoing CA has flexible values, \code{fixNA=TRUE}
+#'       randomly assigns a fixed value to each flexible value.\cr
+#'       Thus, a seed is needed for reproducibility.
+#' @param seed \code{NULL} or an integer seed for making the
+#'       fixing of NA values reproducible; if \code{seed=NULL},
+#'       a seed is randomly obtained and stored in the attribute
+#'       \code{fixNA_seed} of the returned object.
+#' @param preference character: the label for the preferred method;
+#'            one of "PALEY", "CAEX", "CYCLOTOMY", "CKRS",
+#'            "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
+#'            "WKS", "CS_MS", "CS_LCDST", "DWYER", "NIST", "TJ"
+#' @param override logical: If TRUE, the preference overrides a
+#'           better method, otherwise (default) it only decides
+#'           between equally-good methods.
+#' @param ... currently not used
+#' @returns The functions return a matrix of class \code{ca},
+#' which is a uniform covering array of strength at least \code{t} with
+#' \code{k} columns at \code{v} levels.
+#'
+#' @section Details:
+#' Function \code{bestCA} uses function \code{\link{Ns}} for locating
+#' the best construction for the given scenario, and subsequently
+#' implements the first such construction, where the order is that
+#' returned by function \code{\link{Ns}}.
+#'
+#' The user can override that order by stating a preferred construction
+#' with the argument \code{preference}. With \code{override=TRUE},
+#' the preference is observed whenever possible, even if this implies
+#' a larger CA than necessary.
+#'
+#' Some constructions (\code{"DWYER"} and \code{"NIST"}) require an internet
+#' connection, because the respective CAs are not part of the package.
+#'
+#' Some constructions provide CAs with flexible values, which are denoted
+#' as NA values in package \pkg{CAs}. These need to be fixed for actual
+#' experimentation, and function \code{bestCA} fixes them randomly; in such
+#' cases, the returned object has an attribute \code{fixNA_seed}, which is
+#' either the seed that was specified by the user or a seed that was created
+#' by the function. Specifying the seed in a subsequent call to the function
+#' permits to get the same CA again (provided that no new smaller CAs have
+#' been implemented).
+#'
+#' The attributes of the returned object contain elements \code{eCAN},
+#' \code{CAs-version} and \code{date}: \code{eCAN} gives the current
+#' best array; as this may change, the other attributes provide the
+#' context.
+#'
+#' @seealso [Ns()]
+#' @examples
+#' # example with a single best construction
+#' Ns(2,12,4)
+#' bestCA(2,12,4)
+#' # example with three best constructions
+#' Ns(4,8,2)
+#' # without a preference, bestCA uses Paley
+#' bestCA(4,8,2)
+#' bestCA(4,8,2, preference="TJ")
+#' ## for demo purposes only
+#' bestCA(4,8,2, preference="NIST")
+#' ## with override=TRUE, "NIST" could be forced
+#'
+#' # a case that is not implemented
+#' Ns(6, 45, 10)
+#' try(bestCA(6, 45, 10))
+#'
+#' Ns(3, 50, 2)
+#' ## DWYER needs internet connection, prefer TJ
+#' D <- bestCA(3, 50, 2, preference="TJ")
+#' dim(D)
+#' coverage(D, 3)
+#'
+#' Ns(6, 50, 2)
+#' ## a clear optimum
+#' D <- bestCA(6, 50, 2)
+#' dim(D)
+#'
+#' Ns(3, 1500, 2)
+#' ## DWYER and NIST need internet connection
+#' ## however, TJ is not available (will be with Power CT construction)
+#' try(bestCA(3, 1500, 2))
+#'
+
+#' @export
+bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...){
+  hilf <- Ns(t,k,v)
+  if (length(hilf)==1)
+    stop("no construction for this setting has been implemented yet")
+  minN <- min(hilf[-length(hilf)])
+  constrs <- names(hilf)[hilf<=minN]
+  constrs <- setdiff(constrs, "eCAN")
+  ## handling of a stated preference
+  finished <- FALSE
+  if (!is.null(preference)){
+    if (preference %in% constrs){
+      aus <- eval(parse(text=labelToCode(preference, t, k, v)))
+      finished <- TRUE
+    }
+    else{
+    message(preference, " is not among the best constructions.")
+    if (override & preference %in% names(hilf)){
+      message("It is used anyway because of override=TRUE.")
+      aus <- eval(parse(text=labelToCode(preference, t, k, v)))
+      finished <- TRUE
+    }else{
+    if (preference %in% names(hilf))
+      message("It is not used, because override=FALSE.")
+    else
+      message("It is not even among the possible constructions.")
+    }}}
+  if (!finished){
+      aus <- eval(parse(text=labelToCode(constrs[1], t, k, v)))
+  }
+  if (any(is.na(aus))){
+    if (is.null(seed)) seed <- sample(1:32000, 1)
+    nNA <- sum(is.na(aus))
+    set.seed(seed)
+    aus[is.na(aus)] <- sample(0:(v-1), nNA, replace=TRUE)
+    attr(aus, "fixNA_seed") <- seed
+  }
+  if (is.null(attr(aus, "origin"))) attr(aus, "origin") <- ifelse(finished, preference, constrs[1])
+  if (is.null(attr(aus, "t"))) attr(aus, "t") <- t
+  attr(aus, "eCAN") <- eCAN(t,k,v)
+  attr(aus, "date") <- Sys.Date()
+  attr(aus, "CAs-version") <- packageVersion("CAs")
+  if (!"ca" %in% class(aus)) class(aus) <- c("ca", class(aus))
+  aus
+}
+
+labelToCode <- function(label, t, k, v){
+  ## label must correspond to the label used in function Ns
+  stopifnot(label %in% c("PALEY",
+  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA",
+  "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
+  "CS_LCDST", "DWYER", "NIST", "TJ"))
+  if (label =="PALEY"){
+    if (!v==2) stop('"PALEY" requires v=2')
+    return(paste0("paleyCA(", t, ", ", k, ")"))
+  }
+  if (label =="CAEX"){
+    if (!v==3) stop('"CAEX" requires v=3')
+    if (!t==2) stop('"CAEX" requires t=2')
+    return(paste0("CAEX(", k, ")"))
+  }
+  if (label =="TJ"){
+    ## as of June 2025, the 2-level CAs of TJ
+    if (!v==2) stop('"TJ" requires v=2')
+    return(paste0("tjCA(", t, ", ", k, ", ", v, ")"))
+  }
+  if (label=="CYCLOTOMY"){
+    return(paste0("cyclotomyCA(", t, ", ", k, ", ", v, ")"))
+  }
+  if (label=="CKRS"){
+    return(paste0("ckrsCA(", t, ", ", k, ", ", v, ")"))
+  }
+  if (label=="recBoseCA_PCA"){
+    if (!t==2) stop('"recBoseCA_PCA" requires t=2')
+    if (!v %in% primedat$q) stop("v must be prime or prime power")
+    return(paste0("recBoseCA(", t, ", ", k, ", ", v, ", type='PCA')"))
+  }
+  if (label=="recBoseCA_CA"){
+    if (!t==2) stop('"recBoseCA_CA" requires t=2')
+    if (!v %in% primedat$q) stop("v must be prime or prime power")
+    return(paste0("recBoseCA(", t, ", ", k, ", ", v, ", type='CA')"))
+  }
+  if (label=="projBoseCA"){
+    if (!t==2) stop('"projBoseCA" requires t=2')
+    if (!v %in% primedat$q) stop("v must be prime or prime power")
+    return(paste0("recBoseCA(", k, ", ", v, ")"))
+  }
+  if (label=="WKS"){
+    if (!t==6) stop('"WKS" requires t=6')
+    if (!v==2) stop('"WKS" requires v=2')
+    ## the CAs are labeled by k, and there is an entry
+    ## for each k between 30 and 72 (including)
+    return(paste0('WKS_CAs[["', k, '"]]'))
+  }
+  if (label=="CS_MS"){
+    if (!t==2) stop('"CS_MS" requires t=2')
+    return(paste0('CS_MS(', k, ', ', v, ')'))
+  }
+  if (label=="CS_LDCST"){
+    if (!t==2) stop('"CS_LCDST" requires t=2')
+    return(paste0('CS_LCDST(', k, ', ', v, ')'))
+  }
+  if (label=="DWYER"){
+    return(paste0('dwyerCA(', t, ', ', k, ', ', v, ')'))
+  }
+  if (label=="NIST"){
+    return(paste0('nistCA(', t, ', ', k, ', ', v, ')'))
+  }
+}
+
+#' @export
+ckrsCA <- function(t, k, v, ...){
+  Call <- sys.call()
+  hilf <- CKRScat[CKRScat$t>=t & CKRScat$v==v & CKRScat$k>=k,]
+  N <- min(hilf$N)
+  tachieved <- hilf$t
+  hilf <- hilf[which.min(hilf$N),,drop=FALSE]
+  N <- hilf$N
+  fn <- hilf$fn
+  aus <- CKRS_CAs[[fn]]
+  attr(aus, "t") <- tachieved
+  attr(aus, "Call") <- Call
+  aus[,1:k]
+}
+
+#' @export
+dwyerCA <- function(t, k, v, ...){
+  Call <- sys.call()
+  hilf <- DWYERcat[DWYERcat$t>=t & DWYERcat$v==v & DWYERcat$k>=k,]
+  N <- min(hilf$N)
+  hilf <- hilf[which.min(hilf$N),,drop=FALSE]
+  N <- hilf$N  ## should not be necessary, just to be safe
+  kneeded <- hilf$k
+  tachieved <- hilf$t
+  nam <- paste0(paste("CA", N, t, kneeded, v, sep="_"), ".txt")
+  ## load from Dwyer repo
+  pfadGithub <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
+  pfad <- paste0(pfadGithub, "/", nam)
+  aus <- readCA(pfad, ninstruct = 0, ignore.chars=c("[","]"),
+                header=FALSE, sep=",",
+                origin=paste0("Dwyer Github repository, ", nam, ", ",
+                              hilf$Source))
+  attr(aus, "t") <- tachieved
+  attr(aus, "Call") <- Call
+  aus[,1:k]
+}
+
+#' @export
+nistCA <- function(t, k, v, ...){
+  Call <- sys.call()
+  hilf <- NISTcat[NISTcat[,"t"]==t & NISTcat[,"v"]==v &
+                    NISTcat[,"k"]==k,, drop=FALSE]
+  nam <- rownames(hilf)
+  pfad <- paste0("https://math.nist.gov/coveringarrays/ipof/cas/t=", t,"/v=",v,"/", nam)
+  speicherpfad <- paste0(tempdir(), "/", nam)
+  aus <- try(download.file(url = pfad, destfile = speicherpfad))
+  if ("try-error" %in% class(aus)) message("error encountered in downloading the array")
+  if (!"try-error" %in% class(aus)){
+    txtpfad <- gsub(".zip","",speicherpfad, fixed=TRUE)
+    utils::unzip(speicherpfad, exdir = tempdir())
+    aus <- readCA(txtpfad, ninstruct=0, skiplines = 1)
+  }
+  attr(aus, "origin") <- "NIST covering array library"
+  attr(aus, "t") <- t
+  attr(aus, "Call") <- Call
+  aus
+}
+
+#'@export
+tjCA <- function(t, k, v=2, ...){
+  Call <- sys.call()
+  if (!v==2) stop("For v=3, use CAEX. v>3 was not yet implemented.")
+  hilf <- TJcat[TJcat$t>=t & TJcat$v==v & TJcat$k>=k,]
+  N <- min(hilf$N)
+  hilf <- hilf[which.min(hilf$N),,drop=FALSE]
+  N <- hilf$N  ## should not be necessary, just to be safe
+  kneeded <- hilf$k
+  tachieved <- hilf$t
+  nam <- hilf$nameInTJ2level_CAs
+  if (nam=="") stop("This array must be constructed with a Power CT construction,\n which was not yet fully implemented")
+  aus <- TJ2level_CAs[[nam]]
+  attr(aus, "origin") <- "Torres-Jimenez repository, Feb 6 2025"
+  attr(aus, "t") <- tachieved
+  attr(aus, "Call") <- Call
+  aus[,1:k]
+}
