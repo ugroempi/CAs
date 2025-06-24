@@ -7,12 +7,14 @@
 #' @aliases readCA
 #'
 #' @usage readCA(path, flexible.symbols=c("*","-","."), comment.symbol="C",
-#' ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
+#' ninstruct=1, skiplines=0, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
 #'
 #' @param path a character string that specifies the path, including the file name; see Section Details for requirements the file must satisfy.
 #' @param flexible.symbols characters to be treated as flexible values (will be set to NA)
 #' @param comment.symbol character that starts a comment line
 #' @param ninstruct integer, number of lines with instructions (1 or 0)
+#' @param skiplines integer, number of lines with no readable instructions and no defined comment character
+#'        that should nevertheless be skipped; those are assumed to be above the instructions line
 #' @param ignore.chars \code{NULL}, or characters to be removed from data lines (e.g., \[ and \])
 #' @param nosep logical; set to TRUE, if the data lines do not contain separators and each character is a data value
 #' @param origin character string to be attached to the output array as origin-attribute;
@@ -35,10 +37,11 @@
 #' @importFrom utils read.table
 #' @export
 readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
-                   ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...){
+                   ninstruct=1, skiplines=0, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...){
   zeilen <- readLines(con=path)
   zeilen <- zeilen[!nchar(zeilen)==0]
   zeilen <- zeilen[!substr(zeilen,1,1)==comment.symbol]
+  if (skiplines > 0) zeilen <- zeilen[-(1:skiplines)]
   stopifnot(ninstruct %in% c(0,1))
   v <- NULL
   if (ninstruct==1){

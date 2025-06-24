@@ -5,7 +5,7 @@
 \title{Function for reading a covering array from a text file}
 \usage{
 readCA(path, flexible.symbols=c("*","-","."), comment.symbol="C",
-ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
+ninstruct=1, skiplines=0, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
 }
 \arguments{
 \item{path}{a character string that specifies the path, including the file name; see Section Details for requirements the file must satisfy.}
@@ -15,6 +15,9 @@ ninstruct=1, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
 \item{comment.symbol}{character that starts a comment line}
 
 \item{ninstruct}{integer, number of lines with instructions (1 or 0)}
+
+\item{skiplines}{integer, number of lines with no readable instructions and no defined comment character
+that should nevertheless be skipped; those are assumed to be above the instructions line}
 
 \item{ignore.chars}{\code{NULL}, or characters to be removed from data lines (e.g., [ and ])}
 
