@@ -206,6 +206,7 @@
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
 Ns <- function(t, k, v){
+  stopifnot(t <= 6)
   suppressMessages(
     aus <- c(
     PALEY=N_PALEYcat(t,k,v),
