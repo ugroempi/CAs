@@ -37,14 +37,15 @@ a seed is randomly obtained and stored in the attribute
 
 \item{preference}{character: the label for the preferred method;
 one of "PALEY", "CAEX", "CYCLOTOMY", "CKRS",
-"recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
-"WKS", "CS_MS", "CS_LCDST", "DWYER", "NIST", "TJ"}
+"recBoseCA_PCA", "recBoseCA_CA", "projBoseCA", "fuseBose",
+"WKS", "CS_MS", "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"}
 
 \item{override}{logical: If TRUE, the preference overrides a
 better method, otherwise (default) it only decides
 between equally-good methods.}
 
-\item{...}{currently not used}
+\item{...}{handed to construction function, currently,
+only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}
 }
 \value{
 The functions return a matrix of class \code{ca},
@@ -109,14 +110,35 @@ dim(D)
 coverage(D, 3)
 
 Ns(6, 50, 2)
-## a clear optimum
+## WKS is the only best
 D <- bestCA(6, 50, 2)
 dim(D)
+
+Ns(3,9,7)
+## CKRS and DWYER are best
+D <- bestCA(3, 9, 7)
+dim(D)
+
+Ns(3,9,6)
+## CKRS is best implemented, but 16 runs worse than eCAN
+eCAN(3,9,6)
+## Torres-Jimenez designs are currently (June 2025) unavailable
+D <- bestCA(3, 9, 6)
+attributes(D)
 
 Ns(3, 1500, 2)
 ## DWYER and NIST need internet connection
 ## however, TJ is not available (will be with Power CT construction)
 try(bestCA(3, 1500, 2))
+
+Ns(2,26,24) ## fuseBose is best-known
+dim(bestCA(2,26,24))
+
+Ns(2,26,23) ## projBoseCA is best with 623 runs
+dim(D <- bestCA(2,26,23))
+attributes(D)
+## eCAN 7 runs better from NCK post processing
+
 
 }
 \seealso{

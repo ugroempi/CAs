@@ -33,12 +33,13 @@
 #'       \code{fixNA_seed} of the returned object.
 #' @param preference character: the label for the preferred method;
 #'            one of "PALEY", "CAEX", "CYCLOTOMY", "CKRS",
-#'            "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
-#'            "WKS", "CS_MS", "CS_LCDST", "DWYER", "NIST", "TJ"
+#'            "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA", "fuseBose",
+#'            "WKS", "CS_MS", "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"
 #' @param override logical: If TRUE, the preference overrides a
 #'           better method, otherwise (default) it only decides
 #'           between equally-good methods.
-#' @param ... currently not used
+#' @param ... handed to construction function, currently,
+#'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
 #' @returns The functions return a matrix of class \code{ca},
 #' which is a uniform covering array of strength at least \code{t} with
 #' \code{k} columns at \code{v} levels.
@@ -96,14 +97,35 @@
 #' coverage(D, 3)
 #'
 #' Ns(6, 50, 2)
-#' ## a clear optimum
+#' ## WKS is the only best
 #' D <- bestCA(6, 50, 2)
 #' dim(D)
+#'
+#' Ns(3,9,7)
+#' ## CKRS and DWYER are best
+#' D <- bestCA(3, 9, 7)
+#' dim(D)
+#'
+#' Ns(3,9,6)
+#' ## CKRS is best implemented, but 16 runs worse than eCAN
+#' eCAN(3,9,6)
+#' ## Torres-Jimenez designs are currently (June 2025) unavailable
+#' D <- bestCA(3, 9, 6)
+#' attributes(D)
 #'
 #' Ns(3, 1500, 2)
 #' ## DWYER and NIST need internet connection
 #' ## however, TJ is not available (will be with Power CT construction)
 #' try(bestCA(3, 1500, 2))
+#'
+#' Ns(2,26,24) ## fuseBose is best-known
+#' dim(bestCA(2,26,24))
+#'
+#' Ns(2,26,23) ## projBoseCA is best with 623 runs
+#' dim(D <- bestCA(2,26,23))
+#' attributes(D)
+#' ## eCAN 7 runs better from NCK post processing
+#'
 #'
 
 #' @export
@@ -118,14 +140,14 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
   finished <- FALSE
   if (!is.null(preference)){
     if (preference %in% constrs){
-      aus <- eval(parse(text=labelToCode(preference, t, k, v)))
+      aus <- eval(parse(text=labelToCode(preference, t, k, v, ...)))
       finished <- TRUE
     }
     else{
     message(preference, " is not among the best constructions.")
     if (override & preference %in% names(hilf)){
       message("It is used anyway because of override=TRUE.")
-      aus <- eval(parse(text=labelToCode(preference, t, k, v)))
+      aus <- eval(parse(text=labelToCode(preference, t, k, v, ...)))
       finished <- TRUE
     }else{
     if (preference %in% names(hilf))
@@ -134,7 +156,7 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
       message("It is not even among the possible constructions.")
     }}}
   if (!finished){
-      aus <- eval(parse(text=labelToCode(constrs[1], t, k, v)))
+      aus <- eval(parse(text=labelToCode(constrs[1], t, k, v, ...)))
   }
   if (any(is.na(aus))){
     if (is.null(seed)) seed <- sample(1:32000, 1)
@@ -143,6 +165,7 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
     aus[is.na(aus)] <- sample(0:(v-1), nNA, replace=TRUE)
     attr(aus, "fixNA_seed") <- seed
   }
+  dimnames(aus) <- NULL
   if (is.null(attr(aus, "origin"))) attr(aus, "origin") <- ifelse(finished, preference, constrs[1])
   if (is.null(attr(aus, "t"))) attr(aus, "t") <- t
   attr(aus, "eCAN") <- eCAN(t,k,v)
@@ -152,15 +175,21 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
   aus
 }
 
-labelToCode <- function(label, t, k, v){
+labelToCode <- function(label, t, k, v, ...){
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("PALEY",
-  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA",
+  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA", "SCA_Bush", "fuseBose",
   "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
-  "CS_LCDST", "DWYER", "NIST", "TJ"))
+  "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"))
   if (label =="PALEY"){
     if (!v==2) stop('"PALEY" requires v=2')
     return(paste0("paleyCA(", t, ", ", k, ")"))
+  }
+  if (label =="fuseBose"){
+    return(paste0("fuseBose(",v+1, ", ...)"))
+  }
+  if (label =="SCA_Bush"){
+    return(paste0("SCA_Bush(",v,",", t, ")"))
   }
   if (label =="CAEX"){
     if (!v==3) stop('"CAEX" requires v=3')
@@ -191,7 +220,7 @@ labelToCode <- function(label, t, k, v){
   if (label=="projBoseCA"){
     if (!t==2) stop('"projBoseCA" requires t=2')
     if (!v %in% primedat$q) stop("v must be prime or prime power")
-    return(paste0("recBoseCA(", k, ", ", v, ")"))
+    return(paste0("projBoseCA(", k, ", ", v, ")"))
   }
   if (label=="WKS"){
     if (!t==6) stop('"WKS" requires t=6')
@@ -207,6 +236,10 @@ labelToCode <- function(label, t, k, v){
   if (label=="CS_LDCST"){
     if (!t==2) stop('"CS_LCDST" requires t=2')
     return(paste0('CS_LCDST(', k, ', ', v, ')'))
+  }
+  if (label=="CS_CK"){
+    if (!v==2) stop('"CS_CK" requires v=2')
+    return(paste0('CS_CK(', k, ', t=', t, ')'))
   }
   if (label=="DWYER"){
     return(paste0('dwyerCA(', t, ', ', k, ', ', v, ')'))

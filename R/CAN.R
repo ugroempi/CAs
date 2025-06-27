@@ -15,6 +15,7 @@
 #' @aliases Ns
 #' @aliases Ns_derive
 #' @aliases Ns_fuse
+#' @aliases N_fuseBose_forNs
 #' @aliases Ns_CK_doubling
 #' @aliases Ns_productCA
 #' @aliases N_NISTcat
@@ -25,6 +26,7 @@
 #' @aliases N_PALEYcat
 #' @aliases N_CYCLOTOMYcat
 #' @aliases N_CAEX
+#' @aliases N_SCA_Busht
 #' @aliases N_recBoseCA
 #' @aliases N_projBoseCA
 #' @aliases ks
@@ -44,6 +46,7 @@
 #' @usage Ns(t, k, v)
 #' @usage Ns_derive(t, k, v)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
+#' @usage N_fuseBose_forNs(t,k,v)
 #' @usage Ns_CK_doubling(t=3, k, v)
 #' @usage Ns_productCA(t=2, k, v)
 #' @usage N_NISTcat(t, k, v)
@@ -213,12 +216,15 @@ Ns <- function(t, k, v){
     CAEX=N_CAEX(t,k,v),
     CYCLOTOMY=N_CYCLOTOMYcat(t,k,v),
     CKRS=N_CKRScat(t,k,v),
+    SCA_Busht=N_SCA_Busht(t,k,v),
+    fuseBose=N_fuseBose_forNs(t,k,v),
     recBoseCA_PCA=unname(N_recBoseCA(t,k,v,type="PCA")),
     recBoseCA_CA=unname(N_recBoseCA(t,k,v,type="CA")),
     projBoseCA=unname(N_projBoseCA(t,k,v,cmax=Inf)),
     WKS=N_WKScat(t,k,v),
     CS_MS=N_CS_MS(t,k,v),
     CS_LCDST=N_CS_LCDST(t,k,v),
+    CS_CK=N_CS_CK(t,k,v),
     DWYER=N_DWYERcat(t,k,v),
     NIST=N_NISTcat(t,k,v),
     TJ=N_TJcat(t,k,v),
@@ -252,22 +258,44 @@ Ns_derive <- function(t, k, v){
   Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
   Ns <- as.data.frame(rbind('t-from'=t+1, 'k-from'=k+1, 'N-from'=fromNs, t=t, 'N'=Ns, k=k))
   aus <- dplyr::bind_rows(Nswoderive, Ns, .id="label")
-  if (any(aus[1,] > aus[6,], na.rm=TRUE)) return(aus) else {
+  aus <- as.data.frame(aus)
+  rownames(aus) <- c("N_direct", "t-from", "k-from", "N-from","t", "N-derived", "k")
+  aus <- aus[c(1,6,5,7,2,3,4),]
+  if (any(aus[1,] > aus[2,], na.rm=TRUE)) return(aus) else {
     message("no derived design was better than direct constructions")
     return(Nswoderive)
   }
 }
 
-## obtain possibilities for derivation sources
+## obtain possibilities for fusion sources
 #' @export
 Ns_fuse <- function(t, k, v, maxfuse=1){
-  (hilf <- lapply(1:maxfuse,
+  hilf <- lapply(1:maxfuse,
                  function(obj){
                    hilf <- Ns(t, k, v+obj)
-                   aus <- hilf - 2*obj
-                   attr(aus, "detail") <- rbind('v-from'=v+obj, 'N_from'=hilf)
-                   aus
-                 }))
+                   hilf - 2*obj
+                 })
+  aus <- as.data.frame(do.call(dplyr::bind_rows,
+    c(list(direct=Ns(t,k,v)),hilf)))
+  rownames(aus) <- c("direct", paste0("fuse", rep(1:maxfuse)))
+  aus
+}
+
+## special fuse for Bose arrays
+#' @export
+N_fuseBose_forNs <- function(t=2, k, v){
+  if (!t==2) return(NA)
+  if (!v %in% primedat$q-1) return(NA)
+  if (k>v+2) return(NA)
+  (v+1)^2-3
+}
+
+## obtain sizes from OA
+#' @export
+N_SCA_Busht <- function(t, k, v){
+  if (!v %in% primedat$q) return(NA)
+  if (k > v+1) return(NA)
+  v^t
 }
 
 ## obtain sizes for CK doubling for v=2 and v=3
@@ -437,6 +465,7 @@ ks <- function(t, N, v){
     WKS=k_WKScat(t,N,v),
     CS_MS=k_CS_MS(N,v),
     CS_LCDST=k_CS_LCDST(N,v),
+    CS_CK=k_CS_CK(t,N),
     DWYER=k_DWYERcat(t,N,v),
     NIST=k_NISTcat(t,N,v),
     TJ=k_TJcat(t,N,v),
@@ -536,23 +565,6 @@ k_CKRScat <- function(t,N,v){
   hilf <- CKRScat[CKRScat[,"t"]==t & CKRScat[,"N"]<=N & CKRScat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(max(hilf[,"k"]))
-}
-
-ks_CK_doubling <- function(t=3,N,v){
-  if (!v %in% c(2,3)) return(NA)
-  if(!t==3) return(NA)
-  direct <- ks(3,N,v)
-  khilf <- ceiling(max(ks)/2)
-  if (v==3) minus <- suppressMessages(N_CAEX(k=khilf)) else
-    minus <- N_KSK(khilf)
-#### das ist noch gar nicht fertig !!!
-  kdoubled <- ks(3, N-minus, v)
-  kdoubled <- pmin(kdoubled, khilf)
-  hilf <- Ns(3, khilf, v)
-  Ndoubled <- hilf + minus
-  doubled <- as.data.frame(rbind(hilf + plus))
-  direct <- as.data.frame(rbind(Ns(t, k, v)))
-  dplyr::bind_rows(direct=direct, doubled=doubled, .id="way")
 }
 
 ## obtain sizes for product construction
