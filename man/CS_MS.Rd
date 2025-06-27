@@ -90,7 +90,7 @@ D <- CS_MS(9, 6)
 dim(D)
 coverage(D,2)
 ## the matrix M from cyclic permutation of the starter vector
-CAs:::MeagherStevensStarters[["6"]][["9"]]
+MeagherStevensStarters[["6"]][["9"]]
 ## is treated by cyclic permutation of all levels expect the lowest
 ## (v-1) k x k matrices
 ## and a constant column with the lowest level is prepended
@@ -108,7 +108,7 @@ try(D <- CS_MS(14, 6))  ## not implemented
                         ## (though a starter might exist,
                         ## but likely unattractive result)
 N_CS_MS(k=15, v=6, theoretical=TRUE) ## 76 runs possible, if suitable starter provided
-CAs:::MeagherStevensStarters[["6"]][["14"]] ## trying a guess for a starter
+MeagherStevensStarters[["6"]][["14"]] ## trying a guess for a starter
 starter15 <- c(0,1,1,1,1,1,1,1,1,1,2,4,3,1,2)
 D <- CS_MS(15, 6, starter=starter15)
 coverage(D, 2)          ## successful guess
