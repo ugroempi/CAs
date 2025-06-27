@@ -1,44 +1,8 @@
 #' Creation of Covering Arrays
 #' @description Creates covering arrays.
-#' @export  CAEX_CAs
-#' @export  CAEX_lineages
-#' @export  colbournBigFrame
-#' @export  colbournCatalogue
-#' @export  MeagherStevensCombis
-#' @export  MeagherStevensStarters
-#' @export  LCDSTCombis
-#' @export  LCDSTStarters
-#' @export  CKRScat
-#' @export  CKRS_CAs
-#' @export  WKScat
-#' @export  WKS_CAs
-#' @export  DWYERcat
-#' @export  NISTcat
-#' @export  TJcat
-#' @export  TJ2level_CAs
-#' @export  PALEYcat
-#' @export  CYCLOTOMYcat
-#' @export  oa1728.12.6
-#' @aliases  CAEX_CAs
-#' @aliases  CAEX_lineages
-#' @aliases  colbournBigFrame
-#' @aliases  colbournCatalogue
-#' @aliases  MeagherStevensCombis
-#' @aliases  MeagherStevensStarters
-#' @aliases  LCDSTCombis
-#' @aliases  LCDSTStarters
-#' @aliases  CKRScat
-#' @aliases  CKRS_CAs
-#' @aliases  WKScat
-#' @aliases  WKS_CAs
-#' @aliases  DWYERcat
-#' @aliases  NISTcat
-#' @aliases  TJcat
-#' @aliases  TJ2level_CAs
-#' @aliases  PALEYcat
-#' @aliases  CYCLOTOMYcat
-#' @aliases  oa1728.12.6
-#' @details This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
+#'
+#' @section Details:
+#'  This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
 #'
 #' The goal is to implement as many constructions as possible that yield arrays with small numbers of runs, as evidenced by the
@@ -51,7 +15,8 @@
 #' the function \code{\link{Ns}}, which provides sizes from available constructions, as well as the current known optimum size;
 #' it is not guaranteed that all implemented constructions are incorporated, as this is not trivial for constructions with
 #' intricate ingoing quantities.
-#' An analogous function \code{ks} has not been implemented yet.
+#' An analogous function \code{ks} is far less advanced, as the typical application situation
+#' presumably starts from a set of variables to be covered.
 #'
 #' Function \code{\link{bestCA}} makes use of function \code{\link{Ns}} (with the above-stated limitations)
 #' and produces the best currently implemented design, including a download from internet libraries,
@@ -72,6 +37,7 @@
 #' * a projection construction based on a Bose matrix, from Colbourn (2008), in functions \code{\link{projectionBose}} and \code{\link{projBoseCA}}
 #' * the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
 #' * the strength 2 cover starter construction by Lobb et al. (2012) which works similarly to Meagher and Stevens (2005) but fix one or more symbols using the additive group on the non-fixed symbols (function \code{\link{CS_LCDST}})
+#' * the 2-level cover starter construction by Colbourn and Keri (2009), which creates strength 4, 5, and 6 CAs and is also closely related to the Paley type construction of Colbourn (2015)
 #' * direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
 #' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
 #' * composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
@@ -81,13 +47,20 @@
 #'
 #' @section Exported objects:
 #' The constructions are based on various catalogue objects and occasional arrays that can be inspected by expert users,
-#' but are mainly meant to be used by the package functions:
-#' \code{CAEX_CAs}, \code{CAEX_lineages}, \code{colbournBigFrame}, \code{colbournCatalogue},
-#' \code{MeagherStevensCombis}, \code{MeagherStevensStarters},
-#' \code{LCDSTCombis}, \code{LCDSTStarters},
-#' \code{CKRScat}, \code{CKRS_CAs}, \code{WKScat}, \code{WKS_CAs}, \code{DWYERcat},
-#' \code{NISTcat}, \code{TJcat}, \code{TJ2level_CAs},
-#' \code{PALEYcat}, \code{CYCLOTOMYcat}, and \code{oa1728.12.6}.
+#' but are mainly meant to be used by the package functions:\cr
+#' \code{\link{colbournBigFrame}},
+#' \code{\link{CAEX_CAs}}, \code{\link{CAEX_lineages}},
+#' \code{\link{TJcat}}, \code{\link{TJ2level_CAs}},,
+#' \code{\link{MeagherStevensCombis}}, \code{\link{MeagherStevensStarters}},
+#' \code{\link{LCDSTCombis}}, \code{\link{LCDSTStarters}},
+#' \code{\link{ColbournKeriCombis}}, \code{\link{ColbournKeriStarters}},
+#' \code{\link{PALEYcat}}, \code{\link{CYCLOTOMYcat}},
+#' \code{\link{CKRScat}}, \code{\link{CKRS_CAs}},
+#' \code{\link{WKScat}}, \code{\link{WKS_CAs}},
+#' \code{\link{DWYERcat}}, \code{\link{NISTcat}}
+#' and \code{\link{oa1728.12.6}}.\cr
+#' The arrays referenced by \code{\link{DWYERcat}}, \code{\link{NISTcat}} can only be
+#' accessed with an internet connection.
 #'
 #' @author Author: Ulrike Groemping, BHT Berlin.
 #'
@@ -155,6 +128,7 @@
 #' @importFrom grDevices rgb
 #' @importFrom graphics polygon
 #' @importFrom prepplot prepplot
+#' @importFrom utils globalVariables
 #' @importFrom sets as.set set_is_proper_subset
 "_PACKAGE"
 

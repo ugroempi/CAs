@@ -1,7 +1,7 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.3
+Version: 0.4
 Author: Ulrike Groemping
 Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
 Description: Implements mathematical constructions of covering arrays. Provides  
@@ -10,6 +10,8 @@ Depends: R (>= 3.5.0)
 Imports: lhs, DoE.base, SOAs, sets, prepplot, primes, utils, igraph, permutations, dplyr
 Suggests: parallel, FrF2
 License: GPL-3
+LazyData: true
+LazyDataCompression: xz
 Encoding: UTF-8
 URL: https://github.com/ugroempi/CAs
 BugReports: https://github.com/ugroempi/CAs/issues

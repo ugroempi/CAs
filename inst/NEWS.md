@@ -1,5 +1,14 @@
 # NEWS
 
+27 June 2025, version 0.4
+
+ - the user-visible data are now in a data folder instead of sysdata.rda, 
+   and are documented in more detail
+ - the Colbourn and Keri (2009) construction was implemented in function CS_CK,
+   and also added to the repertoire for bestCA
+ - added fuseBose and SCA_Bose to Ns and bestCA
+ - increased the version number
+
 24 June 2025, Version 0.3
  
  - implemented function bestCA for obtaining the best CA from 

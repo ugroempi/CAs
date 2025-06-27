@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.3
+- **Version**: 0.4
 
 ## Warning
 
@@ -48,8 +48,9 @@ can be queried using the function <code>Ns</code>, which provides sizes
 from available constructions, as well as the current known optimum size;
 it is not guaranteed that all implemented constructions are
 incorporated, as this is not trivial for constructions with intricate
-ingoing quantities. An analogous function <code>ks</code> has not been
-implemented yet.
+ingoing quantities. An analogous function <code>ks</code> is far less
+advanced, as the typical application situation presumably starts from a
+set of variables to be covered.
 
 Function <code>bestCA</code> makes use of function <code>Ns</code> (with
 the above-stated limitations) and produces the best currently
@@ -135,6 +136,13 @@ symbols using the additive group on the non-fixed symbols (function
 
 <li>
 
+the 2-level cover starter construction by Colbourn and Keri (2009),
+which creates strength 4, 5, and 6 CAs and is also closely related to
+the Paley type construction of Colbourn (2015)
+</li>
+
+<li>
+
 direct product construction for strength 2 CAs in function
 <code>productCA</code>, with generalizations for slightly reducing the
 number of runs
@@ -184,15 +192,17 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 
 The constructions are based on various catalogue objects and occasional
 arrays that can be inspected by expert users, but are mainly meant to be
-used by the package functions: <code>CAEX_CAs</code>,
-<code>CAEX_lineages</code>, <code>colbournBigFrame</code>,
-<code>colbournCatalogue</code>, <code>MeagherStevensCombis</code>,
+used by the package functions:<br /> <code>colbournBigFrame</code>,
+<code>CAEX_CAs</code>, <code>CAEX_lineages</code>, <code>TJcat</code>,
+<code>TJ2level_CAs</code>,, <code>MeagherStevensCombis</code>,
 <code>MeagherStevensStarters</code>, <code>LCDSTCombis</code>,
-<code>LCDSTStarters</code>, <code>CKRScat</code>, <code>CKRS_CAs</code>,
+<code>LCDSTStarters</code>, <code>ColbournKeriCombis</code>,
+<code>ColbournKeriStarters</code>, <code>PALEYcat</code>,
+<code>CYCLOTOMYcat</code>, <code>CKRScat</code>, <code>CKRS_CAs</code>,
 <code>WKScat</code>, <code>WKS_CAs</code>, <code>DWYERcat</code>,
-<code>NISTcat</code>, <code>TJcat</code>, <code>TJ2level_CAs</code>,
-<code>PALEYcat</code>, <code>CYCLOTOMYcat</code>, and
-<code>oa1728.12.6</code>.
+<code>NISTcat</code> and <code>oa1728.12.6</code>.<br /> The arrays
+referenced by <code>DWYERcat</code>, <code>NISTcat</code> can only be
+accessed with an internet connection.
 
 ## References
 
