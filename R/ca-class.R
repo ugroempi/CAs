@@ -29,7 +29,10 @@ print.ca <- function(x, ...){
    xnam <- deparse(substitute(x))
     if (!"ca" %in% class(x))
       stop("this print method is for class ca only")
-    attrs <- setdiff(names(attributes(x)), c("origin", "class", "t"))
+   ## dim and dimnames should be kept by setdiff, i.e. not in attrs,
+   ##    because dimnames is usually irrelevant and dim is needed
+   ##    and dim is needed for printing as a matrix
+    attrs <- setdiff(names(attributes(x)), c("origin", "class", "t", "dim", "dimnames"))
     for (a in attrs) attr(x, a) <- NULL
     print.default(x, ...)
     if (length(attrs) > 0) {
