@@ -65,6 +65,7 @@
 #' @export
 projBoseCA <- function(k, v, fixNA=TRUE, ...){
   Call <- sys.call()
+  stopifnot(v < k)
   hilf <- N_projectionBose(k, v)  ## with default cmax=Inf
   if (is.na(hilf[1])) stop("This construction is not available for this combination of k and v.")
   aus <- projectionBose(hilf["q"], hilf["c"], fixNA=fixNA, ...)[,1:k]
@@ -141,8 +142,8 @@ N_projectionBose <- function(k, v, cmax=Inf, ...){
   primpotenzen <- primedat$q
     stopifnot(is.numeric(k), is.numeric(v), is.numeric(cmax))
     stopifnot(k %% 1==0, v%%1==0)
-    stopifnot(v < k)
     kalt <- k
+    if (v > k) k <- v+1  ## prevent nonsensical results
     if (!((k-v)%%2)==1){
       k <- k+1
       }

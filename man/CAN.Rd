@@ -6,7 +6,7 @@
 \alias{eCAK}
 \alias{Ns_derive}
 \alias{Ns_fuse}
-\alias{N_fuseBose_forNs}
+\alias{N_fuseBoseCA}
 \alias{Ns_CK_doubling}
 \alias{Ns_productCA}
 \alias{N_NISTcat}
@@ -43,7 +43,7 @@ Ns_derive(t, k, v)
 
 Ns_fuse(t, k, v, maxfuse = 1)
 
-N_fuseBose_forNs(t,k,v)
+N_fuseBoseCA(t,k,v)
 
 Ns_CK_doubling(t=3, k, v)
 

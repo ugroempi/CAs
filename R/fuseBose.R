@@ -5,14 +5,18 @@
 #'
 #' @rdname fuseBose
 #'
+#' @aliases fuseBoseCA
 #' @aliases fuseBose
 #' @aliases N_fuseBose
 #' @aliases k_fuseBose
 #'
+#' @usage fuseBoseCA(k=NULL, v=NULL, fixNA=TRUE, ...)
 #' @usage fuseBose(q, fixNA=TRUE, ...)
 #' @usage N_fuseBose(k=NULL, v=NULL, ...)
 #' @usage k_fuseBose(N, v=NULL, ...)
 #'
+#' @param k \code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.
+#' @param v \code{NULL} or number of levels; if \code{NULL}, inferred from \code{k} as \code{v=k+2} or from \code{N} as \code{sqrt(N+3)-1}; if \code{k} is also specified, it takes precedence.
 #' @param q a prime power
 #' @param fixNA logical; if FALSE, keeps flexible values; if TRUE, the first \code{q}-3 rows are made constant.
 #' @param k \code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.
@@ -36,6 +40,8 @@
 #' # create a CA(22,2,6,4)
 #' fuseBose(5)  ## two constant rows
 #' fuseBose(5, fixNA=FALSE) ## two flexible values
+#' head(fuseBoseCA(6, 4)) ## two constant rows
+#' attributes(fuseBoseCA(6, 4, fixNA=FALSE)) ## flexible values
 #'
 #' # create a CA(46,2,8,6)
 #' dim(D <- fuseBose(7))
@@ -50,19 +56,30 @@
 #' dim(fuseBose(13))
 #' eCAN(2, 14, 12)  ## one run difference
 #'
-#' # querying k or N
+#' # querying N
 #' N_fuseBose(k=21)
 #' eCAN(2, 24, 22) ## one run difference
 #' eCAK(2, 526, 22) ## as good as it gets
 #'
 #' N_fuseBose(v=6)
-#' k_fuseBose(N=50)
-#'
-#' k_fuseBose(N=118)
-#' eCAN(2,12,10) ## two runs difference
 #'
 
 #' @export
+fuseBoseCA <- function(k=NULL, v=NULL, fixNA=TRUE, ...){
+  Call <- sys.call()
+  hilf <- N_fuseBose(k,v,...)
+  aus <- fuseBose(hilf["q"], fixNA=fixNA, ...)
+  class(aus) <- c("ca", class(aus))
+  attr(aus, "Call") <- Call
+  attr(aus, "origin") <- "Colbourn 2008, Lemma 3.2"
+  if (!fixNA){
+    if (any(is.na(aus)))
+      attr(aus, "flexible") <- list(value=NA, profile=colSums(is.na(aus)))
+  }
+  aus
+}
+
+  #' @export
 fuseBose <- function(q, fixNA=TRUE, ...){
   stopifnot(is.logical(fixNA))
   ## first row immediately dropped
@@ -109,36 +126,47 @@ N_fuseBose <- function(k=NULL, v=NULL, ...){
   if (!is.null(k)){
     stopifnot(is.numeric(k))
     stopifnot(k %% 1==0)
-    if (!(k-1) %in% primedat$q) {
-      k <- min(primpotenzen[which(primpotenzen>=k)])+1
-      message("k was increased to nearest usable value")
+    if (!is.null(v)){
+      stopifnot(k <= v+2)
+      ## check for prime
+      if (!(v+1) %in% primedat$q) return(NA)
+      kalt <- k
+      q <- v+1
     }
-    if (!is.null(v)) if (!k==v+2){
-      message("v was adapted to be compatible with k")
+    else{
+      v <- k-2
+      kalt <- k
+      if (!(v+1) %in% primedat$q){
+        # increase k until v+1 is prime power
+        while(!(k-1) %in% primedat$q){
+          k <- k+1
+          v <- k-2
+        }
+      }
+      q <- v+1
     }
-    v <- k - 2
-    ## check for prime
-    q <- k-1
   }else{
+    ## now k is NULL
     stopifnot(is.numeric(v))
     stopifnot(v %% 1==0)
     ## check for prime
-    if (!(v+1) %in% primedat$q) stop("v+1 must be a prime power")
+    if (!(v+1) %in% primedat$q) return(NA)
+      # stop("v+1 must be a prime power")
     q <- v+1
-    k <- q+1
+    k <- kalt <- q+1   ## k was NULL
   }
-  c(N=q^2-3, k=k, v=v, q=q)
+  c(N=q^2-3, k=kalt, kmax=q+1, v=v, q=q)
 }
 
-#' @export
+### #' do not @export yet
 k_fuseBose <- function(N, v=NULL, ...){
   primpotenzen <- primedat$q
   hilf <- primpotenzen^2 - 3
-  if (!(N %in% (primpotenzen^2-3))){
+  if (!(N %in% (hilf))){
     N <- max(hilf[hilf <= N ])
     message("Invalid N was reduced to closest valid N")
   }
-  q <- round(as.integer(sqrt(N+3)))
+  q <- as.integer(sqrt(N+3))  ## must be prime power
   if (!is.null(v)){
     stopifnot(is.numeric(v))
     stopifnot(v %% 1==0)

@@ -15,7 +15,7 @@
 #' @aliases Ns
 #' @aliases Ns_derive
 #' @aliases Ns_fuse
-#' @aliases N_fuseBose_forNs
+#' @aliases N_fuseBoseCA
 #' @aliases Ns_CK_doubling
 #' @aliases Ns_productCA
 #' @aliases N_NISTcat
@@ -46,7 +46,7 @@
 #' @usage Ns(t, k, v)
 #' @usage Ns_derive(t, k, v)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
-#' @usage N_fuseBose_forNs(t,k,v)
+#' @usage N_fuseBoseCA(t,k,v)
 #' @usage Ns_CK_doubling(t=3, k, v)
 #' @usage Ns_productCA(t=2, k, v)
 #' @usage N_NISTcat(t, k, v)
@@ -217,7 +217,7 @@ Ns <- function(t, k, v){
     CYCLOTOMY=N_CYCLOTOMYcat(t,k,v),
     CKRS=N_CKRScat(t,k,v),
     SCA_Busht=N_SCA_Busht(t,k,v),
-    fuseBose=N_fuseBose_forNs(t,k,v),
+    fuseBoseCA=N_fuseBoseCA(t,k,v),
     recBoseCA_PCA=unname(N_recBoseCA(t,k,v,type="PCA")),
     recBoseCA_CA=unname(N_recBoseCA(t,k,v,type="CA")),
     projBoseCA=unname(N_projBoseCA(t,k,v,cmax=Inf)),
@@ -283,11 +283,11 @@ Ns_fuse <- function(t, k, v, maxfuse=1){
 
 ## special fuse for Bose arrays
 #' @export
-N_fuseBose_forNs <- function(t=2, k, v){
+N_fuseBoseCA <- function(t=2, k, v){
   if (!t==2) return(NA)
-  if (!v %in% primedat$q-1) return(NA)
-  if (k>v+2) return(NA)
-  (v+1)^2-3
+  aus <- try(N_fuseBose(k=k, v=v)["N"], silent = TRUE)
+  if ("try-error" %in% class(aus)) return(NA)
+  unname(aus)
 }
 
 ## obtain sizes from OA
@@ -406,7 +406,7 @@ N_recBoseCA <- function(t=2,k,v, type="PCA"){
 #' @export
 N_projBoseCA <- function(t=2,k,v,cmax=3){
   if (!t==2) return(NA)
-  suppressMessages(N_projectionBose(k=k, v=v, cmax=cmax))[1]
+  suppressMessages(N_projectionBose(k=k, v=v, cmax=cmax)[1])
 }
 
 ## obtain size of WKS catalogue entry

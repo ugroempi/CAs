@@ -98,7 +98,7 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
     if (is.null(starter)) stop("not implemented")
   }
   nNA <- sum(is.na(starter))
-  f <- length(unique(starter[starter>100])) ## fixed values
+  f <- length(unique(starter[which(starter>100)])) ## fixed values
   ## there is no case with more NA values than unfixed levels
   if (nNA>0) starter[is.na(starter)] <- (0:(v-f-1))[1:nNA]
   if (f>3) stop("more than three fixed points not (yet?) implemented")
@@ -119,9 +119,9 @@ N_CS_LCDST <- function(t=2, k, v){
   stopifnot(k>=2, v>=3)
   stopifnot(k%%1==0, v%%1==0)
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the optimum run size, which is ", N_KSK(k), "."))
-  if (k <= v+1) message("For k <= v+1, ??? may not be the best construction.")
   hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v &
-                      LCDSTCombis[,"k"]>=k  & LCDSTCombis[,"f"]<=3,,drop=FALSE]
+                      LCDSTCombis[,"k"]>=k  &
+                        LCDSTCombis[,"f"]<=3,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   hilf[1,"N"]
 }

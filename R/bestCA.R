@@ -83,7 +83,7 @@
 #' bestCA(4,8,2)
 #' bestCA(4,8,2, preference="TJ")
 #' ## for demo purposes only
-#' bestCA(4,8,2, preference="NIST")
+#' head(bestCA(4,8,2, preference="NIST"))
 #' ## with override=TRUE, "NIST" could be forced
 #'
 #' # a case that is not implemented
@@ -94,7 +94,7 @@
 #' ## DWYER needs internet connection, prefer TJ
 #' D <- bestCA(3, 50, 2, preference="TJ")
 #' dim(D)
-#' coverage(D, 3)
+#' # coverage(D, 3)
 #'
 #' Ns(6, 50, 2)
 #' ## WKS is the only best
@@ -125,7 +125,6 @@
 #' dim(D <- bestCA(2,26,23))
 #' attributes(D)
 #' ## eCAN 7 runs better from NCK post processing
-#'
 #'
 
 #' @export
@@ -178,15 +177,15 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
 labelToCode <- function(label, t, k, v, ...){
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("PALEY",
-  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA", "SCA_Bush", "fuseBose",
+  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA", "SCA_Bush", "fuseBoseCA",
   "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"))
   if (label =="PALEY"){
     if (!v==2) stop('"PALEY" requires v=2')
     return(paste0("paleyCA(", t, ", ", k, ")"))
   }
-  if (label =="fuseBose"){
-    return(paste0("fuseBose(",v+1, ", ...)"))
+  if (label =="fuseBoseCA"){
+    return(paste0("fuseBoseCA(",k, ", ", v, ", ...)"))
   }
   if (label =="SCA_Bush"){
     return(paste0("SCA_Bush(",v,",", t, ")"))

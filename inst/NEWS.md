@@ -1,5 +1,21 @@
 # NEWS
 
+30 June 2025, version 0.5
+
+ - bug fix: prevented nonsensical result from N_BoseCA 
+ - bug fix: fixed mistake in N_fuseBose and N_fuseBose_forNs
+ - bug fix: fixed mistake in LCDSTCombis (for cases with NAs, 
+   f was one too large, resulting in too small N; occurred for 7 rows;
+   led to erroneous N reported, but arrays were correct)
+ - bug fix: fixed mistake in LCDSTStarters for v=7 with k=14
+ - bug fix: CS_LCDST erroneously refused creation of an array in case of 
+   f=3 with NA-values in the starter
+ - added function fuseBoseCA, in line with the other constructions
+ - renamed N_fuseBose_forNs to N_fuseBoseCA, 
+   in line with the other constructions
+ - bug fix: hid k_fuseBose, because fixing it takes more care (and it is 
+   not so urgently needed)
+
 27 June 2025, version 0.4
 
  - the user-visible data are now in a data folder instead of sysdata.rda, 
