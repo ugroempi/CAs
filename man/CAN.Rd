@@ -123,7 +123,8 @@ and \code{k_TJcat} returns the largest number of columns \code{k} for the reques
 of a catalogued array from the Jose Torres-Jimenez library (as of Feb 6 2025, small
 selection, which is expected to grow; partly available in this package)\cr
 The analogous functionality holds for \code{N_} and \code{k_} functions for
-\code{DWYERcat}, \code{CKRScat}, \code{WKScat} and \code{CYCLOTOMYcat}.
+\code{DWYERcat}, \code{CKRScat}, \code{WKScat} and \code{CYCLOTOMYcat}, also for
+\code{CS_MS}, \code{CS_LCDST}, \code{CS_CK} and various other constructions.
 .
 In cases for which there is no entry in the respective
 table or library, the returned results are missing values.
