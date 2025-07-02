@@ -71,7 +71,7 @@ projBoseCA <- function(k, v, fixNA=TRUE, ...){
   aus <- projectionBose(hilf["q"], hilf["c"], fixNA=fixNA, ...)[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "PCAstatus") <- list
-  attr(aus, "call") <- Call
+  attr(aus, "Call") <- Call
   attr(aus, "origin") <- "projection (Colbourn 2008 Thm 2.3)"
   aus
 }
