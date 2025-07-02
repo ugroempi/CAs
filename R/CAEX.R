@@ -200,7 +200,7 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
     stopifnot(k%%1==0)
     stopifnot(k>=1)
     ## determine N
-    N <- N_TJcat(t, k, v)
+    suppressMessages(N <- N_TJcat(t, k, v))
     if (is.na(N)) stop("The requested k =", k, " cannot be accommodated.")
   }else{
     ## check input N
@@ -221,7 +221,17 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
   if (t==2 && v==3){
     ## current only case, precaution for future extensions
     ## arrays only
-    if (N==v^2 || k==v+1) D <- SCA_Bose(v) else{
+    if (N==v^2 || k<=v+1){
+          D <- SCA_Bose(v)
+          if (k<v+1){
+          attr <- attributes(D)[c("origin", "Call")]
+          D <- D[,1:k]
+          class(D) <- c("ca", class(D))
+          attributes(D) <- c(attributes(D), attr,
+              list(comment="SCA_Bose called from CAEX, columns reduced"))
+          }
+          return(D)
+      }else{
       lineages <- CAEX_lineages[[as.character(t)]][[as.character(v)]]
       lineage <- lineages[[as.character(N)]]
       if (is.character(lineage)){
