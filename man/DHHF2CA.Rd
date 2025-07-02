@@ -2,7 +2,7 @@
 % Please edit documentation in R/DHHF2CA.R
 \name{DHHF2CA}
 \alias{DHHF2CA}
-\title{Make a larger uniform CA from a PHHF and smaller CAs}
+\title{Make a larger uniform CA from a DHHF and smaller CAs}
 \usage{
 DHHF2CA(P, Dlist, v = max(Dlist[[1]]) + 1, ...)
 }
@@ -25,7 +25,7 @@ a CA(chi + sum_i=1^c (N_i-rho_i)*u_i, t, k, v)
 guarantees regarding the strength, because guarding this is left to the user or to calling functions).
 }
 \description{
-Function to construct a larger CA by replacing levels of a PHHF with columns of smaller CAs
+Function to construct a larger CA by replacing levels of a DHHF with columns of smaller CAs
 }
 \section{Details}{
 

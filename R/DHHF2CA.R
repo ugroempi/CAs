@@ -1,6 +1,6 @@
-#' Make a larger uniform CA from a PHHF and smaller CAs
+#' Make a larger uniform CA from a DHHF and smaller CAs
 #'
-#' Function to construct a larger CA by replacing levels of a PHHF with columns of smaller CAs
+#' Function to construct a larger CA by replacing levels of a DHHF with columns of smaller CAs
 #'
 #' @rdname DHHF2CA
 #'
@@ -91,7 +91,7 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
   Dlist <- Dlist[descendingorder]
 
   if (!(all(wis == wis_Dlist)))
-    stop("The PHHF and the CAs in Dlist do not match.")
+    stop("The DHHF and the CAs in Dlist do not match.")
 
   ## which CA to pick for each row of P:
   ##
@@ -150,11 +150,11 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
     if (length(YMp1) < chi) stop("wrong length for YMp1")
     if (length(YMp1) > chi){
       addrow <- length(YMp1) - chi
-      warning(paste("PHHF2CA encountered a case for which the implementation is suboptimal\n",
+      warning(paste("DHHF2CA encountered a case for which the implementation is suboptimal\n",
                     addrow, " more rows than possible"))
       chi <- length(YMp1)
-    }
     aus <- rbind(aus, matrix(NA, addrow, k))
+    }
     aus[(Nbisher+1):(Nbisher+chi),] <- matrix(YMp1, nrow=chi, ncol=k)
   }
   ## unique may improve the result for poorly chosen ingredients
