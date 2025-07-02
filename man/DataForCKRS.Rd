@@ -17,7 +17,12 @@ An object of class \code{list} of length 53.
 }
 \source{
 The reference is Colbourn, Keri, Rivas Soriano and Schlage-Puchta (2010, CKRS).
-The source for the arrays is \url{http://old.sztaki.hu/~keri/arrays/CA_listings.zip}.
+The source for the arrays is \url{http://old.sztaki.hu/~keri/arrays/CA_listings.zip}.\cr
+The creation of the objects is documented by R files in the \code{extdata}
+folder of this package, which can be located using
+\code{system.file("extdata", package="CAs")}, the actual raw arrays
+can be found there as well (they are small enough to be included in spite
+of their availability on the web).
 }
 \usage{
 CKRScat

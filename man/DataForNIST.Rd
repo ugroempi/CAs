@@ -10,7 +10,11 @@
 names in the NIST library of covering arrays.
 }
 \source{
-The source is NIST (2008).
+The source is NIST (2008).\cr
+The creation of the object is documented by the R file \code{NISTcat_create.R}
+in the \code{extdata} folder of this package, which can be located using
+\code{system.file("extdata", package="CAs")}; the many
+raw arrays are not provided there, as they are available on the web.
 }
 \usage{
 NISTcat

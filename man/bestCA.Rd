@@ -2,6 +2,7 @@
 % Please edit documentation in R/bestCA.R
 \name{bestCA}
 \alias{bestCA}
+\alias{bestN}
 \alias{ckrsCA}
 \alias{dwyerCA}
 \alias{nistCA}
@@ -9,6 +10,8 @@
 \title{Function to obtain the best uniform CA for a combination of t, k and v}
 \usage{
 bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
+
+bestN(t, k, v, internet=TRUE, ...)
 
 ckrsCA(t, k, v, ...)
 
@@ -46,9 +49,14 @@ between equally-good methods.}
 
 \item{...}{handed to construction function, currently,
 only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}
+
+\item{internet}{logical; if FALSE, methods whose designs need an internet
+connection are excluded}
 }
 \value{
-The functions return a matrix of class \code{ca},
+\code{bestN} returns a named integer: the first method that yields the
+smallest implemented size.\cr
+The other functions return a matrix of class \code{ca},
 which is a uniform covering array of strength at least \code{t} with
 \code{k} columns at \code{v} levels.
 }
@@ -96,7 +104,7 @@ Ns(4,8,2)
 bestCA(4,8,2)
 bestCA(4,8,2, preference="TJ")
 ## for demo purposes only
-bestCA(4,8,2, preference="NIST")
+head(bestCA(4,8,2, preference="NIST"))
 ## with override=TRUE, "NIST" could be forced
 
 # a case that is not implemented
@@ -107,7 +115,7 @@ Ns(3, 50, 2)
 ## DWYER needs internet connection, prefer TJ
 D <- bestCA(3, 50, 2, preference="TJ")
 dim(D)
-coverage(D, 3)
+# coverage(D, 3)
 
 Ns(6, 50, 2)
 ## WKS is the only best
@@ -138,7 +146,6 @@ Ns(2,26,23) ## projBoseCA is best with 623 runs
 dim(D <- bestCA(2,26,23))
 attributes(D)
 ## eCAN 7 runs better from NCK post processing
-
 
 }
 \seealso{

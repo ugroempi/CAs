@@ -27,9 +27,16 @@ a list whose entries are the starter vectors and whose names are the permissible
 indicates combinations for which starter vectors for the construction function \code{\link{CS_MS}} are available from
 \code{MeagherStevensCombis}.
 
-\code{LCDSTCombis} is a data.frame with columns \code{v}, \code{k}, \code{f}, \code{NAs} and \code{N} that
+\code{LCDSTCombis} is a data.frame that
 indicates combinations for which starter vectors for function \code{\link{CS_LCDST}} are available;
-\code{f} indicates how many values are fixed and has an impact on the length of the starter vector.
+it has columns \code{v}, \code{k}, \code{f}, \code{NAs}, \code{N},
+\code{N_withoutInternet} and \code{N_eCANbased}.\cr
+\code{f} indicates how many values are fixed and has an impact on the length of the starter vector;\cr
+\code{N} is the number of runs achieved in the package based on installed constructions
+for the ingredient CA with \code{f} levels, \code{N_withoutInternet} is that
+same number if use of the internet is not possible, and \code{N_eCANbased}
+is the number when using the best CA referenced in the Colbourn tables
+(which may not be implemented in the package).
 
 \code{ColbournKeriCombis} is a data.frame with columns \code{t}, \code{k}, \code{v}, \code{N},
 \code{method}, \code{starter} and \code{code} that
@@ -40,7 +47,7 @@ the actual arrays.
 
 An object of class \code{list} of length 16.
 
-An object of class \code{data.frame} with 43 rows and 5 columns.
+An object of class \code{data.frame} with 43 rows and 7 columns.
 
 An object of class \code{list} of length 9.
 
@@ -71,7 +78,10 @@ Lists ...Combis and ...Starters support cover starter constructions.
 \section{Details}{
 
 For more details, see also the documentation of functions
-\code{\link{CS_MS}}, \code{\link{CS_LCDST}} and \code{\link{CS_CK}}.
+\code{\link{CS_MS}}, \code{\link{CS_LCDST}} and \code{\link{CS_CK}}.\cr
+The creation of the objects is documented by R files in the \code{extdata}
+folder of this package, which can be located using
+\code{system.file("extdata", package="CAs")}.
 }
 
 \examples{

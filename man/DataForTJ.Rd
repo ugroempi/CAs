@@ -18,7 +18,12 @@ An object of class \code{list} of length 212.
 \source{
 The source is the no longer functional website \code{https://www.tamps.cinvestav.mx/~oc/} by
 Torres-Jimenez (without year). Web archive versions of that site are useless, because they
-do not include the arrays.
+do not include the arrays.\cr
+The creation of the objects is documented by R files in the \code{extdata}
+folder of this package, which can be located using
+\code{system.file("extdata", package="CAs")}, the actual raw arrays
+can be found there as well (omitting large ones that can be constructed
+at least approximately by a recursive construction).
 }
 \usage{
 TJcat

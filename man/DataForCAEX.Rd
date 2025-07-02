@@ -18,7 +18,11 @@ An object of class \code{list} of length 24.
 }
 \source{
 The Source is Torres-Jimenez et al. (2021), and the arrays area also included in
-\code{\link{TJcat}}.
+\code{\link{TJcat}}.\cr
+The creation of the objects is documented by R files in the \code{extdata}
+folder of this package, which can be located using
+\code{system.file("extdata", package="CAs")}, the actual raw arrays
+for \code{CAEX_CAs} be found there as well.
 }
 \usage{
 CAEX_lineages
