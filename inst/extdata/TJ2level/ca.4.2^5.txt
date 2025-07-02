@@ -1,0 +1,21 @@
+C CINVESTAV-TAMAULIPAS, MEXICO 
+C email: jtj@cinvestav.mx 
+C http://www.tamps.cinvestav.mx/~jtj/ 
+C 
+16 5 2^5 4
+0 0 0 0 0
+0 0 0 1 1
+0 0 1 0 1
+0 0 1 1 0
+0 1 0 0 1
+0 1 0 1 0
+0 1 1 0 0
+0 1 1 1 1
+1 0 0 0 1
+1 0 0 1 0
+1 0 1 0 0
+1 0 1 1 1
+1 1 0 0 0
+1 1 0 1 1
+1 1 1 0 1
+1 1 1 1 0
