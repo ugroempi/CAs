@@ -1,5 +1,28 @@
 # NEWS
 
+02 July 2025, version 0.6
+
+ - added a function bestN for use in size calculations
+   for recursive constructions
+ - added an internet availability check to function bestCA
+ - modified ckrsCA, nistCA, dwyerCA and tjCA to throw 
+   a meaningful error for cases that are not covered
+ - extended CS_LCDST to cases with f>3 
+   (uses bestCA for a suitable ingredient)
+ - fixed LCDSTStarters for v=10 and k=27 and
+   for v=11 and k=26, and correspondingly
+   modified LCDSTCombis
+ - modified LCDSTCombis$N to hold realistic
+   numbers for f>3 based on the currently available
+   minimum size construction (three different columns for N now)
+ - added a forgotten entry to DWYERcat, and added 
+   useful row names 
+ - added folder extdata with all data files that 
+   are used by the package and not available 
+   from the internet, as well as code for creating 
+   the objects in data folder
+ - bug fix for documentation of DHHF
+
 30 June 2025, version 0.5
 
  - bug fix: prevented nonsensical result from N_BoseCA 

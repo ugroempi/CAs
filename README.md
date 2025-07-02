@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.5
+- **Version**: 0.6
 
 ## Warning
 
@@ -203,6 +203,13 @@ used by the package functions:<br /> <code>colbournBigFrame</code>,
 <code>NISTcat</code> and <code>oa1728.12.6</code>.<br /> The arrays
 referenced by <code>DWYERcat</code>, <code>NISTcat</code> can only be
 accessed with an internet connection.
+
+The R objects are available in the <code>data</code> folder of the
+package, corresponding raw data and construction code can be found in
+the <code>extdata</code> folder of the package, which can be located in
+the directory <code>inst/extdata</code> of the GitHub repo or, for a
+given R installation, using <code>system.file(“extdata”,
+package=“CAs”)</code> from within R.
 
 ## References
 

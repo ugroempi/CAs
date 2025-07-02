@@ -73,6 +73,13 @@ but are mainly meant to be used by the package functions:\cr
 and \code{\link{oa1728.12.6}}.\cr
 The arrays referenced by \code{\link{DWYERcat}}, \code{\link{NISTcat}} can only be
 accessed with an internet connection.
+
+The R objects are available in the \code{data} folder of the package,
+corresponding raw data and construction code can be found in the
+\code{extdata} folder of the package, which can be located in the
+directory \code{inst/extdata} of the GitHub repo or, for a given
+R installation, using \code{system.file("extdata", package="CAs")}
+from within R.
 }
 
 \references{
