@@ -7,14 +7,17 @@
 #'
 #' @importFrom utils download.file
 #' @importFrom utils packageVersion
+#' @importFrom curl has_internet
 #'
 #' @aliases bestCA
+#' @aliases bestN
 #' @aliases ckrsCA
 #' @aliases dwyerCA
 #' @aliases nistCA
 #' @aliases tjCA
 #'
 #' @usage bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
+#' @usage bestN(t, k, v, internet=TRUE, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
 #' @usage nistCA(t, k, v, ...)
@@ -38,11 +41,15 @@
 #' @param override logical: If TRUE, the preference overrides a
 #'           better method, otherwise (default) it only decides
 #'           between equally-good methods.
+#' @param internet logical; if FALSE, methods whose designs need an internet
+#'           connection are excluded
 #' @param ... handed to construction function, currently,
 #'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
-#' @returns The functions return a matrix of class \code{ca},
-#' which is a uniform covering array of strength at least \code{t} with
-#' \code{k} columns at \code{v} levels.
+#' @returns \code{bestN} returns a named integer: the first method that yields the
+#'        smallest implemented size.\cr
+#'        The other functions return a matrix of class \code{ca},
+#'        which is a uniform covering array of strength at least \code{t} with
+#'        \code{k} columns at \code{v} levels.
 #'
 #' @section Details:
 #' Function \code{bestCA} uses function \code{\link{Ns}} for locating
@@ -132,9 +139,19 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
   hilf <- Ns(t,k,v)
   if (length(hilf)==1)
     stop("no construction for this setting has been implemented yet")
+  internet <- curl::has_internet()
+  if (!internet){
+     message("there is no internet connection")
+     if (preference %in% c("DWYER","NIST")) stop(paste(preference, " requires an internet connection"))
+     forbidden <- which(names(hilf) %in% c("DWYER","NIST"))
+     if (length(forbidden) > 0)
+        hilf <- hilf[-forbidden]
+  }
+  ## remove eCAN entry
+  ## if it is feasible, there is another entry of the same size
   minN <- min(hilf[-length(hilf)])
-  constrs <- names(hilf)[hilf<=minN]
-  constrs <- setdiff(constrs, "eCAN")
+  if (length(hilf)==0) stop("no feasible construction found")
+  constrs <- names(hilf)[which(hilf<=minN)]
   ## handling of a stated preference
   finished <- FALSE
   if (!is.null(preference)){
@@ -171,6 +188,21 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
   attr(aus, "date") <- Sys.Date()
   attr(aus, "CAs-version") <- packageVersion("CAs")
   if (!"ca" %in% class(aus)) class(aus) <- c("ca", class(aus))
+  aus
+}
+
+#' @export
+bestN <- function(t,k,v, internet=TRUE, ...){
+  ## yields the size of the smallest implemented design,
+  ## with or without internet
+  stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
+  stopifnot(t%%1==0, k%%1==0, v%%1==0)
+  hilf <- Ns(t,k,v)
+  if (internet) hilf <- hilf[setdiff(names(hilf), "eCAN")] else
+    hilf <- hilf[setdiff(names(hilf), c("eCAN", "DWYER", "NIST"))]
+  if (length(hilf)==0) return(NA)
+  aus <- min(hilf)
+  names(aus) <- names(hilf)[which.min(hilf)]
   aus
 }
 
@@ -252,6 +284,7 @@ labelToCode <- function(label, t, k, v, ...){
 ckrsCA <- function(t, k, v, ...){
   Call <- sys.call()
   hilf <- CKRScat[CKRScat$t>=t & CKRScat$v==v & CKRScat$k>=k,]
+  if (nrow(hilf)==0) stop("there is no suitable array in CKRS_CAs")
   N <- min(hilf$N)
   tachieved <- hilf$t
   hilf <- hilf[which.min(hilf$N),,drop=FALSE]
@@ -267,6 +300,7 @@ ckrsCA <- function(t, k, v, ...){
 dwyerCA <- function(t, k, v, ...){
   Call <- sys.call()
   hilf <- DWYERcat[DWYERcat$t>=t & DWYERcat$v==v & DWYERcat$k>=k,]
+  if (nrow(hilf)==0) stop("there is no suitable array in the Dwyer database")
   N <- min(hilf$N)
   hilf <- hilf[which.min(hilf$N),,drop=FALSE]
   N <- hilf$N  ## should not be necessary, just to be safe
@@ -290,6 +324,7 @@ nistCA <- function(t, k, v, ...){
   Call <- sys.call()
   hilf <- NISTcat[NISTcat[,"t"]==t & NISTcat[,"v"]==v &
                     NISTcat[,"k"]==k,, drop=FALSE]
+  if (nrow(hilf)==0) stop("there is no suitable array in the NIST library")
   nam <- rownames(hilf)
   pfad <- paste0("https://math.nist.gov/coveringarrays/ipof/cas/t=", t,"/v=",v,"/", nam)
   speicherpfad <- paste0(tempdir(), "/", nam)
@@ -311,6 +346,7 @@ tjCA <- function(t, k, v=2, ...){
   Call <- sys.call()
   if (!v==2) stop("For v=3, use CAEX. v>3 was not yet implemented.")
   hilf <- TJcat[TJcat$t>=t & TJcat$v==v & TJcat$k>=k,]
+  if (nrow(hilf)==0) stop("there is no suitable array in TJ2level_CAs")
   N <- min(hilf$N)
   hilf <- hilf[which.min(hilf$N),,drop=FALSE]
   N <- hilf$N  ## should not be necessary, just to be safe
