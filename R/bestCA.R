@@ -17,7 +17,7 @@
 #' @aliases tjCA
 #'
 #' @usage bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
-#' @usage bestN(t, k, v, internet=TRUE, ...)
+#' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
 #' @usage nistCA(t, k, v, ...)
@@ -43,6 +43,9 @@
 #'           between equally-good methods.
 #' @param internet logical; if FALSE, methods whose designs need an internet
 #'           connection are excluded
+#' @param exclude \code{NULL} or a character vector of method(s) to exclude,
+#'   in support of size calculations for recursive constructions
+#'   which need to calculate sizes of best ingredients
 #' @param ... handed to construction function, currently,
 #'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
 #' @returns \code{bestN} returns a named integer: the first method that yields the
@@ -89,9 +92,15 @@
 #' # without a preference, bestCA uses Paley
 #' bestCA(4,8,2)
 #' bestCA(4,8,2, preference="TJ")
-#' ## for demo purposes only
-#' head(bestCA(4,8,2, preference="NIST"))
-#' ## with override=TRUE, "NIST" could be forced
+
+#' Ns(3, 1500, 2)
+#' ## DWYER and NIST need internet connection
+#' try(bestCA(3, 1500, 2))
+#' ## CK_doublingCA is almost as good
+#' try(dim(bestCA(3, 1500, 2, preference="CK_doublingCA")))
+#' dim(bestCA(3, 1500, 2, preference="CK_doublingCA", override=TRUE))
+#' ## it is, of course, also possible to use the construction functions
+#' ## (but one gets lazy)
 #'
 #' # a case that is not implemented
 #' Ns(6, 45, 10)
@@ -120,11 +129,6 @@
 #' D <- bestCA(3, 9, 6)
 #' attributes(D)
 #'
-#' Ns(3, 1500, 2)
-#' ## DWYER and NIST need internet connection
-#' ## however, TJ is not available (will be with Power CT construction)
-#' try(bestCA(3, 1500, 2))
-#'
 #' Ns(2,26,24) ## fuseBose is best-known
 #' dim(bestCA(2,26,24))
 #'
@@ -135,8 +139,9 @@
 #'
 
 #' @export
-bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...){
-  hilf <- Ns(t,k,v)
+bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
+                   preference=NULL, override=FALSE, ...){
+  hilf <- Ns(t,k,v, ...)
   if (length(hilf)==1)
     stop("no construction for this setting has been implemented yet")
   internet <- curl::has_internet()
@@ -192,12 +197,12 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FAL
 }
 
 #' @export
-bestN <- function(t,k,v, internet=TRUE, ...){
+bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
   ## yields the size of the smallest implemented design,
   ## with or without internet
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   stopifnot(t%%1==0, k%%1==0, v%%1==0)
-  hilf <- Ns(t,k,v)
+  hilf <- Ns(t,k,v, exclude=exclude)
   if (internet) hilf <- hilf[setdiff(names(hilf), "eCAN")] else
     hilf <- hilf[setdiff(names(hilf), c("eCAN", "DWYER", "NIST"))]
   if (length(hilf)==0) return(NA)
@@ -208,10 +213,14 @@ bestN <- function(t,k,v, internet=TRUE, ...){
 
 labelToCode <- function(label, t, k, v, ...){
   ## label must correspond to the label used in function Ns
-  stopifnot(label %in% c("PALEY",
-  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA", "SCA_Bush", "fuseBoseCA",
+  stopifnot(label %in% c("KSK","PALEY",
+  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA", "SCA_Busht", "fuseBoseCA",
   "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
-  "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"))
+  "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ", "CK_doublingCA"))
+  if (label =="KSK"){
+    if (!v==2) stop('"KSK" requires v=2')
+    return(paste0("KSK(", k, ")"))
+  }
   if (label =="PALEY"){
     if (!v==2) stop('"PALEY" requires v=2')
     return(paste0("paleyCA(", t, ", ", k, ")"))
@@ -219,8 +228,8 @@ labelToCode <- function(label, t, k, v, ...){
   if (label =="fuseBoseCA"){
     return(paste0("fuseBoseCA(",k, ", ", v, ", ...)"))
   }
-  if (label =="SCA_Bush"){
-    return(paste0("SCA_Bush(",v,",", t, ")"))
+  if (label =="SCA_Busht"){
+    return(paste0("SCA_Busht(",v,",", t, ")"))
   }
   if (label =="CAEX"){
     if (!v==3) stop('"CAEX" requires v=3')
@@ -231,6 +240,10 @@ labelToCode <- function(label, t, k, v, ...){
     ## as of June 2025, the 2-level CAs of TJ
     if (!v==2) stop('"TJ" requires v=2')
     return(paste0("tjCA(", t, ", ", k, ", ", v, ")"))
+  }
+  if (label =="CK_doublingCA"){
+    if (!t==3) stop('"CK_doublingCA" requires t=3')
+    return(paste0("CK_doublingCA(", k, ", ", v, ")"))
   }
   if (label=="CYCLOTOMY"){
     return(paste0("cyclotomyCA(", t, ", ", k, ", ", v, ")"))

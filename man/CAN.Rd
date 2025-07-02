@@ -37,7 +37,7 @@ eCAN(t, k, v)
 
 eCAK(t, N, v)
 
-Ns(t, k, v)
+Ns(t, k, v, exclude=NULL)
 
 Ns_derive(t, k, v)
 
@@ -97,6 +97,10 @@ k_recBoseCA(t=2, N, v, type="PCA")
 \item{k}{number of columns}
 
 \item{v}{number of levels for each column}
+
+\item{exclude}{\code{NULL} or a character vector of method(s) to exclude,
+in support of size calculations for recursive constructions
+which need to calculate sizes of best ingredients}
 
 \item{maxfuse}{integer number of levels to fuse (i.e., difference between number of levels before and after fusing)}
 

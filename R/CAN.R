@@ -43,7 +43,7 @@
 #'
 #' @usage eCAN(t, k, v)
 #' @usage eCAK(t, N, v)
-#' @usage Ns(t, k, v)
+#' @usage Ns(t, k, v, exclude=NULL)
 #' @usage Ns_derive(t, k, v)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
 #' @usage N_fuseBoseCA(t,k,v)
@@ -74,6 +74,9 @@
 #' @param t coverage strength
 #' @param k number of columns
 #' @param v number of levels for each column
+#' @param exclude \code{NULL} or a character vector of method(s) to exclude,
+#'   in support of size calculations for recursive constructions
+#'   which need to calculate sizes of best ingredients
 #' @param maxfuse integer number of levels to fuse (i.e., difference between number of levels before and after fusing)
 #' @param N number of runs
 #' @param type character string: \code{"PCA"} or \code{"CA"}
@@ -209,30 +212,44 @@
 
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
-Ns <- function(t, k, v){
+Ns <- function(t, k, v, exclude=NULL){
   stopifnot(t <= 6)
+  if (!is.null(exclude)) stopifnot(is.character(exclude))
+  exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
+  if (!all(exclude %in% c("KSK","PALEY", "CAEX", "CYCLOTOMY",
+                          "CKRS", "SCA_Busht", "fuseBoseCA",
+                          "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
+                          "CK_doublingCA", "WKS",
+                          "CS_MS", "CS_LCDST", "CS_CK",
+                          "DWYER", "NIST","TJ"
+                          ))) message("exclude contains invalid element(s)")
+
   suppressMessages(
     aus <- c(
-    PALEY=N_PALEYcat(t,k,v),
-    CAEX=N_CAEX(t,k,v),
-    CYCLOTOMY=N_CYCLOTOMYcat(t,k,v),
-    CKRS=N_CKRScat(t,k,v),
-    SCA_Busht=N_SCA_Busht(t,k,v),
-    fuseBoseCA=N_fuseBoseCA(t,k,v),
-    recBoseCA_PCA=unname(N_recBoseCA(t,k,v,type="PCA")),
-    recBoseCA_CA=unname(N_recBoseCA(t,k,v,type="CA")),
-    projBoseCA=unname(N_projBoseCA(t,k,v,cmax=Inf)),
-    WKS=N_WKScat(t,k,v),
-    CS_MS=N_CS_MS(t,k,v),
-    CS_LCDST=N_CS_LCDST(t,k,v),
-    CS_CK=N_CS_CK(t,k,v),
-    DWYER=N_DWYERcat(t,k,v),
-    NIST=N_NISTcat(t,k,v),
-    TJ=N_TJcat(t,k,v),
+    KSK=ifelse("KSK" %in% exclude || t>2 || v>2, NA, N_KSK(k)),
+    PALEY=ifelse("PALEY" %in% exclude, NA,
+          N_PALEYcat(t,k,v)),
+    CAEX=ifelse("CAEX" %in% exclude, NA,N_CAEX(t,k,v)),
+    CYCLOTOMY=ifelse("CYCLOTOMY" %in% exclude, NA, N_CYCLOTOMYcat(t,k,v)),
+    CKRS=ifelse("CKRS" %in% exclude, NA,N_CKRScat(t,k,v)),
+    SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
+    fuseBoseCA=ifelse("fuseBoseCA" %in% exclude, NA,N_fuseBoseCA(t,k,v)),
+    recBoseCA_PCA=ifelse("recBoseCA_PCA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="PCA"))),
+    recBoseCA_CA=ifelse("recBoseCA_CA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="CA"))),
+    projBoseCA=ifelse("projBoseCA" %in% exclude, NA,unname(N_projBoseCA(t,k,v,cmax=Inf))),
+    CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
+                         NA, N_CK_doublingCA(t,k,v)),
+    WKS=ifelse("WKS" %in% exclude, NA,N_WKScat(t,k,v)),
+    CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
+    CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
+    CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
+    DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
+    NIST=ifelse("NIST" %in% exclude, NA,N_NISTcat(t,k,v)),
+    TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     eCAN=eCAN(t,k,v)[[1]])
     )
   aus <- aus[!is.na(aus)]
-  if (t==2 && v==2) aus <- c(KSK=N_KSK(k), aus)
+  # if (t==2 && v==2) aus <- c(KSK=N_KSK(k), aus)
   if (length(aus)==0){
     Nderive <- Ns_derive(t, k, v)
     if (!is.na(Nderive)){

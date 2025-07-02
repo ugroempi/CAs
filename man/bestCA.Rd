@@ -11,7 +11,7 @@
 \usage{
 bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
 
-bestN(t, k, v, internet=TRUE, ...)
+bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
 
 ckrsCA(t, k, v, ...)
 
@@ -52,6 +52,10 @@ only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}
 
 \item{internet}{logical; if FALSE, methods whose designs need an internet
 connection are excluded}
+
+\item{exclude}{\code{NULL} or a character vector of method(s) to exclude,
+in support of size calculations for recursive constructions
+which need to calculate sizes of best ingredients}
 }
 \value{
 \code{bestN} returns a named integer: the first method that yields the
