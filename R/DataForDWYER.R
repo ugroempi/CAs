@@ -15,11 +15,15 @@ globalVariables("DWYERcat")
 #' @source
 #' The source is Dwyer (2024), who cites personal communications with Colbourn as the
 #' source of many of the arrays; there is some overlap between this repository and
-#' \code{\link{CKRScat}}.
+#' \code{\link{CKRScat}}.\cr
+#' The creation of the object is documented by an R file in the \code{extdata}
+#' folder of this package, which can be located using
+#' \code{system.file("extdata", package="CAs")}; the many
+#' raw arrays are not provided there, as they are available on the web.
 #'
 #' @section Details:
 #' The repository is large and has not been included into the package.
-#' Function \code{\link{dwyerCA}} downloads calculates the requested array
+#' Function \code{\link{dwyerCA}} calculates the requested array
 #' (in case of an OA) or downloads it on the fly.
 #'
 #' @references Dwyer (2024)

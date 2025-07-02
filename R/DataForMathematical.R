@@ -2,7 +2,7 @@ globalVariables(c("CYCLOTOMYcat", "PALEYcat"))
 
 #' Data for function mathematical constructions
 #'
-#' The data.frames CYCLOTOMYcat and PALEYcat support the identification valid
+#' The data.frames CYCLOTOMYcat and PALEYcat support the identification of valid
 #' scenarii for use of the respective constructions, and the actual implementation.
 #'
 #' @docType data
@@ -42,6 +42,10 @@ globalVariables(c("CYCLOTOMYcat", "PALEYcat"))
 #' without doubling are included, as CAs from doubling are not competitive.
 #' Small corrections to Colbourn's Table 1 were needed for primes 7,
 #' 13 (strength 3 not possible) and 17 (no row can be removed).
+#'
+#' The creation of the objects is documented by R files in the \code{extdata}
+#' folder of this package, which can be located using
+#' \code{system.file("extdata", package="CAs")}.
 #'
 #' @section Details:
 #' For more details, see also the documentation of functions
