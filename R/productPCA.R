@@ -460,8 +460,9 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
 SCA_Bose <- function(q, ...){
   Call <- sys.call()
   aus <- lhs::createBose(q, q+1, bRandom=FALSE)[,c(2:(q+1),1)]
+  class(aus) <- c("ca", class(aus))
   attr(aus, "PCAstatus") <- list(type="SCA", k1=q, k2=1)
   attr(aus, "Call") <- Call
-  class(aus) <- c("ca", class(aus))
+  attr(aus, "origin") <- "Bose construction"
   aus
 }
