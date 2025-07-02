@@ -87,8 +87,7 @@ which prime power and construction type to request for which strength.
 <li>
 
 Chateauneuf and Kreher (2002) doubling in function
-<code>CK_doubling</code>, and also construction D from the basics part
-of that paper (function <code>CK_constrD</code>)
+<code>CK_doublingCA</code> (workhorse function <code>CK_doubling</code>)
 </li>
 
 <li>

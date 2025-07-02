@@ -21,6 +21,16 @@
    are used by the package and not available 
    from the internet, as well as code for creating 
    the objects in data folder
+ - deleted function CK_constrD.R, 
+   which was not really for construction D but a duplicate
+   of CK_doubling
+ - added an argument "exclude" to functions Ns and bestN, 
+   in support of recursive constructions that need best sizes
+   for ingredients
+ - immediately return Bose CA for small k with CAEX, 
+   as lineage for N=9 does not exist
+ - automated CK_doubling via CK_doublingCA with arguments k and v,
+   added an N-function for it and included it in Ns and bestCA
  - bug fix for documentation of DHHF
 
 30 June 2025, version 0.5

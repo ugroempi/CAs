@@ -107,9 +107,14 @@ Ns(4,8,2)
 # without a preference, bestCA uses Paley
 bestCA(4,8,2)
 bestCA(4,8,2, preference="TJ")
-## for demo purposes only
-head(bestCA(4,8,2, preference="NIST"))
-## with override=TRUE, "NIST" could be forced
+Ns(3, 1500, 2)
+## DWYER and NIST need internet connection
+try(bestCA(3, 1500, 2))
+## CK_doublingCA is almost as good
+try(dim(bestCA(3, 1500, 2, preference="CK_doublingCA")))
+dim(bestCA(3, 1500, 2, preference="CK_doublingCA", override=TRUE))
+## it is, of course, also possible to use the construction functions
+## (but one gets lazy)
 
 # a case that is not implemented
 Ns(6, 45, 10)
@@ -137,11 +142,6 @@ eCAN(3,9,6)
 ## Torres-Jimenez designs are currently (June 2025) unavailable
 D <- bestCA(3, 9, 6)
 attributes(D)
-
-Ns(3, 1500, 2)
-## DWYER and NIST need internet connection
-## however, TJ is not available (will be with Power CT construction)
-try(bestCA(3, 1500, 2))
 
 Ns(2,26,24) ## fuseBose is best-known
 dim(bestCA(2,26,24))

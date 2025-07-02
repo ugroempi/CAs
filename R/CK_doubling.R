@@ -1,85 +1,97 @@
 #' Function to create a strength 3 CA with Chateauneuf-Kreher doubling
 #'
-#' A strength 3 CA in k v-level columns and N runs is extented
-#' to 2k v-level columns in N + M*(v-1) runs
+#' A strength 3 CA in j v-level columns and N runs is extended
+#' to k=2j v-level columns in N + M*(v-1) runs
 #' by adding cyclic permutations of a strength 2 CA in v levels
 #' and M runs (Thms 4.1 and 4.5)
 #'
 #' @rdname CK_doubling
 #'
+#' @aliases CK_doublingCA
 #' @aliases CK_doubling
+#' @aliases N_CK_doublingCA
 #'
+#' @usage CK_doublingCA(k, v, ...)
 #' @usage CK_doubling(D3, D2=NULL, check=FALSE, start0=TRUE, ...)
+#' @usage N_CK_doublingCA(t=3, k, v, ...)
 #'
-#' @param D3 a strength 3 CA with k columns in v levels, coded as integers
+#' @param k integer: the target number of columns
+#' @param v integer: the number of levels
+#' @param D3 a strength 3 CA with j columns in v levels, coded as integers
 #'           0, ..., v-1 or 1,...,v
-#' @param D2 a strength 2 CA with k columns in v levels, coded as integers
+#' @param D2 a strength 2 CA with j columns in v levels, coded as integers
 #'           0, ..., v-1 or 1,...,v, same coding as \code{D3};\cr
-#'           for v=2 or v=3, \code{NULL} implies automatic creation with function
-#'           \code{\link{KSK}} (v=2) or function \code{\link{CAEX}} (v=3).
+#'           \code{NULL} implies automatic creation with function \code{\link{bestCA}},
+#'           which uses the known optimal function \code{\link{KSK}} for \code{v}=2,
+#'           and the best implemented construction for larger \code{v}.
 #' @param check a logical: if TRUE, the strength requirements are verified
 #' (may take very long for large arrays, therefore defaults to FALSE)
 #' @param start0 logical: Do integer values start with 0 ?  (\code{D3} and \code{D2}
 #'           must be compatible)
-#' @param ... further arguments to function \code{\link{coverage}}
+#' @param t integer: the target strength (always 3)
+#' @param ... further arguments to function \code{\link{coverage}} (\code{CK_doubling})
+#'       or \code{\link{bestN}} (function \code{N_CK_doublingCA})
 #'
 #' @details
+#' \code{CK_doublingCA} is the interface function that uses the workhorse
+#' function \code{CK_doubling}.
+#'
 #' Chateauneuf and Kreher's (2002) doubling contributes a few best-known
 #' strength 3 CAs to the Colbourn tables; in particular, where v is a prime
 #' or prime power and thus fulfills the conditions for the Bose
 #' construction of a strength 2 OA and the Bush
-#' construction of a strength 3 OA (as implemented in R package lhs),
-#' the designs are at present (13 Feb 2025) best-known for v >= 5
+#' construction of a strength 3 OA (as implemented in \code{SCA_Busht}),
+#' the designs are at present (13 Feb 2025) best-known for v >= 5.
+#'
+#' @returns Function \code{CK_doublingCA} returns a matrix of class \code{ca}
+#' with attributes, which is a strength 3 covering array.\cr
+#' Function \code{CK_doubling} returns a matrix without class and attributes,\cr
+#' function \code{N_CK_doublingCA} returns the run size of the CA.
+#'
+#' Note that the run size may depend on the availability of an internet connection
+#' for cases for which the best strength 3 CA for \code{ceiling(k/2)} columns is
+#' in the Dwyer data base or the NIST library only
+#' (these might exist - has not been checked).
 #'
 #' @references Chateauneuf and Kreher (2002)
 #'
 #' @examples
-#' L8.2.4 <- cbind(rep(1:2,each=4), rep(1:2, each=2,times=2), rep(1:2,4), c(1,2,2,1,2,1,1,2))
-#' coverage(L8.2.4,3,start0=FALSE)
-#' E <- CK_doubling(L8.2.4, start0=FALSE)
-#' dim(E)
-#' coverage(E-1, 3)  ## successful
+#' (E1 <- CK_doublingCA(8, 2))
+#' coverage(E1, 3)  ## successful
 #' eCAN(3,8,2)   ## not optimal, but close
 #'
-#' D3 <- paleyHad(11)
+#' ## the above was achieved with these ingredients:
+#' D3 <- bestCA(3, 4, 2)  ## 8x4, OA
+#' dim(D3)
+#' coverage(D3, 3)
+#' D2 <- bestCA(2,4,2)   ## 5x4, KSK construction
+#' dim(D2)
+#' E2 <- CK_doubling(D3, D2)
+#' dim(E2)
+#' table(E1-E2) ## content is the same, attributes differ
+#'
+#' D3 <- paleyCA(3, 11)
 #' coverage(D3, 3)  # suitable
 #' E <- CK_doubling(D3)
 #' dim(E)
 #' coverage(E, 3)  ## successful
 #' eCAN(3,22,2)   ## optimal
 #'
+#' E3 <- CK_doublingCA(12, 4)
+#' dim(E3)
 #' ## Thm 4.5, 4 levels
-#' D3 <- DoE.base::L64.4.6 - 1 ## 6 columns are not created from lhs::createBush
-#' D2 <- CS_MS(6, 4)           ## 19 runs, optimal
+#' ## ingredients for E3:
+#' D3 <- DoE.base::L64.4.6 - 1 ## 6 columns are not created from SCA_Busht
+#'   ## bestCA(3, 6, 4) would yield a suitable CA from the DWYER database,
+#'   ## provided that there is an internet connection
+#' D2 <- bestCA(2, 6, 4)        ## 19 runs, optimal
 #' eCAN(2, 6, 4)
-#' E <- CK_doubling(D3, D2)
-#' coverage(E, 3)   ## has worked
-#' dim(E)           ## size almost optimal
-#' eCAN(3, 12, 4)
+#' ## E3 has 64 + (4-1)*19 = 121 rows
+#' eCAN(3, 12, 4)    ## size almost optimal
 #'
-#' ## 3 levels, with default CAEX-design
-#' ## D3 is the current best-known CA(42, 3, 8, 3) from a cross-summing construction
-#' ##     by Colbourn et al. (2010, CKRS)
-#' eCAN(3, 8, 3)
-#'
-#' CA42.3.8.3 <- rbind(
-#' c(0,0,0,0,0,0,0,0), c(1,1,1,1,1,1,1,1), c(2,2,2,2,2,2,2,2), c(1,2,2,0,1,1,0,1),
-#' c(1,0,0,2,1,2,2,2), c(1,0,1,1,0,2,0,1), c(2,2,2,2,0,0,0,0), c(0,2,1,1,1,0,0,2),
-#' c(0,2,1,0,2,2,1,1), c(0,2,0,2,0,2,1,2), c(0,1,0,1,2,0,1,0), c(2,0,1,2,0,0,1,1),
-#' c(1,1,0,2,2,0,0,1), c(2,2,1,2,1,2,1,0), c(1,1,2,0,0,2,1,0), c(2,0,1,1,0,1,2,0),
-#' c(2,0,0,1,2,2,1,2), c(2,1,1,0,2,0,0,0), c(2,1,2,2,1,0,1,2), c(0,0,0,0,1,1,1,1),
-#' c(1,0,2,2,2,1,1,0), c(1,0,2,1,0,0,2,2), c(1,0,1,0,1,0,2,0), c(1,2,1,2,0,1,2,1),
-#' c(0,1,2,0,1,1,2,2), c(2,2,1,0,0,1,1,2), c(0,0,2,0,2,0,2,1), c(2,2,0,1,1,0,2,1),
-#' c(0,1,2,2,1,2,0,1), c(0,1,1,2,0,0,2,0), c(0,2,2,1,0,1,1,1), c(0,2,0,0,2,1,2,0),
-#' c(1,1,1,1,2,2,2,2), c(2,1,0,0,0,2,2,1), c(2,1,0,2,1,1,0,0), c(2,1,2,1,2,1,0,1),
-#' c(2,0,2,0,1,2,0,2), c(1,2,0,1,2,2,0,0), c(0,0,2,1,1,2,2,0), c(1,1,0,1,0,1,0,2),
-#' c(0,0,1,2,2,1,0,2), c(1,2,0,0,2,0,1,2)
-#' )
-#'
-#' ## D2=NULL implies use of CAEX(k=8), which has 13 runs
-#' E <- CK_doubling(CA42.3.8.3)
-#' dim(E)    ## 42 + 2*13 = 68 runs with 16 columns
-#' # coverage(E, 3)  ## commented out because of example run time
+#' ## not all outcomes are so close to optimal
+#' dim(CK_doublingCA(16, 3))
+#' ## 42 + 2*13 = 68 runs
 #' eCAN(3, 16, 3)  ## run size too large by factor 4/3 versus the current optimum 51
 #'
 #' @export
@@ -100,12 +112,8 @@ CK_doubling <- function(D3, D2=NULL, check=FALSE, start0=TRUE, ...){
     if (check) stopifnot(all(coverage(D2,2)==1))
     if (start0) stopifnot(min(D2)==0) else stopifnot(min(D2)==1)
   }
-  if (is.null(D2)) if (!v %in% c(2,3)) stop("D2=NULL requires v=2 or v=3")
-  if (is.null(D2))
-    if (v==2)
-      D2 <- KSK(k=k) + as.numeric(!start0)
-    else  ## v==3
-      D2 <- CAEX(k=k) + as.numeric(!start0)
+  ## provide the best implemented CA for D2
+  if (is.null(D2)) D2 <- bestCA(2, k, v) + as.numeric(!start0)
   if (!start0){
     D3 <- D3 - 1
     D2 <- D2 - 1
@@ -117,3 +125,28 @@ CK_doubling <- function(D3, D2=NULL, check=FALSE, start0=TRUE, ...){
     return(aus)
 }
 
+#' @export
+CK_doublingCA <- function(k, v, ...){
+  ## t=3 always holds
+  Call <- sys.call()
+  k3 <- ceiling(k/2)
+  D3 <- bestCA(3, k3, v, exclude="CK_doublingCA")
+  D2 <- bestCA(2, k3, v, exclude="CK_doublingCA")
+  aus <- CK_doubling(D3, D2)[,1:k]
+  class(aus) <- c("ca", class(aus))
+  attr(aus, "origin") <- "CK doubling, Chateauneuf and Kreher 2002"
+  attr(aus, "Call") <- Call
+  attr(aus, "t") <- 3
+  aus
+}
+
+#' @export
+N_CK_doublingCA <- function(t=3, k, v, ...){
+  ## the best ingredient CAs are not expected to are themselves from
+  ## CK_doubling
+  if (!t==3) return(NA)
+  k3 <- ceiling(k/2)
+  ## N + M*(v-1) runs
+  bestN(3, k3, v, exclude="CK_doublingCA") +
+    bestN(2, k3, v, exclude="CK_doublingCA")*(v - 1)
+}
