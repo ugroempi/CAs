@@ -34,9 +34,12 @@
 #' \code{k_CS_LCDST} returns the maximum number of \code{v}-level factors that can be accommodated in at most \code{N} runs, or \code{NA}, if no such construction exists.
 #'
 #' @section Details:
-#' Lobb et al. (2012) denote designs with the factors as the columns and the runs as the rows, like in this package, and contrary to Meagher and Stevens (2005).
+#' Lobb et al. (2012) denote designs with the factors as the columns and the runs as the rows,
+#' like in this package, and contrary to Meagher and Stevens (2005).
 #'
-#' The construction uses starter vectors of \code{k} elements with first element a fixed position, denoted as a number >100, depending on \code{v}: the fixed points are taken as the last f levels, and they will be made valid levels \code{v-1} to \code{v-f} eventually by subtracting 100.
+#' The construction uses starter vectors of \code{k} elements with first element a fixed position,
+#' denoted as a number >100, depending on \code{v}: the fixed points are taken as the last f levels,
+#' and they will be made valid levels \code{v-1} to \code{v-f} eventually by subtracting 100.
 #'
 #' The starter vector is cycled into a \code{k x k} matrix \code{M} (internal function \code{circular}),
 #' which is one key ingredient of the construction. The other key ingredient is the additive group \code{Z} of
@@ -51,6 +54,9 @@
 #' to inspect how many runs can be obtained by a suitable user-specified starter vector
 #' with the perfect additional ingredient.
 #'
+#' @seealso [LCDSTCombis]
+#' @seealso [LCDSTStarters]
+#'
 #' @references Lobb et al. (2012)
 #'
 #' @examples
@@ -64,7 +70,7 @@
 #' addfix <- CAEX(20)  ##  20 3-level columns at strength 2
 #' coverage(addfix,2)
 #' dim(addfix)         ## 15 rows
-#' CA115.2.20.8 <- CS_LCDST(20, 8) ## 115 runs, 20 columns
+#' CA115.2.20.8 <- CS_LCDST(20, 8) ## 115 runs, 20 columns at 8 levels
 #' dim(CA115.2.20.8)   ## (v-f)*k + nrow(addfix) = (8 - 3)*20 + 15 rows
 #' coverage(CA115.2.20.8,2)
 #'
@@ -72,9 +78,14 @@
 #' k_CS_LCDST(N=120, v=8) ## with up to 120 runs, 20 8-level columns are possible
 #' eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 #'
+#' ## f larger than 3
+#' ## v=11 levels, f=5, k=26
+#' D <- CS_LCDST(26, 11)
+#'
 
 #' @export
 CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
+  Call <- sys.call()
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields a strength 2 CA in ", N_KSK(k), "runs."))
@@ -87,10 +98,6 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
     #stopifnot(starter[1] > 100)
   }
   if (is.null(starter)){
-    #N <- N_CS_LCDST(k, v)
-    #if (is.na(N)) stop("This combination of k and v cannot be accommodated.")
-    #k_lookup <- k_CS_LCDST(N,v)
-    #if (is.na(k_lookup)) stop("Unexpected error.")
     ## retrieve starter
     vc <- as.character(v)
     kc <- as.character(k)
@@ -101,12 +108,24 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
   f <- length(unique(starter[which(starter>100)])) ## fixed values
   ## there is no case with more NA values than unfixed levels
   if (nNA>0) starter[is.na(starter)] <- (0:(v-f-1))[1:nNA]
-  if (f>3) stop("more than three fixed points not (yet?) implemented")
+  if (f>3) message("For f>3, the run size may be larger, \nbecause the optimum CA may be unavailable.")
 
   ## create array
   G <- createG_LCDST(v, f)
   aus <- createCS_LCDST(starter, v, G)[,1:k]
   if (!start0) aus <- aus + 1
+  attr(aus, "origin") <- "CS_LCDST"
+  attr(aus, "t") <- 2
+  attr(aus, "f") <- f
+  attr(aus, "Call") <- Call
+  if (f>1)
+  hilf <- Ns(2,k,f)
+  if (f>3){
+    attr(aus, "method_D-for-f") <- names(hilf)[
+                             which.min(hilf[-length(hilf)])]
+    attr(aus, "Date") <- Sys.Date()
+    attr(aus, "CAs version") <- packageVersion("CAs")
+  }
   aus
 }
 
@@ -114,14 +133,13 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
 #' @export
 N_CS_LCDST <- function(t=2, k, v){
   if (!t==2 || v==2) return(NA)
+  if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the optimum run size, which is ", N_KSK(k), "."))
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
-  stopifnot(k>=2, v>=3)
   stopifnot(k%%1==0, v%%1==0)
-  if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the optimum run size, which is ", N_KSK(k), "."))
+  stopifnot(k>=2, v>=3)
   hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v &
-                      LCDSTCombis[,"k"]>=k  &
-                        LCDSTCombis[,"f"]<=3,,drop=FALSE]
+                      LCDSTCombis[,"k"]>=k,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   hilf[1,"N"]
 }
@@ -173,7 +191,7 @@ createCS_LCDST <- function(starter, v, G, ...){
   ## 1 to v coding of levels
   M <- circular(starter)
   k <- length(starter)
-  f <- length(unique(starter[starter>100]))
+  f <- length(unique(starter[which(starter>100)]))
 
   ## then M
   ## then M with permuted non-fixed elements (by G)
@@ -186,7 +204,7 @@ createCS_LCDST <- function(starter, v, G, ...){
   if (f==1) mat <- rbind(mat, v-1)
   if (f==2) mat <- rbind(mat, KSK(k=k) + v - f)
   if (f==3) mat <- rbind(mat, CAEX(k=k) + v - f)
-  ## larger f was prevented before-hand
+  if (f>3) mat <- rbind(mat, bestCA(2,k,f) + v - f)
 
   fixed <- which(mat>100)
   mat[fixed] <- mat[fixed]-100  ## fix fixed values

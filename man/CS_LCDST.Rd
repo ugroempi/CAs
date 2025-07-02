@@ -42,9 +42,12 @@ which is the case for f=1,2,3 (eCAN in case of f=3))
 }
 \section{Details}{
 
-Lobb et al. (2012) denote designs with the factors as the columns and the runs as the rows, like in this package, and contrary to Meagher and Stevens (2005).
+Lobb et al. (2012) denote designs with the factors as the columns and the runs as the rows,
+like in this package, and contrary to Meagher and Stevens (2005).
 
-The construction uses starter vectors of \code{k} elements with first element a fixed position, denoted as a number >100, depending on \code{v}: the fixed points are taken as the last f levels, and they will be made valid levels \code{v-1} to \code{v-f} eventually by subtracting 100.
+The construction uses starter vectors of \code{k} elements with first element a fixed position,
+denoted as a number >100, depending on \code{v}: the fixed points are taken as the last f levels,
+and they will be made valid levels \code{v-1} to \code{v-f} eventually by subtracting 100.
 
 The starter vector is cycled into a \code{k x k} matrix \code{M} (internal function \code{circular}),
 which is one key ingredient of the construction. The other key ingredient is the additive group \code{Z} of
@@ -71,7 +74,7 @@ coverage(CS_LCDST(5, 3, starter=starter), 2)
 addfix <- CAEX(20)  ##  20 3-level columns at strength 2
 coverage(addfix,2)
 dim(addfix)         ## 15 rows
-CA115.2.20.8 <- CS_LCDST(20, 8) ## 115 runs, 20 columns
+CA115.2.20.8 <- CS_LCDST(20, 8) ## 115 runs, 20 columns at 8 levels
 dim(CA115.2.20.8)   ## (v-f)*k + nrow(addfix) = (8 - 3)*20 + 15 rows
 coverage(CA115.2.20.8,2)
 
@@ -79,7 +82,16 @@ N_CS_LCDST(k=20, v=8)  ## 115 runs are needed for 20 8-level columns
 k_CS_LCDST(N=120, v=8) ## with up to 120 runs, 20 8-level columns are possible
 eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 
+## f larger than 3
+## v=11 levels, f=5, k=26
+D <- CS_LCDST(26, 11)
+
 }
 \references{
 Lobb et al. (2012)
+}
+\seealso{
+\link{LCDSTCombis}
+
+\link{LCDSTStarters}
 }
