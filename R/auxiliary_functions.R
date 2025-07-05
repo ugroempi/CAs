@@ -761,3 +761,10 @@ D3cols_to_LS <- function(D, start0=NULL){
 }
 
 Double <- function(M) rbind(cbind(0,M), 1-(cbind(0,M)))
+## a different type of doubling than CK doubling
+
+## from Chateauneuf and Kreher 2002
+## AGL(2, q) is the set of functions f: x ->  ax + b with a,
+##                                   b from GF(q) and a non-zero
+AGL2 <- function(x, q, a, b) (a*x + b)%%q
+## for reaching the entire group, a from 1:(q-1) and b from 0:(q-1)
