@@ -448,6 +448,7 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
       }
       attr(aus, "PCAstatus") <- list(type=type, k1=k-2, k2=2)
     }else{
+      aus <- D
       message("D is not a PCA with k2 up to 2. tryhard did not improve the PCA status.")
     }
   }
