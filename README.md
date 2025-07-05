@@ -30,6 +30,10 @@ devtools::install_github("ugroempi/CAs")
 
 ## Details
 
+*At the end of this README file, charts depict the current status of
+array implementation relative to the empirical covering array numbers
+(eCANs) of the Colbourn tables.*
+
 This package constructs covering arrays, i.e., arrays that cover all
 $`t`$-ary combinations of a set of factors at least once. The focus is
 on mathematical constructions. Initially, the package only offers arrays
@@ -215,6 +219,10 @@ the <code>extdata</code> folder of the package, which can be located in
 the directory <code>inst/extdata</code> of the GitHub repo or, for a
 given R installation, using <code>system.file(“extdata”,
 package=“CAs”)</code> from within R.
+
+## Current status of package implementation
+
+![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->
 
 ## References
 
