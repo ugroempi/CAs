@@ -114,8 +114,8 @@ CK_NRB <- function(k, v){
         # table(M) ## sanity check
 
         ## AGL(2, q) is the set of functions f: x ->  (ax + b)%%q
-        ##                                   with a,b from GF(q) and a non-zero
-        ## function AGL2 in
+        ##                              with a,b from GF(q) and a non-zero
+
         # list of the elements of AGL(2,5) consists of this function
         # applied with (a,b) from variants
         variants <- expand.grid(a=1L:4L, b=0L:4L)
