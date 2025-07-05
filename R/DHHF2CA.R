@@ -56,7 +56,8 @@
 #' dim(P)
 #' eCAN(3, 12, 2) ## 15 runs, in TJ2level_CAs
 #' eCAN(3, 11, 2) ## 12 runs, paleyCA also yields this
-#' D <- DHHF2CA(P, list(TJ2level_CAs$ca15.3.2.12, TJ2level_CAs$ca12.3.2.11))
+#' D <- DHHF2CA(P,
+#'     list(bestCA(3,12,2), bestCA(3,11,2)))
 #' dim(D)
 #' eCAN(3, 1452, 2)  ## optimal, this construction
 #'

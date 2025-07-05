@@ -7,13 +7,23 @@
 \title{Data for function tjCA}
 \format{
 \code{TJcat} is a data.frame with columns \code{t} (strength), \code{k} (number of CA columns),
-\code{v} (number of levels), code{N} (number of CA rows), \code{filesize} (the file size in bytes)
-and \code{nameInTJ2level_CAs}. Row names hold the names of the downloaded files.
+\code{v} (number of levels), code{N} (number of CA rows), \code{filesize} (the file size in bytes),
+\code{nameInTJ2level_CAs}, \code{replaceable} and \code{code}.
+Row names hold the names of the downloaded files.\cr
+CAs corresponding to rows
+with entries in \code{code} are created by executing the code of
+column \code{code} (either with function \code{\link{CAEX}} for 3-level
+or with one of several constructions for 2-level),\cr
+CAs corresponding to rows with entries in \code{nameInTJ2level_CAs} by
+picking the respective entry from \code{TJ2levelCAs}.\cr
+CAs corresponding to rows with neither entry cannot be created at present
+(many might be constructable by the power construction which will be
+implemented shortly and will then be incorporated in the \code{code} column).
 
 \code{TJ2level_CAs} is a list of arrays (class \code{ca}) corresponding to the
-rows of \code{TJcat} with element names.
+rows of \code{TJcat} with entries in \code{nameInTJ2level_CAs}.
 
-An object of class \code{list} of length 212.
+An object of class \code{list} of length 151.
 }
 \source{
 The source is the no longer functional website \code{https://www.tamps.cinvestav.mx/~oc/} by
