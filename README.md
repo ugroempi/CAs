@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.6
+- **Version**: 0.7
 
 ## Warning
 
@@ -88,6 +88,11 @@ which prime power and construction type to request for which strength.
 
 Chateauneuf and Kreher (2002) doubling in function
 <code>CK_doublingCA</code> (workhorse function <code>CK_doubling</code>)
+</li>
+
+<li>
+
+strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs
 </li>
 
 <li>
@@ -199,9 +204,10 @@ used by the package functions:<br /> <code>colbournBigFrame</code>,
 <code>ColbournKeriStarters</code>, <code>PALEYcat</code>,
 <code>CYCLOTOMYcat</code>, <code>CKRScat</code>, <code>CKRS_CAs</code>,
 <code>WKScat</code>, <code>WKS_CAs</code>, <code>DWYERcat</code>,
-<code>NISTcat</code> and <code>oa1728.12.6</code>.<br /> The arrays
-referenced by <code>DWYERcat</code>, <code>NISTcat</code> can only be
-accessed with an internet connection.
+<code>NISTcat</code>, <code>miscCAcat</code>, and individual arrays
+named in the latter.<br /> The arrays referenced by
+<code>DWYERcat</code>, <code>NISTcat</code> can only be accessed with an
+internet connection.
 
 The R objects are available in the <code>data</code> folder of the
 package, corresponding raw data and construction code can be found in
@@ -220,6 +226,12 @@ usual location; temporarily, access is provided**
 
 Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations
 and Essays, 13th ed. New York: Dover, pp. 308-309.
+</p>
+
+<p>
+
+Chateauneuf, M., Colbourn, C. and Kreher, D.L. (1999). Covering Arrays
+of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 </p>
 
 <p>

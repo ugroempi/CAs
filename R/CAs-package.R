@@ -31,6 +31,7 @@
 #' * strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
 #' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doublingCA}} (workhorse function \code{\link{CK_doubling}})
+#' * strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
 #' * recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 #' * a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBose}}
@@ -57,8 +58,9 @@
 #' \code{\link{PALEYcat}}, \code{\link{CYCLOTOMYcat}},
 #' \code{\link{CKRScat}}, \code{\link{CKRS_CAs}},
 #' \code{\link{WKScat}}, \code{\link{WKS_CAs}},
-#' \code{\link{DWYERcat}}, \code{\link{NISTcat}}
-#' and \code{\link{oa1728.12.6}}.\cr
+#' \code{\link{DWYERcat}}, \code{\link{NISTcat}},
+#' \code{\link{miscCAcat}}, and individual arrays named in the
+#' latter.\cr
 #' The arrays referenced by \code{\link{DWYERcat}}, \code{\link{NISTcat}} can only be
 #' accessed with an internet connection.
 #'
@@ -73,6 +75,8 @@
 #'
 #' @references
 #' Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations and Essays, 13th ed. New York: Dover, pp. 308-309.
+#'
+#' Chateauneuf, M., Colbourn, C. and Kreher, D.L. (1999). Covering Arrays of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 #'
 #' Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
 #'

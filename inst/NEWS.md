@@ -1,5 +1,20 @@
 # NEWS
 
+05 July 2025, version 0.7
+ - implemented a data file miscCAcat, a function miscCA 
+   with N_ and k_ functions,
+   and modified Ns and ks to refer to these
+ - modified oa1728.12.6 to PCA structure, and added further 
+   cas / oas, as well as retrieval of a few OAs from DoE.base
+   (handled via miscCAcat);
+   (renamed the R code in extdata for single arrays to miscCAs.R)
+ - implemented the three arrays of source "Chateauneuf-Kreher NRB"
+ - rewrote and re-exported k_fuseBose
+ - removed TJcat arrays that can be replaced by other constructions, 
+   and adapted TJcat so that they can still all be constructed
+ - bug fix to productPCA: did not work as expected when trying 
+   without success to improve a PCA with tryhard=TRUE
+
 02 July 2025, version 0.6
 
  - added a function bestN for use in size calculations
