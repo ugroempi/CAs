@@ -158,23 +158,27 @@ N_fuseBose <- function(k=NULL, v=NULL, ...){
   c(N=q^2-3, k=kalt, kmax=q+1, v=v, q=q)
 }
 
-### #' do not @export yet
+#' @export
 k_fuseBose <- function(N, v=NULL, ...){
-  primpotenzen <- primedat$q
-  hilf <- primpotenzen^2 - 3
-  if (!(N %in% (hilf))){
-    N <- max(hilf[hilf <= N ])
-    message("Invalid N was reduced to closest valid N")
-  }
-  q <- as.integer(sqrt(N+3))  ## must be prime power
+  ## 3 runs can be omitted
+  q <- NA
+  stopifnot(is.numeric(N))
+  stopifnot(N%%1==0)
   if (!is.null(v)){
     stopifnot(is.numeric(v))
     stopifnot(v %% 1==0)
     if (!(v+1) %in% primedat$q)
-      message("v is invalid and was ignored.")
-    if (!(v+1 == q))
-      message("v is not compatible with N and was ignored.")
-    }
+      stop("v+1 must be a prime or prime power")
+    else q <- v+1
+  }
+  if (!is.na(q)){
+    if (N < q^2 - 3) return(NA)
+    return(c(N=q^2-3, k=q+1, v=v, q=q))
+  }
+  ## now unspecified v
+  hilf <- primedat$q^2 - 3
+  if (!(N %in% (hilf))) N <- max(hilf[hilf <= N ])
+  q <- as.integer(sqrt(N+3))  ## must be prime power
    v <- q-1
    c(N=q^2-3, k=q+1, v=v, q=q)
 }
