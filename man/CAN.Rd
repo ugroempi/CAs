@@ -13,11 +13,13 @@
 \alias{N_TJcat}
 \alias{N_WKScat}
 \alias{N_CKRScat}
+\alias{N_miscCAcat}
 \alias{N_DWYERcat}
 \alias{N_PALEYcat}
 \alias{N_CYCLOTOMYcat}
 \alias{N_CAEX}
 \alias{N_SCA_Busht}
+\alias{k_fuseBoseCA}
 \alias{N_recBoseCA}
 \alias{N_projBoseCA}
 \alias{ks}
@@ -26,6 +28,7 @@
 \alias{k_TJcat}
 \alias{k_WKScat}
 \alias{k_CKRScat}
+\alias{k_miscCAcat}
 \alias{k_DWYERcat}
 \alias{k_PALEYcat}
 \alias{k_CYCLOTOMYcat}
@@ -57,6 +60,8 @@ N_WKScat(t=6, k, v=2)
 
 N_CKRScat(t, k, v)
 
+N_miscCAcat(t, k, v)
+
 N_DWYERcat(t, k, v)
 
 N_PALEYcat(t, k, v=2)
@@ -81,6 +86,8 @@ k_WKScat(t=6, N, v=2)
 
 k_CKRScat(t, N, v)
 
+k_miscCAcat(t, N, v)
+
 k_DWYERcat(t, N, v)
 
 k_PALEYcat(t, N, v=2)
@@ -88,6 +95,8 @@ k_PALEYcat(t, N, v=2)
 k_CYCLOTOMYcat(t, N, v)
 
 k_CAEX(t=2, N, v=3)
+
+k_fuseBoseCA(t=2, N, v)
 
 k_recBoseCA(t=2, N, v, type="PCA")
 }
@@ -127,7 +136,7 @@ and \code{k_TJcat} returns the largest number of columns \code{k} for the reques
 of a catalogued array from the Jose Torres-Jimenez library (as of Feb 6 2025, small
 selection, which is expected to grow; partly available in this package)\cr
 The analogous functionality holds for \code{N_} and \code{k_} functions for
-\code{DWYERcat}, \code{CKRScat}, \code{WKScat} and \code{CYCLOTOMYcat}, also for
+\code{DWYERcat}, \code{CKRScat}, \code{miscCAcat}, \code{WKScat} and \code{CYCLOTOMYcat}, also for
 \code{CS_MS}, \code{CS_LCDST}, \code{CS_CK} and various other constructions.
 .
 In cases for which there is no entry in the respective

@@ -102,19 +102,20 @@ context.
 # example with a single best construction
 Ns(2,12,4)
 bestCA(2,12,4)
-# example with three best constructions
+# example with three best constructions (TJ is now PALEY)
 Ns(4,8,2)
 # without a preference, bestCA uses Paley
 bestCA(4,8,2)
-bestCA(4,8,2, preference="TJ")
+bestCA(4,8,2, preference="CS_CK")
+
 Ns(3, 1500, 2)
 ## DWYER and NIST need internet connection
 try(bestCA(3, 1500, 2))
 ## CK_doublingCA is almost as good
 try(dim(bestCA(3, 1500, 2, preference="CK_doublingCA")))
 dim(bestCA(3, 1500, 2, preference="CK_doublingCA", override=TRUE))
-## it is, of course, also possible to use the construction functions
-## (but one gets lazy)
+## it is, of course, also possible to directly use the
+## construction functions, e.g., CK_doublingCA.
 
 # a case that is not implemented
 Ns(6, 45, 10)
@@ -143,13 +144,20 @@ eCAN(3,9,6)
 D <- bestCA(3, 9, 6)
 attributes(D)
 
+Ns(3,9,5)
+## CK_NRB is the unique best
+ks(3,185,5)
+
 Ns(2,26,24) ## fuseBose is best-known
 dim(bestCA(2,26,24))
 
-Ns(2,26,23) ## projBoseCA is best with 623 runs
+Ns(2,26,23) ## projBoseCA is best implemented with 623 runs
 dim(D <- bestCA(2,26,23))
 attributes(D)
 ## eCAN 7 runs better from NCK post processing
+
+Ns(3,6,12)
+## the optimum Ji and Yin OA is in the package as oa1728.12.6
 
 }
 \seealso{

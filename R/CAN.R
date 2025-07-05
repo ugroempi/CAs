@@ -22,11 +22,13 @@
 #' @aliases N_TJcat
 #' @aliases N_WKScat
 #' @aliases N_CKRScat
+#' @aliases N_miscCAcat
 #' @aliases N_DWYERcat
 #' @aliases N_PALEYcat
 #' @aliases N_CYCLOTOMYcat
 #' @aliases N_CAEX
 #' @aliases N_SCA_Busht
+#' @aliases k_fuseBoseCA
 #' @aliases N_recBoseCA
 #' @aliases N_projBoseCA
 #' @aliases ks
@@ -35,6 +37,7 @@
 #' @aliases k_TJcat
 #' @aliases k_WKScat
 #' @aliases k_CKRScat
+#' @aliases k_miscCAcat
 #' @aliases k_DWYERcat
 #' @aliases k_PALEYcat
 #' @aliases k_CYCLOTOMYcat
@@ -53,6 +56,7 @@
 #' @usage N_TJcat(t, k, v)
 #' @usage N_WKScat(t=6, k, v=2)
 #' @usage N_CKRScat(t, k, v)
+#' @usage N_miscCAcat(t, k, v)
 #' @usage N_DWYERcat(t, k, v)
 #' @usage N_PALEYcat(t, k, v=2)
 #' @usage N_CYCLOTOMYcat(t, k, v)
@@ -65,10 +69,12 @@
 #' @usage k_TJcat(t, N, v)
 #' @usage k_WKScat(t=6, N, v=2)
 #' @usage k_CKRScat(t, N, v)
+#' @usage k_miscCAcat(t, N, v)
 #' @usage k_DWYERcat(t, N, v)
 #' @usage k_PALEYcat(t, N, v=2)
 #' @usage k_CYCLOTOMYcat(t, N, v)
 #' @usage k_CAEX(t=2, N, v=3)
+#' @usage k_fuseBoseCA(t=2, N, v)
 #' @usage k_recBoseCA(t=2, N, v, type="PCA")
 #'
 #' @param t coverage strength
@@ -136,7 +142,7 @@
 #'  of a catalogued array from the Jose Torres-Jimenez library (as of Feb 6 2025, small
 #'  selection, which is expected to grow; partly available in this package)\cr
 #'  The analogous functionality holds for \code{N_} and \code{k_} functions for
-#'  \code{DWYERcat}, \code{CKRScat}, \code{WKScat} and \code{CYCLOTOMYcat}, also for
+#'  \code{DWYERcat}, \code{CKRScat}, \code{miscCAcat}, \code{WKScat} and \code{CYCLOTOMYcat}, also for
 #'  \code{CS_MS}, \code{CS_LCDST}, \code{CS_CK} and various other constructions.
 #'  .
 #'  In cases for which there is no entry in the respective
@@ -219,7 +225,7 @@ Ns <- function(t, k, v, exclude=NULL){
   if (!all(exclude %in% c("KSK","PALEY", "CAEX", "CYCLOTOMY",
                           "CKRS", "SCA_Busht", "fuseBoseCA",
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
-                          "CK_doublingCA", "WKS",
+                          "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
                           "DWYER", "NIST","TJ"
                           ))) message("exclude contains invalid element(s)")
@@ -232,6 +238,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CAEX=ifelse("CAEX" %in% exclude, NA,N_CAEX(t,k,v)),
     CYCLOTOMY=ifelse("CYCLOTOMY" %in% exclude, NA, N_CYCLOTOMYcat(t,k,v)),
     CKRS=ifelse("CKRS" %in% exclude, NA,N_CKRScat(t,k,v)),
+    miscCA=ifelse("miscCA" %in% exclude, NA,N_miscCAcat(t,k,v)),
     SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
     fuseBoseCA=ifelse("fuseBoseCA" %in% exclude, NA,N_fuseBoseCA(t,k,v)),
     recBoseCA_PCA=ifelse("recBoseCA_PCA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="PCA"))),
@@ -239,6 +246,8 @@ Ns <- function(t, k, v, exclude=NULL){
     projBoseCA=ifelse("projBoseCA" %in% exclude, NA,unname(N_projBoseCA(t,k,v,cmax=Inf))),
     CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
                          NA, N_CK_doublingCA(t,k,v)),
+    CK_NRB=ifelse("CK_doublingCA" %in% exclude,
+                  NA, N_CK_NRB(t,k,v)),
     WKS=ifelse("WKS" %in% exclude, NA,N_WKScat(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
@@ -470,14 +479,27 @@ N_CKRScat <- function(t,k,v){
   else return(min(hilf[,"N"]))
 }
 
+## obtain size of miscCAcat catalogue entry
+#' @export
+N_miscCAcat <- function(t,k,v){
+  hilf <- miscCAcat[miscCAcat[,"t"]==t &
+                      miscCAcat[,"k"]>=k &
+                      miscCAcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(min(hilf[,"N"]))
+}
+
 #' @export
 ks <- function(t, N, v){
   suppressMessages(
     aus <- c(
     PALEY=k_PALEYcat(t,N,v),
     CAEX=k_CAEX(t,N,v),
+    CK_NRB=k_CK_NRB(t,N,v),
     CYCLOTOMY=k_CYCLOTOMYcat(t,N,v),
     CKRS=k_CKRScat(t,N,v),
+    miscCA=k_miscCAcat(t,N,v),
+    fuseBoseCA=unname(k_fuseBoseCA(t,N,v)[2]),
     recBoseCA_PCA=unname(k_recBoseCA(t,N,v,type="PCA")),
     recBoseCA_CA=unname(k_recBoseCA(t,N,v,type="CA")),
     WKS=k_WKScat(t,N,v),
@@ -519,6 +541,15 @@ k_TJcat <- function(t,N,v){
 k_CAEX <- function(t=2,N,v=3){
   if (t>2 || !v==3) return(NA)
   k_TJcat(t,N,v)
+}
+
+## special fuse for Bose arrays
+#' @export
+k_fuseBoseCA <- function(t=2, N, v){
+  if (!t==2) return(NA)
+  aus <- try(k_fuseBose(N=N, v=v)["k"], silent = TRUE)
+  if ("try-error" %in% class(aus)) return(NA)
+  unname(aus)
 }
 
 #' @export
@@ -581,6 +612,14 @@ k_WKScat <- function(t=6,N,v=2){
 #' @export
 k_CKRScat <- function(t,N,v){
   hilf <- CKRScat[CKRScat[,"t"]==t & CKRScat[,"N"]<=N & CKRScat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(max(hilf[,"k"]))
+}
+
+#' @export
+k_miscCAcat <- function(t,N,v){
+  hilf <- miscCAcat[miscCAcat[,"t"]==t & miscCAcat[,"N"]<=N &
+                      miscCAcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(max(hilf[,"k"]))
 }

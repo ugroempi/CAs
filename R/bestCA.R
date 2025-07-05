@@ -87,11 +87,12 @@
 #' # example with a single best construction
 #' Ns(2,12,4)
 #' bestCA(2,12,4)
-#' # example with three best constructions
+#' # example with three best constructions (TJ is now PALEY)
 #' Ns(4,8,2)
 #' # without a preference, bestCA uses Paley
 #' bestCA(4,8,2)
-#' bestCA(4,8,2, preference="TJ")
+#' bestCA(4,8,2, preference="CS_CK")
+#'
 
 #' Ns(3, 1500, 2)
 #' ## DWYER and NIST need internet connection
@@ -99,8 +100,8 @@
 #' ## CK_doublingCA is almost as good
 #' try(dim(bestCA(3, 1500, 2, preference="CK_doublingCA")))
 #' dim(bestCA(3, 1500, 2, preference="CK_doublingCA", override=TRUE))
-#' ## it is, of course, also possible to use the construction functions
-#' ## (but one gets lazy)
+#' ## it is, of course, also possible to directly use the
+#' ## construction functions, e.g., CK_doublingCA.
 #'
 #' # a case that is not implemented
 #' Ns(6, 45, 10)
@@ -129,13 +130,20 @@
 #' D <- bestCA(3, 9, 6)
 #' attributes(D)
 #'
+#' Ns(3,9,5)
+#' ## CK_NRB is the unique best
+#' ks(3,185,5)
+#'
 #' Ns(2,26,24) ## fuseBose is best-known
 #' dim(bestCA(2,26,24))
 #'
-#' Ns(2,26,23) ## projBoseCA is best with 623 runs
+#' Ns(2,26,23) ## projBoseCA is best implemented with 623 runs
 #' dim(D <- bestCA(2,26,23))
 #' attributes(D)
 #' ## eCAN 7 runs better from NCK post processing
+#'
+#' Ns(3,6,12)
+#' ## the optimum Ji and Yin OA is in the package as oa1728.12.6
 #'
 
 #' @export
@@ -214,12 +222,15 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
 labelToCode <- function(label, t, k, v, ...){
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("KSK","PALEY",
-  "CAEX", "CYCLOTOMY", "CKRS", "recBoseCA_PCA", "SCA_Busht", "fuseBoseCA",
+  "CAEX", "CYCLOTOMY", "CKRS", "miscCA", "recBoseCA_PCA", "SCA_Busht", "fuseBoseCA",
   "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
-  "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ", "CK_doublingCA"))
+  "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ", "CK_doublingCA", "CK_NRB"))
   if (label =="KSK"){
     if (!v==2) stop('"KSK" requires v=2')
     return(paste0("KSK(", k, ")"))
+  }
+  if (label=="miscCA"){
+    return(paste0("miscCA(", t, ", ", k, ", ", v, ", ...)"))
   }
   if (label =="PALEY"){
     if (!v==2) stop('"PALEY" requires v=2')
@@ -244,6 +255,12 @@ labelToCode <- function(label, t, k, v, ...){
   if (label =="CK_doublingCA"){
     if (!t==3) stop('"CK_doublingCA" requires t=3')
     return(paste0("CK_doublingCA(", k, ", ", v, ")"))
+  }
+  if (label =="CK_NRB"){
+    if (!t==3) stop('"CK_NRB" requires t=3')
+    if (!v %in% 3:5) stop('"CK_NRB" requires v = 3, 4, or 5')
+    if (!k<=2*v) stop('"CK_NRB" requires k<=2*v')
+    return(paste0("CK_NRB(", k, ", ", v, ")"))
   }
   if (label=="CYCLOTOMY"){
     return(paste0("cyclotomyCA(", t, ", ", k, ", ", v, ")"))
@@ -366,10 +383,16 @@ tjCA <- function(t, k, v=2, ...){
   kneeded <- hilf$k
   tachieved <- hilf$t
   nam <- hilf$nameInTJ2level_CAs
-  if (nam=="") stop("This array must be constructed with a Power CT construction,\n which was not yet fully implemented")
-  aus <- TJ2level_CAs[[nam]]
+  if (!nam==""){
+  aus <- TJ2level_CAs[[nam]][,1:k]
   attr(aus, "origin") <- "Torres-Jimenez repository, Feb 6 2025"
   attr(aus, "t") <- tachieved
   attr(aus, "Call") <- Call
-  aus[,1:k]
+  return(aus)
+  }
+  code <- hilf$code
+  if (code=="") stop("This array must be constructed with a construction\n that was not yet implemented")
+  aus <- eval(parse(text=code))
+  attr(aus, "comment") <- "called via tjCA"
+  aus
 }
