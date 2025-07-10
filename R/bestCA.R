@@ -95,13 +95,10 @@
 #'
 
 #' Ns(3, 1500, 2)
-#' ## DWYER and NIST need internet connection
-#' try(bestCA(3, 1500, 2))
-#' ## CK_doublingCA is almost as good
-#' try(dim(bestCA(3, 1500, 2, preference="CK_doublingCA")))
-#' dim(bestCA(3, 1500, 2, preference="CK_doublingCA", override=TRUE))
+#' ## powerCT is best
+#' attributes(bestCA(3, 1500, 2))
 #' ## it is, of course, also possible to directly use the
-#' ## construction functions, e.g., CK_doublingCA.
+#' ## construction functions, in this case powerCA with type="CT".
 #'
 #' # a case that is not implemented
 #' Ns(6, 45, 10)
@@ -152,6 +149,9 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
   hilf <- Ns(t,k,v, ...)
   if (length(hilf)==1)
     stop("no construction for this setting has been implemented yet")
+  ## return a matrix with v constant rows in case k <= t
+  ## there will be an error otherwise
+  if (k < t) return(ffCA(k , v))
   internet <- curl::has_internet()
   if (!internet){
      message("there is no internet connection")
@@ -210,6 +210,7 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
   ## with or without internet
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   stopifnot(t%%1==0, k%%1==0, v%%1==0)
+  if (k <= t) return(c(FullFactorial=v^k))
   hilf <- Ns(t,k,v, exclude=exclude)
   if (internet) hilf <- hilf[setdiff(names(hilf), "eCAN")] else
     hilf <- hilf[setdiff(names(hilf), c("eCAN", "DWYER", "NIST"))]
@@ -224,7 +225,11 @@ labelToCode <- function(label, t, k, v, ...){
   stopifnot(label %in% c("KSK","PALEY",
   "CAEX", "CYCLOTOMY", "CKRS", "miscCA", "recBoseCA_PCA", "SCA_Busht", "fuseBoseCA",
   "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
-  "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ", "CK_doublingCA", "CK_NRB"))
+  "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
+  "CK_NRB","FullFactorial"))
+  if (label =="FullFactorial"){
+    return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
+  }
   if (label =="KSK"){
     if (!v==2) stop('"KSK" requires v=2')
     return(paste0("KSK(", k, ")"))
@@ -302,6 +307,9 @@ labelToCode <- function(label, t, k, v, ...){
     if (!v==2) stop('"CS_CK" requires v=2')
     return(paste0('CS_CK(', k, ', t=', t, ')'))
   }
+  if (label=="powerCT"){
+    return(paste0('powerCA(', t, ', ', k, ', ', v, ', type="CT")'))
+  }
   if (label=="DWYER"){
     return(paste0('dwyerCA(', t, ', ', k, ', ', v, ')'))
   }
@@ -344,9 +352,17 @@ dwyerCA <- function(t, k, v, ...){
                 header=FALSE, sep=",",
                 origin=paste0("Dwyer Github repository, ", nam, ", ",
                               hilf$Source))
+  attrs <- attributes(aus)
+  aus <- aus[,1:k]
+  N <- nrow(aus)
+  neles <- lengths(lapply(1:N, function(obj) unique(aus[obj,])))
+  constrows <- which(neles==1)
+  if (length(constrows) > 1) aus <- aus[c(constrows, setdiff(1:N, constrows)),]
+  attributes(aus) <- attrs
   attr(aus, "t") <- tachieved
+  if (length(constrows) > 1) attr(aus, "nconstant") <- length(constrows)
   attr(aus, "Call") <- Call
-  aus[,1:k]
+  aus
 }
 
 #' @export
@@ -391,8 +407,18 @@ tjCA <- function(t, k, v=2, ...){
   return(aus)
   }
   code <- hilf$code
-  if (code=="") stop("This array must be constructed with a construction\n that was not yet implemented")
+  if (code=="") stop("this setting is not implemented in tjCA, \nuse function Ns for finding alternatives")
   aus <- eval(parse(text=code))
   attr(aus, "comment") <- "called via tjCA"
+  aus
+}
+
+ffCA <- function(k, v){
+  Call <- sys.call()
+  aus <- maxconstant(as.matrix(expand.grid(rep(list(0:(v-1)), k))))
+  attr(aus, "t") <- NA
+  attr(aus, "origin") <- "Full Factorial"
+  attr(aus, "nconstant") <- v
+  attr(aus, "Call") <- Call
   aus
 }

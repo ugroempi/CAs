@@ -227,7 +227,7 @@ Ns <- function(t, k, v, exclude=NULL){
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
-                          "DWYER", "NIST","TJ"
+                          "DWYER", "NIST","TJ", "powerCT"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
@@ -252,6 +252,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
     CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
+    powerCT=ifelse("powerCT" %in% exclude, NA,N_powerCT(t,k,v)),
     DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
     NIST=ifelse("NIST" %in% exclude, NA,N_NISTcat(t,k,v)),
     TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
@@ -506,6 +507,7 @@ ks <- function(t, N, v){
     CS_MS=k_CS_MS(N,v),
     CS_LCDST=k_CS_LCDST(N,v),
     CS_CK=k_CS_CK(t,N),
+    powerCT=k_powerCT(t,N,v),
     DWYER=k_DWYERcat(t,N,v),
     NIST=k_NISTcat(t,N,v),
     TJ=k_TJcat(t,N,v),

@@ -109,13 +109,10 @@ bestCA(4,8,2)
 bestCA(4,8,2, preference="CS_CK")
 
 Ns(3, 1500, 2)
-## DWYER and NIST need internet connection
-try(bestCA(3, 1500, 2))
-## CK_doublingCA is almost as good
-try(dim(bestCA(3, 1500, 2, preference="CK_doublingCA")))
-dim(bestCA(3, 1500, 2, preference="CK_doublingCA", override=TRUE))
+## powerCT is best
+attributes(bestCA(3, 1500, 2))
 ## it is, of course, also possible to directly use the
-## construction functions, e.g., CK_doublingCA.
+## construction functions, in this case powerCA with type="CT".
 
 # a case that is not implemented
 Ns(6, 45, 10)
