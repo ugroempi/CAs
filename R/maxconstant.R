@@ -120,8 +120,10 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
   consts <- lengths(lapply(1:N, function(obj) unique(D[obj,])))==1
   ## TRUE for constant rows
   nconstant <- sum(consts)
+
   if (nconstant > 0) posconsts <- which(consts==1)
   if (nconstant > 1) posconsts <- posconsts[sort(D[posconsts,1], index.return=TRUE)$ix]
+
   ## move the existing maximum possible number of constant rows to the front
   if (nconstant == nlev){
     if (remove)
