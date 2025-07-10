@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.7
+- **Version**: 0.8
 
 ## Warning
 
@@ -97,13 +97,19 @@ Chateauneuf and Kreher (2002) doubling in function
 <li>
 
 strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs
+(<code>miscCA</code>)
+</li>
+
+<li>
+
+the Colbourn and Torres-Jimenez (2010) power construction in function
+<code>powerCA</code>
 </li>
 
 <li>
 
 Colbourn et al. (2010, CKRS) cross-sum of an <code>N x k</code> code
-with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it
-3 only?) CA
+with a strength t-1 CA to yield a strength t CA
 </li>
 
 <li>
@@ -200,18 +206,66 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 
 The constructions are based on various catalogue objects and occasional
 arrays that can be inspected by expert users, but are mainly meant to be
-used by the package functions:<br /> <code>colbournBigFrame</code>,
-<code>CAEX_CAs</code>, <code>CAEX_lineages</code>, <code>TJcat</code>,
-<code>TJ2level_CAs</code>,, <code>MeagherStevensCombis</code>,
-<code>MeagherStevensStarters</code>, <code>LCDSTCombis</code>,
-<code>LCDSTStarters</code>, <code>ColbournKeriCombis</code>,
-<code>ColbournKeriStarters</code>, <code>PALEYcat</code>,
-<code>CYCLOTOMYcat</code>, <code>CKRScat</code>, <code>CKRS_CAs</code>,
-<code>WKScat</code>, <code>WKS_CAs</code>, <code>DWYERcat</code>,
+used by the package functions:
+<ul>
+
+<li>
+
+<code>colbournBigFrame</code>,
+</li>
+
+<li>
+
+<code>CAEX_CAs</code> and <code>CAEX_lineages</code>,
+</li>
+
+<li>
+
+<code>TJcat</code> and <code>TJ2level_CAs</code>,
+</li>
+
+<li>
+
+<code>powerCTcat</code>,
+</li>
+
+<li>
+
+<code>MeagherStevensCombis</code> and
+<code>MeagherStevensStarters</code>,
+</li>
+
+<li>
+
+<code>LCDSTCombis</code> and <code>LCDSTStarters</code>,
+</li>
+
+<li>
+
+<code>ColbournKeriCombis</code> and <code>ColbournKeriStarters</code>,
+</li>
+
+<li>
+
+<code>CKRScat</code> and <code>CKRS_CAs</code>,
+</li>
+
+<li>
+
+<code>WKScat</code>, <code>WKS_CAs</code>,
+</li>
+
+<li>
+
+<code>PALEYcat</code>, <code>CYCLOTOMYcat</code>, <code>DWYERcat</code>,
 <code>NISTcat</code>, <code>miscCAcat</code>, and individual arrays
-named in the latter.<br /> The arrays referenced by
-<code>DWYERcat</code>, <code>NISTcat</code> can only be accessed with an
-internet connection.
+named in the latter.
+</li>
+
+</ul>
+
+The arrays referenced by <code>DWYERcat</code> and <code>NISTcat</code>
+can only be accessed with an internet connection.
 
 The R objects are available in the <code>data</code> folder of the
 package, corresponding raw data and construction code can be found in
@@ -238,7 +292,20 @@ and Essays, 13th ed. New York: Dover, pp. 308-309.
 
 <p>
 
-Chateauneuf, M., Colbourn, C. and Kreher, D.L. (1999). Covering Arrays
+Bose, R.C. (1938). On the application of the properties of Galois fields
+to the problem of construction of hyper-Graeco-Latin squares. Sankhya 3,
+323-338.
+</p>
+
+<p>
+
+Bush, K.A. (1952). Orthogonal Arrays of Index Unity. Annals of
+Mathematical Statistics 23, 426-434.
+</p>
+
+<p>
+
+Chateauneuf, M., Colbour.n, C. and Kreher, D.L. (1999). Covering Arrays
 of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 </p>
 

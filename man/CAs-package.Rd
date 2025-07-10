@@ -40,8 +40,9 @@ So far, the following constructions have been implemented:
 \item strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
 \item constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
 \item Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doublingCA}} (workhorse function \code{\link{CK_doubling}})
-\item strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs
-\item Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA (or is it 2 only) to yield a strength t (or is it 3 only?) CA
+\item strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs (\code{\link{miscCA}})
+\item the Colbourn and Torres-Jimenez (2010) power construction in function \code{\link{powerCA}}
+\item Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA to yield a strength t CA
 \item recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 \item a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBose}}
 \item a projection construction based on a Bose matrix, from Colbourn (2008), in functions \code{\link{projectionBose}} and \code{\link{projBoseCA}}
@@ -60,20 +61,24 @@ So far, the following constructions have been implemented:
 \section{Exported objects}{
 
 The constructions are based on various catalogue objects and occasional arrays that can be inspected by expert users,
-but are mainly meant to be used by the package functions:\cr
-\code{\link{colbournBigFrame}},
-\code{\link{CAEX_CAs}}, \code{\link{CAEX_lineages}},
-\code{\link{TJcat}}, \code{\link{TJ2level_CAs}},,
-\code{\link{MeagherStevensCombis}}, \code{\link{MeagherStevensStarters}},
-\code{\link{LCDSTCombis}}, \code{\link{LCDSTStarters}},
-\code{\link{ColbournKeriCombis}}, \code{\link{ColbournKeriStarters}},
-\code{\link{PALEYcat}}, \code{\link{CYCLOTOMYcat}},
-\code{\link{CKRScat}}, \code{\link{CKRS_CAs}},
-\code{\link{WKScat}}, \code{\link{WKS_CAs}},
+but are mainly meant to be used by the package functions:
+\itemize{
+\item \code{\link{colbournBigFrame}},
+\item \code{\link{CAEX_CAs}} and \code{\link{CAEX_lineages}},
+\item \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
+\item \code{\link{powerCTcat}},
+\item \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
+\item \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},
+\item \code{\link{ColbournKeriCombis}} and \code{\link{ColbournKeriStarters}},
+\item \code{\link{CKRScat}} and \code{\link{CKRS_CAs}},
+\item \code{\link{WKScat}}, \code{\link{WKS_CAs}},
+\item \code{\link{PALEYcat}}, \code{\link{CYCLOTOMYcat}},
 \code{\link{DWYERcat}}, \code{\link{NISTcat}},
 \code{\link{miscCAcat}}, and individual arrays named in the
-latter.\cr
-The arrays referenced by \code{\link{DWYERcat}}, \code{\link{NISTcat}} can only be
+latter.
+}
+
+The arrays referenced by \code{\link{DWYERcat}} and \code{\link{NISTcat}} can only be
 accessed with an internet connection.
 
 The R objects are available in the \code{data} folder of the package,
@@ -87,7 +92,11 @@ from within R.
 \references{
 Ball, W. W. R. and Coxeter, H. S. M. (1987). Mathematical Recreations and Essays, 13th ed. New York: Dover, pp. 308-309.
 
-Chateauneuf, M., Colbourn, C. and Kreher, D.L. (1999). Covering Arrays of Strength Three. Des. Codes Cryptogr. 16, 235-242.
+Bose, R.C. (1938). On the application of the properties of Galois fields to the problem of construction of hyper-Graeco-Latin squares. Sankhya 3, 323-338.
+
+Bush, K.A. (1952). Orthogonal Arrays of Index Unity. Annals of Mathematical Statistics 23, 426-434.
+
+Chateauneuf, M., Colbour.n, C. and Kreher, D.L. (1999). Covering Arrays of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 
 Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
 
