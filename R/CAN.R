@@ -406,7 +406,9 @@ k_NISTcat <- function(t,N,v){
 ## obtain size of TJ catalogue entry
 #' @export
 N_TJcat <- function(t,k,v){
-  hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"k"]>=k & TJcat[,"v"]==v,,drop=FALSE]
+  hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"k"]>=k &
+                  TJcat[,"v"]==v &
+                  !(TJcat$replaceable=="" & TJcat$code==""),,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else {
     if (t==2 && v==3){
@@ -525,7 +527,9 @@ ks <- function(t, N, v){
 
 #' @export
 k_TJcat <- function(t,N,v){
-  hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"N"]<=N & TJcat[,"v"]==v,,drop=FALSE]
+  hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"N"]<=N &
+                  TJcat[,"v"]==v &
+                  !(TJcat$replaceable=="" & TJcat$code==""),,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else{
     k <- max(hilf[,"k"])
