@@ -151,7 +151,7 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
     stop("no construction for this setting has been implemented yet")
   ## return a matrix with v constant rows in case k <= t
   ## there will be an error otherwise
-  if (k < t) return(ffCA(k , v))
+  if (k <= t) return(ffCA(k , v))
   internet <- curl::has_internet()
   if (!internet){
      message("there is no internet connection")

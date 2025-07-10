@@ -246,7 +246,7 @@ Ns <- function(t, k, v, exclude=NULL){
     projBoseCA=ifelse("projBoseCA" %in% exclude, NA,unname(N_projBoseCA(t,k,v,cmax=Inf))),
     CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
                          NA, N_CK_doublingCA(t,k,v)),
-    CK_NRB=ifelse("CK_doublingCA" %in% exclude,
+    CK_NRB=ifelse("CK_NRB" %in% exclude,
                   NA, N_CK_NRB(t,k,v)),
     WKS=ifelse("WKS" %in% exclude, NA,N_WKScat(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
