@@ -68,7 +68,7 @@
 fuseBoseCA <- function(k=NULL, v=NULL, fixNA=TRUE, ...){
   Call <- sys.call()
   hilf <- N_fuseBose(k,v,...)
-  aus <- fuseBose(hilf["q"], fixNA=fixNA, ...)
+  aus <- fuseBose(hilf["q"], fixNA=fixNA, ...)[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "Call") <- Call
   attr(aus, "origin") <- "Colbourn 2008, Lemma 3.2"
