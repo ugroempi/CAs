@@ -9,7 +9,7 @@ globalVariables(c("TJcat", "TJ2level_CAs"))
 #'
 #' @format
 #' \code{TJcat} is a data.frame with columns \code{t} (strength), \code{k} (number of CA columns),
-#' \code{v} (number of levels), code{N} (number of CA rows), \code{filesize} (the file size in bytes),
+#' \code{v} (number of levels), \code{N} (number of CA rows), \code{filesize} (the file size in bytes),
 #' \code{nameInTJ2level_CAs}, \code{replaceable} and \code{code}.
 #' Row names hold the names of the downloaded files.\cr
 #' CAs corresponding to rows
@@ -44,9 +44,13 @@ globalVariables(c("TJcat", "TJ2level_CAs"))
 #' These have been selected by size, i.e., too large ones have been omitted.
 #' The unavailable 2-level arrays
 #' (empty string in column \code{TJ2level_CAs}) can *in principle* be constructed
-#' by the construction of Colbourn and Torres-Jimenez (2010), which has not yet been
-#' fully implemented. In variuos cases, post-processing steps reduced the run size of the
-#' pure construction.
+#' by the construction of Colbourn and Torres-Jimenez (2010).
+#'  In various cases, post-processing steps by Torres-Jimenez, not implemented in the package,
+#'  reduced the run size of the pure construction or added a column to the pure construction.
+#'  Furthermore, as not all ingredients are available in this package (yet),
+#' some sizes can not be achieved by the package. The size of the arrays
+#' has nevertheless precluded the inclusion of the larger arrays into the package, in the interest
+#' interest of limiting package size.
 #'
 #' @references Colbourn and Torres-Jimenez (2010), Torres-Jimenez (without year), Torres-Jimenez (2021)
 #'

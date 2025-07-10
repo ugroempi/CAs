@@ -35,23 +35,37 @@ tjCA(6,18,2)  ## stored array
 
 ### reduce the storage requirements, as these files are responsible for
 ###    more than 80pct of the package size
+
+## handle rows with stored arrays
 settings <- TJcat[!TJcat$nameInTJ2level_CAs=="",]
 settings$replaceable <- ""
 for (i in 1:nrow(settings)){
   hilf <- names(bestN(settings$t[i], settings$k[i], 2))
   if (!hilf=="TJ") settings$replaceable[i] <- hilf
 }
-settings$replaceable[which(settings$replaceable=="DWYER")] <- "" ## only on the internet
-length(which(!settings$replaceable == ""))  ## originally, there were 61 files that could be removed
-sum((settings$filesize)[which(!settings$replaceable == "")])/sum(settings$filesize)
-## size can be reduced to about 30pct for both TJ2level_CAs and the external folder
 
 table(settings$replaceable)
-TJcat$replaceable <- ""
+## do not remove arrays that are only on the Internet
+settings$replaceable[which(settings$replaceable=="DWYER")] <- ""
+table(settings$replaceable) ## seven additional arrays removable July 10 2025
+
+## the following statement was only needed at the first round
+# TJcat$replaceable <- ""
 TJcat[rownames(settings),]$replaceable <- settings$replaceable
-TJcat$code <- ""
-TJcat$code[TJcat$v==3 & TJcat$t==2] <- paste0("CAEX(", TJcat$k[TJcat$v==3 & TJcat$t==2], ")")
-## CK_doublingCA CKRS CS_CK PALEY WKS
+## the following statement was only needed at the first round
+# TJcat$code <- ""
+TJcat[rownames(settings),]$code <- ""
+## the following statement was only needed at the first round
+# TJcat$code[TJcat$v==3 & TJcat$t==2] <- paste0("CAEX(", TJcat$k[TJcat$v==3 & TJcat$t==2], ")")
+
+## powerCT CK_doublingCA CKRS CS_CK PALEY WKS
+TJcat$code[TJcat$replaceable=="powerCT"] <- paste0("powerCA(",
+                                                   TJcat$t[TJcat$replaceable=="powerCT"],
+                                                   ", ",
+                                                   TJcat$k[TJcat$replaceable=="powerCT"],
+                                                   ", ",
+                                                   TJcat$v[TJcat$replaceable=="powerCT"],
+                                                         ")")
 TJcat$code[TJcat$replaceable=="CK_doublingCA"] <- paste0("CK_doublingCA(",
                                                          TJcat$k[TJcat$replaceable=="CK_doublingCA"],
                                                          ", ",
@@ -103,5 +117,7 @@ for (i in 1:nrow(TJcat)){
   print(TJcat$N[i]>=nrow(tjCA(TJcat$t[i], TJcat$k[i], 2)))
 }
 
-#file.remove(paste0("D:/rtests/CAs/inst/extdata/TJ2level/", fns_toberemoved))
+# file.remove(paste0("D:/rtests/CAs/inst/extdata/TJ2level/", fns_toberemoved))
+save(TJcat, file="D:/rtests/CAs/data/TJcat.rda", compress="xz")
+save(TJ2level_CAs, file="D:/rtests/CAs/data/TJ2level_CAs.rda", compress="xz")
 
