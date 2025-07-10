@@ -7,12 +7,10 @@
 #' @rdname productPCA
 #'
 #' @aliases productPCA
-#' @aliases SCA_Bose
 #' @aliases CA_to_PCA
 #' @aliases is.PCA
 #'
 #' @usage productPCA(D1, D2=NULL, k1=NULL, l1=NULL, ...)
-#' @usage SCA_Bose(q, ...)
 #' @usage CA_to_PCA(D, tryhard=FALSE, ...)
 #' @usage is.PCA(D, start0=NULL, ...)
 #'
@@ -21,7 +19,6 @@
 #' @param D an N x k CA of strength 2 with v levels
 #' @param k1 width of P block in \code{D1} (see Details section)
 #' @param l1 width of P block in \code{D2} (see Details section)
-#' @param q a prime power for the Bose construction
 #' @param tryhard logical: if \code{TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.
 #' @param start0 \code{NULL}, or logical: do the values start with 0 (otherwise with 1)?
 #' @param ... currently not used
@@ -57,11 +54,6 @@
 #' levels in the first \code{v} rows.\cr
 #' \code{tryhard=TRUE} may be useful for small designs, but may substantially increase run times for \code{D} with many rows or many columns.
 #'
-#' Function \code{SCA_Bose} obtains the strength 2 Bose constructed CA (q+1 columns in q levels, q^2 runs, q a prime power)
-#' and rearranges it into SCA shape. The array actually is a 2PCA, in the sense that its bottom left \code{(q^2-q)xq} block is itself a PCA
-#' with width of the left parts equal to \code{q} (and thus width of the right-hand side equal to zero). Every consecutive \code{qxq} block
-#' of the matrix consists of columns whose elements are a permutation of the number 0 to \code{q-1}.
-#'
 #' Function \code{CA_to_PCA} brings its argument into the best possible PCA shape by swapping columns only, working on the first \code{q} rows.
 #' If the argument \code{tryhard} is invoked, the function tries to achieve \code{k1=k-1} or \code{k1=k-2} by trying \code{\link{maxconstant}} on
 #' subsets of columns. Function \code{is.PCA} checks the PCA status of its argument without modifying it in any way.
@@ -86,9 +78,6 @@
 #' The returned matrix has its levels coded like the ingoing matrices, i.e., integers starting with 0 or 1.
 #'
 #' Function \code{CA_to_PCA} returns an equivalent CA of S3 class \code{ca} that has PCA (or SCA) structure (see Section "Partitioned Covering Array (PCA)").
-#'
-#' Function\code{SCA_Bose} creates a Bose array from \code{\link[lhs]{createBose}} and rearranges its columns
-#' into SCA structure (see Section "Partitioned Covering Array (PCA)").
 #'
 #' The results of functions \code{CA_to_PCA}, \code{SCA_Bose} and {\code{prodPCA}} have an attribute \code{PCAstatus},
 #' which is a list with elements \code{type} (PCA or SCA), \code{k1} and \code{k2}.
@@ -455,15 +444,4 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
   attr(aus, "Call") <- c(attr(aus, "Call"), Call)
    class(aus) <- c("ca", class(aus))
    aus
-}
-
-#' @export
-SCA_Bose <- function(q, ...){
-  Call <- sys.call()
-  aus <- lhs::createBose(q, q+1, bRandom=FALSE)[,c(2:(q+1),1)]
-  class(aus) <- c("ca", class(aus))
-  attr(aus, "PCAstatus") <- list(type="SCA", k1=q, k2=1)
-  attr(aus, "Call") <- Call
-  attr(aus, "origin") <- "Bose construction"
-  aus
 }
