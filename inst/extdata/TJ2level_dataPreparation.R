@@ -121,3 +121,12 @@ for (i in 1:nrow(TJcat)){
 save(TJcat, file="D:/rtests/CAs/data/TJcat.rda", compress="xz")
 save(TJ2level_CAs, file="D:/rtests/CAs/data/TJ2level_CAs.rda", compress="xz")
 
+## check whether existing constructions need replacement
+settings <- TJcat[which(!TJcat$replaceable==""),]
+settings$replaceable2 <- ""
+for (i in 1:nrow(settings)){
+  hilf <- names(bestN(settings$t[i], settings$k[i], 2))
+  if (!hilf=="TJ") settings$replaceable2[i] <- hilf
+}
+table(settings$replaceable, settings$replaceable2)
+## perfectly aligned!

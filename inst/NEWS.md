@@ -5,12 +5,19 @@
    construction according to Colbourn and Torres-Jimenez (2010)
  - implemented functions powerCA (with type="CT"), N_powerCT and 
    k_powerCT and incorporated them into Ns, bestN, bestCA
+ - implemented full factorial for k<=t (which sometimes occurs  
+   for ingredients in recursive constructions)
+ - omitted exclude="CK_doublingCA" for CK_doubling ingredients,
+   which substantially increases the covered strength 3 scenarii
+   (though not always with competitive arrays)
  - removed seven arrays from TJcat and TJ2level_CAs, as well 
    as from the folder TJ2level in extdata
  - moved SCA_Bose and SCA_Busht to a common file with dedicated
    documentation
  - fixed various bugs in other constructions that showed up in 
-   testing the new function powerCA
+   testing the new function powerCA, among them the number 
+   of columns for fuseBoseCA, which was always the maximum 
+   instead of the requested k
 
 05 July 2025, version 0.7
  - implemented a data file miscCAcat, a function miscCA 
