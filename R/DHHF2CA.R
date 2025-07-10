@@ -51,7 +51,7 @@
 #' ## the Ji and Yin (2010) strength 3 OA in six 12-level columns (Lemma 3.5 with Corollary 3.3)
 #' ## available in this package as oa1728.12.6
 #' P <- t(oa1728.12.6[,1:5])
-#' P <- T(P, 4:5, 1)
+#' P <- Tred(P, 4:5, 1)
 #' ## two columns reduced to 11 levels each
 #' dim(P)
 #' eCAN(3, 12, 2) ## 15 runs, in TJ2level_CAs
@@ -78,18 +78,18 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
   stopifnot(length(unique(mins))==1)
   if (mins[1]==0) P <- P+1 ## assuming no other violations
   maxs <- apply(P,1,max)
-  descendingorder <- sort(maxs, decreasing = TRUE, index.return=TRUE)$ix
-  P <- P[descendingorder,]
-  maxs <- maxs[descendingorder]
-  uis <- rev(table(maxs)) ## descending order
-  wis <- as.numeric(names(uis))
+#  descendingorder <- sort(maxs, decreasing = TRUE, index.return=TRUE)$ix
+#  P <- P[descendingorder,]
+#  maxs <- maxs[descendingorder]
+  wis <- unique(maxs) ## order as it appears
+  uis <- sapply(wis, function(obj) sum(maxs==obj))
   cblocks <- length(uis)
 
   ## check Dlist
   stopifnot(length(Dlist)==cblocks)
   wis_Dlist <- sapply(Dlist, ncol)
-  descendingorder <- sort(wis_Dlist, decreasing = TRUE, index.return=TRUE)$ix
-  Dlist <- Dlist[descendingorder]
+#  descendingorder <- sort(wis_Dlist, decreasing = TRUE, index.return=TRUE)$ix
+#  Dlist <- Dlist[descendingorder]
 
   if (!(all(wis == wis_Dlist)))
     stop("The DHHF and the CAs in Dlist do not match.")
@@ -112,14 +112,16 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
   ## nconst contains the rho_i of Theorem 2.3 of Colbourn and Torres-Jimenez
   ## in the order of Dlist
   chi <- max(0, v - sum(uis*(v-nconst)))
-      ## if chi > 0, some constant rows have to be added back in
+      ## if chi > 0, some constant rows have to be added back i
+
 
   const <- mapply(function(obj1, obj2) c(obj1[1:obj2,1]),
-                  Drem, as.list(nconst))
-       ## list of constant elements
-  Drem <- mapply(function(obj1, obj2) obj1[-(1:obj2),],Drem, as.list(nconst))
-       ## matrices without constant elements to use in every step
+                  Drem, as.list(nconst), SIMPLIFY = FALSE)
 
+  Drem <- mapply(function(obj1, obj2) obj1[-(1:obj2),,drop=FALSE],Drem, as.list(nconst),
+                 SIMPLIFY = FALSE)
+       ## Drem must be a list of matrices
+       ## matrices without constant rows to use in every step
   nonconst <- lapply(const, function(obj) setdiff(levs, obj))
   aus <- matrix(NA, chi + sum(uis*(Nis-nconst)), k)
     Y <- vector(mode="list", length=M+1) ## for covered elements
@@ -133,16 +135,16 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
       ## as possible from coveredbisher (for j>=2)
       ## Where this is encountered, a message should complain about exceeding chi
       Ninow <- Nis[j]
-      for (i in 1:uis[j]){
+      for (r in 1:uis[j]){
         aus[(Nbisher+1):(Nbisher+Ninow-nconstnow),] <-
-          (Drem[[j]][,P[Mbisher+i,]] + (i-1)*nconstnow) %% v
-        r <- Mbisher + i
+          (Drem[[j]][,P[Mbisher+r,]] + (r-1)*nconstnow) %% v
+        r <- Mbisher + r
         Y[[r]] <- setdiff(levs, (constnow + nconstnow) %% v)
         Nbisher <- Nbisher + Ninow - nconstnow
       }
       Mbisher <- Mbisher + uis[j]
       coveredbisher <- sort(unique(unlist(Y[1:Mbisher])))
-  }
+    }
 
   ## Yr the levels that are not constant in the CA used for row r
   ## YMp1 the levels that were constant for all rows (there are such levels for chi>0)

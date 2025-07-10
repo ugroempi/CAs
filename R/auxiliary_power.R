@@ -5,13 +5,11 @@
 #'
 #' @rdname auxpower
 #'
-#' @aliases alias createDHF
-#' @aliases T
-#' @aliases SCA_Busht
+#' @aliases createDHF
+#' @aliases Tred
 #'
 #' @usage createDHF(oa, toa, tdhf, vdhf=tdhf)
-#' @usage T(DHF, rs, reduce)
-#' @usage SCA_Busht(q, t)
+#' @usage Tred(DHF, rs, reduce)
 #'
 #' @param oa   an orthogonal array
 #' @param toa  strength of the orthogonal array
@@ -22,24 +20,19 @@
 #'            is to be reduced by \code{reduce}
 #' @param rs   vector of row indices whose number of levels is to be reduced
 #' @param reduce number of levels to reduce
-#' @param q    number of levels, prime or prime power
-#' @param t    requested strength
 #'
 #' @returns Function \code{createDHF} creates a DHF or PHF of minimum
 #' number of rows for the combination of \code{toa}, \code{tdhf} and
 #' \code{vdhf}.\cr
-#' Function \code{T} reduces the number of levels for the specified rows
+#' Function \code{Tred} reduces the number of levels for the specified rows
 #' by the amount stated in \code{reduce}, aiming for retaining the
-#' maximum number of columns.\cr
-#' Function \code{SCA_Busht} is a convenience function that creates
-#' a strength \code{t} design with \code{q} levels using function
-#' \code{createBusht} of R package lhs.
+#' maximum number of columns.
 #'
 #' @section Details:
 #' Function \code{createDHF} creates a distributed hash family according to
 #' Lemma 1.1 or Lemma 1.2 of Colbourn and Torres-Jimenez (2010).
 #'
-#' Function \code{T} applies Lemma 3.1 of Colbourn and Torres-Jimenez (2010).
+#' Function \code{Tred} applies Lemma 3.1 of Colbourn and Torres-Jimenez (2010).
 #'
 #' @references Colbourn and Torres-Jimenez (2010)
 #'
@@ -52,7 +45,7 @@
 #' mydhf[,1:6]
 #' mydhf[,116:121]
 #' ## reduce the third row by 6 levels to 5 levels
-#' mydhhf <- T(mydhf, 3, 6)
+#' mydhhf <- Tred(mydhf, 3, 6)
 #' dim(mydhhf)
 #' mydhhf[,50:55]
 #'
@@ -76,7 +69,7 @@ createDHF <- function(oa, toa, tdhf, vdhf=tdhf){
 }
 
 #' @export
-T <- function(DHF, rs, reduce){
+Tred <- function(DHF, rs, reduce){
   start0 <- TRUE
   if (min(DHF)==1){
     start0 <- FALSE
@@ -100,10 +93,4 @@ T <- function(DHF, rs, reduce){
     }
   }
   DHF + as.numeric(!start0)
-}
-
-#' @export
-SCA_Busht <- function(q, t){
-  aus <- lhs::createBusht(q, q+1, t, bRandom=FALSE)
-  aus[, c(2:(q+1), 1)]
 }

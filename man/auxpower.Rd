@@ -2,16 +2,12 @@
 % Please edit documentation in R/auxiliary_power.R
 \name{createDHF}
 \alias{createDHF}
-\alias{alias}
-\alias{T}
-\alias{SCA_Busht}
+\alias{Tred}
 \title{Auxiliary functions for Colbourn Torres-Jimenez Power construction}
 \usage{
 createDHF(oa, toa, tdhf, vdhf=tdhf)
 
-T(DHF, rs, reduce)
-
-SCA_Busht(q, t)
+Tred(DHF, rs, reduce)
 }
 \arguments{
 \item{oa}{an orthogonal array}
@@ -29,21 +25,14 @@ is to be reduced by \code{reduce}}
 \item{rs}{vector of row indices whose number of levels is to be reduced}
 
 \item{reduce}{number of levels to reduce}
-
-\item{q}{number of levels, prime or prime power}
-
-\item{t}{requested strength}
 }
 \value{
 Function \code{createDHF} creates a DHF or PHF of minimum
 number of rows for the combination of \code{toa}, \code{tdhf} and
 \code{vdhf}.\cr
-Function \code{T} reduces the number of levels for the specified rows
+Function \code{Tred} reduces the number of levels for the specified rows
 by the amount stated in \code{reduce}, aiming for retaining the
-maximum number of columns.\cr
-Function \code{SCA_Busht} is a convenience function that creates
-a strength \code{t} design with \code{q} levels using function
-\code{createBusht} of R package lhs.
+maximum number of columns.
 }
 \description{
 These functions support the implementation of the power constructions
@@ -54,7 +43,7 @@ by Colbourn and Torres-Jimenez
 Function \code{createDHF} creates a distributed hash family according to
 Lemma 1.1 or Lemma 1.2 of Colbourn and Torres-Jimenez (2010).
 
-Function \code{T} applies Lemma 3.1 of Colbourn and Torres-Jimenez (2010).
+Function \code{Tred} applies Lemma 3.1 of Colbourn and Torres-Jimenez (2010).
 }
 
 \examples{
@@ -66,7 +55,7 @@ dim(mydhf)
 mydhf[,1:6]
 mydhf[,116:121]
 ## reduce the third row by 6 levels to 5 levels
-mydhhf <- T(mydhf, 3, 6)
+mydhhf <- Tred(mydhf, 3, 6)
 dim(mydhhf)
 mydhhf[,50:55]
 

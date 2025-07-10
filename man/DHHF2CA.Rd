@@ -57,7 +57,7 @@ responsibility to ensure that these are as needed.
 ## the Ji and Yin (2010) strength 3 OA in six 12-level columns (Lemma 3.5 with Corollary 3.3)
 ## available in this package as oa1728.12.6
 P <- t(oa1728.12.6[,1:5])
-P <- T(P, 4:5, 1)
+P <- Tred(P, 4:5, 1)
 ## two columns reduced to 11 levels each
 dim(P)
 eCAN(3, 12, 2) ## 15 runs, in TJ2level_CAs
