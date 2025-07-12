@@ -25,7 +25,7 @@ postopNCK(D, t, fixrows=0, verbose=0, maxnochange=25, retrymax=10, ...)
 
 \item{fixrows}{integer from 0 to \code{N} for preventing the top \code{fixrows} rows from being moved}
 
-\item{verbose}{integer-valued degree of verbosity; not yet implemented; intended for documenting the row permutations that were conducted}
+\item{verbose}{integer-valued degree of verbosity; 1 requests that the latest stages of unsuccessful attempts are added as an attribute to the returned unchanged matrix in case of a failure}
 
 \item{...}{currently not used}
 
@@ -49,7 +49,9 @@ last row, until the row has flexible entries only. It that is not successful in 
 number of iterations (\code{trymax}),
 a retry step switches to a different last row to make flexible
 (at most \code{retrymax} attempts).
-If no attempt is successful, the function returns a list with the last states of each retry.
+If no attempt is successful, the function returns the unchanged input matrix,
+adding as an attribute a list with the last states of each retry,
+if requested by the \code{verbose} argument.
 }
 \description{
 Functions for manipulating flexible values: determination of flexible positions (flexpos),

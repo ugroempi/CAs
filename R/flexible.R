@@ -20,7 +20,7 @@
 #' @param D an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}
 #' @param t integer-valued (>=2), the strength of \code{D}
 #' @param fixrows integer from 0 to \code{N} for preventing the top \code{fixrows} rows from being moved
-#' @param verbose integer-valued degree of verbosity; not yet implemented; intended for documenting the row permutations that were conducted
+#' @param verbose integer-valued degree of verbosity; 1 requests that the latest stages of unsuccessful attempts are added as an attribute to the returned unchanged matrix in case of a failure
 #' @param maxnochange integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements
 #' @param retrymax integer-valued number of retries for escaping local optimum, if \code{trymax} iterations were not successful
 #' @param ... currently not used
@@ -55,7 +55,9 @@
 #' number of iterations (\code{trymax}),
 #' a retry step switches to a different last row to make flexible
 #' (at most \code{retrymax} attempts).
-#' If no attempt is successful, the function returns a list with the last states of each retry.
+#' If no attempt is successful, the function returns the unchanged input matrix,
+#' adding as an attribute a list with the last states of each retry,
+#' if requested by the \code{verbose} argument.
 #'
 #' @references Nayeri, Colbourn and Konjevod (2013)
 #'
@@ -322,7 +324,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, maxnochange=25, retrymax=10, .
         aus[is.na(aus[,j]),j] <- sample(0:(vs[j]-1), sum(is.na(aus[,j])), replace=TRUE)
       }
       ## create new flexible set
-      aus <- markflex(aus,2, fixrows=ifelse(!any(exhausted), 0, max(which(exhausted))))
+      aus <- markflex(aus, t, fixrows=ifelse(!any(exhausted), 0, max(which(exhausted))))
       orig_row <- orig_row[attr(aus, "rowOrder")]
       exhausted <- exhausted[attr(aus, "rowOrder")]
       print(orig_row[which(exhausted)])
@@ -330,7 +332,12 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, maxnochange=25, retrymax=10, .
       hilf <- rowSums(is.na(aus))
     }## end of loop over r
   }## end of else
-  if (length(toremove)==0) return(auslist)
+  if (length(toremove)==0){
+    if (verbose==1){
+      attr(D, "postNCK_unsuccessful_attempts") <- auslist
+    }
+    return(D)
+  }
   class(aus) <- c("ca", class(aus))
   if (any(is.na(aus)))
     attr(aus, "flexible") <- list(value=NA,
