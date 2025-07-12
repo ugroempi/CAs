@@ -34,7 +34,7 @@ where applicable.
 Besides the construction functions, coverage properties of any array can be checked by function
 \code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
 
-So far, the following constructions have been implemented:
+So far, the following constructions for uniform CAs have been implemented:
 \itemize{
 \item strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973) in function \code{\link{KSK}},
 \item strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
@@ -56,6 +56,10 @@ So far, the following constructions have been implemented:
 \item a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in functions \code{\link{DHF2CA}} (homogeneous DHF) and \code{\link{DHHF2CA}} (heterogeneous); a more practical approach an N functions for these are not yet available.
 \item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }
+
+So far, there is a single function for mixed level CAs: \code{\link{CA_to_MCA}} takes
+a uniform array, removes levels (makes them flexible) as required, and subsequently
+tries to remove as many rows as possible via the Nayeri et al. (2013) construction.
 }
 
 \section{Exported objects}{

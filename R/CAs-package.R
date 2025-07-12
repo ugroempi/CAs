@@ -2,7 +2,7 @@
 #' @description Creates covering arrays.
 #'
 #' @section Details:
-#'  This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
+#' This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
 #'
 #' The goal is to implement as many constructions as possible that yield arrays with small numbers of runs, as evidenced by the
@@ -25,7 +25,7 @@
 #' Besides the construction functions, coverage properties of any array can be checked by function
 #' \code{\link{coverage}} and plotted by function \code{\link{coverplot}}.
 #'
-#' So far, the following constructions have been implemented:
+#' So far, the following constructions for uniform CAs have been implemented:
 #'
 #' * strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973) in function \code{\link{KSK}},
 #' * strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
@@ -46,6 +46,10 @@
 #' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
 #' * a preliminary technical implementation of the Power construction as proposed in Colbourn and Torres-Jimenez (2010), in functions \code{\link{DHF2CA}} (homogeneous DHF) and \code{\link{DHHF2CA}} (heterogeneous); a more practical approach an N functions for these are not yet available.
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
+#'
+#' So far, there is a single function for mixed level CAs: \code{\link{CA_to_MCA}} takes
+#' a uniform array, removes levels (makes them flexible) as required, and subsequently
+#' tries to remove as many rows as possible via the Nayeri et al. (2013) construction.
 #'
 #' @section Exported objects:
 #' The constructions are based on various catalogue objects and occasional arrays that can be inspected by expert users,

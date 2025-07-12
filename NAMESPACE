@@ -3,6 +3,7 @@
 S3method(base::print,coverage)
 S3method(print,ca)
 export(CAEX)
+export(CA_to_MCA)
 export(CA_to_PCA)
 export(CK_NRB)
 export(CK_doubling)

@@ -1,5 +1,12 @@
 # NEWS
 
+13 July 2025, version 0.9
+ - added function CA_to_MCA for creating mixed level CAs
+ - changed the output of function postopNCK in case the
+   number of rows cannot be reduced
+ - fixed bug in function postopNCK that led to violation of 
+   the requested strength in some cases
+
 10 July 2025, version 0.8
  - implemented data file powerCTcat in support of power
    construction according to Colbourn and Torres-Jimenez (2010)

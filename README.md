@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.8
+- **Version**: 0.9
 
 ## Warning
 
@@ -65,7 +65,8 @@ Besides the construction functions, coverage properties of any array can
 be checked by function <code>coverage</code> and plotted by function
 <code>coverplot</code>.
 
-So far, the following constructions have been implemented:
+So far, the following constructions for uniform CAs have been
+implemented:
 <ul>
 
 <li>
@@ -201,6 +202,11 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 </li>
 
 </ul>
+
+So far, there is a single function for mixed level CAs:
+<code>CA_to_MCA</code> takes a uniform array, removes levels (makes them
+flexible) as required, and subsequently tries to remove as many rows as
+possible via the Nayeri et al. (2013) construction.
 
 ## Exported objects
 
