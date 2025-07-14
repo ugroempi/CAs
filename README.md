@@ -32,7 +32,7 @@ devtools::install_github("ugroempi/CAs")
 
 *At the end of this README file, charts depict the current status of
 array implementation relative to the empirical covering array numbers
-(eCANs) of the Colbourn tables.*
+(eCANs) of the Colbourn tables, for v up to 10.*
 
 This package constructs covering arrays, i.e., arrays that cover all
 $`t`$-ary combinations of a set of factors at least once. The focus is
