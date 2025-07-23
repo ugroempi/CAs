@@ -1,5 +1,25 @@
 # NEWS
 
+23 July 2025, version 0.10
+ - modified postopNCK to include an outer loop 
+   (new arguments outerRetrymax and outermaxnochange, and seed),
+   and deferred the previous inner workings to an internal function
+ - provide detailed iteration information of postopNCK by messages (suppressible),
+   stating the interim run size achieved at the end of each outer loop, 
+   supporting informed decision on early interruption of the process
+ - permit interruption of postopNCK with interim result preserved
+ - implemented stop in postopNCK when lower bound on run size is reached
+ - added function MCA2 for creating strength 2 mixed CAs with a generalization 
+   of the first method of Sherwood (2008), as stated in Groemping (2025)
+ - made CA_to_MCA interruptable with latest result returned
+   (as the run size reduction may be slow)
+ - implemented the possibility for outerRetry=0 (suppressing optimization)
+ - made CA_to_MCA and MCA2 return objects with meaningful attributes; 
+   handling of the information from the ingoing array may benefit from 
+   future improvements
+ - bugfix: postopNCK did not fix the top fixedrows rows; now it does
+ - bugfix: CA_to_MCA was not reproducible for a given seed; now it is
+
 13 July 2025, version 0.9
  - added function CA_to_MCA for creating mixed level CAs
  - changed the output of function postopNCK in case the

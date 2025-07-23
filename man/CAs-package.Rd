@@ -57,9 +57,18 @@ So far, the following constructions for uniform CAs have been implemented:
 \item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }
 
-So far, there is a single function for mixed level CAs: \code{\link{CA_to_MCA}} takes
-a uniform array, removes levels (makes them flexible) as required, and subsequently
-tries to remove as many rows as possible via the Nayeri et al. (2013) construction.
+So far, there are two functions for mixed level CAs: \code{MCA2} implements a strength 2
+construction, generalized from Sherwood (2008) by Groemping (2025),
+that is based on expanding some columns of a (mixed or)
+uniform CA, after reducing their number of levels, by replacing the flexible values of those
+columns with suitable small matrices and replicating the rest of those columns the corresponding
+number of times. Its details can be found in Groemping (2025).\cr
+\code{\link{CA_to_MCA}} takes
+a uniform array, removes levels (makes them flexible) as required.\cr
+Both constructions may benefit from subsequent
+removal of as many rows as possible via the Nayeri et al. (2013) construction. For
+\code{CA_to_MCA}, this is the crucial step; for \code{MCA2}, gains are less dramatic,
+but still often relevant.
 }
 
 \section{Exported objects}{
@@ -128,6 +137,8 @@ Colbourn, C.J., Zhou, J. (2012). Improving Two Recursive Constructions for Cover
 
 Dwyer, A. (2024). CA Database: Data base of covering arrays and related objects. \url{https://github.com/aadwyer/CA_Database}.
 
+Groemping, U. (2025). Generalizing a Sherwood (2008) construction for mixed level covering arrays. Report 01/2025, Reports in Mathematics, Physics and Chemistry. BHT Berlin. \url{https://www1.beuth-hochschule.de/FB_II/reports/Report-2025-001.pdf}
+
 Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) \emph{Graph Theory, Combinatorics and Algorithms}. Operations Research/Computer Science Interfaces Series, vol 34. Springer-Verlag, New York.
 
 Ji, L. and Yin, J., 2010. Constructions of new orthogonal arrays and covering arrays of strength three. Journal of Combinatorial Theory, Series A 117, 236-247. https://doi.org/10.1016/j.jcta.2009.06.002
@@ -146,9 +157,13 @@ Meagher, K., (2005a). Group Construction of Covering Arrays: Part 2. (Unpublishe
 
 Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative Independence Graphs and Extremal Set Partition Theory. PhD thesis. University of Ottawa, Ottawa.
 
+Moura, L., Stardom, J., Stevens, B., Williams, A. (2003). Covering arrays with mixed alphabet sizes. J of Combinatorial Designs 11, 413-432. https://doi.org/10.1002/jcd.10059
+
 Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized post-optimization of covering arrays. European Journal of Combinatorics 34, 91-103. https://doi.org/10.1016/j.ejc.2012.07.017
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
+
+Sherwood, G.B. (2008). Optimal and near-optimal mixed covering arrays by column expansion. Discrete Mathematics 308, 6022-6035. https://doi.org/10.1016/j.disc.2007.11.021
 
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
 
