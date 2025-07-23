@@ -148,7 +148,7 @@ CS_CK <- function(k, t=4, v=2, starter=NULL, method=NULL, start0=TRUE, ...){
     class(aus) <- c("ca", class(aus))
     attr(aus, "Call") <- Call
     attr(aus, "origin") <- paste0("Colbourn Keri, strength t=", t, ", ")
-    attr(aus, "strength") <- t
+    attr(aus, "t") <- t
     aus[,1:k]
 }
 
