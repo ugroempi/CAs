@@ -227,7 +227,7 @@ Ns <- function(t, k, v, exclude=NULL){
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
-                          "DWYER", "NIST","TJ", "powerCT"
+                          "DWYER", "NIST","TJ", "powerCT", "miscCA"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
