@@ -296,8 +296,9 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
   if (hilf) attr(D, "PCAstatus") <- attr(hilf, "PCAstatus")
   if (!is.null(attr(hilf, "flexible")))
     attr(D, "flexible") <- attr(hilf, "flexible")
-  class(D) <- c("ca", class(D))
+  if (!"ca" %in% class(D)) class(D) <- c("ca", class(D))
   attr(D, "Call") <- call
+  attr(D, "t") <- 2
   attr(D, "lineage") <- lineage
   D
 }
