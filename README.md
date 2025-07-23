@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.9
+- **Version**: 0.10
 
 ## Warning
 
@@ -203,10 +203,19 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 
 </ul>
 
-So far, there is a single function for mixed level CAs:
+So far, there are two functions for mixed level CAs: <code>MCA2</code>
+implements a strength 2 construction, generalized from Sherwood (2008)
+by Groemping (2025), that is based on expanding some columns of a (mixed
+or) uniform CA, after reducing their number of levels, by replacing the
+flexible values of those columns with suitable small matrices and
+replicating the rest of those columns the corresponding number of times.
+Its details can be found in Groemping (2025).<br />
 <code>CA_to_MCA</code> takes a uniform array, removes levels (makes them
-flexible) as required, and subsequently tries to remove as many rows as
-possible via the Nayeri et al. (2013) construction.
+flexible) as required.<br /> Both constructions may benefit from
+subsequent removal of as many rows as possible via the Nayeri et
+al. (2013) construction. For <code>CA_to_MCA</code>, this is the crucial
+step; for <code>MCA2</code>, gains are less dramatic, but still often
+relevant.
 
 ## Exported objects
 
@@ -413,6 +422,14 @@ objects.
 
 <p>
 
+Groemping, U. (2025). Generalizing a Sherwood (2008) construction for
+mixed level covering arrays. Report 01/2025, Reports in Mathematics,
+Physics and Chemistry. BHT Berlin.
+<a href="https://www1.beuth-hochschule.de/FB_II/reports/Report-2025-001.pdf">`https://www1.beuth-hochschule.de/FB_II/reports/Report-2025-001.pdf`</a>
+</p>
+
+<p>
+
 Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial
 Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) <em>Graph
 Theory, Combinatorics and Algorithms</em>. Operations Research/Computer
@@ -476,6 +493,13 @@ University of Ottawa, Ottawa.
 
 <p>
 
+Moura, L., Stardom, J., Stevens, B., Williams, A. (2003). Covering
+arrays with mixed alphabet sizes. J of Combinatorial Designs 11,
+413-432. <https://doi.org/10.1002/jcd.10059>
+</p>
+
+<p>
+
 Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized
 post-optimization of covering arrays. European Journal of Combinatorics
 34, 91-103. <https://doi.org/10.1016/j.ejc.2012.07.017>
@@ -485,6 +509,13 @@ post-optimization of covering arrays. European Journal of Combinatorics
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 <a href="https://math.nist.gov/coveringarrays/">https://math.nist.gov/coveringarrays/</a>.
+</p>
+
+<p>
+
+Sherwood, G.B. (2008). Optimal and near-optimal mixed covering arrays by
+column expansion. Discrete Mathematics 308, 6022-6035.
+<https://doi.org/10.1016/j.disc.2007.11.021>
 </p>
 
 <p>
