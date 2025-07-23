@@ -146,6 +146,7 @@
 #' @export
 bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
                    preference=NULL, override=FALSE, ...){
+  Call <- sys.call()
   hilf <- Ns(t,k,v, ...)
   if (length(hilf)==1)
     stop("no construction for this setting has been implemented yet")
@@ -155,7 +156,8 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
   internet <- curl::has_internet()
   if (!internet){
      message("there is no internet connection")
-     if (preference %in% c("DWYER","NIST")) stop(paste(preference, " requires an internet connection"))
+     if (!is.null(preference)) if (preference %in% c("DWYER","NIST"))
+       stop(paste(preference, " requires an internet connection"))
      forbidden <- which(names(hilf) %in% c("DWYER","NIST"))
      if (length(forbidden) > 0)
         hilf <- hilf[-forbidden]
@@ -197,6 +199,8 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
   dimnames(aus) <- NULL
   if (is.null(attr(aus, "origin"))) attr(aus, "origin") <- ifelse(finished, preference, constrs[1])
   if (is.null(attr(aus, "t"))) attr(aus, "t") <- t
+  ## prepend the Call attribute
+  attr(aus, "Call") <- c(Call, attr(aus, "Call"))
   attr(aus, "eCAN") <- eCAN(t,k,v)
   attr(aus, "date") <- Sys.Date()
   attr(aus, "CAs-version") <- packageVersion("CAs")
