@@ -106,6 +106,7 @@
 
 #'@export
 CS_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
+  Call <- sys.call()
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields a strength 2 CA in ", N_KSK(k), "runs."))
@@ -131,6 +132,10 @@ CS_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
   ## create array
   aus <- createCS_MS(starter, v, createG(v))[,1:k]
   if (start0) aus <- aus - 1
+  class(aus) <- c("ca", class(aus))
+  attr(aus, "t") <- 2
+  attr(aus, "Call") <- Call
+  attr(aus, "origin") <- "Meagher and Stevens 2005"
   aus
 }
 
