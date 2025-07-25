@@ -9,10 +9,6 @@
 name: R
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -23,7 +19,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        r-version: ['4.5.0']
+        r-version: ['4.5.1']
 
     steps:
       - uses: actions/checkout@v4
