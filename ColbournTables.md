@@ -5,16 +5,19 @@ July 25, 2025
 
 # Purpose
 
-This file gives access to a November 2024 status of the Colbourn tables,
-as those tables are currently not available to the public at their usual
+This file gives access to a November 2024 status of Covering Array
+tables maintained by Charlie Colbourn (short: the Colbourn tables), as
+those tables are no longer available to the public at their previous
 location (see references). In a few places (e.g., for strength $`t=3`$
 with $`v=4`$ levels for more than 798 columns or for strength $`t=6`$
 with $`v=2`$ levels for $`k=30,\dots,72`$; not systematically checked
 for more such instances), this file has more recent content than the
 latest wayback machine crawl of February 2025 at
-<https://web.archive.org/web/20250211193915/https://www.public.asu.edu/~ccolbou/src/tabby/catable.html>;
-the one instance for $`t=2`$, $`v=10`$ with a later crawl date (Dec
-2024) has unchanged content.
+<https://web.archive.org/web/20250211193915/https://www.public.asu.edu/~ccolbou/src/tabby/catable.html>,
+as the latest crawl dates for linked individual tables are all earlier
+than February 2025. The one instance for $`t=2`$, $`v=10`$ with a crawl
+date later than November 2024 (crawled in Dec 2024) has unchanged
+content.
 
 # Tables
 
