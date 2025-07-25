@@ -13,7 +13,7 @@ $`v=2`$ levels for $`k=30,\dots,72`$ columns; not systematically checked for m
 such instances), this file has more recent content than
 the latest wayback machine crawl of February 2025 at
 <https://web.archive.org/web/20250211193915/https://www.public.asu.edu/~ccolbou/src/tabby/catable.html>; 
-the one instance for $t=2,\,v=10$ with a later crawl data (Dec 2024) has unchanged content.
+the one instance for $t=2$, $v=10$ with a later crawl date (Dec 2024) has unchanged content.
 
 # Tables
 
