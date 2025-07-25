@@ -9,13 +9,11 @@ This file gives access to a November 2024 status of the Colbourn tables,
 as those tables are currently not available to the public at their usual
 location (see references). In a few places (e.g., for strength $`t=3`$
 with $`v=4`$ levels for more than 798 columns or for strength $`t=6`$ with 
-<<<<<<< HEAD
 $`v=2`$ levels for $`k=30,\dots,72`$ columns; not systematically checked for more 
 such instances), this file has more recent content than
 the latest wayback machine crawl of February 2025 at
 <https://web.archive.org/web/20250211193915/https://www.public.asu.edu/~ccolbou/src/tabby/catable.html>; 
 the one instance for $t=2,\,v=10$ with a later crawl data (Dec 2024) has unchanged content.
->>>>>>> d64f3f632dd7c196e6c2a96ac8908e8e0bb391fb
 
 # Tables
 
