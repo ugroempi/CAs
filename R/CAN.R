@@ -335,7 +335,7 @@ Ns_CK_doubling <- function(t=3, k, v){
   hilf <- Ns(3, khilf, v)
   if (v==3) plus <- suppressMessages(N_CAEX(k=khilf)) else
     plus <- N_KSK(khilf)
-  doubled <- as.data.frame(rbind(hilf + plus))
+  doubled <- as.data.frame(rbind(hilf + (v-1)*plus))
   direct <- as.data.frame(rbind(Ns(t, k, v)))
   dplyr::bind_rows(direct=direct, doubled=doubled, .id="way")
 }
