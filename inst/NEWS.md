@@ -1,5 +1,18 @@
 # NEWS
 
+ - TODO: make check Call attribute for MCA2 and postopNCK, in the combination
+   it apparently loses the MCA2 call 
+   (see file D15etalOptimized.RData in colbournTableReport folder)
+
+
+31 July 2025, still version 0.10
+ - documented clearly that nlevels order does not determine the output 
+   column order in MCA2
+ - hand over objects from the function environment to the cluster
+   in function coverage
+ - Bug fix: Ns_CK_doubling was wrong for v=3, as it did not multiply plus
+   with v-1
+
 23 July 2025, version 0.10
  - modified postopNCK to include an outer loop 
    (new arguments outerRetrymax and outermaxnochange, and seed),
