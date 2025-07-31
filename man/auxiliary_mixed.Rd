@@ -6,7 +6,7 @@
 \description{
 non-visible functions to be used in functions for MCA creation,
 and currently also previous drafts that may be deleted
-key resource: Sherwood (2008)
+key resource: Sherwood (2008) and Groemping (2025)
 }
 \details{
 OD: ingredient creation for array expansion
