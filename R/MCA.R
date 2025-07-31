@@ -16,7 +16,8 @@
 #'
 #' @param nlevels a vector of numbers of levels, or a data.frame that is the table
 #'       of that vector, with levels in decreasing order and column names \code{level}
-#'       and \code{frequency}
+#'       and \code{frequency}; function \code{MCA2} always sorts the numbers of levels
+#'       into decreeasing order
 #' @param D for \code{MCA2}, a CA to be used for expanding; if \code{NULL}, it is
 #' automatically determined; it is meant for experts only, and it may have mixed levels\cr
 #' for \code{CA_to_MCA}, a strength \code{t} CA (it may also have mixed levels)
@@ -69,7 +70,8 @@
 #' retry has finished before escaping calculations!).
 #'
 #' @returns Both functions return a matrix of class \code{ca} with attributes of the ingoing matrix (dimensions modified),
-#'    and attributes \code{Call} and \code{seed} modified, and with flexible values in most columns.
+#'    and attributes \code{Call} and \code{seed} modified, and with flexible values in most columns. For function \code{MCA},
+#'    the number of levels is in decreasing order (regardless of the order specified in \code{nlevels}).
 #'
 #' @section Warning:
 #' There is not much experience yet with the post-optimization performance.

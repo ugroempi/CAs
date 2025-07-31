@@ -34,16 +34,18 @@ if \code{NULL}, it will be randomly determined and reported with the result}
 
 \item{nlevels}{a vector of numbers of levels, or a data.frame that is the table
 of that vector, with levels in decreasing order and column names \code{level}
-and \code{frequency}}
+and \code{frequency}; function \code{MCA2} always sorts the numbers of levels
+into decreeasing order}
 }
 \value{
 Both functions return a matrix of class \code{ca} with attributes of the ingoing matrix (dimensions modified),
-and attributes \code{Call} and \code{seed} modified, and with flexible values in most columns.
+and attributes \code{Call} and \code{seed} modified, and with flexible values in most columns. For function \code{MCA},
+the number of levels is in decreasing order (regardless of the order specified in \code{nlevels}).
 }
 \description{
 either from a given CA D, by makes unused levels of some columns flexible (
 arbitrary strength), or for strength 2 only,
-from required numbers of levels, by a construction due to Sherwood (2008).
+from required numbers of levels, by a construction generalized from Sherwood (2008).
 In either case, the result is treated by function postopNCK for reducing its
 run size.
 }
