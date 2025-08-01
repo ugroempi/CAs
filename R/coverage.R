@@ -97,7 +97,6 @@
 #' @export
 coverage <- function(D, t, isInteger=TRUE,
                         verbose=0, start0=TRUE, parallel=1){
-  D <- D   ## make it part of this environment
   ## made faster by custom table function fasttab
   ## isInteger: are the values all from 0 to v-1 or from 1 to v?
   ## start0: 0 to v-1? (relevant for isI==TRUE only)
@@ -136,7 +135,7 @@ coverage <- function(D, t, isInteger=TRUE,
     stopifnot(requireNamespace("parallel"))
     stopifnot(parallel <= parallel::detectCores())
     mycl <- parallel::makePSOCKcluster(parallel)
-    parallel::clusterExport(mycl, c("nproj", "projs", "D"), envir=sys.frame(which=1L))
+    parallel::clusterExport(mycl, c("nproj", "projs", "D"), envir=environment())
     parallel::clusterExport(mycl, c("fasttab"), envir=environment(CAs:::fasttab))
     tabs <- parallel::parLapply(mycl, 1:nproj,
                        function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
