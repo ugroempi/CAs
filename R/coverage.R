@@ -125,24 +125,27 @@ coverage <- function(D, t, isInteger=TRUE,
   ## (provided that the integer versions are adequate)
   lls <- levels.no.NA(D)
   projs <- nchoosek(m,t)
-  nproj <- ncol(projs)
+  # nproj <- ncol(projs)
   ## make D into integer matrix from 1 to lls
 
-  tots <- sapply(1:nproj, function(obj) prod(lls[projs[,obj]]))
+  tots <- apply(projs, 2, function(obj) prod(lls[obj]))
   if (parallel==1)
-    tabs <- lapply(1:nproj, function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
+    tabs <- apply(projs, 2, function(obj) fasttab(D[,obj, drop=FALSE]), simplify = TRUE)
   else{
     stopifnot(requireNamespace("parallel"))
     stopifnot(parallel <= parallel::detectCores())
     mycl <- parallel::makePSOCKcluster(parallel)
-    parallel::clusterExport(mycl, c("nproj", "projs", "D"), envir=environment())
+    parallel::clusterExport(mycl, c("projs", "D"), envir=environment())
     parallel::clusterExport(mycl, c("fasttab"), envir=environment(CAs:::fasttab))
-    tabs <- parallel::parLapply(mycl, 1:nproj,
-                       function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
+#    tabs <- parallel::parLapply(mycl, 1:nproj,
+#                       function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
+    tabs <- parallel::parApply(mycl, projs,2,
+                                function(obj) fasttab(D[, obj, drop=FALSE]))
     parallel::stopCluster(mycl); rm(mycl)
   }
-  ncovereds <- sapply(tabs, function(obj) sum(obj>0))
-  whichnotcovereds <- lapply(tabs, function(obj) which(obj==0))
+  # ncovereds <- sapply(tabs, function(obj) sum(obj>0))
+  ncovereds <- apply(tabs, 2, function(obj) sum(obj>0))
+  whichnotcovereds <- apply(tabs, 2, function(obj) which(obj==0))
 
     #### das war deutlich langsamer
      ### evtl. war diese Variante ohne parallel einen Hauch schneller
