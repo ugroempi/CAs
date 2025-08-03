@@ -2,11 +2,15 @@
 % Please edit documentation in R/coverage.R
 \name{coverage}
 \alias{coverage}
+\alias{coverage_iter}
 \alias{prepcoverplot}
 \alias{coverplot}
 \title{coverage and diagnostic plot functions}
 \usage{
 coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
+
+coverage_iter(D, t, isInteger=TRUE, start0=TRUE,
+       progress=FALSE, abortnot1=FALSE, start.proj=1)
 
 coverplot(D, t, isInteger=TRUE, start0=TRUE,
     type="projections",
@@ -28,6 +32,15 @@ Anything apart from 1 and 2 behaves like 0.}
 
 \item{parallel}{number of threads to be used (default: 1); if increased, package parallel must be available}
 
+\item{progress}{logical (default \code{FALSE}): should a progress bar be printed ?}
+
+\item{abortnot1}{logical (default \code{FALSE}): should the function stop at the first projection for which
+strength \code{t} coverage is not perfect ?}
+
+\item{start.proj}{integer, the number of the projection to start with in lexicographical
+order; ignored for \code{abortnot1=FALSE}; for \code{abortnot1=TRUE}, assumes that all
+projections up to \code{start.proj - 1} were already successfully checked}
+
 \item{type}{\code{"projections"} (default) or \code{"tuples"}}
 
 \item{main}{title of plot}
@@ -45,7 +58,8 @@ Anything apart from 1 and 2 behaves like 0.}
 \value{
 \code{coverage} returns an object of class coverage, which is a
 list with elements \code{total}, \code{ave}, \code{min} and \code{simple},
-with increasing detail added for verbose 1 or 2.
+with increasing detail added for verbose 1 or 2 (function \code{coverage}) or
+where a run was aborted because of \code{abortnot1=TRUE} (function \code{coverage_iter}).
 
 The \code{coverplot} functions return a list of \code{x}, \code{y}, \code{t}
 and \code{proportions} (from call with \code{verbose=1}).
@@ -63,13 +77,38 @@ the \code{min}imum proportion of \code{t}-tuples covered taken over the \code{t}
 projections, and the proportion of \code{t}-factor projections that are
 completely covered (\code{simple}).
 
-If verbosity is requested, there are additional list elements:
+For function \code{coverage}, if verbosity is requested, there are additional list elements:
 
 for \code{verbose=1} the number of covered tuples for each projection (\code{ncovereds}),
 the proportion this number represents (\code{proportions}),
 
 for \code{verbose=2} the frequency tables of tuples (\code{tabs})
 and the identification indices of uncovered tuples \code{uncovereds}.
+
+Function \code{coverage_iter} calculates the same quantities as function \code{coverage};
+instead of creating all projections at once, it creates them iteratively, which is slower
+but doable for large cases for which function \code{coverage} fails for memory reasons.
+This iterative version is, at least at present, not parallelized. It allows a progress bar
+(which slightly deteriorates run time, e.g., on my Windows 10 machine, about 7 milliseconds
+per 1000 projections). It also allows to request abortion on encountering the first violation
+of strength \code{t} coverage.\cr
+In case of aborting, the function returns \code{NA} values for
+all four metrics, and as a fifth list element, the message at which projection the violation
+occurred; \code{coverage_iter} does not have a \code{verbose} argument, but using the
+\code{verbose} argument on printing an object that resulted from an aborted run prints
+that message.\cr
+For \code{abortnot1=TRUE}, function runs that did not abort up to a particular
+iteration can be restarted at the subsequent iteration. The actual restart point will be
+the first projection starting with the same first element as the requested \code{start.proj}
+e.g., for \code{t=3} and a matrix \code{D} with 6 columns, the first ten 3-factor projections
+start with 1, followed by six projections that start with 2, three projections that start with 3
+and a single projection that starts with 4 (10 + 6 + 3 + 1 = 20). \code{start.proj=12} will start
+with the projection 2:3:4, i.e., the 11th projection,
+which is the first that starts with 2. For projections that start with 1, the second factor is
+also relevant for the start position: the first four projections have 2 in the second position,
+then there are three with 3 in the second position, then two with 4, and finally one with 5.
+Thus, for \code{start.proj=7}, \code{start.proj} will be reduced to 5, and the projection
+is 1:3:4 (the first that starts with 1:3).
 
 Per default, the print method for class \code{coverage} prints the first four
 elements only.
@@ -80,6 +119,13 @@ the coverage on the vertical axis (visualizing the average taken over projection
 with \code{type=tuples}, the percentage of tuples (i.e., projections as weighted by tuples)
 is shown on the horizontal axis, visualizing the total percentage covered.
 Sorting of the combinations on the horizontal axis is from best to worst coverage.
+}
+
+\section{Warning}{
+
+For function \code{coverage_iter}, in case of starting at projection \code{start.now},
+the user is responsible to ensure that all prior runs have also been checked; the calculated
+values assume that the prior runs showed perfect coverage.
 }
 
 \examples{
