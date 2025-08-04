@@ -7,6 +7,8 @@
 04 Aug 2025, version 0.11
  - implemented an iterative version of function coverage
    that also allows to abort at the first non-perfect coverage
+ - fixed a bug that was introduced on 31 July that made coverage fail
+   for mixed level CAs
 
 31 July 2025, still version 0.10
  - documented clearly that nlevels order does not determine the output 
