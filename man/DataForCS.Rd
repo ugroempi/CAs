@@ -6,26 +6,40 @@
 \alias{MeagherStevensStarters}
 \alias{LCDSTCombis}
 \alias{LCDSTStarters}
+\alias{CMMSSYCombis}
+\alias{CMMSSYStarters}
 \alias{ColbournKeriCombis}
 \alias{ColbournKeriStarters}
-\title{Data for function cover starter constructions}
+\title{Data for cover starter constructions}
 \format{
-\code{LCDSTStarters}, \code{MeagherStevensStarters} and \code{ColbournKeriStarters} are lists of lists:
+\code{LCDSTStarters}, \code{CMMSSYStarters}, \code{MeagherStevensStarters} and
+\code{ColbournKeriStarters} are lists of lists:
 
 The first hierarchy level is either the number of levels per column for,
 i.e., \code{v}, or the strength \code{t}:\cr
+\code{CMMSSYStarters} holds 5 lists for 5 to 9 levels,\cr
 \code{MeagherStevensStarters} holds 16 lists for 3 to 18 levels,\cr
 \code{LCDSTStarters} 9 lists for 3 to 11 levels; these two constructions always yield strength 2.\cr
 \code{ColbournKeriStarters} holds a single list for strength 4,
 as the starter vectors for the other strengths can be calculated and do not need to be stored;
 this construction works for 2 levels only.
 
-The second hierarchy level is the number of columns (\code{k}): Each list element at the first level is
-a list whose entries are the starter vectors and whose names are the permissible numbers of columns.
+The second hierarchy level relates to the number of columns (\code{k}):\cr
+Each list element at the first level is
+a list whose entries are the starter vectors and whose names are either the
+permissible numbers of columns or, for \code{CMMSSYStarters}, the length of the starter
+which is one less than the number of columns.
 
 \code{MeagherStevensCombis} is a matrix with columns \code{v}, \code{k} and \code{N} that
 indicates combinations for which starter vectors for the construction function \code{\link{CS_MS}} are available from
 \code{MeagherStevensCombis}.
+
+\code{CMMSSYCombis} is a data.frame that
+indicates combinations for which starter vectors for function \code{\link{CS_CMMSSY}} are available;
+it has columns \code{v}, \code{k}, \code{N}, \code{k1}, \code{code}, and \code{stage}.\cr
+\code{k1} indicates the number of columns in the left-hand side partition of a PCA structure.\cr
+\code{code} is the code for creating the array, \code{stage} indicates the number of CAs
+combined by function \code{\link{productPCA}}.
 
 \code{LCDSTCombis} is a data.frame that
 indicates combinations for which starter vectors for function \code{\link{CS_LCDST}} are available;
@@ -51,6 +65,10 @@ An object of class \code{data.frame} with 43 rows and 7 columns.
 
 An object of class \code{list} of length 9.
 
+An object of class \code{data.frame} with 180 rows and 6 columns.
+
+An object of class \code{list} of length 5.
+
 An object of class \code{data.frame} with 273 rows and 7 columns.
 
 An object of class \code{list} of length 1.
@@ -67,6 +85,10 @@ MeagherStevensStarters
 LCDSTCombis
 
 LCDSTStarters
+
+CMMSSYCombis
+
+CMMSSYStarters
 
 ColbournKeriCombis
 
