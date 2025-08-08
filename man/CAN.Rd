@@ -7,6 +7,8 @@
 \alias{Ns_derive}
 \alias{Ns_fuse}
 \alias{N_fuseBoseCA}
+\alias{N_SCA_Busht}
+\alias{N_fuseBushtCA}
 \alias{Ns_CK_doubling}
 \alias{Ns_productCA}
 \alias{N_NISTcat}
@@ -18,8 +20,6 @@
 \alias{N_PALEYcat}
 \alias{N_CYCLOTOMYcat}
 \alias{N_CAEX}
-\alias{N_SCA_Busht}
-\alias{N_fuseBushtCA}
 \alias{N_recBoseCA}
 \alias{N_projBoseCA}
 \alias{ks}
