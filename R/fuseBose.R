@@ -7,17 +7,24 @@
 #'
 #' @aliases fuseBoseCA
 #' @aliases fuseBose
+#' @aliases fuseBushtCA
 #' @aliases N_fuseBose
 #' @aliases k_fuseBose
+#' @aliases N_fuseBusht
+#' @aliases k_fuseBusht
 #'
 #' @usage fuseBoseCA(k=NULL, v=NULL, fixNA=TRUE, ...)
 #' @usage fuseBose(q, fixNA=TRUE, ...)
+#' @usage fuseBushtCA(t, k, v, fixNA=TRUE, ...)
 #' @usage N_fuseBose(k=NULL, v=NULL, ...)
 #' @usage k_fuseBose(N, v=NULL, ...)
+#' @usage N_fuseBusht(t, k, v, ...)
+#' @usage k_fuseBusht(t, N, v, ...)
 #'
 #' @param k \code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.
 #' @param v \code{NULL} or number of levels; if \code{NULL}, inferred from \code{k} as \code{v=k+2} or from \code{N} as \code{sqrt(N+3)-1}; if \code{k} is also specified, it takes precedence.
 #' @param q a prime power
+#' @param t the requested strength
 #' @param fixNA logical; if FALSE, keeps flexible values; if TRUE, the first \code{q}-3 rows are made constant.
 #' @param k \code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.
 #' @param v \code{NULL} or number of levels; if \code{NULL}, inferred from \code{k} as \code{v=k+2} or from \code{N} as \code{sqrt(N+3)-1}; if \code{k} is also specified, it takes precedence.
@@ -25,16 +32,24 @@
 #' @param ... currently not used
 #'
 #' @details
-#' Colbourn (2008) proposed this particular variant of fusion, which allows to
-#' reduce the number of runs by 3 for strength 2 and at most q+1 columns.
+#' Colbourn (2008) proposed the particular variant of fusion for a Bose CA,
+#' which allows to reduce the number of runs by 3 for strength 2 and at most q+1 columns.
 #' It creates a CA(q^2-3, 2, q+1, q-1) from an OA(q^2, 2, q+1, q).
 #' The reduction in rows is achieved by using a graph coloring approach
 #' (Lemma 3.2 of Colbourn 2008).
 #'
-#' @returns \code{fuseBose} returns a (\code{q^2-3} x \code{q+1} matrix with columns in \code{q}-1 levels labeled from 0 to q-2 that is a covering array of strength 2.\cr
-#' \code{N_fuseBose} and \code{k_fuseBose} return a named vector with elements \code{N}, \code{k}, \code{v} and \code{q}.
+#' The fusion of Bush strength \code{t} CAs is included for cases
+#' for which no other better CA is implemented. It creates a
+#' CA(q^t-2*c, t, q+1, q-c) (with c the distance of v to the next largest prime power q)
 #'
-#' @references Colbourn (2008, Lemma 3.2)
+#' @returns \code{fuseBose} returns a (\code{q^2-3} x \code{q+1} matrix with columns in \code{q}-1 levels labeled from 0 to q-2 that is a covering array of strength 2.\cr
+#' \code{fuseBoseCA} returns a matrix of class \code{ca} from inputs \code{k} and \code{v}.\cr
+#' \code{fuseBushtCA} returns a matrix of class \code{ca} which is obtained from the smallest possible strength \code{t} Bush construction SCA
+#' created with \code{\link{SCA_Busht}} by the necessary number of fuse steps.\cr
+#' \code{N_fuseBose} and \code{k_fuseBose}, \code{N_fuseBusht} and \code{k_fuseBusht}
+#' return a named vector with elements \code{N}, \code{k}, \code{v} and \code{q}.
+#'
+#' @references Colbourn (2008, Lemma 3.2) for \code{fuseBose}
 #'
 #' @examples
 #' # create a CA(22,2,6,4)
@@ -56,6 +71,10 @@
 #' dim(fuseBose(13))
 #' eCAN(2, 14, 12)  ## one run difference
 #'
+#' # create a CA(508,3,9,6)
+#' dim(fuseBushtCA(3, 9, 6))
+#' eCAN(2, 14, 12)  ## one run difference
+#'
 #' # querying N
 #' N_fuseBose(k=21)
 #' eCAN(2, 24, 22) ## one run difference
@@ -63,6 +82,16 @@
 #'
 #' N_fuseBose(v=6)
 #'
+#' ## create a CA(61, 3, 9, 7)
+#' N_fuseBusht(3,9,7)
+#'
+#' ## fuseBusht is the best implemented solution
+#' Ns(3,14,12)
+#' ## it is behind the eCAN entry
+#' eCAN(3, 14, 12)
+#' ## apparently, postopNCK can remove 25 runs
+#' ## with the implementation in the package the effort
+#' ## for this appears somewhat unreasonable
 
 #' @export
 fuseBoseCA <- function(k=NULL, v=NULL, fixNA=TRUE, ...){
@@ -79,7 +108,7 @@ fuseBoseCA <- function(k=NULL, v=NULL, fixNA=TRUE, ...){
   aus
 }
 
-  #' @export
+#' @export
 fuseBose <- function(q, fixNA=TRUE, ...){
   stopifnot(is.logical(fixNA))
   ## first row immediately dropped
@@ -116,6 +145,41 @@ fuseBose <- function(q, fixNA=TRUE, ...){
   }
   aus <- cbind(arrsub[-(1:2),], arr[-(1:2),q+1])-1
   if (fixNA) aus[1:(q-3), q+1] <- aus[1:(q-3), 1]
+  aus
+}
+
+#' @export
+fuseBushtCA <- function(t, k, v, fixNA=TRUE, ...){
+  Call <- sys.call()
+  hilf <- try(N_fuseBusht(t,k,v,...))
+  if ("try-error" %in% class(hilf))
+    stop("fuseBushtCA does not work for this setting")
+  if (hilf["q"]==hilf["v"]){
+    aus <- SCA_Busht(v, t)
+    attrs <- attributes(aus)
+    if (k < v + 1){
+        aus <- aus[,1:k]
+        attrs$PCAstatus$k2 <- 0
+        attrs$PCAstatus$k1 <- k
+        attributes(aus) <- attrs
+    }
+    return(aus)
+  }
+  ## now fusion takes place
+  q <- hilf["q"]
+  aus <- SCA_Busht(q, t)
+  attrs <- attributes(aus)
+  attrs$PCAstatus <- NULL
+  attrs$dim[1] <- attrs$dim[1] - 2*(q-v)
+  attrs$origin <- c(attrs$origin, paste(rep("fuse", q-v), collapse=" "))
+  aus <- fuse(aus, vprior=q, vpost=v, fixNA=fixNA, ...)[,1:k]
+  attrs$dim <- dim(aus)
+  attributes(aus) <- attrs
+  attr(aus, "Call") <- Call  ## overwrite
+  if (!fixNA){
+    if (any(is.na(aus)))
+      attr(aus, "flexible") <- list(value=NA, profile=colSums(is.na(aus)))
+  }
   aus
 }
 
@@ -181,5 +245,30 @@ k_fuseBose <- function(N, v=NULL, ...){
   q <- as.integer(sqrt(N+3))  ## must be prime power
    v <- q-1
    c(N=q^2-3, k=q+1, v=v, q=q)
+}
+
+#' @export
+N_fuseBusht <- function(t, k, v, ...){
+  #if (t==2) return(NA)
+  primpotenzen <- primedat$q
+  stopifnot(is.numeric(k))
+  stopifnot(k %% 1==0)
+  ## find next largest suitable prime
+  q <- min(primpotenzen[which(primpotenzen >= max(v, k-1))])
+  kalt <- k
+  ## prevent cases for which fewer than 2 levels would remain
+  stopifnot(q-v <= v-2)
+  c(N=q^t-2*(q-v), k=kalt, kmax=q+1, v=v, q=q)
+}
+
+#' @export
+k_fuseBusht <- function(t, N, v, ...){
+  primpotenzen <- primedat$q
+  stopifnot(is.numeric(N))
+  stopifnot(N %% 1==0)
+  ## find next largest suitable prime
+  q <- min(primpotenzen[which(primpotenzen >= max(v, N^(1/t)))])
+  Nalt <- N
+  c(N=q^t-2*(q-v), k = q+1, Nmax=Nalt, v=v, q=q)
 }
 

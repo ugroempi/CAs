@@ -3,17 +3,26 @@
 \name{fuseBoseCA}
 \alias{fuseBoseCA}
 \alias{fuseBose}
+\alias{fuseBushtCA}
 \alias{N_fuseBose}
 \alias{k_fuseBose}
+\alias{N_fuseBusht}
+\alias{k_fuseBusht}
 \title{Function to create a strength 2 CA by fusion applied to a Bose OA}
 \usage{
 fuseBoseCA(k=NULL, v=NULL, fixNA=TRUE, ...)
 
 fuseBose(q, fixNA=TRUE, ...)
 
+fuseBushtCA(t, k, v, fixNA=TRUE, ...)
+
 N_fuseBose(k=NULL, v=NULL, ...)
 
 k_fuseBose(N, v=NULL, ...)
+
+N_fuseBusht(t, k, v, ...)
+
+k_fuseBusht(t, N, v, ...)
 }
 \arguments{
 \item{k}{\code{NULL} or requested number of columns (\code{q+1}); if \code{NULL}, inferred from \code{v} as \code{k=v+2}; if specified, \code{k}-1 must be a prime power, or \code{k} will be increased to the nearest such number.}
@@ -26,22 +35,32 @@ k_fuseBose(N, v=NULL, ...)
 
 \item{q}{a prime power}
 
+\item{t}{the requested strength}
+
 \item{N}{maximum acceptable number of runs}
 }
 \value{
 \code{fuseBose} returns a (\code{q^2-3} x \code{q+1} matrix with columns in \code{q}-1 levels labeled from 0 to q-2 that is a covering array of strength 2.\cr
-\code{N_fuseBose} and \code{k_fuseBose} return a named vector with elements \code{N}, \code{k}, \code{v} and \code{q}.
+\code{fuseBoseCA} returns a matrix of class \code{ca} from inputs \code{k} and \code{v}.\cr
+\code{fuseBushtCA} returns a matrix of class \code{ca} which is obtained from the smallest possible strength \code{t} Bush construction SCA
+created with \code{\link{SCA_Busht}} by the necessary number of fuse steps.\cr
+\code{N_fuseBose} and \code{k_fuseBose}, \code{N_fuseBusht} and \code{k_fuseBusht}
+return a named vector with elements \code{N}, \code{k}, \code{v} and \code{q}.
 }
 \description{
 A strength 2 CA in q+1 (q-1)-level columns and q^2-3 runs is created
 from a q-level Bose array arranged as SCA
 }
 \details{
-Colbourn (2008) proposed this particular variant of fusion, which allows to
-reduce the number of runs by 3 for strength 2 and at most q+1 columns.
+Colbourn (2008) proposed the particular variant of fusion for a Bose CA,
+which allows to reduce the number of runs by 3 for strength 2 and at most q+1 columns.
 It creates a CA(q^2-3, 2, q+1, q-1) from an OA(q^2, 2, q+1, q).
 The reduction in rows is achieved by using a graph coloring approach
 (Lemma 3.2 of Colbourn 2008).
+
+The fusion of Bush strength \code{t} CAs is included for cases
+for which no other better CA is implemented. It creates a
+CA(q^t-2*c, t, q+1, q-c) (with c the distance of v to the next largest prime power q)
 }
 \examples{
 # create a CA(22,2,6,4)
@@ -63,6 +82,10 @@ eCAN(2, 9, 7)  ## two runs difference
 dim(fuseBose(13))
 eCAN(2, 14, 12)  ## one run difference
 
+# create a CA(508,3,9,6)
+dim(fuseBushtCA(3, 9, 6))
+eCAN(2, 14, 12)  ## one run difference
+
 # querying N
 N_fuseBose(k=21)
 eCAN(2, 24, 22) ## one run difference
@@ -70,7 +93,17 @@ eCAK(2, 526, 22) ## as good as it gets
 
 N_fuseBose(v=6)
 
+## create a CA(61, 3, 9, 7)
+N_fuseBusht(3,9,7)
+
+## fuseBusht is the best implemented solution
+Ns(3,14,12)
+## it is behind the eCAN entry
+eCAN(3, 14, 12)
+## apparently, postopNCK can remove 25 runs
+## with the implementation in the package the effort
+## for this appears somewhat unreasonable
 }
 \references{
-Colbourn (2008, Lemma 3.2)
+Colbourn (2008, Lemma 3.2) for \code{fuseBose}
 }
