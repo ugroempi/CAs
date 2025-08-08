@@ -16,6 +16,9 @@
 #' @aliases Ns_derive
 #' @aliases Ns_fuse
 #' @aliases N_fuseBoseCA
+#' @aliases N_SCA_Busht
+#' @aliases N_fuseBoseCA
+#' @aliases N_fuseBushtCA
 #' @aliases Ns_CK_doubling
 #' @aliases Ns_productCA
 #' @aliases N_NISTcat
@@ -27,8 +30,6 @@
 #' @aliases N_PALEYcat
 #' @aliases N_CYCLOTOMYcat
 #' @aliases N_CAEX
-#' @aliases N_SCA_Busht
-#' @aliases k_fuseBoseCA
 #' @aliases N_recBoseCA
 #' @aliases N_projBoseCA
 #' @aliases ks
@@ -42,6 +43,8 @@
 #' @aliases k_PALEYcat
 #' @aliases k_CYCLOTOMYcat
 #' @aliases k_CAEX
+#' @aliases k_fuseBoseCA
+#' @aliases k_fuseBushtCA
 #' @aliases k_recBoseCA
 #'
 #' @usage eCAN(t, k, v)
@@ -50,6 +53,7 @@
 #' @usage Ns_derive(t, k, v)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
 #' @usage N_fuseBoseCA(t,k,v)
+#' @usage N_fuseBushtCA(t,k,v)
 #' @usage Ns_CK_doubling(t=3, k, v)
 #' @usage Ns_productCA(t=2, k, v)
 #' @usage N_NISTcat(t, k, v)
@@ -223,11 +227,12 @@ Ns <- function(t, k, v, exclude=NULL){
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
   if (!all(exclude %in% c("KSK","PALEY", "CAEX", "CYCLOTOMY",
-                          "CKRS", "SCA_Busht", "fuseBoseCA",
+                          "CKRS", "SCA_Busht", "fuseBoseCA", "fuseBushtCA",
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
-                          "DWYER", "NIST","TJ", "powerCT", "miscCA"
+                          "DWYER", "NIST","TJ", "powerCT", "miscCA",
+                          "compositCA"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
@@ -239,8 +244,10 @@ Ns <- function(t, k, v, exclude=NULL){
     CYCLOTOMY=ifelse("CYCLOTOMY" %in% exclude, NA, N_CYCLOTOMYcat(t,k,v)),
     CKRS=ifelse("CKRS" %in% exclude, NA,N_CKRScat(t,k,v)),
     miscCA=ifelse("miscCA" %in% exclude, NA,N_miscCAcat(t,k,v)),
+    compositCA=ifelse("compositCA" %in% exclude, NA, N_compositCA(t,k,v)),
     SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
     fuseBoseCA=ifelse("fuseBoseCA" %in% exclude, NA,N_fuseBoseCA(t,k,v)),
+    fuseBushtCA=ifelse("fuseBushtCA" %in% exclude, NA,N_fuseBushtCA(t,k,v)),
     recBoseCA_PCA=ifelse("recBoseCA_PCA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="PCA"))),
     recBoseCA_CA=ifelse("recBoseCA_CA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="CA"))),
     projBoseCA=ifelse("projBoseCA" %in% exclude, NA,unname(N_projBoseCA(t,k,v,cmax=Inf))),
@@ -249,6 +256,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CK_NRB=ifelse("CK_NRB" %in% exclude,
                   NA, N_CK_NRB(t,k,v)),
     WKS=ifelse("WKS" %in% exclude, NA,N_WKScat(t,k,v)),
+    CS_CMMSSY=ifelse("CS_CMMSSY" %in% exclude, NA,N_CS_CMMSSY(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
     CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
@@ -316,6 +324,14 @@ N_fuseBoseCA <- function(t=2, k, v){
   aus <- try(N_fuseBose(k=k, v=v)["N"], silent = TRUE)
   if ("try-error" %in% class(aus)) return(NA)
   unname(aus)
+}
+
+#' @export
+N_fuseBushtCA <- function(t, k, v){
+  aus <- try(N_fuseBusht(t=t, k=k, v=v), silent = TRUE)
+  if ("try-error" %in% class(aus)) return(NA)
+  if (aus["q"] - aus["v"] > 10) return(NA)
+  unname(aus["N"])
 }
 
 ## obtain sizes from OA
@@ -502,13 +518,15 @@ ks <- function(t, N, v){
     CYCLOTOMY=k_CYCLOTOMYcat(t,N,v),
     CKRS=k_CKRScat(t,N,v),
     miscCA=k_miscCAcat(t,N,v),
-    fuseBoseCA=unname(k_fuseBoseCA(t,N,v)[2]),
+    fuseBoseCA=k_fuseBoseCA(t,N,v),
+    fuseBushtCA=k_fuseBushtCA(t,N,v),
     recBoseCA_PCA=unname(k_recBoseCA(t,N,v,type="PCA")),
     recBoseCA_CA=unname(k_recBoseCA(t,N,v,type="CA")),
     WKS=k_WKScat(t,N,v),
     CS_MS=k_CS_MS(N,v),
     CS_LCDST=k_CS_LCDST(N,v),
     CS_CK=k_CS_CK(t,N),
+    CS_CMMSSY=k_CS_CMMSSY(t,N),
     powerCT=k_powerCT(t,N,v),
     DWYER=k_DWYERcat(t,N,v),
     NIST=k_NISTcat(t,N,v),
@@ -554,6 +572,13 @@ k_CAEX <- function(t=2,N,v=3){
 k_fuseBoseCA <- function(t=2, N, v){
   if (!t==2) return(NA)
   aus <- try(k_fuseBose(N=N, v=v)["k"], silent = TRUE)
+  if ("try-error" %in% class(aus)) return(NA)
+  unname(aus)
+}
+
+#' @export
+k_fuseBushtCA <- function(t, N, v){
+  aus <- try(k_fuseBose(t=t, N=N, v=v)["k"], silent = TRUE)
   if ("try-error" %in% class(aus)) return(NA)
   unname(aus)
 }

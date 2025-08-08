@@ -19,7 +19,7 @@
 \alias{N_CYCLOTOMYcat}
 \alias{N_CAEX}
 \alias{N_SCA_Busht}
-\alias{k_fuseBoseCA}
+\alias{N_fuseBushtCA}
 \alias{N_recBoseCA}
 \alias{N_projBoseCA}
 \alias{ks}
@@ -33,6 +33,8 @@
 \alias{k_PALEYcat}
 \alias{k_CYCLOTOMYcat}
 \alias{k_CAEX}
+\alias{k_fuseBoseCA}
+\alias{k_fuseBushtCA}
 \alias{k_recBoseCA}
 \title{Functions for N and k from Colbourn tables, other libraries, and implemented constructions}
 \usage{
@@ -47,6 +49,8 @@ Ns_derive(t, k, v)
 Ns_fuse(t, k, v, maxfuse = 1)
 
 N_fuseBoseCA(t,k,v)
+
+N_fuseBushtCA(t,k,v)
 
 Ns_CK_doubling(t=3, k, v)
 
