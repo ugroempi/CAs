@@ -6,11 +6,11 @@
 #'
 #' @aliases crossCAs
 #'
-#' @usage crossCAs(A, B, t, check=FALSE, ...)
+#' @usage crossCAs(A, B, t=NULL, check=FALSE, ...)
 #'
 #' @param A  an N x k CA of strength \code{t} with v levels,
 #' @param B  an M x k CA of strength \code{t} with w levels,
-#' @param t strength of \code{A} and \code{B}
+#' @param t strength of \code{A} and \code{B}, needed for \code{check=TRUE}
 #' @param check logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for larger CAs, especially for \code{t}>2)
 #' @param ... currently not used
 #'
@@ -43,7 +43,7 @@
 #'
 
 #' @export
-crossCAs <- function(A, B, t, check=FALSE, ...){
+crossCAs <- function(A, B, t=NULL, check=FALSE, ...){
   Call <- sys.call()
    stopifnot(is.matrix(A)); stopifnot(is.matrix(B))
    stopifnot(is.numeric(A)); stopifnot(is.numeric(B))
@@ -70,7 +70,7 @@ crossCAs <- function(A, B, t, check=FALSE, ...){
      B <- B - 1
    }
    for (i in 1:k)
-      aus[,i] <- rep(A[,i], each=M)*w + rep(B[,i], v)
+      aus[,i] <- rep(A[,i], each=M)*w + rep(B[,i], N)
    if (!start0) aus <- aus+1
    class(aus) <- c("ca", class(aus))
    attr(aus, "Call") <- Call

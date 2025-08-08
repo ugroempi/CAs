@@ -4,14 +4,14 @@
 \alias{crossCAs}
 \title{Cross two strength t CAs with k columns to yield strength t in v*w levels}
 \usage{
-crossCAs(A, B, t, check=FALSE, ...)
+crossCAs(A, B, t=NULL, check=FALSE, ...)
 }
 \arguments{
 \item{A}{an N x k CA of strength \code{t} with v levels,}
 
 \item{B}{an M x k CA of strength \code{t} with w levels,}
 
-\item{t}{strength of \code{A} and \code{B}}
+\item{t}{strength of \code{A} and \code{B}, needed for \code{check=TRUE}}
 
 \item{check}{logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for larger CAs, especially for \code{t}>2)}
 

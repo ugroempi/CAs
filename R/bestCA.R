@@ -227,10 +227,12 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
 labelToCode <- function(label, t, k, v, ...){
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("KSK","PALEY",
-  "CAEX", "CYCLOTOMY", "CKRS", "miscCA", "recBoseCA_PCA", "SCA_Busht", "fuseBoseCA",
-  "recBoseCA_CA", "projBoseCA", "WKS", "CS_MS",
+  "CAEX", "CYCLOTOMY", "CKRS", "miscCA", "recBoseCA_PCA", "SCA_Busht",
+  "fuseBoseCA", "fuseBushtCA",
+  "recBoseCA_CA", "projBoseCA", "compositCA",
+  "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }
@@ -241,6 +243,9 @@ labelToCode <- function(label, t, k, v, ...){
   if (label=="miscCA"){
     return(paste0("miscCA(", t, ", ", k, ", ", v, ", ...)"))
   }
+  if (label=="compositCA"){
+    return(paste0("compositCA(", t, ", ", k, ", ", v, ", ...)"))
+  }
   if (label =="PALEY"){
     if (!v==2) stop('"PALEY" requires v=2')
     return(paste0("paleyCA(", t, ", ", k, ")"))
@@ -250,6 +255,9 @@ labelToCode <- function(label, t, k, v, ...){
   }
   if (label =="SCA_Busht"){
     return(paste0("SCA_Busht(",v,",", t, ")"))
+  }
+  if (label =="fuseBushtCA"){
+    return(paste0("fuseBushtCA(",t, ",", k, ", ", v, ", ...)"))
   }
   if (label =="CAEX"){
     if (!v==3) stop('"CAEX" requires v=3')
@@ -307,6 +315,10 @@ labelToCode <- function(label, t, k, v, ...){
     if (!t==2) stop('"CS_LCDST" requires t=2')
     return(paste0('CS_LCDST(', k, ', ', v, ')'))
   }
+  if (label=="CS_CMMSSY"){
+    if (!t==2) stop('"CS_CMMSSY" requires t=2')
+    return(paste0('CS_CMMSSY(', k, ', ', v, ')'))
+  }
   if (label=="CS_CK"){
     if (!v==2) stop('"CS_CK" requires v=2')
     return(paste0('CS_CK(', k, ', t=', t, ')'))
@@ -357,7 +369,9 @@ dwyerCA <- function(t, k, v, ...){
                 origin=paste0("Dwyer Github repository, ", nam, ", ",
                               hilf$Source))
   attrs <- attributes(aus)
+  attrs$dimnames <- NULL
   aus <- aus[,1:k]
+  attrs$dim <- dim(aus)
   N <- nrow(aus)
   neles <- lengths(lapply(1:N, function(obj) unique(aus[obj,])))
   constrows <- which(neles==1)

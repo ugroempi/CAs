@@ -61,12 +61,15 @@ powerCA <- function(t, k, v, type="CT", ...){
   if (length(pick)==0) stop("no construction for this setting")
   hilf <- powerCTcat[pick,,drop=FALSE]
   r <- which.min(hilf$N)
+  ## provide new t, which can be larger than requested t
+  t <- hilf$t[r]
   oaDHF <- eval(parse(text=hilf$OAforDHF[r]))
   toa <- hilf$expon[r]
   w1 <- hilf$w1[r]
   DHF <- createDHF(oaDHF, toa, t, v)
   M <- nrow(DHF)
   stopifnot(M==hilf$M[r])
+
   ## first OA
   N1 <- hilf$N1[r]
   D1 <- eval(parse(text=labelToCode(hilf$constr1[r], t, w1, v)))[,1:w1]
@@ -120,14 +123,14 @@ powerCA <- function(t, k, v, type="CT", ...){
 
 #' @export
 N_powerCT <- function(t,k,v, type="CT", ...){
-  hilf <- powerCTcat[powerCTcat[,"t"]==t & powerCTcat[,"k"]>=k & powerCTcat[,"v"]==v,,drop=FALSE]
+  hilf <- powerCTcat[powerCTcat[,"t"]>=t & powerCTcat[,"k"]>=k & powerCTcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(min(hilf[,"N"]))
 }
 
 #' @export
 k_powerCT <- function(t,N,v, type="CT", ...){
-  hilf <- powerCTcat[powerCTcat[,"t"]==t & powerCTcat[,"N"]<=N & powerCTcat[,"v"]==v,,drop=FALSE]
+  hilf <- powerCTcat[powerCTcat[,"t"]>=t & powerCTcat[,"N"]<=N & powerCTcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(max(hilf[,"k"]))
 }
