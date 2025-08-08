@@ -108,6 +108,7 @@ SCA_Bose <- function(q){
   Call <- sys.call()
   aus <- lhs::createBose(q, q+1, bRandom=FALSE)[,c(2:(q+1),1)]
   class(aus) <- c("ca", class(aus))
+  attr(aus, "t") <- 2
   attr(aus, "PCAstatus") <- list(type="SCA", k1=q, k2=1)
   attr(aus, "Call") <- Call
   attr(aus, "origin") <- "Bose construction"
@@ -116,6 +117,12 @@ SCA_Bose <- function(q){
 
 #' @export
 SCA_Busht <- function(q, t){
+  Call <- sys.call()
   aus <- lhs::createBusht(q, q+1, t, bRandom=FALSE)
+  class(aus) <- c("ca", class(aus))
+  attr(aus, "Call") <- Call
+  attr(aus, "t") <- t
+  attr(aus, "PCAstatus") <- list(type="SCA", k1=q, k2=1)
+  attr(aus, "origin") <- "Bush construction"
   aus[, c(2:(q+1), 1)]
 }
