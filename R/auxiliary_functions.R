@@ -165,6 +165,20 @@ cycvec <- function(v, q, gf=NULL, primitive=NULL){
   xstart%%v
 }
 
+circular <- function(vec){
+  ## matrix of cyclic permutations
+  ## used in createCS_MS, createCS_CMMSSY, createCS_LCDST
+  k <- length(vec)
+  aus <- matrix(NA,k,k)
+  hilf <- vec
+  aus[,1] <- hilf
+  for (i in 2:k){
+    hilf <- c(hilf[k], hilf[1:(k-1)])
+    aus[,i] <- hilf
+  }
+  aus
+}
+
 gf_minus <- function(x,y,gf){
   ## calculates x - y, after reducing both by a mod operation to
   ## gf entries

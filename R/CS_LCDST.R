@@ -157,20 +157,6 @@ k_CS_LCDST <- function(t=2, N, v){
 
 ### auxiliary functions
 
-circular <- function(vec){
-  ## matrix of cyclic permutations
-  ## used in createCS_MS
-  k <- length(vec)
-  aus <- matrix(NA,k,k)
-  hilf <- vec
-  aus[,1] <- hilf
-  for (i in 2:k){
-    hilf <- c(hilf[k], hilf[1:(k-1)])
-    aus[,i] <- hilf
-  }
-  aus
-}
-
 createG_LCDST <- function(v, f){
   ## creates function that uses the additive group
   ## except for the fixed elements
