@@ -83,6 +83,7 @@ but are mainly meant to be used by the package functions:
 \item \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
 \item \code{\link{powerCTcat}},
 \item \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
+\item \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
 \item \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},
 \item \code{\link{ColbournKeriCombis}} and \code{\link{ColbournKeriStarters}},
 \item \code{\link{CKRScat}} and \code{\link{CKRS_CAs}},

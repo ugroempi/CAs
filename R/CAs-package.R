@@ -71,6 +71,7 @@
 #' * \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
 #' * \code{\link{powerCTcat}},
 #' * \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
+#' * \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
 #' * \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},
 #' * \code{\link{ColbournKeriCombis}} and \code{\link{ColbournKeriStarters}},
 #' * \code{\link{CKRScat}} and \code{\link{CKRS_CAs}},

@@ -265,6 +265,11 @@ used by the package functions:
 
 <li>
 
+<code>CMMSSYCombis</code> and <code>CMMSSYStarters</code>,
+</li>
+
+<li>
+
 <code>LCDSTCombis</code> and <code>LCDSTStarters</code>,
 </li>
 
