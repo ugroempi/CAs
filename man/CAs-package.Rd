@@ -44,10 +44,12 @@ So far, the following constructions for uniform CAs have been implemented:
 \item the Colbourn and Torres-Jimenez (2010) power construction in function \code{\link{powerCA}}
 \item Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA to yield a strength t CA
 \item recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
-\item a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBose}}
+\item a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBoseCA}}
+\item a fusion construction based on a Bush matrix, from Colbourn (2008), in function \code{\link{fuseBushtCA}}
 \item a projection construction based on a Bose matrix, from Colbourn (2008), in functions \code{\link{projectionBose}} and \code{\link{projBoseCA}}
 \item the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
 \item the strength 2 cover starter construction by Lobb et al. (2012) which works similarly to Meagher and Stevens (2005) but fix one or more symbols using the additive group on the non-fixed symbols (function \code{\link{CS_LCDST}})
+\item the strength 2 cover starter construction by Colbourn et al. (2006) which is simpler than Meagher and Stevens (2005) and allows a recursive product construction (function \code{\link{CS_CMMSSY}})
 \item the 2-level cover starter construction by Colbourn and Keri (2009), which creates strength 4, 5, and 6 CAs and is also closely related to the Paley type construction of Colbourn (2015)
 \item direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
 \item product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
@@ -114,6 +116,8 @@ Chateauneuf, M., Colbour.n, C. and Kreher, D.L. (1999). Covering Arrays of Stren
 Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
 
 Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
+
+Colbourn, C.J., (2004). Combinatorial aspects of covering arrays. Matematiche (Catania) 59, 125-172.
 
 Colbourn, C.J., (2008). Strength two covering arrays: Existence tables and projection. Discrete Math., vol. 308, 772-786. https://doi.org/10.1016/j.disc.2007.07.050
 

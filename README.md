@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.11
+- **Version**: 0.12
 
 ## Warning
 
@@ -125,7 +125,13 @@ construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 <li>
 
 a fusion construction based on a Bose matrix, from Colbourn (2008), in
-function <code>fuseBose</code>
+function <code>fuseBoseCA</code>
+</li>
+
+<li>
+
+a fusion construction based on a Bush matrix, from Colbourn (2008), in
+function <code>fuseBushtCA</code>
 </li>
 
 <li>
@@ -147,6 +153,13 @@ the strength 2 cover starter construction by Lobb et al. (2012) which
 works similarly to Meagher and Stevens (2005) but fix one or more
 symbols using the additive group on the non-fixed symbols (function
 <code>CS_LCDST</code>)
+</li>
+
+<li>
+
+the strength 2 cover starter construction by Colbourn et al. (2006)
+which is simpler than Meagher and Stevens (2005) and allows a recursive
+product construction (function <code>CS_CMMSSY</code>)
 </li>
 
 <li>
@@ -289,7 +302,7 @@ the directory <code>inst/extdata</code> of the GitHub repo or, for a
 given R installation, using <code>system.file(“extdata”,
 package=“CAs”)</code> from within R.
 
-## Current status of package implementation
+## Current status of package implementation (for uniform CAs only)
 
 ![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->
 
@@ -336,6 +349,12 @@ pp. 217-238. doi: 10.1002/jcd.10002.
 Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6,
 t≤k ≤10000, 2005–23.
 <a href="https://www.public.asu.edu/~ccolbou/src/tabby">https://www.public.asu.edu/~ccolbou/src/tabby</a>.
+</p>
+
+<p>
+
+Colbourn, C.J., (2004). Combinatorial aspects of covering arrays.
+Matematiche (Catania) 59, 125-172.
 </p>
 
 <p>

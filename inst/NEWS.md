@@ -3,6 +3,25 @@
  - TODO: make check Call attribute for MCA2 and postopNCK, in the combination
    it apparently loses the MCA2 call 
    (see file D15etalOptimized.RData in colbournTableReport folder)
+
+
+08 August 2025, version 0.12
+
+ - added CS_CMMSSY for direct cover starters; the arrays have the same sizes as 
+   CS_MS, but are guaranteed to be SCAs and can therefore be used recursively
+   with function productPCA (similar to recursiveBose, also implemented in 
+   function CS_CMMSSY)
+ - added function fuse_BushtCA and corresponding N and k functions
+ - added function compositCA and corresponding N and k functions 
+   (for automated composition, using work horse function crossCAs)
+ - modified N_powerCA and k_powerCA to allow t > requested t (will often yield 
+   unattractive numbers; may be reverted after gaining experience)
+ - added attributes to output of SCA_Busht
+ - bug fix for crossCAs: construction did not have the correct number of repeats,
+   and yielded a wrong result with a warning
+ - bug fix for powerCA: cases with implemented t larger than requested t yielded an 
+   uncaptured error
+ - bug fix for dwyerCA: did not work for k less than maximum possible number of columns
    
 04 Aug 2025, version 0.11
  - implemented an iterative version of function coverage
