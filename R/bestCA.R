@@ -311,7 +311,7 @@ labelToCode <- function(label, t, k, v, ...){
     if (!t==2) stop('"CS_MS" requires t=2')
     return(paste0('CS_MS(', k, ', ', v, ')'))
   }
-  if (label=="CS_LDCST"){
+  if (label=="CS_LCDST"){
     if (!t==2) stop('"CS_LCDST" requires t=2')
     return(paste0('CS_LCDST(', k, ', ', v, ')'))
   }
