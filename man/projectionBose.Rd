@@ -28,7 +28,9 @@ k_projectionBose(N, v, cmax=Inf, ...)
 
 \item{c}{an integer number, 0 <= c <= \code{q-2}; for \code{c=0}, the unchanged array created by \code{\link{SCA_Bose}} is returned.}
 
-\item{s}{an integer number, 2 <= s <= \code{q-c}; for \code{c=0}, \code{s} is irrelevant.}
+\item{s}{an integer number; for \code{c > 1}, 2 <= \code{s} <= \code{q-c};\cr
+for \code{c=1}, 2 <= \code{s} <= \code{q+1};\cr
+for \code{c=0}, \code{s} is irrelevant.}
 
 \item{N}{maximum acceptable number of runs}
 
@@ -36,7 +38,7 @@ k_projectionBose(N, v, cmax=Inf, ...)
 for which \code{k} and \code{v} are too far apart}
 }
 \value{
-\code{projBose} returns a covering array in \code{k} columns at \code{v} levels each with \code{v} constant rows,
+\code{projBoseCA} returns a covering array in \code{k} columns at \code{v} levels each with \code{v} constant rows,
 if this is reasonably possible by projection of a strength 2 Bose OA, which should be the case whenever
 \code{v<k} and \code{k-v} not larger than seven and \code{v+(k-v-1)/2} a prime power.\cr
 
@@ -47,7 +49,8 @@ that is a covering array of strength 2.\cr
 vector with elements \code{N}, \code{k}, \code{kmax}, \code{v}, \code{q} and \code{c}.
 }
 \description{
-A strength 2 CA with q^2-c runs with q+1 (q-c)-level columns and c s-level columns is created from a q-level Bose array arranged as SCA
+A strength 2 CA with q^2-c runs with q+1 (q-c)-level columns
+and c s-level columns is created from a q-level Bose array arranged as SCA
 }
 \examples{
 # create a CA(24,2,7,4)
@@ -74,7 +77,15 @@ k_projectionBose(N=357, v=15)
 eCAN(2, 21, 15) ## the above design is the basis
 eCAK(2, 357, 15) ## four more columns
 
+# the mixed level construction of Stevens, Ling and Mendelssohn (2002)
+# Thm 2.6, yields a CA(q^2-1, 2, q+2, (q-1)^(q+1) (q+1)^1),
+# e.g., a CA(24, 2, 7, 4^6 6^1)
+# as quoted also in Colbourn 2008
+D <- projectionBose(5, 1, 6)  ## q=5, c=1, s=
+D
+coverage(D, 2)
+
 }
 \references{
-Colbourn (2008, Theorem 2.3), Torres-Jimenez et al. (2019, Fig. 25)
+Colbourn (2008, Theorem 2.3 and Corollary 2.2), Torres-Jimenez et al. (2019, Fig. 25)
 }

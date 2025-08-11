@@ -1,6 +1,7 @@
 #' Function to create a strength 2 CA by projection of a Bose OA
 #'
-#' A strength 2 CA with q^2-c runs with q+1 (q-c)-level columns and c s-level columns is created from a q-level Bose array arranged as SCA
+#' A strength 2 CA with q^2-c runs with q+1 (q-c)-level columns
+#' and c s-level columns is created from a q-level Bose array arranged as SCA
 #'
 #' @rdname projectionBose
 #'
@@ -18,14 +19,16 @@
 #' @param v number of levels
 #' @param q a prime power
 #' @param c an integer number, 0 <= c <= \code{q-2}; for \code{c=0}, the unchanged array created by \code{\link{SCA_Bose}} is returned.
-#' @param s an integer number, 2 <= s <= \code{q-c}; for \code{c=0}, \code{s} is irrelevant.
+#' @param s an integer number; for \code{c > 1}, 2 <= \code{s} <= \code{q-c};\cr
+#'         for \code{c=1}, 2 <= \code{s} <= \code{q+1};\cr
+#'         for \code{c=0}, \code{s} is irrelevant.
 #' @param fixNA logical; if FALSE, keeps flexible values; if TRUE, flexible values are arbitrarily fixed.
 #' @param N maximum acceptable number of runs
 #' @param cmax the maximum number permitted for \code{c}; setting \code{cmax} prevents ridiculous values of \code{N} for cases
 #' for which \code{k} and \code{v} are too far apart
 #' @param ... currently not used
 #'
-#' @returns \code{projBose} returns a covering array in \code{k} columns at \code{v} levels each with \code{v} constant rows,
+#' @returns \code{projBoseCA} returns a covering array in \code{k} columns at \code{v} levels each with \code{v} constant rows,
 #' if this is reasonably possible by projection of a strength 2 Bose OA, which should be the case whenever
 #' \code{v<k} and \code{k-v} not larger than seven and \code{v+(k-v-1)/2} a prime power.\cr
 #' @returns \code{projectionBose} returns a (\code{q^2-c} x \code{q+1+c} matrix with the first \code{q+1} columns
@@ -34,7 +37,7 @@
 #' \code{N_projectionBose} and \code{k_projectionBose} return a named
 #' vector with elements \code{N}, \code{k}, \code{kmax}, \code{v}, \code{q} and \code{c}.
 #'
-#' @references Colbourn (2008, Theorem 2.3), Torres-Jimenez et al. (2019, Fig. 25)
+#' @references Colbourn (2008, Theorem 2.3 and Corollary 2.2), Torres-Jimenez et al. (2019, Fig. 25)
 #'
 #' @examples
 #' # create a CA(24,2,7,4)
@@ -61,6 +64,14 @@
 #' eCAN(2, 21, 15) ## the above design is the basis
 #' eCAK(2, 357, 15) ## four more columns
 #'
+#' # the mixed level construction of Stevens, Ling and Mendelssohn (2002)
+#' # Thm 2.6, yields a CA(q^2-1, 2, q+2, (q-1)^(q+1) (q+1)^1),
+#' # e.g., a CA(24, 2, 7, 4^6 6^1)
+#' # as quoted also in Colbourn 2008
+#' D <- projectionBose(5, 1, 6)  ## q=5, c=1, s=
+#' D
+#' coverage(D, 2)
+#'
 
 #' @export
 projBoseCA <- function(k, v, fixNA=TRUE, ...){
@@ -80,10 +91,13 @@ projBoseCA <- function(k, v, fixNA=TRUE, ...){
 projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
   ## s is the number of levels of the additional columns
   ## if it equals q-c, the resulting CA is uniform
+  ## for c > 1, s <= q-c is required
+  ## for c == 1, s can be up to q+1 (see Corollary 2.2 in Colbourn 2008)
   stopifnot(is.numeric(q), is.numeric(c), is.numeric(s))
   stopifnot(c>=0)
   stopifnot(c<=q-2)    ## make sure at least two levels remain
-  stopifnot(s <= q-c)  ## make sure that s is permissible
+  stopifnot(s <= q+1)  ## make sure that s is permissible
+  if (c > 1) stopifnot(s <= q-c)
   stopifnot((c%%1)==0)
   stopifnot(is.logical(fixNA))
   arr <- SCA_Bose(q)                  ## also checks for appropriate q
@@ -93,6 +107,8 @@ projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
 
   ## immediately use final symbols only for the first s columns
   replacesel <- setdiff(0:(q-1), 0:(c-1))
+  ## handle first s columns, depending on what the first c rows
+  ## look like
   for (j in 1:c){
     ## loop through the first c rows (rows to be removed)
 
@@ -103,7 +119,7 @@ projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
       newmat[hilf, q+1+j] <- k - 1 + c  ## immediately correct levels
                                         ## no after-treatment needed
                                         ## except subtracting c
-      ## treat the first s columns
+      ## treat the first s columns that will have q-c levels
       if (length(replacesel) < length(hilf))
         replace <- sample(
           c( replacesel, rep(NA, length(hilf)-length(replacesel)) )
@@ -114,15 +130,15 @@ projectionBose <- function(q, c=1, s=q-c, fixNA=FALSE, ...){
     }
 
     ## treat value j-1 in columns s+1 to q+1 (wild card)
+    if (s < q+1)
     newmat[(c+1):(q^2),(s+1):(q+1)][which(newmat[(c+1):(q^2),(s+1):(q+1)]==j-1)] <- NA
   }
-
   aus <- newmat[-(1:c),] - c
   ## make first rows constant
   for (i in 1:(q-c)){
-     if (s==q-c || i <= s)
-       aus[i, (q+1):(q+1+c)] <- i-1
-     else
+      if (s < q+1 && (s==q-c || i <= s))
+        aus[i, (q+1):(q+1+c)] <- i-1
+      else
        aus[i, (q+1)] <- i-1
   }
   missings1 <- which(is.na(aus[,1:(q+1)]))
