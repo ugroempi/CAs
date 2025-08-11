@@ -87,6 +87,8 @@ CS_CMMSSY <- function(k, v, start0=TRUE, starter=NULL, ...){
   stopifnot(k > 2)
   stopifnot(is.logical(start0))
   if (!is.null(starter)){
+    ## the starters must have one less element than the number of columns
+    ## in this construction
     stopifnot(length(starter)>=k-1)
     stopifnot(starter[1]==Inf)
     stopifnot(all(starter[-1] %in% 0:(v-1)))
@@ -94,7 +96,7 @@ CS_CMMSSY <- function(k, v, start0=TRUE, starter=NULL, ...){
   if (is.null(starter)){
     N <- N_CS_CMMSSY(t=2, k, v)
     if (is.na(N)) stop("This combination of k and v cannot be accommodated.")
-    k_lookup <- k_CS_CMMSSY(N,v)
+    k_lookup <- k_CS_CMMSSY(N,v)  ## the column size corresponding to the N
     if (is.na(k_lookup)) stop("Unexpected error.")
     ## retrieve code that fetches starter, if possible
     zeile <- which(CMMSSYCombis$k==k_lookup &
