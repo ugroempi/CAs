@@ -83,8 +83,10 @@ k_CS_LCDST(N=120, v=8) ## with up to 120 runs, 20 8-level columns are possible
 eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 
 ## f larger than 3
-## v=11 levels, f=5, k=26
+## v=11 levels, f=4, k=26
 D <- CS_LCDST(26, 11)
+dim(D)
+N_CS_LCDST(2,26,11)
 
 }
 \references{

@@ -79,8 +79,10 @@
 #' eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 #'
 #' ## f larger than 3
-#' ## v=11 levels, f=5, k=26
+#' ## v=11 levels, f=4, k=26
 #' D <- CS_LCDST(26, 11)
+#' dim(D)
+#' N_CS_LCDST(2,26,11)
 #'
 
 #' @export
@@ -88,19 +90,26 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
   Call <- sys.call()
   ## checks
   stopifnot(is.numeric(k), is.numeric(v))
-  if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields a strength 2 CA in ", N_KSK(k), "runs."))
+  if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields a strength 2 CA in ",
+                          N_KSK(k), "runs."))
   stopifnot(v >= 3)
   stopifnot(v %% 1 == 0)
   stopifnot(k > 2)
   stopifnot(is.logical(start0))
+  ## a specified starter
   if (!is.null(starter)){
-    stopifnot(length(starter)>=k-1)
-    #stopifnot(starter[1] > 100)
+    stopifnot(length(starter) >= k)
+    stopifnot(starter[1] > 100)
   }
   if (is.null(starter)){
+    N <- N_CS_LCDST(t=2, k, v)
+    if (is.na(N)) stop("This combination of k and v cannot be accommodated.")
+    k_lookup <- k_CS_LCDST(t=2,N,v)
+    if (is.na(k_lookup)) stop("Unexpected error.")
     ## retrieve starter
     vc <- as.character(v)
-    kc <- as.character(k)
+    kc <- as.character(k_lookup)
+
     starter <- LCDSTStarters[[vc]][[kc]]
     if (is.null(starter)) stop("not implemented")
   }
@@ -108,7 +117,6 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
   f <- length(unique(starter[which(starter>100)])) ## fixed values
   ## there is no case with more NA values than unfixed levels
   if (nNA>0) starter[is.na(starter)] <- (0:(v-f-1))[1:nNA]
-  if (f>3) message("For f>3, the run size may be larger, \nbecause the optimum CA may be unavailable.")
 
   ## create array
   G <- createG_LCDST(v, f)
@@ -141,6 +149,7 @@ N_CS_LCDST <- function(t=2, k, v){
   hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v &
                       LCDSTCombis[,"k"]>=k,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
+  if (hilf[1,"f"]==4) return(hilf[1,"N"] + bestN(2,k,4)-eCAN(2,k,4)$CAN)
   hilf[1,"N"]
 }
 
@@ -149,7 +158,13 @@ k_CS_LCDST <- function(t=2, N, v){
   if (!t==2) return(NA)
   stopifnot(is.numeric(N), is.numeric(v))
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the maximum number of factors, which is ", k_KSK(N), "."))
-  hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v & LCDSTCombis[,"N"]<=N & LCDSTCombis[,"f"]<=3,,drop=FALSE]
+  hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v & LCDSTCombis[,"N"]<=N,,drop=FALSE]
+  if (any(hilf[,"f"]==4)){
+    hilf[which(hilf[,"f"]==4),"N"] <- hilf[which(hilf[,"f"]==4),"N"] +
+      sapply(hilf[which(hilf[,"f"]==4),"k"],
+             function(obj) bestN(2, obj, 4) - eCAN(2, obj, 4)$CAN)
+    hilf <- hilf[which(hilf[,"N"] <=N),]
+  }
   if (nrow(hilf)==0) return(NA)
   posmax <- which.max(hilf[,"k"])
   hilf[posmax,"k"]
