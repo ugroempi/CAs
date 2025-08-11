@@ -46,6 +46,7 @@
 #' Ns(4, 12, 24) ## much worse than fuseBushtCA,
 #'               ## which almost yields eCAN
 #'
+#' @importFrom conf.design factorize
 
 #' @export
 compositCA <- function(t, k, v, ...){
