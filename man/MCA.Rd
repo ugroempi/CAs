@@ -3,11 +3,17 @@
 \name{CA_to_MCA}
 \alias{CA_to_MCA}
 \alias{MCA2}
+\alias{N_upper_MCA}
+\alias{projBoseMCA}
 \title{Making mixed-level CAs}
 \usage{
 MCA2(nlevels, D=NULL, outerRetry=10, innerRetry=1, seed=NULL, ...)
 
 CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=10, innerRetry=1, seed=NULL, ...)
+
+N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
+
+projBoseMCA(nlevels, t=2, ...)
 }
 \arguments{
 \item{D}{a strength \code{t} CA (it may have mixed levels)}
@@ -19,7 +25,7 @@ by \code{cs}; must not be larger than the number of levels of the related
 columns in \code{cs}, and must not be smaller than 2}
 
 \item{t}{integer, the strength of \code{D} (smaller strength would be permitted,
-but would not make sense)}
+but would not make sense) or the requested strength}
 
 \item{outerRetry}{passed to \code{\link{postopNCK}}; if \code{0},
 run size reduction will not be attempted.}
@@ -36,11 +42,23 @@ if \code{NULL}, it will be randomly determined and reported with the result}
 of that vector, with levels in decreasing order and column names \code{level}
 and \code{frequency}; function \code{MCA2} always sorts the numbers of levels
 into decreeasing order}
+
+\item{internet}{logical: is an internet connection available (for DWYER or NIST download)}
 }
 \value{
-Both functions return a matrix of class \code{ca} with attributes of the ingoing matrix (dimensions modified),
-and attributes \code{Call} and \code{seed} modified, and with flexible values in most columns. For function \code{MCA},
-the number of levels is in decreasing order (regardless of the order specified in \code{nlevels}).
+Functions \code{MCA2} and \code{CA_to_MCA} return a matrix of class \code{ca}
+with attributes of the ingoing matrix (dimensions modified),
+and attributes \code{Call} and \code{seed} modified,
+and often with flexible values in most columns. For function \code{MCA},
+the number of levels is in decreasing order
+(regardless of the order specified in \code{nlevels}).\cr
+Function \code{N_upper_MCA} returns an upper bound for the run size of an MCA
+obtainable via the constructions (named integer, obtained by \code{\link{bestN}},
+where the size can be obtained by using the CA of the construction indicated
+by the name as the \code{D} in function \code{CA_to_MCA}).\cr
+Function \code{projBoseMCA} returns a matrix of class \code{ca} with attributes;
+for numeric \code{nlevels}, the columns are in the order of \code{nlevels}, otherwise
+the columns with more levels come before the columns with fewer levels.
 }
 \description{
 either from a given CA D, by makes unused levels of some columns flexible (
@@ -82,6 +100,19 @@ Per default, the optimization is switched on. Its progress is reported
 by interim messages. The functions react beneficial to user interrupts: They
 return the result from the previous successful \emph{outer} retry (make sure the outer
 retry has finished before escaping calculations!).
+
+Function \code{N_upper_MCA} reports an upper bound on the run number for an MCA
+of the setting. That bound is obtained by using function \code{\link{bestN}} for
+the maximum number of levels with the total number of columns. Depending on the situation,
+the bound may be sharp (e.g., for eight five-level columns with two 3-level columns)
+or dramatically too large (e.g., for one eight-level column with ten 2-level columns).
+
+Function \code{projBoseMCA} implements Theorem 2.3 of Colbourn (2008) as well as
+Corollary 2.2 of the same paper, which also references Stevens, Ling and Mendelsohn
+(2002, their Theorem 2.6). It works for two different numbers of levels only.
+It is most powerful for q+1 columns at q-1 levels with a single column at q+1 levels,
+where q is a prime power (the Corollary 2.2 situation);
+in these cases the run size is optimal ((q-1)*(q+1)=q^2-1).
 }
 
 \section{Warning}{
@@ -94,20 +125,30 @@ The defaults for the related parameters may change in the future.
 ##################################################
 ### MCA2
 ##################################################
-## small example without run size optimization
-## 14 runs (one better than CAgen for this setting)
-D <- MCA2(c(rep(2,30), rep(3,2)), outerRetry=0)
-attributes(D)
+## small example with fast optimization to global optimum
+## which is 2*8
+## 16 runs
+D <- MCA2(c(rep(2,10), 8))
+dim(D)
 coverage(D, 2)
+## N_upper_MCA is very pessimistic
+N_upper_MCA(c(rep(2,10), 8))
+
+## another case for which N_upper_MCA seems to be tight
+N_upper_MCA(c(rep(5,8), 3,3))
+D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
+dim(D)
+head(D); tail(D)
 
 \dontrun{
 ## optimize run size (using a good seed)
 D <- MCA2(c(rep(2,30), rep(3,2)), seed=17369, outerRetry=3)
 coverage(D, 2)
 attributes(D)
-}
 ## reasonably quickly reduces to 11 runs on my Windows machine
 ## lower bound is 9 runs (3*3)
+## CAgen yields 14 runs with IPOG-F
+}
 
 ## create a large design without trying a run size optimization
 D <- MCA2(c(rep(2,70), rep(3,80), rep(4,8), rep(6,2)),
@@ -191,9 +232,50 @@ tail(Dmixed2)
 ## but not too bad
 }
 
+######################################################
+####           projBoseMCA               #############
+######################################################
+
+## corollary 2.2 cases (a single number of levels is different,
+## and two larger than the others)
+D <- projBoseMCA(c(rep(4,6),6))
+head(D)
+dim(D) ## 24 runs like IPOG-F for CAgen
+
+D <- projBoseMCA(c(rep(6,8),8))
+head(D)
+dim(D) ## 48 runs, better than the 60 for IPOG-F
+       ## which is best for CAgen and the 58 of JMP Pro
+       ## as of 11 August 2025
+
+## the single different number can also be smaller
+## then not guaranteed to be optimal
+D <- projBoseMCA(c(rep(6,8),7))
+head(D)
+dim(D) ## 48 runs, better than the 60 for IPOG-F
+       ##  42 would be a guaranteed optimal
+
+D <- projBoseMCA(c(rep(6,8),4))
+head(D)
+dim(D) ## 48 runs, better than the 55 for IPOG-F
+       ##  36 would be a guaranteed optimal
+
+## cases with two groups of alphabet sizes
+## the larger alphabet must be more frequent
+D <- projBoseMCA(c(rep(4,5), rep(3,4)))
+dim(D)  ## based on q=8 and c=4,
+        ## there could be up to 9 4-level columns
+D <- projBoseMCA(c(rep(4,9), rep(3,4)))
+dim(D)  ## 60 runs, larger than 30 for IPOG-F2
+
+## better use CA_to_MCA for this setting
+D <- CA_to_MCA(bestCA(2,13,4), 10:13, rep(3,4), outerRetry=0)
+dim(D)  ## better than CAgen, even without postoptimization
+
 }
 \references{
-Groemping (2025), Moura et al. (2003), Nayeri et al. (2013), Sherwood (2008)
+Colbourn (2008), Groemping (2025), Moura et al. (2003), Nayeri et al. (2013),
+Sherwood (2008), Stevens, Ling and Mendelsohn (2002)
 }
 \author{
 Ulrike Groemping

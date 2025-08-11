@@ -10,9 +10,13 @@
 #'
 #' @aliases MCA2
 #' @aliases CA_to_MCA
+#' @aliases N_upper_MCA
+#' @aliases projBoseMCA
 #'
 #' @usage MCA2(nlevels, D=NULL, outerRetry=10, innerRetry=1, seed=NULL, ...)
 #' @usage CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=10, innerRetry=1, seed=NULL, ...)
+#' @usage N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
+#' @usage projBoseMCA(nlevels, t=2, ...)
 #'
 #' @param nlevels a vector of numbers of levels, or a data.frame that is the table
 #'       of that vector, with levels in decreasing order and column names \code{level}
@@ -33,7 +37,8 @@
 #'        by \code{cs}; must not be larger than the number of levels of the related
 #'        columns in \code{cs}, and must not be smaller than 2
 #' @param t integer, the strength of \code{D} (smaller strength would be permitted,
-#'        but would not make sense)
+#'        but would not make sense) or the requested strength
+#' @param internet logical: is an internet connection available (for DWYER or NIST download)
 #' @param ... currently not used
 #'
 #' @section Details:
@@ -69,15 +74,39 @@
 #' return the result from the previous successful \emph{outer} retry (make sure the outer
 #' retry has finished before escaping calculations!).
 #'
-#' @returns Both functions return a matrix of class \code{ca} with attributes of the ingoing matrix (dimensions modified),
-#'    and attributes \code{Call} and \code{seed} modified, and with flexible values in most columns. For function \code{MCA},
-#'    the number of levels is in decreasing order (regardless of the order specified in \code{nlevels}).
+#' Function \code{N_upper_MCA} reports an upper bound on the run number for an MCA
+#' of the setting. That bound is obtained by using function \code{\link{bestN}} for
+#' the maximum number of levels with the total number of columns. Depending on the situation,
+#' the bound may be sharp (e.g., for eight five-level columns with two 3-level columns)
+#' or dramatically too large (e.g., for one eight-level column with ten 2-level columns).
+#'
+#' Function \code{projBoseMCA} implements Theorem 2.3 of Colbourn (2008) as well as
+#' Corollary 2.2 of the same paper, which also references Stevens, Ling and Mendelsohn
+#' (2002, their Theorem 2.6). It works for two different numbers of levels only.
+#' It is most powerful for q+1 columns at q-1 levels with a single column at q+1 levels,
+#' where q is a prime power (the Corollary 2.2 situation);
+#' in these cases the run size is optimal ((q-1)*(q+1)=q^2-1).
+#'
+#' @returns Functions \code{MCA2} and \code{CA_to_MCA} return a matrix of class \code{ca}
+#'    with attributes of the ingoing matrix (dimensions modified),
+#'    and attributes \code{Call} and \code{seed} modified,
+#'    and often with flexible values in most columns. For function \code{MCA},
+#'    the number of levels is in decreasing order
+#'    (regardless of the order specified in \code{nlevels}).\cr
+#'    Function \code{N_upper_MCA} returns an upper bound for the run size of an MCA
+#'    obtainable via the constructions (named integer, obtained by \code{\link{bestN}},
+#'    where the size can be obtained by using the CA of the construction indicated
+#'    by the name as the \code{D} in function \code{CA_to_MCA}).\cr
+#'    Function \code{projBoseMCA} returns a matrix of class \code{ca} with attributes;
+#'    for numeric \code{nlevels}, the columns are in the order of \code{nlevels}, otherwise
+#'    the columns with more levels come before the columns with fewer levels.
 #'
 #' @section Warning:
 #' There is not much experience yet with the post-optimization performance.
 #' The defaults for the related parameters may change in the future.
 #'
-#' @references Groemping (2025), Moura et al. (2003), Nayeri et al. (2013), Sherwood (2008)
+#' @references Colbourn (2008), Groemping (2025), Moura et al. (2003), Nayeri et al. (2013),
+#' Sherwood (2008), Stevens, Ling and Mendelsohn (2002)
 #'
 #' @author Ulrike Groemping
 #'
@@ -85,20 +114,30 @@
 #' ##################################################
 #' ### MCA2
 #' ##################################################
-#' ## small example without run size optimization
-#' ## 14 runs (one better than CAgen for this setting)
-#' D <- MCA2(c(rep(2,30), rep(3,2)), outerRetry=0)
-#' attributes(D)
+#' ## small example with fast optimization to global optimum
+#' ## which is 2*8
+#' ## 16 runs
+#' D <- MCA2(c(rep(2,10), 8))
+#' dim(D)
 #' coverage(D, 2)
+#' ## N_upper_MCA is very pessimistic
+#' N_upper_MCA(c(rep(2,10), 8))
+#'
+#' ## another case for which N_upper_MCA seems to be tight
+#' N_upper_MCA(c(rep(5,8), 3,3))
+#' D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
+#' dim(D)
+#' head(D); tail(D)
 #'
 #' \dontrun{
 #' ## optimize run size (using a good seed)
 #' D <- MCA2(c(rep(2,30), rep(3,2)), seed=17369, outerRetry=3)
 #' coverage(D, 2)
 #' attributes(D)
-#' }
 #' ## reasonably quickly reduces to 11 runs on my Windows machine
 #' ## lower bound is 9 runs (3*3)
+#' ## CAgen yields 14 runs with IPOG-F
+#' }
 #'
 #' ## create a large design without trying a run size optimization
 #' D <- MCA2(c(rep(2,70), rep(3,80), rep(4,8), rep(6,2)),
@@ -181,6 +220,46 @@
 #' ## there may still be potential for more reduction,
 #' ## but not too bad
 #' }
+#'
+#' ######################################################
+#' ####           projBoseMCA               #############
+#' ######################################################
+#'
+#' ## corollary 2.2 cases (a single number of levels is different,
+#' ## and two larger than the others)
+#' D <- projBoseMCA(c(rep(4,6),6))
+#' head(D)
+#' dim(D) ## 24 runs like IPOG-F for CAgen
+#'
+#' D <- projBoseMCA(c(rep(6,8),8))
+#' head(D)
+#' dim(D) ## 48 runs, better than the 60 for IPOG-F
+#'        ## which is best for CAgen and the 58 of JMP Pro
+#'        ## as of 11 August 2025
+#'
+#' ## the single different number can also be smaller
+#' ## then not guaranteed to be optimal
+#' D <- projBoseMCA(c(rep(6,8),7))
+#' head(D)
+#' dim(D) ## 48 runs, better than the 60 for IPOG-F
+#'        ##  42 would be a guaranteed optimal
+#'
+#' D <- projBoseMCA(c(rep(6,8),4))
+#' head(D)
+#' dim(D) ## 48 runs, better than the 55 for IPOG-F
+#'        ##  36 would be a guaranteed optimal
+#'
+#' ## cases with two groups of alphabet sizes
+#' ## the larger alphabet must be more frequent
+#' D <- projBoseMCA(c(rep(4,5), rep(3,4)))
+#' dim(D)  ## based on q=8 and c=4,
+#'         ## there could be up to 9 4-level columns
+#' D <- projBoseMCA(c(rep(4,9), rep(3,4)))
+#' dim(D)  ## 60 runs, larger than 30 for IPOG-F2
+#'
+#' ## better use CA_to_MCA for this setting
+#' D <- CA_to_MCA(bestCA(2,13,4), 10:13, rep(3,4), outerRetry=0)
+#' dim(D)  ## better than CAgen, even without postoptimization
 #'
 
 #' @export
@@ -331,4 +410,106 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
   attr(aus, "rowOrder") <- NULL  ## no longer relevant
   attr(aus, "PCAstatus") <- NULL  ## will be destroyed
   return(aus)
+}
+
+#' @export
+N_upper_MCA <- function(nlevels, t=2, internet=TRUE, ...){
+  if (!is.list(nlevels))
+    if (!is.numeric(nlevels))
+      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+
+    if (is.numeric(nlevels)){
+      k <- length(nlevels)
+      v <- max(nlevels)
+    }else{
+      k <- sum(nlevels$frequency)
+      v <- max(nlevels$levels)
+    }
+  bestN(t, k, v, internet=internet, ...)
+}
+
+#' @export
+projBoseMCA <- function(nlevels, t=2, ...){
+  if (!is.list(nlevels))
+    if (!is.numeric(nlevels))
+      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+
+  if (is.numeric(nlevels)){
+    nlevels_ordered <- nlevels
+    levels <- sort(unique(nlevels), decreasing = TRUE)
+    if (length(levels) < 2) stop("uniform CA requested, use projBoseCA")
+    if (length(levels) > 2) stop("projBoseMCA not applicable for more than two different numbers of levels")
+    nlevels <- data.frame(levels=levels, frequency=sapply(levels, function(obj) sum(nlevels==obj)))
+  }else{
+    nlevels_ordered <- rep(nlevels$levels, nlevels$frequency)
+    levels <- nlevels$levels
+    if (length(levels) > 2) stop("projBoseMCA not applicable for more than two different numbers of levels")
+    if (!all(sort(levels, decreasing = TRUE)==levels)) stop("data.frame nlevels must be sorted with levels in descending order")
+  }
+  ## now, nlevels is a data.frame with levels sorted in decreasing order
+  c_temp <- min(nlevels$frequency)
+     ## c at least c_temp, perhaps more
+  s <- nlevels$levels[which(nlevels$frequency==c_temp)]
+  levother <- setdiff(nlevels$levels, s)
+  if (s > levother && c_temp > 1) stop("combination of c and s not permissible")
+  if (s > levother){
+    ## the special case of Colbourn 2008 Corollary 2.2
+    c <- 1
+    if (!(s - levother <= 2)) stop("this setting is not covered by projBoseMCA")
+    if (!(levother + 1 %in% primedat$q)) stop("this setting is not covered by projBoseMCA")
+    q <- levother + 1
+    nqminus1 <- max(nlevels$frequency)
+    if (nqminus1 > q + 1) stop("two many columns with ", q, "-1 levels for projBoseMCA")
+    aus <- projectionBose(q, c, s)[,c(1:nqminus1, q+2)]
+    ## arrange columns in requested order for originally numeric
+    ## nlevels
+    pos_s <- which.max(nlevels_ordered)
+    if (!pos_s==length(nlevels_ordered)){
+      if (pos_s==1) aus <- aus[,c(ncol(aus),1:(ncol(aus)-1))]
+      else aus <- aus[,c(1:(pos_s-1), ncol(aus), pos_s:(ncol(aus)-1))]
+    }
+    ## assign attributes
+    class(aus) <- c("ca", class(aus))
+    attr(aus, "origin") <- "Colbourn 2008 Corollary 2.2 (and Stevens, Ling, Mendelssohn 2002)"
+    attr(aus, "t") <- 2
+    return(aus)
+  }
+  ## now s < levother
+  ## c_temp = frequency of s
+  c <- NA
+  if (levother + c_temp %in% primedat$q &&
+      max(nlevels$frequency) <= levother + c_temp + 1){
+      c <- c_temp
+      q <- levother + c
+    }else{
+      ## now c_temp must be increased for getting
+      ## both a prime and enough columns
+      repeat{
+        c_temp <- c_temp + 1
+        if (levother + c_temp %in% primedat$q &&
+            max(nlevels$frequency) <= levother + c_temp + 1){
+          c <- c_temp
+          q <- levother + c
+          break
+        }
+      }
+    }
+  ## as s < levother
+  nqminusc <- max(nlevels$frequency)
+  n_s <- min(nlevels$frequency)
+  ## create the array with maximum number of columns
+  hilf <- projectionBose(q, c, s)[,c(1:nqminusc, (q+2):(q+1+n_s))]
+  ## arrange columns in requested order for originally numeric
+  ## nlevels
+  pos_s <- which(nlevels_ordered==min(nlevels$levels))
+  pos_qminusc <- which(nlevels_ordered==max(nlevels$levels))
+  aus <- matrix(NA, nrow=nrow(hilf), ncol=ncol(hilf))
+  aus[,pos_s] <- hilf[,(nqminusc+1):(ncol(hilf))]
+  aus[,pos_qminusc] <- hilf[,1:nqminusc]
+
+  ## assign attributes
+  class(aus) <- c("ca", class(aus))
+  attr(aus, "origin") <- "Colbourn 2008 thm 2.3"
+  attr(aus, "t") <- 2
+  aus
 }
