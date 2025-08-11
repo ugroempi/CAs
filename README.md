@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.12
+- **Version**: 0.13
 
 ## Warning
 
@@ -216,19 +216,22 @@ identification of flexible values as in Colbourn and Torres-Jimenez
 
 </ul>
 
-So far, there are two functions for mixed level CAs: <code>MCA2</code>
+So far, there are three functions for mixed level CAs: <code>MCA2</code>
 implements a strength 2 construction, generalized from Sherwood (2008)
 by Groemping (2025), that is based on expanding some columns of a (mixed
 or) uniform CA, after reducing their number of levels, by replacing the
 flexible values of those columns with suitable small matrices and
 replicating the rest of those columns the corresponding number of times.
 Its details can be found in Groemping (2025).<br />
-<code>CA_to_MCA</code> takes a uniform array, removes levels (makes them
-flexible) as required.<br /> Both constructions may benefit from
-subsequent removal of as many rows as possible via the Nayeri et
-al. (2013) construction. For <code>CA_to_MCA</code>, this is the crucial
-step; for <code>MCA2</code>, gains are less dramatic, but still often
-relevant.
+<code>CA_to_MCA</code> takes a uniform (or mixed level) array, removes
+levels (makes them flexible) as required.<br /> Both constructions may
+benefit from subsequent removal of as many rows as possible via the
+Nayeri et al. (2013) construction. For <code>CA_to_MCA</code>, this is
+the crucial step; for <code>MCA2</code>, gains are less dramatic, but
+still often relevant.<br /> <code>projBoseMCA</code> implements the
+mixed level construction by Stevens, Ling and Mendelsohn (2002) in the
+form stated by Colbourn (2008) in his Corollary 2.2, and the
+construction of Colbourn’s Theorem 2.3.
 
 ## Exported objects
 
@@ -540,6 +543,13 @@ NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 Sherwood, G.B. (2008). Optimal and near-optimal mixed covering arrays by
 column expansion. Discrete Mathematics 308, 6022-6035.
 <https://doi.org/10.1016/j.disc.2007.11.021>
+</p>
+
+<p>
+
+Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction
+of Transversal Covers Using Group Divisible Designs. Ars Combinatoria
+63, 145-159.
 </p>
 
 <p>

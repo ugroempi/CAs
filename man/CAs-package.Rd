@@ -59,18 +59,20 @@ So far, the following constructions for uniform CAs have been implemented:
 \item identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 }
 
-So far, there are two functions for mixed level CAs: \code{MCA2} implements a strength 2
+So far, there are three functions for mixed level CAs: \code{MCA2} implements a strength 2
 construction, generalized from Sherwood (2008) by Groemping (2025),
 that is based on expanding some columns of a (mixed or)
 uniform CA, after reducing their number of levels, by replacing the flexible values of those
 columns with suitable small matrices and replicating the rest of those columns the corresponding
 number of times. Its details can be found in Groemping (2025).\cr
 \code{\link{CA_to_MCA}} takes
-a uniform array, removes levels (makes them flexible) as required.\cr
+a uniform (or mixed level) array, removes levels (makes them flexible) as required.\cr
 Both constructions may benefit from subsequent
 removal of as many rows as possible via the Nayeri et al. (2013) construction. For
 \code{CA_to_MCA}, this is the crucial step; for \code{MCA2}, gains are less dramatic,
-but still often relevant.
+but still often relevant.\cr
+\code{\link{projBoseMCA}} implements the mixed level construction by Stevens, Ling and Mendelsohn (2002)
+in the form stated by Colbourn (2008) in his Corollary 2.2, and the construction of Colbourn's Theorem 2.3.
 }
 
 \section{Exported objects}{
@@ -169,6 +171,8 @@ Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized post-optimization o
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
 
 Sherwood, G.B. (2008). Optimal and near-optimal mixed covering arrays by column expansion. Discrete Mathematics 308, 6022-6035. https://doi.org/10.1016/j.disc.2007.11.021
+
+Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction of Transversal Covers Using Group Divisible Designs. Ars Combinatoria 63, 145-159.
 
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
 
