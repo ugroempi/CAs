@@ -11,10 +11,7 @@ August 11, 2025, version 0.13
  - adapted projectionBose to also include the case with s=q+1 and c=1
  - created a function projBoseMCA for mixed level CAs
  - created a function N_upper_MCA
- - improved the concept of N_CS_LCDST and k_CS_LCDST for f=4:
-   now works based on the realistic *implemented* N based on bestN(2,k,f), 
-   not the N from the paper that was smaller than what the package can provide
-   (previous version warned with a message, which is now obsolete)
+ - removed the futile run size warning for CS_LCDST with f>3
  - bug fix: N_CS_LCDST allows k smaller than min(k_implemented), 
    where k_implemented is the smallest k 
    for which there is a starter for the given v;

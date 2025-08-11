@@ -83,6 +83,7 @@
 #' D <- CS_LCDST(26, 11)
 #' dim(D)
 #' N_CS_LCDST(2,26,11)
+#' LCDSTCombis[which(LCDSTCombis$k==26 & LCDSTCombis$v==11),]
 #'
 
 #' @export
@@ -149,7 +150,8 @@ N_CS_LCDST <- function(t=2, k, v){
   hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v &
                       LCDSTCombis[,"k"]>=k,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
-  if (hilf[1,"f"]==4) return(hilf[1,"N"] + bestN(2,k,4)-eCAN(2,k,4)$CAN)
+  # would be a solution if N were eCAN-based
+  # if (hilf[1,"f"]==4) return(hilf[1,"N"] + bestN(2,k,4)-eCAN(2,k,4)$CAN)
   hilf[1,"N"]
 }
 
@@ -159,12 +161,13 @@ k_CS_LCDST <- function(t=2, N, v){
   stopifnot(is.numeric(N), is.numeric(v))
   if (v == 2) stop(paste0("For v=2, use function KSK .\n It yields the maximum number of factors, which is ", k_KSK(N), "."))
   hilf <- LCDSTCombis[LCDSTCombis[,"v"]==v & LCDSTCombis[,"N"]<=N,,drop=FALSE]
-  if (any(hilf[,"f"]==4)){
-    hilf[which(hilf[,"f"]==4),"N"] <- hilf[which(hilf[,"f"]==4),"N"] +
-      sapply(hilf[which(hilf[,"f"]==4),"k"],
-             function(obj) bestN(2, obj, 4) - eCAN(2, obj, 4)$CAN)
-    hilf <- hilf[which(hilf[,"N"] <=N),]
-  }
+  # would be a solution if N were eCAN-based
+  # if (any(hilf[,"f"]==4)){
+  #   hilf[which(hilf[,"f"]==4),"N"] <- hilf[which(hilf[,"f"]==4),"N"] +
+  #     sapply(hilf[which(hilf[,"f"]==4),"k"],
+  #            function(obj) bestN(2, obj, 4) - eCAN(2, obj, 4)$CAN)
+  #   hilf <- hilf[which(hilf[,"N"] <=N),]
+  # }
   if (nrow(hilf)==0) return(NA)
   posmax <- which.max(hilf[,"k"])
   hilf[posmax,"k"]

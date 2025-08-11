@@ -87,6 +87,7 @@ eCAN(2, 20, 8) ## post-processing with simulated annealing may loose seven rows
 D <- CS_LCDST(26, 11)
 dim(D)
 N_CS_LCDST(2,26,11)
+LCDSTCombis[which(LCDSTCombis$k==26 & LCDSTCombis$v==11),]
 
 }
 \references{
