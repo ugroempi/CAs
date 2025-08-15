@@ -32,6 +32,7 @@
 #' * constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
 #' * Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doublingCA}} (workhorse function \code{\link{CK_doubling}})
 #' * strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs (\code{\link{miscCA}})
+#' * strength 3 CAs for v=q+1 with q a prime power, and k<=v, based on augmenting an ordered design with further runs (Cohen, Colbourn and Ling 2003 and 2008)
 #' * the Colbourn and Torres-Jimenez (2010) power construction in function \code{\link{powerCA}}
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA to yield a strength t CA
 #' * recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
@@ -105,6 +106,10 @@
 #' Chateauneuf, M., Colbour.n, C. and Kreher, D.L. (1999). Covering Arrays of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 #'
 #' Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
+#'
+#' Cohen, M.B., Colbourn, C.J., Ling, A.C.H. (2003). Augmenting simulated annealing to build interaction test suites, in: 14th International Symposium on Software Reliability Engineering, 2003. ISSRE 2003. IEEE, Denver, Colorado, USA, pp. 394-405. https://doi.org/10.1109/ISSRE.2003.1251061
+#'
+#' Cohen, M.B., Colbourn, C.J., Ling, A.C.H. (2008). Constructing strength three covering arrays with augmented annealing. Discrete Mathematics 308, 2709-2722. https://doi.org/10.1016/j.disc.2006.06.036
 #'
 #' Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
 #'

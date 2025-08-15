@@ -5,6 +5,36 @@
    (see file D15etalOptimized.RData in colbournTableReport folder)
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
+ 
+August 15 2025, version 0.14
+
+ - added constructions by Cohen, Colbourn and Ling (2003, 2008) based 
+   on ordered designs, in function ODbasedCA, with N_ and k_ functions,
+   and made it available in Ns and ks and thus bestN and bestCA
+ - added a CA(12,3,8,2) with two constant runs (available as ca12.2.8, 
+   or via miscCA(3,8,2))
+ - adapted the power construction info to the availability of the CA(12,3,8,2)
+   with two constant rows
+ - removed three arrays from TJ2level_CAs, and adapted corresponding rows of TJcat;
+   added replacement constructions also for arrays that were never provided because 
+   of their size, and removed N results for those
+ - adapted N_TJcat and k_TJcat to yield result that refers to stored arrays and
+   ignore removed better CAs from other constructions; this way, the actual 
+   usage of stored arrays is more transparent
+ - improved and renamed now internal Martirosyan and van Trung (2004) 
+   Roux type implementations, and their referencing of actual theorems in the paper; 
+   added a an API function MTVTRouxtypeCA that takes t, k, v as inputs, 
+   and added the function N_upper_MTVTRouxtypeCA
+   for the size (which can only yield upper bounds because of 
+   unforeseeable number of duplicates that can be removed);
+   not included in Ns and thus in bestCA so far (and probably rarely best, 
+   if ever)
+ - moved SCA_Busht further up in Ns, because its arrays yield better results
+   than OAs in miscCA when used in recursive constructions (via bestCA)
+ - modified miscCA to not make rows constant per default, 
+   because this can make large arrays very slow
+ - renamed internal function OD to OD2 and moved it to auxiliary_ingredients
+ - bug fix: made bestCA obey to its argument fixNA
    
 August 11, 2025, version 0.13
 

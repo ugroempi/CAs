@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.13
+- **Version**: 0.14
 
 ## Warning
 
@@ -99,6 +99,13 @@ Chateauneuf and Kreher (2002) doubling in function
 
 strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs
 (<code>miscCA</code>)
+</li>
+
+<li>
+
+strength 3 CAs for v=q+1 with q a prime power, and k\<=v, based on
+augmenting an ordered design with further runs (Cohen, Colbourn and Ling
+2003 and 2008)
 </li>
 
 <li>
@@ -350,6 +357,22 @@ of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three
 covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4,
 pp. 217-238. doi: 10.1002/jcd.10002.
+</p>
+
+<p>
+
+Cohen, M.B., Colbourn, C.J., Ling, A.C.H. (2003). Augmenting simulated
+annealing to build interaction test suites, in: 14th International
+Symposium on Software Reliability Engineering, 2003. ISSRE 2003. IEEE,
+Denver, Colorado, USA, pp. 394-405.
+<https://doi.org/10.1109/ISSRE.2003.1251061>
+</p>
+
+<p>
+
+Cohen, M.B., Colbourn, C.J., Ling, A.C.H. (2008). Constructing strength
+three covering arrays with augmented annealing. Discrete Mathematics
+308, 2709-2722. <https://doi.org/10.1016/j.disc.2006.06.036>
 </p>
 
 <p>
