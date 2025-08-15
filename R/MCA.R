@@ -170,9 +170,14 @@
 #' ##    stopping short of reaching the known lower bound 52
 #' ##    within the default settings for outer retries
 #'
-#' ## use the argument D
-#' D <- MCA2(c(rep(5,1), rep(4,2), rep(3,7), rep(2,20)),
+#' ## use the argument D;
+#' ## even this naive version, though starting large, is quickly reduced
+#' ## to adequate size (sometimes even faster than smaller one)
+#' D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
 #'          outerRetry=0)
+#' \dontrun{
+#'    Doptimized <- postopNCK(D, 2)
+#' }
 #'
 #' ########################################################
 #' ### CA_to_MCA
