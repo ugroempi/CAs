@@ -50,7 +50,7 @@
 #' @usage eCAN(t, k, v)
 #' @usage eCAK(t, N, v)
 #' @usage Ns(t, k, v, exclude=NULL)
-#' @usage Ns_derive(t, k, v)
+#' @usage Ns_derive(t, k, v, exclude=NULL)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
 #' @usage N_fuseBoseCA(t,k,v)
 #' @usage N_fuseBushtCA(t,k,v)
@@ -232,20 +232,21 @@ Ns <- function(t, k, v, exclude=NULL){
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
                           "DWYER", "NIST","TJ", "powerCT", "miscCA",
-                          "compositCA"
+                          "compositCA", "ODbasedCA"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
     aus <- c(
     KSK=ifelse("KSK" %in% exclude || t>2 || v>2, NA, N_KSK(k)),
+    CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
     PALEY=ifelse("PALEY" %in% exclude, NA,
           N_PALEYcat(t,k,v)),
     CAEX=ifelse("CAEX" %in% exclude, NA,N_CAEX(t,k,v)),
     CYCLOTOMY=ifelse("CYCLOTOMY" %in% exclude, NA, N_CYCLOTOMYcat(t,k,v)),
     CKRS=ifelse("CKRS" %in% exclude, NA,N_CKRScat(t,k,v)),
+    SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
     miscCA=ifelse("miscCA" %in% exclude, NA,N_miscCAcat(t,k,v)),
     compositCA=ifelse("compositCA" %in% exclude, NA, N_compositCA(t,k,v)),
-    SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
     fuseBoseCA=ifelse("fuseBoseCA" %in% exclude, NA,N_fuseBoseCA(t,k,v)),
     fuseBushtCA=ifelse("fuseBushtCA" %in% exclude, NA,N_fuseBushtCA(t,k,v)),
     recBoseCA_PCA=ifelse("recBoseCA_PCA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="PCA"))),
@@ -256,47 +257,52 @@ Ns <- function(t, k, v, exclude=NULL){
     CK_NRB=ifelse("CK_NRB" %in% exclude,
                   NA, N_CK_NRB(t,k,v)),
     WKS=ifelse("WKS" %in% exclude, NA,N_WKScat(t,k,v)),
+    ODbasedCA=ifelse("ODbasedCA" %in% exclude, NA, N_ODbasedCA(t,k,v)),
     CS_CMMSSY=ifelse("CS_CMMSSY" %in% exclude, NA,N_CS_CMMSSY(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
-    CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
     powerCT=ifelse("powerCT" %in% exclude, NA,N_powerCT(t,k,v)),
+    TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
     NIST=ifelse("NIST" %in% exclude, NA,N_NISTcat(t,k,v)),
-    TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     eCAN=eCAN(t,k,v)[[1]])
     )
   aus <- aus[!is.na(aus)]
   # if (t==2 && v==2) aus <- c(KSK=N_KSK(k), aus)
-  if (length(aus)==0){
-    Nderive <- Ns_derive(t, k, v)
-    if (!is.na(Nderive)){
-      message("no solution found, but deriving yields a solution:")
-      aus <- Nderive["N",]
-      attr(aus, "detail") <- Nderive
-      return(aus)
-    }
-    message("no solution found")
-    return(numeric(0))
-  }
+  # if (length(aus)==0 && t<6){
+  #   Nderive <- Ns_derive(t, k, v, exclude=exclude)
+  #   if (!is.na(Nderive)){
+  #     message("no solution found, but deriving yields a solution:")
+  #     aus <- Nderive["N",]
+  #     attr(aus, "detail") <- Nderive
+  #     return(aus)
+  #   }
+  #   message("no solution found")
+  #   return(numeric(0))
+  # }
   aus
 }
 
 ## obtain possibilities for derivation sources
 #' @export
-Ns_derive <- function(t, k, v){
-  Nswoderive <- Ns(t, k, v)
+Ns_derive <- function(t, k, v, exclude=NULL){
+  Nswoderive <- Ns(t, k, v, exclude=exclude)
   if (t>=6){
     message("derive could not be used for strength 6")
     return(Nswoderive)
   }
-  fromNs <- Ns(t+1, k+1, v)
-  Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
+  fromNs <- Ns(t+1, k+1, v, exclude=exclude)
+
+  if (length(fromNs)>0)
+    Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
+  else return(NA)
   Ns <- as.data.frame(rbind('t-from'=t+1, 'k-from'=k+1, 'N-from'=fromNs, t=t, 'N'=Ns, k=k))
   aus <- dplyr::bind_rows(Nswoderive, Ns, .id="label")
   aus <- as.data.frame(aus)
+
   rownames(aus) <- c("N_direct", "t-from", "k-from", "N-from","t", "N-derived", "k")
   aus <- aus[c(1,6,5,7,2,3,4),]
+
   if (any(aus[1,] > aus[2,], na.rm=TRUE)) return(aus) else {
     message("no derived design was better than direct constructions")
     return(Nswoderive)
@@ -422,12 +428,19 @@ k_NISTcat <- function(t,N,v){
 ## obtain size of TJ catalogue entry
 #' @export
 N_TJcat <- function(t,k,v){
+  ## yield only an N where there is no other construction that
+  ##    yields it, i.e., where a stored CA must actually be used
   hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"k"]>=k &
-                  TJcat[,"v"]==v &
-                  !(TJcat$replaceable=="" & TJcat$code==""),,drop=FALSE]
+                  TJcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else {
+    if (v==2){
+      ## suppress N for replaced other constructions
+      pick <- which.min(hilf$N)
+      if (!hilf$replaceable[pick]=="") return(NA)
+    }
     if (t==2 && v==3){
+      ## CAEX
       if (k==4)
         message("The CA can be produced with command SCA_Bose(3).")
       else
@@ -523,6 +536,7 @@ ks <- function(t, N, v){
     recBoseCA_PCA=unname(k_recBoseCA(t,N,v,type="PCA")),
     recBoseCA_CA=unname(k_recBoseCA(t,N,v,type="CA")),
     WKS=k_WKScat(t,N,v),
+    ODbasedCA=k_ODbasedCA(t,N,v),
     CS_MS=k_CS_MS(N,v),
     CS_LCDST=k_CS_LCDST(N,v),
     CS_CK=k_CS_CK(t,N),
@@ -545,9 +559,9 @@ ks <- function(t, N, v){
 
 #' @export
 k_TJcat <- function(t,N,v){
+  ## only yield a non-NA result where a stored CA is needed
   hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"N"]<=N &
-                  TJcat[,"v"]==v &
-                  !(TJcat$replaceable=="" & TJcat$code==""),,drop=FALSE]
+                  TJcat[,"v"]==v & TJcat$replaceable=="",,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else{
     k <- max(hilf[,"k"])

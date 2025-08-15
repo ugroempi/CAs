@@ -189,7 +189,7 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
   if (!finished){
       aus <- eval(parse(text=labelToCode(constrs[1], t, k, v, ...)))
   }
-  if (any(is.na(aus))){
+  if (any(is.na(aus)) && fixNA){
     if (is.null(seed)) seed <- sample(1:32000, 1)
     nNA <- sum(is.na(aus))
     set.seed(seed)
@@ -232,7 +232,7 @@ labelToCode <- function(label, t, k, v, ...){
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial", "CS_CMMSSY"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }
@@ -254,7 +254,7 @@ labelToCode <- function(label, t, k, v, ...){
     return(paste0("fuseBoseCA(",k, ", ", v, ", ...)"))
   }
   if (label =="SCA_Busht"){
-    return(paste0("SCA_Busht(",v,",", t, ")"))
+    return(paste0("SCA_Busht(",v,",", t, ")[,1:",k,"]"))
   }
   if (label =="fuseBushtCA"){
     return(paste0("fuseBushtCA(",t, ",", k, ", ", v, ", ...)"))
@@ -263,6 +263,11 @@ labelToCode <- function(label, t, k, v, ...){
     if (!v==3) stop('"CAEX" requires v=3')
     if (!t==2) stop('"CAEX" requires t=2')
     return(paste0("CAEX(", k, ")"))
+  }
+  if (label == "ODbasedCA"){
+    if (!t==3) stop('"ODbasedCA" requires t=3')
+    if (!k <= v) stop('"ODbasedCA" requires k<=v')
+    return(paste0("ODbasedCA(", t, ",", k, ",", v, ")"))
   }
   if (label =="TJ"){
     ## as of June 2025, the 2-level CAs of TJ

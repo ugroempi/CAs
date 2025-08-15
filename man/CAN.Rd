@@ -44,7 +44,7 @@ eCAK(t, N, v)
 
 Ns(t, k, v, exclude=NULL)
 
-Ns_derive(t, k, v)
+Ns_derive(t, k, v, exclude=NULL)
 
 Ns_fuse(t, k, v, maxfuse = 1)
 
