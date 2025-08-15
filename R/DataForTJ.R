@@ -23,7 +23,7 @@ globalVariables(c("TJcat", "TJ2level_CAs"))
 #' implemented shortly and will then be incorporated in the \code{code} column).
 #'
 #' \code{TJ2level_CAs} is a list of arrays (class \code{ca}) corresponding to the
-#' rows of \code{TJcat} with entries in \code{nameInTJ2level_CAs}.
+#' rows of \code{TJcat} with entries in \code{nameInTJ2level_CAs} (access via names).
 #'
 #' @source
 #' The source is the no longer functional website \code{https://www.tamps.cinvestav.mx/~oc/} by

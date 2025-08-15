@@ -36,8 +36,18 @@ tjCA(6,18,2)  ## stored array
 ### reduce the storage requirements, as these files are responsible for
 ###    more than 80pct of the package size
 
+## handle rows without stored arrays
+settings <- TJcat[which(TJcat$nameInTJ2level_CAs=="" & TJcat$replaceable=="" & TJcat$v==2),]
+for (i in 1:nrow(settings)){
+  hilf <- names(bestN(settings$t[i], settings$k[i], 2))
+  if (!hilf=="TJ") settings$replaceable[i] <- hilf
+}
+settings <- settings[which(!settings$replaceable==""),] ## August 15 2025: 33 rows
+                                                        ## CS_CK, CYCLOTOMY, PALEY, powerCT
+TJcat[rownames(settings),]$replaceable <- settings$replaceable
+
 ## handle rows with stored arrays
-settings <- TJcat[!TJcat$nameInTJ2level_CAs=="",]
+settings <- TJcat[which(!TJcat$nameInTJ2level_CAs==""),]
 settings$replaceable <- ""
 for (i in 1:nrow(settings)){
   hilf <- names(bestN(settings$t[i], settings$k[i], 2))
@@ -48,9 +58,14 @@ table(settings$replaceable)
 ## do not remove arrays that are only on the Internet
 settings$replaceable[which(settings$replaceable=="DWYER")] <- ""
 table(settings$replaceable) ## seven additional arrays removable July 10 2025
+                            ## three additional arrays removable August 15 2025
 
 ## the following statement was only needed at the first round
 # TJcat$replaceable <- ""
+## August 15 2025
+## modified replaceable for CA(12, 3, 11, 2) to miscCA, as this has two constant rows
+TJcat["ca.3.2^11.txt",]$replaceable <- "miscCA"
+
 TJcat[rownames(settings),]$replaceable <- settings$replaceable
 ## the following statement was only needed at the first round
 # TJcat$code <- ""
@@ -71,6 +86,21 @@ TJcat$code[TJcat$replaceable=="CK_doublingCA"] <- paste0("CK_doublingCA(",
                                                          ", ",
                                                          TJcat$v[TJcat$replaceable=="CK_doublingCA"],
                                                          ")")
+TJcat$code[TJcat$replaceable=="miscCA"] <- paste0("miscCA(",
+                                                TJcat$t[TJcat$replaceable=="miscCA"],
+                                                ", ",
+                                                TJcat$k[TJcat$replaceable=="miscCA"],
+                                                ", ",
+                                                TJcat$v[TJcat$replaceable=="miscCA"],
+                                                ")")
+TJcat$code[TJcat$replaceable=="CYCLOTOMY"] <- paste0("cyclotomyCA(",
+                                                TJcat$t[TJcat$replaceable=="CYCLOTOMY"],
+                                                ", ",
+                                                TJcat$k[TJcat$replaceable=="CYCLOTOMY"],
+                                                ", ",
+                                                TJcat$v[TJcat$replaceable=="CYCLOTOMY"],
+                                                ")")
+
 TJcat$code[TJcat$replaceable=="CKRS"] <- paste0("ckrsCA(",
                                                 TJcat$t[TJcat$replaceable=="CKRS"],
                                                 ", ",
@@ -117,6 +147,9 @@ for (i in 1:nrow(TJcat)){
   print(TJcat$N[i]>=nrow(tjCA(TJcat$t[i], TJcat$k[i], 2)))
 }
 
+## removed files from TJ2level_CAs (August 15 2025)
+## some files were still there though they names were NA
+TJ2level_CAs[which(is.na(names(TJ2level_CAs)))] <- NULL
 # file.remove(paste0("D:/rtests/CAs/inst/extdata/TJ2level/", fns_toberemoved))
 save(TJcat, file="D:/rtests/CAs/data/TJcat.rda", compress="xz")
 save(TJ2level_CAs, file="D:/rtests/CAs/data/TJ2level_CAs.rda", compress="xz")
@@ -125,8 +158,9 @@ save(TJ2level_CAs, file="D:/rtests/CAs/data/TJ2level_CAs.rda", compress="xz")
 settings <- TJcat[which(!TJcat$replaceable==""),]
 settings$replaceable2 <- ""
 for (i in 1:nrow(settings)){
-  hilf <- names(bestN(settings$t[i], settings$k[i], 2))
-  if (!hilf=="TJ") settings$replaceable2[i] <- hilf
+  hilf <- bestN(settings$t[i], settings$k[i], 2)
+  if (hilf<=settings$N[i]) settings$replaceable2[i] <- names(hilf)
 }
 table(settings$replaceable, settings$replaceable2)
+## CS_CK and PALEY exchangeable, rest perfectly aligned
 ## perfectly aligned!

@@ -21,9 +21,9 @@ CAs corresponding to rows with neither entry cannot be created at present
 implemented shortly and will then be incorporated in the \code{code} column).
 
 \code{TJ2level_CAs} is a list of arrays (class \code{ca}) corresponding to the
-rows of \code{TJcat} with entries in \code{nameInTJ2level_CAs}.
+rows of \code{TJcat} with entries in \code{nameInTJ2level_CAs} (access via names).
 
-An object of class \code{list} of length 356.
+An object of class \code{list} of length 141.
 }
 \source{
 The source is the no longer functional website \code{https://www.tamps.cinvestav.mx/~oc/} by
