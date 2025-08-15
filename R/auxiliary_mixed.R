@@ -20,23 +20,6 @@
 #'    but is way more complicated
 #' outerseparate: workhorse function of function MCA2
 
-## returns the bottom left part of SCA_Bose
-## or a trivial OD for v not a prime power
-## with exceptions for v=6 and v=10
-
-OD <- function(v){
-  ## determine the OD according to Sherwood (2008)
-  ## for prime power v, it is an LOD, otherwise an OD
-  ## (OD is sufficient; OD can be verified by verifying
-  ## strength 2 for the OA with all-constant rows added
-  ## by calculating the GWLP
-  if (v %in% primedat$q) return(SCA_Bose(v)[(v+1):(v^2), -(v+1)])
-  if (v==6) return(miscCA(2,3,6)[-(1:6),]) ## three columns possible
-  if (v==10) return(maxconstant(miscCA(2,3,10))[-(1:10),]) ## three columns possible
-  one <- rep(0:(v-1), v-1)
-  cbind(one, (one + rep(1:(v-1), each=v))%%v)
-}
-
 one_to_howmany <- function(N, vfrom, vto, ...){
   ## if the ingoing design is not balanced, use most frequent levels
   ## for making them flexible
@@ -49,7 +32,7 @@ one_to_howmany <- function(N, vfrom, vto, ...){
   else
     Nflex <- nperlevel*perlevel + (vfrom-vto-nperlevel)*floor(N/vfrom)
   r <- floor(Nflex/(vto*(vto-1)))
-  ncol(OD(vto))^r
+  ncol(OD2(vto))^r
 }
 one_to_howmany_vec <- Vectorize(one_to_howmany, vectorize.args = c("vfrom", "vto"))
 # one_to_howmany(25,5,3)
@@ -62,7 +45,7 @@ colexpandOD <- function(D, c, lev=2){
   stopifnot(levs[c]==lev)
   nas <- which(is.na(D[,c]))
   stopifnot(length(nas)>=lev*(lev-1))
-  OD <- OD(lev)
+  OD <- OD2(lev)
   new <- do.call(cbind, rep(list(D[,c]), ncol(OD)))
   new[nas[1:(lev*(lev-1))],] <- OD
   if (c==1) aus <- cbind(D[,-1], new)
@@ -202,6 +185,7 @@ print(know) ## 4, NIST 43 runs
     ## create remainingNAs for current levels entry
     ##    (unchanged at 0, if it is created exclusively from prior columns)
     levnow <- nlevels$levels[j]
+    ncolODnow <- ncol(OD2(levnow))
     needednow <- nlevels$frequency[j]
     ## how much from leftover NA from previous (=larger) levels?
     remainingNAsprior <- remainingNAs[1:(j-1)]
@@ -211,7 +195,7 @@ print(know) ## 4, NIST 43 runs
     potentialColumnsPrior <- lapply(remainingNAsprior,
                                     function(obj) ifelse(levnow*(levnow - 1) > obj,
                                     0, ## no column possible
-                                    ncol(OD(levnow))^floor(obj/(levnow*(levnow - 1)))))
+                                    ncolODnow^floor(obj/(levnow*(levnow - 1)))))
 # print(potentialColumnsPrior)
 # print(ndonor_prior)
     #stopifnot(all(lengths(potentialColumnsPrior)==ndonor_prior)) ## sanity check
@@ -220,7 +204,7 @@ print(know) ## 4, NIST 43 runs
     initialNAnow <- ceiling(N*(vmax-levnow)/vmax) ## cautious, works with wise choice of levels
                        ## *very* wise choice may occasionally have more NA
     ## how many levnow-level columns can one such column be expanded to?
-    potentialColumnsNow <- ncol(OD(levnow))^floor(initialNAnow/(levnow*(levnow - 1)))
+    potentialColumnsNow <- ncolODnow^floor(initialNAnow/(levnow*(levnow - 1)))
     check <- (needednow - sum(unlist(potentialColumnsPrior))) %/% potentialColumnsNow    ## minimum number of required donor potential columns
     addcheck <- (needednow - sum(unlist(potentialColumnsPrior))) %% potentialColumnsNow
     if (addcheck > 0) check <- check + 1
@@ -246,7 +230,7 @@ print(know) ## 4, NIST 43 runs
           remainingNAs[[j]] <- c(rep(initialNAnow %% (levnow*(levnow-1)),
                                          (check-1) * potentialColumnsNow),
                                 rep(initialNAnow - levnow*(levnow-1) *
-                                  ceiling((needednow %% potentialColumnsNow)/ncol(OD(levnow))),
+                                  ceiling((needednow %% potentialColumnsNow)/ncolODnow),
                                   needednow %% potentialColumnsNow))
         next  ## move to next j, as no useprior is needed
     }
@@ -262,7 +246,7 @@ print(know) ## 4, NIST 43 runs
           if (sum(potcolnow) <= needednow){
             ## use them all (and likely some more)
             assigncols[i,j] <- assigncols[i,j] + potcolnow
-            remainingNA[[i]] <- remainingNA[[i]] - potcolnow/ncol(OD(levnow))*levnow*(levnow-1)
+            remainingNA[[i]] <- remainingNA[[i]] - potcolnow/ncolODnow*levnow*(levnow-1)
             if (sum(potcolnow)==needednow) break ## no further need
             needednow <- needednow - sum(potcolnow)
           }else{
@@ -274,10 +258,10 @@ print(know) ## 4, NIST 43 runs
             assigncols[i,j] <- assigncols[i,j] + needednow
             if (nneeded > 1)
             remainingNA[[i]][1:(nneeded-1)] <- remainingNA[[i]][1:(nneeded-1)] -
-              potcolnow[1:(nneeded-1)]/ncol(OD(levnow))*levnow*(levnow-1)
+              potcolnow[1:(nneeded-1)]/ncolODnow*levnow*(levnow-1)
             ## last (or only) needed column
             remainingNA[[i]][nneeded] <- remainingNA[[i]][nneeded] -
-              ceiling(neededlast/ncol(OD(levnow)))*levnow*(levnow-1)
+              ceiling(neededlast/ncolODnow)*levnow*(levnow-1)
             ## remaining values do not need to be changed
           }
         }
