@@ -30,14 +30,15 @@
 #' the best possible ones if the perfect ingredients are not (yet) available;
 #' they may also be somewhat smaller, because this package makes use of the
 #' maximum number of constant rows of the ingredient CAs where possible, whereas
-#' the numbers in \code{\link{colbournBigFrame}} do not always do that.
+#' the numbers in \code{\link{colbournBigFrame}} do not always do that (they do it where
+#' the Source entry contains "c" next to the respective ingredient).
 #'
 #' The construction uses functions \code{\link{Tred}}, \code{\link{createDHF}}, and
 #' \code{\link{DHHF2CA}}, as well as CA construction functions as indicated in
 #' \code{\link{powerCTcat}}.
 #'
 #' @returns Function \code{powerCA}
-#' returns a strength code{t} CA in \code{N_powerCA(t, k, v)} runs
+#' returns a strength \code{t} CA in \code{N_powerCA(t, k, v)} runs
 #' and \code{k} columns. \code{k_powerCA(t, N, v)} returns the maximum number of columns
 #' that can be achieved with \code{N} runs when requesting strength \code{t} at \code{v} levels.
 #'
@@ -48,8 +49,13 @@
 #' D <- powerCA(3, 25, 2)
 #' dim(D)
 #' coverage(D, 3)
+#' Ns(3, 25, 2) ## too large for so few columns
+#'
+#' ## a larger example
 #' Ns(6, 25, 2) ## way too large for so few columns
 #' ks(6, 5321, 2) ## would cover many more columns
+#' dim(powerCA(6,5000,2))
+#' Ns(6, 5000, 2) ## eCAN is PowerCZ
 #'
 
 #' @export

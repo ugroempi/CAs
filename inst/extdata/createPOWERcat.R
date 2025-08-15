@@ -128,6 +128,17 @@ powerCTcat$N4[pick] <- mapply(bestN, powerCTcat$t[pick], powerCTcat$w4[pick], po
 powerCTcat$constr4[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)), powerCTcat$t[pick], powerCTcat$w1[pick], powerCTcat$v[pick])
 powerCTcat$constr4 <- unlist(powerCTcat$constr4)
 
+## replace Paley with miscCA for constr2 and constr3 where w2 and w3 are 8, respectively
+## two constant rows instead of one
+## modified August 15, 2025
+powerCTcat$constr2[which(powerCTcat$w2==8 & powerCTcat$v==2)] <- "miscCA"
+powerCTcat$c2[which(powerCTcat$w2==8 & powerCTcat$v==2)] <- 2
+
+powerCTcat$constr3[which(powerCTcat$w3==8 & powerCTcat$v==2)] <- "miscCA"
+powerCTcat$c3[which(powerCTcat$w3==8 & powerCTcat$v==2)] <- 2
+
+powerCTcat$constr2[which(powerCTcat$t==5 & powerCTcat$w2==14 & powerCTcat$v==4)] <- "compositCA"
+
 ## information on constant rows
 ## SCA_Busht has v constant rows, as always v columns only
 powerCTcat$c1[which(powerCTcat$constr1=="SCA_Busht")] <- powerCTcat$v[which(powerCTcat$constr1=="SCA_Busht")]
@@ -194,7 +205,8 @@ powerCTcat$chi <- pmax(0, powerCTcat$v -
 powerCTcat$claimedN <- powerCTcat$N
 powerCTcat$claimedk <- powerCTcat$k
 
-## this seems to be still wrong, though I cannot see why
+## this seems correct for standard cases
+## cases with massive deviations from claimed N: "+" in the construction, or poor ingredients
 powerCTcat$N <- powerCTcat$chi + (powerCTcat$N1-powerCTcat$c1)*powerCTcat$u1 +
   ifelse(is.na((powerCTcat$N2-powerCTcat$c2)*powerCTcat$u2), 0, (powerCTcat$N2-powerCTcat$c2)*powerCTcat$u2) +
   ifelse(is.na((powerCTcat$N3-powerCTcat$c3)*powerCTcat$u3), 0, (powerCTcat$N3-powerCTcat$c3)*powerCTcat$u3) +
@@ -208,7 +220,8 @@ powerCTcat$k[setdiff(1:nrow(powerCTcat), homog)] <- powerCTcat$claimedk[setdiff(
 table(powerCTcat$k - powerCTcat$claimedk)
 ## +2167 because of the 10000 cap in the tables
 ## - x because of powerCTcat[(1:nrow(powerCTcat)) %in% grep("+", powerCTcat$Source, fixed=TRUE),]
-boxplot(N - claimedN ~ constr1, data=powerCTcat, horizontal=TRUE, las=1, ylab="", subset=!constr1 %in% c("NIST", "DWYER"))
+boxplot(N - claimedN ~ constr1, data=powerCTcat, horizontal=TRUE, las=1, ylab="",
+        subset=!constr1 %in% c("NIST", "DWYER"))
 
 save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda", compress="xz")
 
