@@ -17,6 +17,7 @@
 #'
 #' @param k integer: the target number of columns
 #' @param v integer: the number of levels
+#' @param t integer: the target strength (always 3)
 #' @param D3 a strength 3 CA with j columns in v levels, coded as integers
 #'           0, ..., v-1 or 1,...,v
 #' @param D2 a strength 2 CA with j columns in v levels, coded as integers
@@ -28,7 +29,6 @@
 #' (may take very long for large arrays, therefore defaults to FALSE)
 #' @param start0 logical: Do integer values start with 0 ?  (\code{D3} and \code{D2}
 #'           must be compatible)
-#' @param t integer: the target strength (always 3)
 #' @param ... further arguments to function \code{\link{coverage}} (\code{CK_doubling})
 #'       or \code{\link{bestN}} (function \code{N_CK_doublingCA})
 #'
@@ -149,4 +149,25 @@ N_CK_doublingCA <- function(t=3, k, v, ...){
   ## N + M*(v-1) runs
   bestN(3, k3, v) +
     bestN(2, k3, v)*(v - 1)
+}
+
+# #' @export
+# this is not up to use yet
+# the problem is recursive use of CK_doubling
+# maybe this must be directly addressed
+k_CK_doublingCA <- function(t=3, N, v, ...){
+  ## the best ingredient CAs are not expected to are themselves from
+  ## CK_doubling
+  if (!t==3) return(NA)
+  hilfk <- ks(3, N, v); hilfk <- hilfk[-length(hilfk)] # omit eCAK
+  kupper <- floor(max(hilfk)/2)
+  ## N + M*(v-1) runs
+  if (bestN(3, kupper, v) +
+    bestN(2, kupper, v)*(v - 1) <= N) return(2*kupper)
+  ## count down until feasible
+  while(kupper<=1){
+    kupper <- kupper - 1
+    if (bestN(3, kupper, v) +
+        bestN(2, kupper, v)*(v - 1) <= N) return(2*kupper)
+  }
 }
