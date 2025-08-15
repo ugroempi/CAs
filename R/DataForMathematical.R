@@ -10,7 +10,7 @@ globalVariables(c("CYCLOTOMYcat", "PALEYcat"))
 #' @format
 #' \code{CYCLOTOMYcat} is a data.frame in 213 rows
 #' with columns \code{t} (strength),
-#' \code{k} (number of CA columns), \code{v} (number of levels), code{N} (number of CA rows),
+#' \code{k} (number of CA columns), \code{v} (number of levels), \code{N} (number of CA rows),
 #' \code{q} (prime or prime power behind the construcion), \code{type} (the construction type),
 #' and the code for the workhorse function that the interface function \code{\link{cyclotomyCA}}
 #' will use.
