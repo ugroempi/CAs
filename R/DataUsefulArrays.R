@@ -1,4 +1,4 @@
-globalVariables(c("ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261.21.6", "miscCAcat"))
+globalVariables(c("ca12.2.8", "ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261.21.6", "miscCAcat"))
 
 #' Useful arrays for covering array constructions
 #'
@@ -25,20 +25,27 @@ globalVariables(c("ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261.21.6", "mis
 #' .
 #'
 #' @source
+#' \code{oa12.2.8} was created by the package author based on learning about
+#' its existence (with two constant rows) from Colbourn and Torres-Jimenez (2010)
+#' and Cohen, Colbourn and Ling (2003).\cr
 #' \code{oa1728.12.6} was created by the package author using construction 2
 #' of Ji and Yin (2010).\cr
 #' The creation of the objects is documented by the R file \code{miscCAs.R}
 #' in the \code{extdata} folder of this package, which can be located using
 #' \code{system.file("extdata", package="CAs")}.
 #'
-#' @references Ji and Yin (2010)
+#' @references Cohen, Colbourn and Ling (2003), Colbourn and Torres-Jimenez (2010), Ji and Yin (2010)
 #'
 #' @examples
+#' attributes(ca12.2.8)
 #' attributes(ca26.4.15)
 #' attributes(oa1728.12.6)
 #' attributes(oa3375.15.6)
 #' attributes(oa9261.21.6)
 #'
+
+#'@rdname DataUsefulArrays
+"ca12.2.8"
 
 #'@rdname DataUsefulArrays
 "ca26.4.15"

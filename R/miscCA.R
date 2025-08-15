@@ -7,7 +7,7 @@
 #'
 #' @aliases miscCA
 #'
-#' @usage miscCA(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=TRUE, makePCA=FALSE, ...)
+#' @usage miscCA(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=FALSE, makePCA=FALSE, ...)
 #'
 #' @param t integer: the strength
 #' @param k integer: the number of columns
@@ -22,7 +22,9 @@
 #'       \code{fixNA_seed} of the returned object.
 #' @param maxconstant logical: should constant rows be maximized ?\cr
 #'       ignored for internal arrays, applied for arrays loaded
-#'       from package \pkg{\link{DoE.base}} only
+#'       from package \pkg{\link{DoE.base}} only;
+#'       per default, the array is not modified and may not even
+#'       have a single constant row
 #' @param makePCA logical: should a PCA structure be enforced ?\cr
 #'       ignored for internal arrays, applied for arrays loaded
 #'       from package \pkg{\link{DoE.base}} only\cr
@@ -53,7 +55,7 @@
 #'
 
 #' @export
-miscCA <- function(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=TRUE, makePCA=FALSE, ...){
+miscCA <- function(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=FALSE, makePCA=FALSE, ...){
   Call <- sys.call()
   hilf <- miscCAcat[miscCAcat[,"t"]==t &
                       miscCAcat[,"k"]>=k &

@@ -3,6 +3,7 @@
 ## info collected in miscCAcat at the very top
 ##
 miscCAcat <- rbind(
+  data.frame(t=3, k=8, v=2, N=12, fns="ca12.2.8", nconst=2, PCAstatus=0, hasNA=FALSE, comment="created from paleyCA(3,23)"),
   data.frame(t=5, k=6, v=3, N=243, fns="DoE.base::L243.3.6-1", nconst=3, PCAstatus=0, hasNA=FALSE, comment=""),
   data.frame(t=5, k=12, v=3, N=729, fns="DoE.base::L729.3.12-1", nconst=3, PCAstatus=0, hasNA=FALSE, comment=""),
   data.frame(t=2, k=15, v=4, N=26, fns="ca26.4.15", nconst=1, PCAstatus=11, hasNA=FALSE, comment="SCA with k1=11 for up to 13 columns"),
@@ -21,6 +22,20 @@ miscCAcat <- rbind(
 ## PCAstatus=0 means that there are v constant rows - otherwise,
 ##      PCAstatus must be at least 1, as it is always possible to arrange rows such that
 ##      the first column has v distinct elements
+
+## ca12.2.8
+## make one row constant
+D <- maxconstant(paleyCA(3,23))
+rowSums(D)
+## keep 8 columns with row 2 equal to 1
+D <- D[,which(D[2,]==1)[5:12]]
+ca12.2.8 <- postopNCK(D, 3, fixrows=2, innerRetry = 3, seed=17190)
+attr(ca12.2.8, "rowOrder") <- NULL
+attr(ca12.2.8, "seed") <- NULL
+attr(ca12.2.8, "Call") <- NULL
+attr(ca12.2.8, "origin") <- c("from paleyCA(3,23) by making one row constant,",
+                              "picking last eight columns with second row also constant,",
+                              "and reducing to 12 runs via postopNCK with seed 17190")
 
 ## ca26.4.15
 hilf <- strsplit("220033101323300 030210112330122 113300232313302 003123221103122 132102303103211 101231020033333 202211323301202 203211032112311 312203001230220 321130332202130 212300123002123 332122313000332 330021223211110 303312110223010 231122010331131 321033210132201 021301003322012 01032013102⋆211 130122301222103 012032330211322 010300111121033 123013202011233 000000000000000 111111111110020 222222222220021 333333333330013", " ")
@@ -260,6 +275,7 @@ attr(oa9261.21.6, "origin") <- "Ji and Yin Lemma 4.1"
 attr(oa9261.21.6, "t") <- 3
 attr(oa9261.21.6, "PCAstatus") <- list(type="SCA", k1=4, k2=2)
 
+# save(ca12.2.8, file="d:/rtests/CAs/data/ca12.2.8.rda", compress="xz")
 # save(ca26.4.15, file="d:/rtests/CAs/data/ca26.4.15.rda", compress="xz")
 # save(oa1728.12.6, file="d:/rtests/CAs/data/oa1728.12.6.rda", compress="xz")
 # save(oa3375.15.6, file="d:/rtests/CAs/data/oa3375.15.6.rda", compress="xz")

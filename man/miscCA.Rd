@@ -4,7 +4,7 @@
 \alias{miscCA}
 \title{Incorporate miscellaneous arrays}
 \usage{
-miscCA(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=TRUE, makePCA=FALSE, ...)
+miscCA(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=FALSE, makePCA=FALSE, ...)
 }
 \arguments{
 \item{t}{integer: the strength}
@@ -25,7 +25,9 @@ a seed is randomly obtained and stored in the attribute
 
 \item{maxconstant}{logical: should constant rows be maximized ?\cr
 ignored for internal arrays, applied for arrays loaded
-from package \pkg{\link{DoE.base}} only}
+from package \pkg{\link{DoE.base}} only;
+per default, the array is not modified and may not even
+have a single constant row}
 
 \item{makePCA}{logical: should a PCA structure be enforced ?\cr
 ignored for internal arrays, applied for arrays loaded
