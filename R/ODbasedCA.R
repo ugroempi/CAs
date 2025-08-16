@@ -90,7 +90,7 @@ ODbasedCA <- function(t=3, k, v, ...){
   OD <- OD3(v-1)
   hilfN <- bestN(3, k, 2)
   ## maximum feasible k for the necessary N
-  if (hilfN==12){
+  if (hilfN==12 && k<=8){
     hilfk <- k
     constr <- "miscCA"
   }else{
