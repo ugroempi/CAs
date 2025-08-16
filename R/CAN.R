@@ -431,7 +431,8 @@ N_TJcat <- function(t,k,v){
   ## yield only an N where there is no other construction that
   ##    yields it, i.e., where a stored CA must actually be used
   hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"k"]>=k &
-                  TJcat[,"v"]==v,,drop=FALSE]
+                  TJcat[,"v"]==v &
+                !(TJcat$v==2 & TJcat$nameInTJ2level_CAs==""),,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else {
     if (v==2){
@@ -561,7 +562,8 @@ ks <- function(t, N, v){
 k_TJcat <- function(t,N,v){
   ## only yield a non-NA result where a stored CA is needed
   hilf <- TJcat[TJcat[,"t"]==t & TJcat[,"N"]<=N &
-                  TJcat[,"v"]==v & TJcat$replaceable=="",,drop=FALSE]
+                  TJcat[,"v"]==v &
+                  !(TJcat$v==2 & TJcat$nameInTJ2level_CAs==""),,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else{
     k <- max(hilf[,"k"])
