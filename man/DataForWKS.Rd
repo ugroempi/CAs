@@ -7,7 +7,7 @@
 \title{Data for function wksCA}
 \format{
 \code{WKScat} is a data.frame in 43 rows with columns \code{t} (strength), \code{k} (number of CA columns),
-\code{v} (number of levels) and code{N} (number of CA rows).
+\code{v} (number of levels) and \code{N} (number of CA rows).
 
 \code{WKS_CAs} is a list of stored strength 6 CAs for 2-level factors,
 constructed by Wagner, Kampel and Simos (2021). Its element names are

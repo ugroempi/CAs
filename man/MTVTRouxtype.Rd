@@ -33,7 +33,7 @@ or strength 5 CA in 2k columns at v levels each from several smaller arrays.
 \section{Details}{
 
 
-The constructions are based on a strength code{t} CA A, a strength {t-1} CA B, a strength \code{t-2} CA C
+The constructions are based on a strength \code{t} CA A, a strength {t-1} CA B, a strength \code{t-2} CA C
 and, for strength 4 with Theorem 4.3 as well as 5, a strength 2 CA D.
 These ingredient CAs have c columns at \code{v}, where \code{c=ceiling(k/2)}, except
 for Theorem 4.3, where D has \code{v} columns at v levels.\cr

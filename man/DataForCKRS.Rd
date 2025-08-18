@@ -7,7 +7,7 @@
 \title{Data for function ckrsCA}
 \format{
 \code{CKRScat} is a data.frame in 53 rows with columns \code{t} (strength), \code{v} (number of levels),
-\code{k} (number of CA columns), code{N} (number of CA rows)
+\code{k} (number of CA columns), \code{N} (number of CA rows)
 and \code{fn} (name of entry in list \code{CKRS_CAs}.
 
 \code{CKRS_CAs} is a list of 53 covering arrays (class \code{ca}) corresponding to the

@@ -6,7 +6,7 @@
 \title{Data for function dwyerCA}
 \format{
 \code{DWYERcat} is a data.frame with columns \code{t} (strength), \code{v} (number of levels),
-\code{k} (number of CA columns), code{N} (number of CA rows) and \code{Source}
+\code{k} (number of CA columns), \code{N} (number of CA rows) and \code{Source}
 (a brief descriptive source entry by Aaron Dwyer).
 }
 \source{

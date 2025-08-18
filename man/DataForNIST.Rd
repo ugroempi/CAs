@@ -6,7 +6,7 @@
 \title{Data for function nistCA}
 \format{
 \code{NISTcat} is a matrix with columns \code{t} (strength), \code{v} (number of levels),
-\code{k} (number of CA columns) and code{N} (number of CA rows). Its rownames are the file
+\code{k} (number of CA columns) and \code{N} (number of CA rows). Its rownames are the file
 names in the NIST library of covering arrays.
 }
 \source{
