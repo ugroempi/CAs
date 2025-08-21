@@ -74,6 +74,7 @@
 #' * \code{\link{CAEX_CAs}} and \code{\link{CAEX_lineages}},
 #' * \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
 #' * \code{\link{powerCTcat}},
+#' * \code{\link{SMCcat}} and \code{\link{SMC_CPHFs}}
 #' * \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
 #' * \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
 #' * \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},

@@ -275,6 +275,11 @@ used by the package functions:
 
 <li>
 
+<code>SMCcat</code> and <code>SMC_CPHFs</code>
+</li>
+
+<li>
+
 <code>MeagherStevensCombis</code> and
 <code>MeagherStevensStarters</code>,
 </li>
@@ -325,7 +330,14 @@ package=“CAs”)</code> from within R.
 
 ## Current status of package implementation (for uniform CAs only)
 
-![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->
+The figures show performance percentages relative to the best-known
+arrays as collated by Colbourn, status November 2024; there are figures
+for up to 10 levels and figures for up to 25 levels. For large $`v`$,
+the relative performance improves versus medium $`v`$; this is
+presumably due to a worse status of best-known arrays, not to a better
+status of implementation in the package.
+
+![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->![](README_files/figure-gfm/status1-5.png)<!-- -->![](README_files/figure-gfm/status1-6.png)<!-- -->![](README_files/figure-gfm/status1-7.png)<!-- -->![](README_files/figure-gfm/status1-8.png)<!-- -->
 
 ## References
 

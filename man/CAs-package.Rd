@@ -86,6 +86,7 @@ but are mainly meant to be used by the package functions:
 \item \code{\link{CAEX_CAs}} and \code{\link{CAEX_lineages}},
 \item \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
 \item \code{\link{powerCTcat}},
+\item \code{\link{SMCcat}} and \code{\link{SMC_CPHFs}}
 \item \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
 \item \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
 \item \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},
