@@ -179,15 +179,6 @@ circular <- function(vec){
   aus
 }
 
-gf_minus <- function(x,y,gf){
-  ## calculates x - y, after reducing both by a mod operation to
-  ## gf entries
-  q <- gf$q; p <- gf$p
-  x <- x%%q; y <- y%%q
-  yn <- gf$neg[y+1]
-  gf$plus[x+1,yn+1]
-}
-
 
 ## function for reading and arranging copy-pasted strings
 funmakefromstrings <- function(stringvec){
