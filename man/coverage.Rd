@@ -82,8 +82,10 @@ For function \code{coverage}, if verbosity is requested, there are additional li
 for \code{verbose=1} the number of covered tuples for each projection (\code{ncovereds}),
 the proportion this number represents (\code{proportions}),
 
-for \code{verbose=2} the frequency tables of tuples (\code{tabs})
-and the identification indices of uncovered tuples \code{uncovereds}.
+for \code{verbose=2} the frequency tables of tuples (\code{tabs}),\cr
+a list of identification indices of uncovered tuples for each projection (\code{uncovereds})\cr
+and the \code{projections} as a \code{t x choose(k, t)}-matrix that can be used as the legend
+for the columns of \code{tabs} for the elements of \code{uncovered}.
 
 Function \code{coverage_iter} calculates the same quantities as function \code{coverage};
 instead of creating all projections at once, it creates them iteratively, which is slower
