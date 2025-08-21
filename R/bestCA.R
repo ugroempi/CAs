@@ -232,7 +232,7 @@ labelToCode <- function(label, t, k, v, ...){
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "smcCA"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }
@@ -327,6 +327,9 @@ labelToCode <- function(label, t, k, v, ...){
   if (label=="CS_CK"){
     if (!v==2) stop('"CS_CK" requires v=2')
     return(paste0('CS_CK(', k, ', t=', t, ')'))
+  }
+  if (label=="smcCA"){
+    return(paste0('smcCA(', t, ', ', k, ', ', v, ')'))
   }
   if (label=="powerCT"){
     return(paste0('powerCA(', t, ', ', k, ', ', v, ', type="CT")'))

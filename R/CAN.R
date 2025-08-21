@@ -44,6 +44,7 @@
 #' @aliases k_CYCLOTOMYcat
 #' @aliases k_CAEX
 #' @aliases k_fuseBoseCA
+#' @aliases k_SCA_Busht
 #' @aliases k_fuseBushtCA
 #' @aliases k_recBoseCA
 #'
@@ -232,7 +233,7 @@ Ns <- function(t, k, v, exclude=NULL){
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
                           "DWYER", "NIST","TJ", "powerCT", "miscCA",
-                          "compositCA", "ODbasedCA"
+                          "compositCA", "ODbasedCA", "smcCA"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
@@ -244,7 +245,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CAEX=ifelse("CAEX" %in% exclude, NA,N_CAEX(t,k,v)),
     CYCLOTOMY=ifelse("CYCLOTOMY" %in% exclude, NA, N_CYCLOTOMYcat(t,k,v)),
     CKRS=ifelse("CKRS" %in% exclude, NA,N_CKRScat(t,k,v)),
-    SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
+ #   SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
     miscCA=ifelse("miscCA" %in% exclude, NA,N_miscCAcat(t,k,v)),
     compositCA=ifelse("compositCA" %in% exclude, NA, N_compositCA(t,k,v)),
     fuseBoseCA=ifelse("fuseBoseCA" %in% exclude, NA,N_fuseBoseCA(t,k,v)),
@@ -261,6 +262,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CS_CMMSSY=ifelse("CS_CMMSSY" %in% exclude, NA,N_CS_CMMSSY(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
+    smcCA=ifelse("smcCA" %in% exclude, NA, N_smcCA(t,k,v)),
     powerCT=ifelse("powerCT" %in% exclude, NA,N_powerCT(t,k,v)),
     TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
@@ -344,7 +346,9 @@ N_fuseBushtCA <- function(t, k, v){
 #' @export
 N_SCA_Busht <- function(t, k, v){
   if (!v %in% primedat$q) return(NA)
-  if (k > v+1) return(NA)
+  if (k > v+1 && !t==3 ) return(NA)
+  if (k > v+1 && !((v/2)%%1)==0) return(NA)
+  if (k > v+2 && ((v/2)%%1)==0) return(NA)
   v^t
 }
 
@@ -533,6 +537,7 @@ ks <- function(t, N, v){
     CKRS=k_CKRScat(t,N,v),
     miscCA=k_miscCAcat(t,N,v),
     fuseBoseCA=k_fuseBoseCA(t,N,v),
+  #  SCA_Busht=k_SCA_Busht(t,N,v),
     fuseBushtCA=k_fuseBushtCA(t,N,v),
     recBoseCA_PCA=unname(k_recBoseCA(t,N,v,type="PCA")),
     recBoseCA_CA=unname(k_recBoseCA(t,N,v,type="CA")),
@@ -542,6 +547,7 @@ ks <- function(t, N, v){
     CS_LCDST=k_CS_LCDST(N,v),
     CS_CK=k_CS_CK(t,N),
     CS_CMMSSY=k_CS_CMMSSY(t,N),
+    smcCA=N_smcCA(t,N,v),
     powerCT=k_powerCT(t,N,v),
     DWYER=k_DWYERcat(t,N,v),
     NIST=k_NISTcat(t,N,v),
@@ -594,9 +600,18 @@ k_fuseBoseCA <- function(t=2, N, v){
 
 #' @export
 k_fuseBushtCA <- function(t, N, v){
-  aus <- try(k_fuseBose(t=t, N=N, v=v)["k"], silent = TRUE)
+  aus <- try(k_fuseBusht(t=t, N=N, v=v)["k"], silent = TRUE)
   if ("try-error" %in% class(aus)) return(NA)
   unname(aus)
+}
+
+## obtain sizes from OA
+#' @export
+k_SCA_Busht <- function(t, N, v){
+  if (!v %in% primedat$q) return(NA)
+  if (N < v^t) return(NA)
+  if (((v/2)%%1)==0 && t==3) return(v+2)
+  v + 1
 }
 
 #' @export

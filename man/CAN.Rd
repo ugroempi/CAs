@@ -34,6 +34,7 @@
 \alias{k_CYCLOTOMYcat}
 \alias{k_CAEX}
 \alias{k_fuseBoseCA}
+\alias{k_SCA_Busht}
 \alias{k_fuseBushtCA}
 \alias{k_recBoseCA}
 \title{Functions for N and k from Colbourn tables, other libraries, and implemented constructions}
