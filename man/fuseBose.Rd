@@ -93,8 +93,13 @@ eCAK(2, 526, 22) ## as good as it gets
 
 N_fuseBose(v=6)
 
-## create a CA(61, 3, 9, 7)
+## run size from fuseBusht for t=3,k=9,v=7
 N_fuseBusht(3,9,7)
+
+## fuseBusht is very close to eCAN
+## postopNCK removes a few rows
+## (not in its implementation in this package)
+Ns(3, 18, 15)
 
 ## fuseBusht is the best implemented solution
 Ns(3,14,12)

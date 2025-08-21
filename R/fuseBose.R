@@ -82,8 +82,13 @@
 #'
 #' N_fuseBose(v=6)
 #'
-#' ## create a CA(61, 3, 9, 7)
+#' ## run size from fuseBusht for t=3,k=9,v=7
 #' N_fuseBusht(3,9,7)
+#'
+#' ## fuseBusht is very close to eCAN
+#' ## postopNCK removes a few rows
+#' ## (not in its implementation in this package)
+#' Ns(3, 18, 15)
 #'
 #' ## fuseBusht is the best implemented solution
 #' Ns(3,14,12)
@@ -157,10 +162,11 @@ fuseBushtCA <- function(t, k, v, fixNA=TRUE, ...){
   if (hilf["q"]==hilf["v"]){
     aus <- SCA_Busht(v, t)
     attrs <- attributes(aus)
-    if (k < v + 1){
+    if (k < ncol(aus)){
         aus <- aus[,1:k]
-        attrs$PCAstatus$k2 <- 0
-        attrs$PCAstatus$k1 <- k
+        attrs$dim[2] <- k
+        attrs$PCAstatus$k2 <- max(0, k-attrs$PCAstatus$k1)
+        attrs$PCAstatus$k1 <- min(k, attrs$PCAstatus$k1)
         attributes(aus) <- attrs
     }
     return(aus)
@@ -254,11 +260,22 @@ N_fuseBusht <- function(t, k, v, ...){
   stopifnot(is.numeric(k))
   stopifnot(k %% 1==0)
   ## find next largest suitable prime
-  q <- min(primpotenzen[which(primpotenzen >= max(v, k-1))])
+  q <- min(primpotenzen[which(primpotenzen >= max(v, k-2))])
+  if (q==k-2){
+    ## this is suitable for powers of 2 with t=3 only
+    if (!(((q/2)%%1)==0 && t==3)) {
+      primpotenzen <- setdiff(primpotenzen, q)
+      q <- min(primpotenzen[which(primpotenzen >= max(v, k-2))])
+    }
+  }
+  ## now q is permissible
   kalt <- k
+  ## kmax depends on the q,t combination
+  kmax <- ifelse(t==3 && ((q/2)%%1)==0, q + 2, q + 1)
+
   ## prevent cases for which fewer than 2 levels would remain
   stopifnot(q-v <= v-2)
-  c(N=q^t-2*(q-v), k=kalt, kmax=q+1, v=v, q=q)
+  c(N=q^t-2*(q-v), k=kalt, kmax=kmax, v=v, q=q)
 }
 
 #' @export
@@ -269,6 +286,6 @@ k_fuseBusht <- function(t, N, v, ...){
   ## find next largest suitable prime
   q <- min(primpotenzen[which(primpotenzen >= max(v, N^(1/t)))])
   Nalt <- N
-  c(N=q^t-2*(q-v), k = q+1, Nmax=Nalt, v=v, q=q)
+  c(N=q^t-2*(q-v), k = k_SCA_Busht(t, q^t, q), Nmax=Nalt, v=v, q=q)
 }
 

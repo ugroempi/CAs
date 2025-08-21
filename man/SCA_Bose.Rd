@@ -16,7 +16,8 @@ SCA_Busht(q, t)
 }
 \value{
 Both functions yield a matrix of class \code{ca} which is an orthogonal array in
-\code{q+1} columns with \code{q} levels; the number of rows is
+\code{q+1} columns with \code{q} levels (exception: \code{q+2} columns for \code{t=3} and \code{q} a power of 2);
+the number of rows is
 \code{q^2} for \code{SCA_Bose} and \code{q^t} for \code{SCA_Busht}.
 The arrays are rearranged such that their first \code{q} columns
 have their first \code{q} rows constant,
@@ -36,77 +37,30 @@ with width of the left parts equal to \code{q} (and thus width of the right-hand
 of the matrix consists of columns whose elements are a permutation of the number 0 to \code{q-1}.
 This structure of the matrix is exploited by function \code{\link{productPCA}}.
 
-Function \code{SCA_Busht} obtains the strength t Bush constructed CA (q+1 columns in q levels, q^t runs, q a prime power)
-and rearranges it into SCA shape. For \code{t=2}, it equals the array created by \code{SCA_Bose}.
+Function \code{SCA_Busht} obtains the strength t Bush constructed CA (q+1 columns in q levels, q^t runs, q a prime power;
+exception: for \code{t=3} and \code{q} a power of 2, $q+2$ columns are achieved.\cr
+In all cases, the array is arranged into SCA shape with \code{k1=q}.
+For \code{t=2}, it equals the array created by \code{SCA_Bose}.
 This array is also a 2PCA; however, \code{productPCA} is a strength 2 construction only.
 
 Function \code{SCA_Bose} uses function \code{\link[lhs]{createBose}},
-function \code{SCA_Busht} uses function \code{\link[lhs]{createBusht}}.
+function \code{SCA_Busht} uses function \code{\link[lhs]{createBusht}},
+except for \code{t=3} with \code{q} a power of 2, where it uses the internal
+function \code{createBush3PowerOf2} of this package, which is based
+on Sherwood et al. (2006).
 }
 
 \examples{
-#################################################
-### productPCA
-#################################################
 A <- SCA_Bose(4)  ## Bose array, arranged as SCA
-EPCA <- productPCA(A, A)
-coverage(EPCA, 2)
-dim(EPCA)  ## 24 columns only, 28 runs only
-eCAN(2, 24, 4) ## optimal, this construction!
-eCAK(2, 28, 4) ## optimal, this construction
-attr(EPCA, "PCAstatus")
-## better, if D2 is left unspecified, because
-## the structure of SCA_Bose(4) in the role of D2
-## is exploited
-EPCA2 <- productPCA(A)
-attr(EPCA2, "PCAstatus")
+B <- SCA_Busht(4,2)
+all.equal(A, B)
+## arrays the same, difference only in attributes
 
-
-########################################
-## utilities CA_to_PCA and is.PCA
-########################################
-SCA61.2..9.1..7 <- CA_to_PCA(CS_MS(10, 7), tryhard=TRUE)
-attributes(SCA61.2..9.1..7)
-
-is.PCA(DoE.base::L36.2.8.6.3[,-(1:8)])
-CA_to_PCA(DoE.base::L36.2.8.6.3[,-(1:8)])
-
-## utility SCA_Bose
-SCA_Bose(3)
-
-## apply PCA construction
-E <- productPCA(SCA_Bose(3))
-dim(E)
-coverage(E,2)
-eCAN(2,15,3)  ## optimal for 15 columns
-eCAK(2,15,3)  ## but does not cover 20 columns
-
-## for non-prime power case
-## use optimum CA(46,2,9,6)
-MS6 <- CS_MS(k=9, v=6)
-MS6 <- CA_to_PCA(MS6)
-MS6 <- CA_to_PCA(MS6, tryhard=TRUE)
-head(MS6)  ## it is an SCA with k1=8 and k2=9
-dim(CA.86.6.80 <- productPCA(MS6, MS6))
-## four too many runs
-eCAN(2,80,6)
-
-## another case
-head(DoE.base::L36.2.8.6.3[,-(1:8)]) ## it is an SCA with k1=3 and k2=0,
-                                     ## as all columns have six distinct
-                                     ## values in first six rows
-dim(productPCA(MS6, CA_to_PCA(DoE.base::L36.2.8.6.3[,-(1:8)] - 1)))
-eCAN(2,27,6)  ## 8 too many runs
-
-## the function also works for designs with flexible values (which are denoted by NA)
-## productPCA
-D <- productPCA(CAEX(N=16), CAEX(N=16))
-dim(D)
-eCAN(2,405,3) ## slightly worse than the best CA, which is obtained as CAEX(N=27)
-is.PCA(D) ## is already good and cannot be further improved by the simple method used in CA_to_PCA
-\dontrun{coverage(D, 2)} ## slightly longer run time
+dim(SCA_Busht(4, 3))  ## q+2 columns for t=3 and q=2^s
+dim(SCA_Busht(4, 4))  ## q+1 columns otherwise
+dim(SCA_Busht(5, 3))  ## q+1 columns otherwise
 
 }
 \references{
-Bose (1938), Bush (1952)
+Bose (1938), Bush (1952), Sherwood, Martirosyan and Colbourn (2006)
 }
