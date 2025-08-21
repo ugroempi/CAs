@@ -142,13 +142,11 @@ CK_doublingCA <- function(k, v, ...){
 
 #' @export
 N_CK_doublingCA <- function(t=3, k, v, ...){
-  ## the best ingredient CAs are not expected to are themselves from
-  ## CK_doubling
   if (!t==3) return(NA)
   k3 <- ceiling(k/2)
   ## N + M*(v-1) runs
-  bestN(3, k3, v) +
-    bestN(2, k3, v)*(v - 1)
+  unname(bestN(3, k3, v) +
+    bestN(2, k3, v)*(v - 1))
 }
 
 # #' @export
