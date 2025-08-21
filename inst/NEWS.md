@@ -5,6 +5,19 @@
    (see file D15etalOptimized.RData in colbournTableReport folder)
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
+   
+August 21 2025, version 0.15
+ - implemented one more column for strength 3 with v=2^s in SCA_Busht, 
+   with consequences also for fuse_BushtCA, and fixed the manual for 
+   SCA_Busht and SCA_Bose
+ - adapted the N and k functions for SCA_Busht and fuse_BushtCA
+ - implemented the Sherwood, Martirosyan, Colbourn (2006) construction
+   with CPHFs and permutation vectors
+ - created new file auxiliary_GFcalculus.R that holds all Galois field 
+   related auxiliary functions (some moved from auxiliary_functions.R),
+   including a somewhat hacky mygf for handling cases that require a 
+   different characteristic polynomial than that used in lhs
+ - improved the documentation of the verbose=2 case for function coverage
  
 August 15 2025, version 0.14
 

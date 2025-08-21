@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.14
+- **Version**: 0.15
 
 ## Warning
 
@@ -83,6 +83,15 @@ Colbourn (2015) in function <code>paleyCA</code>,
 
 <li>
 
+orthogonal arrays from a Bose (1938) or Bush (1952) construction in
+functions <code>SCA_Bose</code> and <code>SCA_Busht</code>; the latter
+does one more column for strength 3 with <code>q</code> a power of 2,
+according to the Sherwood, Martirosyan and Colbourn (2006) example for
+the usage of permutation vectors.
+</li>
+
+<li>
+
 constructions based on cyclotomy (Colbourn 2010) in function
 <code>cyclotomyCA</code> for practitioners (based on arrays listed in
 the Colbourn tables), and function <code>cyc</code> for experts who know
@@ -112,6 +121,12 @@ augmenting an ordered design with further runs (Cohen, Colbourn and Ling
 
 the Colbourn and Torres-Jimenez (2010) power construction in function
 <code>powerCA</code>
+</li>
+
+<li>
+
+the Sherwood, Martirosyan and Colbourn (2006) construction based on
+CPHFs and permutation vectors
 </li>
 
 <li>
@@ -203,15 +218,6 @@ Acevedo-Juarez and Avila-George 2021), which yields the current best
 arrays for all scenarii (but, contrary to the 2-level case, these are
 not theoretically optimal and might improve in the future) in function
 <code>CAEX</code>.
-</li>
-
-<li>
-
-a preliminary technical implementation of the Power construction as
-proposed in Colbourn and Torres-Jimenez (2010), in functions
-<code>DHF2CA</code> (homogeneous DHF) and <code>DHHF2CA</code>
-(heterogeneous); a more practical approach an N functions for these are
-not yet available.
 </li>
 
 <li>
@@ -559,6 +565,13 @@ post-optimization of covering arrays. European Journal of Combinatorics
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 <a href="https://math.nist.gov/coveringarrays/">https://math.nist.gov/coveringarrays/</a>.
+</p>
+
+<p>
+
+Sherwood, G.B., Martirosyan, S.S., Colbourn, C.J. (2006). Covering
+arrays of higher strength from permutation vectors. J. of Combinatorial
+Designs 14, 202-213. <https://doi.org/10.1002/jcd.20067>
 </p>
 
 <p>
