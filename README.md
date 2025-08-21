@@ -332,10 +332,18 @@ package=“CAs”)</code> from within R.
 
 The figures show performance percentages relative to the best-known
 arrays as collated by Colbourn, status November 2024; there are figures
-for up to 10 levels and figures for up to 25 levels. For large $`v`$,
-the relative performance improves versus medium $`v`$; this is
-presumably due to a worse status of best-known arrays, not to a better
-status of implementation in the package.
+for up to 10 levels and figures for up to 25 levels; the reference
+scenarii are created as the union of situations for which NIST (2008)
+has arrays ($`t=2,\dots,6`$, $`v=2,\dots,6`$ but not both 6, with $`k`$
+up to 2000 for $`t=2`$ and $`t=3`$ with $`v`$ up to 4, and decreasing
+maximum $`k`$ for larger $`t`$ and $`v`$) − these have an array for each
+individual $`k`$ − and the Colbourn table entries for $`t=2,\dots,6`$,
+$`v=2,\dots,25`$ and $`k`$ only where the necessary $`N`$ increases for
+the scenario. This choice was based on convenience and could certainly
+be improved. For large $`v`$ (far outside of the NIST domain), the
+relative performance improves versus medium $`v`$; this is presumably
+due to a worse status of best-known arrays, not to a better status of
+implementation in the package.
 
 ![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->![](README_files/figure-gfm/status1-5.png)<!-- -->![](README_files/figure-gfm/status1-6.png)<!-- -->![](README_files/figure-gfm/status1-7.png)<!-- -->![](README_files/figure-gfm/status1-8.png)<!-- -->
 
