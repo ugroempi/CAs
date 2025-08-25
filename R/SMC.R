@@ -97,7 +97,8 @@ SMC <- function(cphf, q, t, ...){
   ## matrix with the beta vectors in the order 0 top
   ## to t-1 bottom
 
-  if (q==8) gf <- mygf(q, 11) else gf <- lhs::create_galois_field(q)
+  if (q %in% c(8,9)) gf <- mygf(q, 11) else gf <- lhs::create_galois_field(q)
+  ## for 9, the primitive would be 17, but that does not make a difference
   ## the cphf for q=8 does not work with the field from lhs
   ##  but needs a different isomorphic variant of the gf
 
