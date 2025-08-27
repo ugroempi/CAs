@@ -29,6 +29,36 @@ transform <- function(cphf_string, s){
   }))
 }
 
+transformCPHF <- function(cphf_string, s){
+  ## assumes that the symbol q-1 occurs
+  ## s is the power so that the number of levels is v=q^s
+  ## as 0, ..., v-1
+  hilf <- strsplit(cphf_string, " ")
+  hilf <- lapply(hilf, function(obj)
+    sapply(obj, function(obj2)
+      unlist(strsplit(obj2, ""))))
+  alphabet <- sort(unique(unlist(hilf)))
+  if ("A" %in% alphabet) hilf <- lapply(hilf,
+                                        function(obj) {obj[which(obj=="A")] <- "10"; obj})
+  if ("B" %in% alphabet) hilf <- lapply(hilf,
+                                        function(obj) {obj[which(obj=="B")] <- "11"; obj})
+  if ("C" %in% alphabet) hilf <- lapply(hilf,
+                                        function(obj) {obj[which(obj=="C")] <- "12"; obj})
+  if ("D" %in% alphabet) hilf <- lapply(hilf,
+                                        function(obj) {obj[which(obj=="D")] <- "13"; obj})
+  if ("E" %in% alphabet) hilf <- lapply(hilf,
+                                        function(obj) {obj[which(obj=="E")] <- "14"; obj})
+  if ("F" %in% alphabet) hilf <- lapply(hilf,
+                                        function(obj) {obj[which(obj=="F")] <- "15"; obj})
+  alphabet <- sort(as.numeric(unique(unlist(hilf))))
+  q <- max(alphabet) + 1
+  t(sapply(hilf, function(obj){
+    dd <- dim(obj)
+    obj <- rbind(matrix(as.numeric(obj), nrow=dd[1]),1)
+    t(q^((s - 1) : 0)) %*% obj
+  }))
+}
+
 ## copy-pasted from Sherwood, Martirosyan, Colbourn (2006)
   ############## strength t=3 ####################################
 #CPHF(3; 20, 9, 3)  # v=3 # paper: N=75, k=20
@@ -165,19 +195,22 @@ cphf <- c("000 001 002 003 004 010 100 110 121 212 231",
 (cphf <- transform(cphf, 3))
 SMC_CPHFs$`4`[["5"]] <- list("11"=cphf)
 
-SMCcat <- data.frame(t=numeric(0), v=numeric(0), k=numeric(0), N=numeric(0))
+SCPHFcat <- data.frame(t=numeric(0), v=numeric(0), k=numeric(0), N=numeric(0))
 for (t in 3:4)
   for (v in as.numeric(names(SMC_CPHFs[[as.character(t)]]))){
     for (k in as.numeric(names(SMC_CPHFs[[as.character(t)]][[as.character(v)]]))){
       kc <- as.character(k); vc <- as.character(v); tc <- as.character(t)
-      SMCcat <- rbind(SMCcat,
+      SCPHFcat <- rbind(SCPHFcat,
       c(t=t, v=v, k=k,
         N=nrow(SMC(SMC_CPHFs[[tc]][[vc]][[kc]], v, t))))
     }
   }
-colnames(SMCcat) <- c("t","v", "k", "N")
+colnames(SCPHFcat) <- c("t","v", "k", "N")
 
-save("SMCcat", file="d:/rtests/CAs/data/SMCcat.rda", compress="xz")
+SCPHFcat$type <- "2006"
+
+save("SCPHFcat", file="d:/rtests/CAs/data/SCPHFcat.rda", compress="xz")
+## caution, is later also modified by getCL_CPHFs_fromDwyerRepo.R
 save("SMC_CPHFs", file="d:/rtests/CAs/data/SMC_CPHFs.rda", compress="xz")
 
 ## check that everything is correct
