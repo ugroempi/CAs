@@ -87,13 +87,14 @@
 #' # example with a single best construction
 #' Ns(2,12,4)
 #' bestCA(2,12,4)
-#' # example with three best constructions (TJ is now PALEY)
+#' # example with three best constructions
+#'     ## (TJ is based on catalogued arrays, also had this but was
+#'     ##  removed for space reasons)
 #' Ns(4,8,2)
-#' # without a preference, bestCA uses Paley
+#' # without a preference, bestCA uses CS_CK
 #' bestCA(4,8,2)
-#' bestCA(4,8,2, preference="CS_CK")
+#' bestCA(4,8,2, preference="PALEY")
 #'
-
 #' Ns(3, 1500, 2)
 #' ## powerCT is best
 #' attributes(bestCA(3, 1500, 2))
@@ -105,8 +106,9 @@
 #' try(bestCA(6, 45, 10))
 #'
 #' Ns(3, 50, 2)
-#' ## DWYER needs internet connection, prefer TJ
-#' D <- bestCA(3, 50, 2, preference="TJ")
+#' ## DWYER needs internet connection,
+#' ## as earlier in list, TJ is preferred
+#' D <- bestCA(3, 50, 2)
 #' dim(D)
 #' # coverage(D, 3)
 #'
@@ -121,7 +123,7 @@
 #' dim(D)
 #'
 #' Ns(3,9,6)
-#' ## CKRS is best implemented, but 16 runs worse than eCAN
+#' ## CKRS is best implemented, but 18 runs worse than eCAN
 #' eCAN(3,9,6)
 #' ## Torres-Jimenez designs are currently (June 2025) unavailable
 #' D <- bestCA(3, 9, 6)
@@ -232,7 +234,7 @@ labelToCode <- function(label, t, k, v, ...){
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "smcCA"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "scphfCA"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }
@@ -328,8 +330,8 @@ labelToCode <- function(label, t, k, v, ...){
     if (!v==2) stop('"CS_CK" requires v=2')
     return(paste0('CS_CK(', k, ', t=', t, ')'))
   }
-  if (label=="smcCA"){
-    return(paste0('smcCA(', t, ', ', k, ', ', v, ')'))
+  if (label=="scphfCA"){
+    return(paste0('scphfCA(', t, ', ', k, ', ', v, ')'))
   }
   if (label=="powerCT"){
     return(paste0('powerCA(', t, ', ', k, ', ', v, ', type="CT")'))

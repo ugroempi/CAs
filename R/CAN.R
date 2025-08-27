@@ -180,46 +180,41 @@
 #' N_projectionBose(45, 2)
 #' Ns(2, 16, 11) ## CS_LCDST is the best,
 #'               ## projBoseCA and CS_MS are competitive
-#' Ns(3, 45, 2)  ## the best array is in the DWYER-catalogue
-#'    # readable with internet connection
+#' Ns(3, 45, 2)  ## the best array is in the TJ or the DWYER-catalogue
+#'    # D <- tjCA(3, 45, 2)
+#'    # dim(D)
+#'    # # Dwyer readable with internet connection or
 #'    # pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
-#'    # the instruction line starts with a comment character and is ignored, therefore ninstruct=0
+#'    # # the instruction line starts with a comment character and is ignored, therefore ninstruct=0
 #'    # D <- readCA(paste0(pathGH, "/CA_26_3_46_2.txt"), ignore.chars=c("]", "["),
 #'    #        ninstruct=0, sep=",")
-#' Ns(3, 400, 2) ## at present, the best easily available array
-#'               ## is in the NIST catalogue
-#'    # https://math.nist.gov/coveringarrays/ipof/cas/t=3/v=2/ca.3.2%5E400.txt.zip
+#'    # # or
+#'    # D <- dwyerCA(3, 45, 2)
+#' Ns(3, 400, 2) ## powerCT construction is best
 #' Ns(2, 800, 3) ## function CAEX produces the best available array
-#' Ns(3, 200, 3) ## the respective construction has not yet been implemented
-#'    # ## at present, the best easily available array
-#'               ## is in the NIST catalogue
-#'    # https://math.nist.gov/coveringarrays/ipof/cas/t=3/v=3/ca.3.3%5E200.txt.zip
+#' Ns(3, 200, 3) ## CK_doubling is the best implemented construction
 #' Ns(4, 150, 3) ## cyclotomy is very competitive
-#' Ns(4, 150, 2) ## the best easily available CA is NIST, PALEY is not much worse
+#' Ns(4, 150, 2) ## TJ is best (function tjCA)
 #' Ns(4, 50, 2) ## Paley and Cyclotomy are the same, and both optimal
 #' Ns(4, 50, 3) ## the best easily available CA is
 #'    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_507_4_53_3.txt
 #' Ns(5, 50, 2) ## Paley is optimal
-#' Ns(5, 500, 2) ## at present, Cyclotomy is competitive - best design will be implemented
+#' Ns(5, 500, 2) ## CS_CK is near-optimal
 #' Ns(5, 50, 3) ## the best easily available CA is
 #'    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_2067_5_50_3.txt
 #' Ns(5, 500, 3) ## Cyclotomy is optimal
 #' Ns(6, 50, 2) ## WKS is optimal
 #'    # WKS_CAs['50']
-#' Ns(6, 200, 2) ## Paley is optimal
+#' Ns(6, 200, 2) ## CS_CK and Paley are optimal
 #' Ns(6, 2000, 2) ## Cyclotomy is optimal
-#' Ns(6, 200, 3) ## not easily available at present
+#' Ns(6, 200, 3) ## powerCT is best implemented, but far worse than optimumnot easily available at present
 #'
 #' Ns_CK_doubling(3, 22, 2)
 #' ## with doubling a Paley design for ceiling(22/2) columns,
 #' ## the optimum run size can be achieved
 #'
 #' Ns_CK_doubling(3, 12, 3)
-#' ## the direct CKRS construction is best
-#' ## it is available under the name given in CKRScat
-#' ## in the list CKRS_CAs
-#' CKRScat[CKRScat$t==3 & CKRScat$k==12 & CKRScat$v==3,]
-#' ## CKRS_CAs["CA(15x3;3,12,3)"]
+#' ## the direct CKRS construction is best (ckrsCA)
 
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
@@ -233,7 +228,7 @@ Ns <- function(t, k, v, exclude=NULL){
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK",
                           "DWYER", "NIST","TJ", "powerCT", "miscCA",
-                          "compositCA", "ODbasedCA", "smcCA"
+                          "compositCA", "ODbasedCA", "scphfCA"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
@@ -262,7 +257,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CS_CMMSSY=ifelse("CS_CMMSSY" %in% exclude, NA,N_CS_CMMSSY(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
-    smcCA=ifelse("smcCA" %in% exclude, NA, N_smcCA(t,k,v)),
+    scphfCA=ifelse("scphfCA" %in% exclude, NA, N_scphfCA(t,k,v)),
     powerCT=ifelse("powerCT" %in% exclude, NA,N_powerCT(t,k,v)),
     TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
@@ -547,7 +542,7 @@ ks <- function(t, N, v){
     CS_LCDST=k_CS_LCDST(N,v),
     CS_CK=k_CS_CK(t,N),
     CS_CMMSSY=k_CS_CMMSSY(t,N),
-    smcCA=N_smcCA(t,N,v),
+    scphfCA=k_scphfCA(t,N,v),
     powerCT=k_powerCT(t,N,v),
     DWYER=k_DWYERcat(t,N,v),
     NIST=k_NISTcat(t,N,v),
