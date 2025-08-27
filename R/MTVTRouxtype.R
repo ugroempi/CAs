@@ -24,9 +24,10 @@
 #' @section Details:
 #'
 #' The constructions are based on a strength \code{t} CA A, a strength {t-1} CA B, a strength \code{t-2} CA C
-#' and, for strength 4 with Theorem 4.3 as well as 5, a strength 2 CA D.
-#' These ingredient CAs have c columns at \code{v}, where \code{c=ceiling(k/2)}, except
-#' for Theorem 4.3, where D has \code{v} columns at v levels.\cr
+#' and, for one of the strength 4 constructions (with Theorem 4.3) as well as for the strength 5 construction,
+#' a strength 2 CA D.
+#' These ingredient CAs have c columns at \code{v} levels, where \code{c=ceiling(k/2)}, except
+#' for Theorem 4.3, where D has \code{v} columns at \code{v} levels.\cr
 #'
 #' The construction for strength 4 is based on Theorem 4.13 (default) or on request on Theorem 4.3 (may be better for large \code{k}).
 #'
