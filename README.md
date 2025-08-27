@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.15
+- **Version**: 0.16
 
 ## Warning
 
@@ -126,7 +126,10 @@ the Colbourn and Torres-Jimenez (2010) power construction in function
 <li>
 
 the Sherwood, Martirosyan and Colbourn (2006) construction based on
-CPHFs and permutation vectors
+SCPHFs and permutation vectors, including not only the (S)CPHFs from the
+Sherwood et al. paper but also those provided by Lanus (based on
+Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function
+<code>scphfCA</code>
 </li>
 
 <li>
@@ -275,7 +278,7 @@ used by the package functions:
 
 <li>
 
-<code>SMCcat</code> and <code>SMC_CPHFs</code>
+<code>SCPHFcat</code>, <code>SMC_CPHFs</code> and <code>CL_SCPHFs</code>
 </li>
 
 <li>
@@ -458,6 +461,20 @@ Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C.,
 (2010). Covering and radius-covering arrays: constructions and
 classification. Discrete Appl. Math 158, 1158-1180.
 <https://doi.org/10.1016/j.dam.2010.03.008>
+</p>
+
+<p>
+
+Colbourn, C.J., Lanus, E., 2018. Subspace restrictions and affine
+composition for covering perfect hash families. Art Discrete Appl. Math.
+1, \#P2.03. <https://doi.org/10.26493/2590-9770.1220.3a1>
+</p>
+
+<p>
+
+Colbourn, C.J., Lanus, E., Sarkar, K., 2018. Asymptotic and constructive
+methods for covering perfect hash families and covering arrays. Des.
+Codes Cryptogr. 86, 907-937. <https://doi.org/10.1007/s10623-017-0369-x>
 </p>
 
 <p>
