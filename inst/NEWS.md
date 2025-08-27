@@ -6,6 +6,19 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
+August 27 2025, version 0.16
+ - renamed smcCA to scphfCA, and made its workhorse function internal; adapted
+   everything to that change
+ - modified the workhorse function SMC to avoid the creation of unnecessarily
+   large matrices, and to handle both the SCPHFs from the Sherwood et al. paper
+   (type="2006") and from Lanus and co-authors (type="2018") by taking care 
+   of their respective GFs for v=8 and v=9
+ - added the Lanus SCPHFs for up to v=9, as far as they improve constructions,
+   in the list CL_SCPHFs
+ - provided further internal functions for Galois field calculations, e.g., 
+   the determinant, for checking CPHFs
+ - fixed sloppy writing in the documentation of MTVTRouxtypeCA
+   
 August 21 2025, version 0.15
  - implemented one more column for strength 3 with v=2^s in SCA_Busht, 
    with consequences also for fuse_BushtCA, and fixed the manual for 

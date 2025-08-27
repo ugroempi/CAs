@@ -35,7 +35,7 @@
 #' * strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs (\code{\link{miscCA}})
 #' * strength 3 CAs for v=q+1 with q a prime power, and k<=v, based on augmenting an ordered design with further runs (Cohen, Colbourn and Ling 2003 and 2008)
 #' * the Colbourn and Torres-Jimenez (2010) power construction in function \code{\link{powerCA}}
-#' * the Sherwood, Martirosyan and Colbourn (2006) construction based on CPHFs and permutation vectors
+#' * the Sherwood, Martirosyan and Colbourn (2006) construction based on SCPHFs and permutation vectors, including not only the (S)CPHFs from the Sherwood et al. paper but also those provided by Lanus (based on Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function \code{\link{scphfCA}}
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA to yield a strength t CA
 #' * recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 #' * a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBoseCA}}
@@ -74,7 +74,7 @@
 #' * \code{\link{CAEX_CAs}} and \code{\link{CAEX_lineages}},
 #' * \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
 #' * \code{\link{powerCTcat}},
-#' * \code{\link{SMCcat}} and \code{\link{SMC_CPHFs}}
+#' * \code{\link{SCPHFcat}}, \code{\link{SMC_CPHFs}} and \code{\link{CL_SCPHFs}}
 #' * \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
 #' * \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
 #' * \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},
@@ -128,6 +128,10 @@
 #' Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H., Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22-33. https://doi.org/10.1007/978-3-642-01877-0_3
 #'
 #' Colbourn, C., Kéri, G., Rivas Soriano, P.P., Schlage-Puchta, J.-C., (2010). Covering and radius-covering arrays: constructions and classification. Discrete Appl. Math 158, 1158-1180. https://doi.org/10.1016/j.dam.2010.03.008
+#'
+#' Colbourn, C.J., Lanus, E., 2018. Subspace restrictions and affine composition for covering perfect hash families. Art Discrete Appl. Math. 1, #P2.03. https://doi.org/10.26493/2590-9770.1220.3a1
+#'
+#' Colbourn, C.J., Lanus, E., Sarkar, K., 2018. Asymptotic and constructive methods for covering perfect hash families and covering arrays. Des. Codes Cryptogr. 86, 907-937. https://doi.org/10.1007/s10623-017-0369-x
 #'
 #' Colbourn, C.J., Martirosyan, S.S., Mullen, G.L., Shasha, D., Sherwood, G.B., Yucas, J.L., (2006). Products of mixed covering arrays of strength two. \emph{J of Combinatorial Designs} \bold{14}, 124-138. doi: 10.1002/jcd.20065
 #'
