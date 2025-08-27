@@ -33,6 +33,13 @@ OD3 <- function(q){
   ## CCL, with Inf replaced by q+1
   ## stopifnot(q %in% primedat$q)
   Q <- 0:(q-1)
+  ## treat the case for which q is not prime or prime power
+  ## (yields three columns only)
+  if (!q %in% primedat$q){
+    hilf <- ffCA(3,q+1)
+    hilf <- hilf[which(lengths(apply(hilf,1,unique))==3),]
+    return(hilf)
+  }
   ## initially only prime, later use gf_mult
   gf <- lhs::create_galois_field(q)
   INV <- gf$inv[-1] # does not include position for 0
