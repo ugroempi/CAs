@@ -53,9 +53,10 @@ is the number when using the best CA referenced in the Colbourn tables
 (which may not be implemented in the package).
 
 \code{ColbournKeriCombis} is a data.frame with columns \code{t}, \code{k}, \code{v}, \code{N},
-\code{method}, \code{starter} and \code{code} that
+\code{method}, \code{starter}, \code{code} and \code{nconst} that
 indicates combinations for which starter vectors for function \code{\link{CS_CK}} are available;
-\code{method} refers to four different methods that are introduced by Colbourn and Keri (2009),
+\code{method} refers to four different methods that are introduced by Colbourn and Keri (2009)
+(one of which is deriving from the next higher strength),
 \code{code} (built on \code{starter}) is used by function \code{CS_CK} for constructing
 the actual arrays.
 
@@ -69,7 +70,7 @@ An object of class \code{data.frame} with 180 rows and 6 columns.
 
 An object of class \code{list} of length 5.
 
-An object of class \code{data.frame} with 273 rows and 7 columns.
+An object of class \code{data.frame} with 217 rows and 8 columns.
 
 An object of class \code{list} of length 1.
 }

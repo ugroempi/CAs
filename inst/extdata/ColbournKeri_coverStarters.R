@@ -204,16 +204,33 @@ diff <- compare$N-compare$CAN
 fivenum(diff)
 ratio <- compare$N/compare$CAN
 
-## verify the dimensions of the construction
+# remove redundant rows
+redundant <- rep(FALSE, nrow(ColbournKeriCombis))
 for (i in 1:nrow(ColbournKeriCombis)){
-  ## 273 rows
+  hilf <- ColbournKeriCombis[ColbournKeriCombis$t>=ColbournKeriCombis$t[i] &
+                               ColbournKeriCombis$k>=ColbournKeriCombis$k[i],]
+  #print(i)
+  if (min(hilf$N) < ColbournKeriCombis$N[i]) redundant[i] <- TRUE
+}
+ColbournKeriCombis <- ColbournKeriCombis[which(!redundant),]
+
+## verify the dimensions of the construction
+## and the number of constant rows
+nconst_CS_CK <- rep(NA, nrow(ColbournKeriCombis))
+
+for (i in 1:nrow(ColbournKeriCombis)){
+  ## 217 rows
   print(i)
-  hilf <- dim(eval(parse(text=ColbournKeriCombis$code[i])))
+  hilf <- dim(D <- eval(parse(text=ColbournKeriCombis$code[i])))
   stopifnot(all(hilf==c(ColbournKeriCombis$N[i], ColbournKeriCombis$k[i])))
+  D <- maxconstant(D, verbose=2)
+  print(nconst_CS_CK[i] <- length(attr(D, "constant_rows")$row_set_list))
 }
 
+ColbournKeriCombis$nconst <- nconst_CS_CK
+
 ## verify the strengths for constructions with choose(k,t)<=10000000
-## and rows 134 and 135dimensions of the construction
+## and row 134
 for (i in c(1:25, 134)){
   print(i)
   hilf <- coverage(eval(parse(text=ColbournKeriCombis$code[i])), t=ColbournKeriCombis$t[i])
@@ -222,4 +239,4 @@ for (i in c(1:25, 134)){
 
 ## might add sample verifications
 
-
+save(ColbournKeriCombis, file="D:/rtests/CAs/data/ColbournKeriCombis.rda", compress="xz")

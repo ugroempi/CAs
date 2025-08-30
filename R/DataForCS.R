@@ -51,9 +51,10 @@ globalVariables(c("LCDSTStarters", "LCDSTCombis",
 #' (which may not be implemented in the package).
 #'
 #' \code{ColbournKeriCombis} is a data.frame with columns \code{t}, \code{k}, \code{v}, \code{N},
-#' \code{method}, \code{starter} and \code{code} that
+#' \code{method}, \code{starter}, \code{code} and \code{nconst} that
 #' indicates combinations for which starter vectors for function \code{\link{CS_CK}} are available;
-#' \code{method} refers to four different methods that are introduced by Colbourn and Keri (2009),
+#' \code{method} refers to four different methods that are introduced by Colbourn and Keri (2009)
+#' (one of which is deriving from the next higher strength),
 #' \code{code} (built on \code{starter}) is used by function \code{CS_CK} for constructing
 #' the actual arrays.
 #'

@@ -45,7 +45,10 @@
 #' the cover starters for higher strengths are calculated with the internal function \code{cycvec} (that is
 #' also used for the cyclotomy constructions of function \code{\link{cyc}}).
 #'
-#' @returns \code{CS_CK} returns a matrix of class \code{ca} with attributes.
+#' @returns \code{CS_CK} returns a matrix of class \code{ca} with attributes. The built-in starters
+#' allow to obtain two constant rows for all three methods, whereas the third method guarantees two constant
+#' rows in the result in general (at the bottom).\cr
+#' The "derive" construction does not permit two constant rows.
 #'
 #' @references Colbourn and Keri (2009)
 #'
@@ -74,36 +77,6 @@
 #' Ns(5, 359, 2)
 #' Ns(5, 503, 2)  ##  from deriving 504 columns in 1008 runs
 #'
-
-CS_CK1 <- function(k, starter, ...){
-  ## internal function, no input checks needed
-  ## works for k<=26, with constructions for k=21, 24, 25, 26
-  ## starter vector has length k
-  ## Lemma 1 of Colbourn and Keri (2009)
-  ## yields strength 4
-  aus <- circular(starter)
-  rbind(aus, 1-aus)
-}
-
-CS_CK2 <- function(k, starter, ...){
-  ## internal function, no input checks needed
-  ## works for k<=34, with constructions for k=24, 27 to 34
-  ## starter vector has length k-1
-  ## Lemma 2 of Colbourn and Keri (2009)
-  ## yields strength 4
-
-  aus <- cbind(circular(starter))
-  cbind(rbind(aus, 1-aus),rep(0:1, each=k-1))
-}
-
-CS_CK3 <- function(k, starter, ...){
-  ## internal function, no input checks needed
-  ## works for k<=27, with constructions for k=12, 20, 22, 23, 25 to 27
-  ## starter vector has length k-1
-  ## Lemma 3 of Colbourn and Keri (2009)
-  aus <- CS_CK2(k, starter=starter)
-  rbind(aus, 0, 1)
-}
 
 #' @export
 CS_CK <- function(k, t=4, v=2, starter=NULL, method=NULL, start0=TRUE, ...){
@@ -143,13 +116,13 @@ CS_CK <- function(k, t=4, v=2, starter=NULL, method=NULL, start0=TRUE, ...){
     zrows <- nrow(zeilen)
     if (zrows == 0) stop("The request cannot be served by function CS_CK.")
     zeile <- zeilen[zrows + 1 - which.min(rev(zeilen$N)), ,drop=FALSE]
-    aus <- eval(parse(text = zeile$code))
+    aus <- eval(parse(text = zeile$code))[,1:k]
     if (!start0) aus <- aus + 1
     class(aus) <- c("ca", class(aus))
     attr(aus, "Call") <- Call
-    attr(aus, "origin") <- paste0("Colbourn Keri, strength t=", t, ", ")
+    attr(aus, "origin") <- paste0("Colbourn Keri, method=", zeile$method)
     attr(aus, "t") <- t
-    aus[,1:k]
+    aus
 }
 
 #' @export
@@ -166,6 +139,36 @@ k_CS_CK <- function(t,N,v=2){
                                ColbournKeriCombis[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(max(hilf[,"k"]))
+}
+
+CS_CK1 <- function(k, starter, ...){
+  ## internal function, no input checks needed
+  ## works for k<=26, with constructions for k=21, 24, 25, 26
+  ## starter vector has length k
+  ## Lemma 1 of Colbourn and Keri (2009)
+  ## yields strength 4
+  aus <- circular(starter)
+  rbind(aus, 1-aus)
+}
+
+CS_CK2 <- function(k, starter, ...){
+  ## internal function, no input checks needed
+  ## works for k<=34, with constructions for k=24, 27 to 34
+  ## starter vector has length k-1
+  ## Lemma 2 of Colbourn and Keri (2009)
+  ## yields strength 4
+
+  aus <- cbind(circular(starter))
+  cbind(rbind(aus, 1-aus),rep(0:1, each=k-1))
+}
+
+CS_CK3 <- function(k, starter, ...){
+  ## internal function, no input checks needed
+  ## works for k<=27, with constructions for k=12, 20, 22, 23, 25 to 27
+  ## starter vector has length k-1
+  ## Lemma 3 of Colbourn and Keri (2009)
+  aus <- CS_CK2(k, starter=starter)
+  rbind(aus, 0, 1)
 }
 
 
