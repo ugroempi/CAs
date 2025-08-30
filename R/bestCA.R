@@ -102,8 +102,8 @@
 #' ## construction functions, in this case powerCA with type="CT".
 #'
 #' # a case that is not implemented
-#' Ns(6, 45, 10)
-#' try(bestCA(6, 45, 10))
+#' Ns(6, 5000, 10)
+#' try(bestCA(6, 5000, 10))
 #'
 #' Ns(3, 50, 2)
 #' ## DWYER needs internet connection,
