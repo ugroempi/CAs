@@ -42,13 +42,19 @@ Colbourn and Torres-Jimenez (2010); it is based on the data.frame object
 \code{\link{powerCTcat}} that contains scenarii for which the power construction
 with ideal ingredients yields the smallest possible CAs according to
 \code{\link{colbournBigFrame}} (and for which the construction string in
-\code{\link{colbournBigFrame}} is understood).
+\code{\link{colbournBigFrame}} is understood). Many rows of the data.frame
+object \code{\link{powerCTcat}} refer to instances for which the resulting
+design is so large that its construction requires a computer with massive
+resources (and the naive call of \code{powerCA} will crash R or even the
+computer); it is therefore recommended to inspect the expected run size
+with function \code{N_powerCT} before calling the construction function.
 
 The actual arrays that can be generated with this package may be larger than
 the best possible ones if the perfect ingredients are not (yet) available;
 they may also be somewhat smaller, because this package makes use of the
 maximum number of constant rows of the ingredient CAs where possible, whereas
-the numbers in \code{\link{colbournBigFrame}} do not always do that (they do it where
+the numbers in \code{\link{colbournBigFrame}} do not always do that
+(it appears that they do it where
 the Source entry contains "c" next to the respective ingredient).
 
 The construction uses functions \code{\link{Tred}}, \code{\link{createDHF}}, and

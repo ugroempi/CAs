@@ -107,6 +107,17 @@ powerCTcat$u3[equal2] <- 2   ## not equal to first, but equal to second
 ## to automate the designs: bestCA(t, wj, v)
 ## BE ALERT WHETHER THE c in the source has an impact somehow
 
+## need to use a bestN that prioritizes constant rows
+## past changes to the global function bestN have deteriorated run sizes for the powerCT construction
+## CS_CK instead of PALEY in constr1 and constr2 harmful - prevent by moving it behind PALEY
+## Paley instead of CK_doublingCA harmful, prevent by moving CK_doublingCA before PALEY
+## fuseBushtCA instead of SCA_Busht harmful, as it does not know that there are q constant rows
+##            (though practically irrelevant for the large cases it affects, because these are not doable,
+##             at least not on my machine)
+## NIST instead of DWYER in constr2 and constr3 harmful
+
+require(CAs)  # version 0.16 with naively updated powerCTcat
+
 powerCTcat$constr4 <- powerCTcat$constr3 <- powerCTcat$constr2 <- powerCTcat$constr1 <- ""
 powerCTcat$c4 <- powerCTcat$c3 <- powerCTcat$c2 <- powerCTcat$c1 <- 1  ## minimum achievable, increase via knowledge
 powerCTcat$N4 <- powerCTcat$N3 <- powerCTcat$N2 <- powerCTcat$N1 <- NA
@@ -117,15 +128,18 @@ powerCTcat <- powerCTcat[which(!sapply(powerCTcat$constr1, is.null)),] ## exclud
 powerCTcat$constr1 <- unlist(powerCTcat$constr1)
 pick <- which(!is.na(powerCTcat$w2))
 powerCTcat$N2[pick] <- mapply(bestN, powerCTcat$t[pick], powerCTcat$w2[pick], powerCTcat$v[pick])
-powerCTcat$constr2[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)), powerCTcat$t[pick], powerCTcat$w1[pick], powerCTcat$v[pick])
+powerCTcat$constr2[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)),
+                                   powerCTcat$t[pick], powerCTcat$w2[pick], powerCTcat$v[pick])
 powerCTcat$constr2 <- unlist(powerCTcat$constr2)
 pick <- which(!is.na(powerCTcat$w3))
 powerCTcat$N3[pick] <- mapply(bestN, powerCTcat$t[pick], powerCTcat$w3[pick], powerCTcat$v[pick])
-powerCTcat$constr3[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)), powerCTcat$t[pick], powerCTcat$w1[pick], powerCTcat$v[pick])
+powerCTcat$constr3[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)),
+                                   powerCTcat$t[pick], powerCTcat$w3[pick], powerCTcat$v[pick])
 powerCTcat$constr3 <- unlist(powerCTcat$constr3)
 pick <- which(!is.na(powerCTcat$w4))
 powerCTcat$N4[pick] <- mapply(bestN, powerCTcat$t[pick], powerCTcat$w4[pick], powerCTcat$v[pick])
-powerCTcat$constr4[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)), powerCTcat$t[pick], powerCTcat$w1[pick], powerCTcat$v[pick])
+powerCTcat$constr4[pick] <- mapply(function(t,k,v) names(bestN(t,k,v)),
+                                   powerCTcat$t[pick], powerCTcat$w4[pick], powerCTcat$v[pick])
 powerCTcat$constr4 <- unlist(powerCTcat$constr4)
 
 ## replace Paley with miscCA for constr2 and constr3 where w2 and w3 are 8, respectively
@@ -137,20 +151,33 @@ powerCTcat$c2[which(powerCTcat$w2==8 & powerCTcat$v==2)] <- 2
 powerCTcat$constr3[which(powerCTcat$w3==8 & powerCTcat$v==2)] <- "miscCA"
 powerCTcat$c3[which(powerCTcat$w3==8 & powerCTcat$v==2)] <- 2
 
-powerCTcat$constr2[which(powerCTcat$t==5 & powerCTcat$w2==14 & powerCTcat$v==4)] <- "compositCA"
-
 ## information on constant rows
 ## SCA_Busht has v constant rows, as always v columns only
-powerCTcat$c1[which(powerCTcat$constr1=="SCA_Busht")] <- powerCTcat$v[which(powerCTcat$constr1=="SCA_Busht")]
-## tj 15 runs (constr1) has 2 constant rows, tj12 runs (constr2) 12 doesn't
-## for Pbase 19 only 1 constant run
-powerCTcat$c1[which(powerCTcat$constr1=="TJ" & powerCTcat$Pbase==12)] <- 2
+powerCTcat$c1[which((powerCTcat$constr1=="SCA_Busht" | powerCTcat$constr1=="fuseBushtCA") & powerCTcat$w1<=powerCTcat$v)] <-
+  powerCTcat$v[which((powerCTcat$constr1=="SCA_Busht" | powerCTcat$constr1=="fuseBushtCA") & powerCTcat$w1<=powerCTcat$v)]
+powerCTcat$c2[which((powerCTcat$constr2=="SCA_Busht" | powerCTcat$constr2=="fuseBushtCA") & powerCTcat$w2<=powerCTcat$v)] <-
+  powerCTcat$v[which((powerCTcat$constr2=="SCA_Busht" | powerCTcat$constr2=="fuseBushtCA") & powerCTcat$w2<=powerCTcat$v)]
+powerCTcat$c3[which((powerCTcat$constr3=="SCA_Busht" | powerCTcat$constr3=="fuseBushtCA") & powerCTcat$w3<=powerCTcat$v)] <-
+  powerCTcat$v[which((powerCTcat$constr3=="SCA_Busht" | powerCTcat$constr3=="fuseBushtCA") & powerCTcat$w3<=powerCTcat$v)]
+powerCTcat$c4[which((powerCTcat$constr4=="SCA_Busht" | powerCTcat$constr4=="fuseBushtCA") & powerCTcat$w4<=powerCTcat$v)] <-
+  powerCTcat$v[which((powerCTcat$constr4=="SCA_Busht" | powerCTcat$constr4=="fuseBushtCA") & powerCTcat$w4<=powerCTcat$v)]
+## t=3: TJ 15 runs (constr1) has 2 constant rows, TJ 10 runs (constr2) as well
+## t=6: TJ has only 1 constant run in all cases
+powerCTcat$c1[which(powerCTcat$constr1=="TJ" & powerCTcat$t == 3)] <- 2
+powerCTcat$c2[which(powerCTcat$constr2=="TJ" & powerCTcat$t == 3)] <- 2
+powerCTcat$c4[which((powerCTcat$constr4=="SCA_Busht" | powerCTcat$constr4=="fuseBushtCA") & powerCTcat$w4<=powerCTcat$v)] <-
+  powerCTcat$v[which((powerCTcat$constr4=="SCA_Busht" | powerCTcat$constr4=="fuseBushtCA") & powerCTcat$w4<=powerCTcat$v)]
+powerCTcat$c2[which(powerCTcat$constr2=="FullFactorial")] <- powerCTcat$v[which(powerCTcat$constr2=="FullFactorial")]
+powerCTcat$c2[which(powerCTcat$constr2=="CK_doublingCA")] <- powerCTcat$v[which(powerCTcat$constr2=="CK_doublingCA")]
+powerCTcat$c3[which(powerCTcat$constr3=="CK_doublingCA")] <- powerCTcat$v[which(powerCTcat$constr3=="CK_doublingCA")]
+
 ## NIST is not touched, as the arrays are large
 ##    the arrays do not have systematic constant rows,
 ##    i.e., they must be treated with one_is_enough by maxconstant
 ## DWYER sometimes has constant rows, dwyerCA moves them to the top
 ##    check if they are there - and modify cj-values
-## PALEY has to be checked for each case
+
+## PALEY and CS_CK have to be checked for each case
 for (i in 1:nrow(powerCTcat)){
   print(i)
   constr1 <- powerCTcat$constr1[i]
@@ -162,33 +189,59 @@ for (i in 1:nrow(powerCTcat)){
     hilf <- dwyerCA(t,k,v)
     nc <- attr(hilf, "nconstant")
     if (!is.null(nc)) powerCTcat$c1[i] <- nc
+  }
     if (constr2=="DWYER"){
       k <- powerCTcat$w2[i]
       hilf <- dwyerCA(t,k,v)
       nc <- attr(hilf, "nconstant")
       if (!is.null(nc)) powerCTcat$c2[i] <- nc
-      if (constr3=="DWYER"){
+    }
+    if (constr3=="DWYER"){
         k <- powerCTcat$w3[i]
         hilf <- dwyerCA(t,k,v)
         nc <- attr(hilf, "nconstant")
         if (!is.null(nc)) powerCTcat$c3[i] <- nc
         ## constr4 is never DWYER
+  }
+  if (constr1 == "CS_CK"){
+    k <- powerCTcat$w1[i]
+    nc <- ColbournKeriCombis[which(ColbournKeriCombis$t>=t &
+        ColbournKeriCombis$k>=k),]$nconst[which.min(ColbournKeriCombis[which(ColbournKeriCombis$t>=t &
+                                                                               ColbournKeriCombis$k>=k),]$N)]
+    if (nc > 1) powerCTcat$c1[i] <- nc
+    if (constr2=="CS_CK"){
+      k <- powerCTcat$w2[i]
+      nc <- ColbournKeriCombis[which(ColbournKeriCombis$t>=t &
+                                       ColbournKeriCombis$k>=k),]$nconst[which.min(ColbournKeriCombis[which(ColbournKeriCombis$t>=t &
+                                                                                                    ColbournKeriCombis$k>=k),]$N)]
+      if (nc > 1) powerCTcat$c2[i] <- nc
+      if (constr3=="CS_CK"){
+        k <- powerCTcat$w3[i]
+        nc <- ColbournKeriCombis[which(ColbournKeriCombis$t>=t &
+                               ColbournKeriCombis$k>=k),]$nconst[which.min(ColbournKeriCombis[which(ColbournKeriCombis$t>=t &
+                                                                                  ColbournKeriCombis$k>=k),]$N)]
+        if (nc > 1) powerCTcat$c3[i] <- nc
+        ## constr4 is never CS_CK
       }
     }
   }
   if (constr1 == "PALEY"){
-    hilf <- paleyCA(t,k,v)
-    nc <- length(attr(maxconstant(hilf, verbose=2), "constant_rows")$row_set_list)
+    k <- powerCTcat$w1[i]
+    nc <- PALEYcat[which(PALEYcat$t>=t &
+                           PALEYcat$k>=k),]$nconst[which.min(PALEYcat[which(PALEYcat$t>=t &
+                                                                              PALEYcat$k>=k),]$N)]
     if (nc > 1) powerCTcat$c1[i] <- nc
     if (constr2=="PALEY"){
       k <- powerCTcat$w2[i]
-      hilf <- paleyCA(t,k,v)
-      nc <- length(attr(maxconstant(hilf, verbose=2), "constant_rows")$row_set_list)
+      nc <- PALEYcat[which(PALEYcat$t>=t &
+                             PALEYcat$k>=k),]$nconst[which.min(PALEYcat[which(PALEYcat$t>=t &
+                                                                                PALEYcat$k>=k),]$N)]
       if (nc > 1) powerCTcat$c2[i] <- nc
       if (constr3=="PALEY"){
         k <- powerCTcat$w3[i]
-        hilf <- paleyCA(t,k,v)
-        nc <- length(attr(maxconstant(hilf, verbose=2), "constant_rows")$row_set_list)
+        nc <- PALEYcat[which(PALEYcat$t>=t &
+                               PALEYcat$k>=k),]$nconst[which.min(PALEYcat[which(PALEYcat$t>=t &
+                                                                                  PALEYcat$k>=k),]$N)]
         if (nc > 1) powerCTcat$c3[i] <- nc
         ## constr4 is never PALEY
       }
@@ -223,7 +276,18 @@ table(powerCTcat$k - powerCTcat$claimedk)
 boxplot(N - claimedN ~ constr1, data=powerCTcat, horizontal=TRUE, las=1, ylab="",
         subset=!constr1 %in% c("NIST", "DWYER"))
 
+rownames(powerCTcat) <- NULL
+
 save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda", compress="xz")
+
+load("D:/rtests/CAs/data/powerCTcat.rda")
+
+load("D:/rtests/CAsbak/powerCTcat_old.rda") ## has old powerCTcat
+v16_old <- powerCTcat
+merged <- merge(v16_old, powerCTcat, by=c("t","k","v","Source"))
+merged[merged$N.x<merged$N.y,]
+merged[merged$N.x>merged$N.y,]
+
 
 ## sanity checks
 aus <- powerCA(6, 361, 3)  ## smallest N for 3-level
