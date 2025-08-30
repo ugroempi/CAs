@@ -6,6 +6,16 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
+August 30 2025, version 0.17
+ - updated the data frame powerCTcat with 179 additional constructions, based 
+   on new implementations in the recent past; also, one bug with a claim of
+   a too small design was fixed; several runs are needed, as now some ingredients 
+   are of type powerCT
+ - fixed the creation file for powerCTcat in extdata
+ - added nconst columns to ColbournKeriCombis and PALEYcat, and removed redundant rows from 
+   ColbournKeriCombis
+ - bug fix: CS_CK did not yield class ca with attributes
+
 August 27 2025, version 0.16
  - renamed smcCA to scphfCA, and made its workhorse function internal; adapted
    everything to that change

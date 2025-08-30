@@ -1,7 +1,7 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.16
+Version: 0.17
 Author: Ulrike Groemping
 Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
 Description: Implements mathematical constructions of covering arrays. Provides  
