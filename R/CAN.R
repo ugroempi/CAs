@@ -207,7 +207,8 @@
 #'    # WKS_CAs['50']
 #' Ns(6, 200, 2) ## CS_CK and Paley are optimal
 #' Ns(6, 2000, 2) ## Cyclotomy is optimal
-#' Ns(6, 200, 3) ## powerCT is best implemented, but far worse than optimumnot easily available at present
+#' Ns(6, 200, 3) ## powerCT is best implemented,
+#'               ## but far worse than optimum
 #'
 #' Ns_CK_doubling(3, 22, 2)
 #' ## with doubling a Paley design for ceiling(22/2) columns,
@@ -234,6 +235,8 @@ Ns <- function(t, k, v, exclude=NULL){
   suppressMessages(
     aus <- c(
     KSK=ifelse("KSK" %in% exclude || t>2 || v>2, NA, N_KSK(k)),
+    CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
+                         NA, N_CK_doublingCA(t,k,v)),
     CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
     PALEY=ifelse("PALEY" %in% exclude, NA,
           N_PALEYcat(t,k,v)),
@@ -248,8 +251,6 @@ Ns <- function(t, k, v, exclude=NULL){
     recBoseCA_PCA=ifelse("recBoseCA_PCA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="PCA"))),
     recBoseCA_CA=ifelse("recBoseCA_CA" %in% exclude, NA,unname(N_recBoseCA(t,k,v,type="CA"))),
     projBoseCA=ifelse("projBoseCA" %in% exclude, NA,unname(N_projBoseCA(t,k,v,cmax=Inf))),
-    CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
-                         NA, N_CK_doublingCA(t,k,v)),
     CK_NRB=ifelse("CK_NRB" %in% exclude,
                   NA, N_CK_NRB(t,k,v)),
     WKS=ifelse("WKS" %in% exclude, NA,N_WKScat(t,k,v)),

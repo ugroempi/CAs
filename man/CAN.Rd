@@ -245,7 +245,8 @@ Ns(6, 50, 2) ## WKS is optimal
    # WKS_CAs['50']
 Ns(6, 200, 2) ## CS_CK and Paley are optimal
 Ns(6, 2000, 2) ## Cyclotomy is optimal
-Ns(6, 200, 3) ## powerCT is best implemented, but far worse than optimumnot easily available at present
+Ns(6, 200, 3) ## powerCT is best implemented,
+              ## but far worse than optimum
 
 Ns_CK_doubling(3, 22, 2)
 ## with doubling a Paley design for ceiling(22/2) columns,
