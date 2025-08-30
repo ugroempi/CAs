@@ -15,9 +15,11 @@ globalVariables(c("CYCLOTOMYcat", "PALEYcat"))
 #' and the code for the workhorse function that the interface function \code{\link{cyclotomyCA}}
 #' will use.
 #'
-#' \code{PALEYcat} is a data.frame in 178 rows with the same columns as
-#' \code{CYCLOTOMYcat}, except for the column \code{type}, which is not needed;
-#' here. \code{v} is always 2. The code is for the workhorse function
+#' \code{PALEYcat} is a data.frame in 178 rows with columns \code{t} (strength),
+#' \code{k} (number of CA columns), \code{v} (number of levels), \code{N} (number of CA rows),
+#' \code{q} (prime or prime power behind the construcion), and \code{nconst} (number of constant
+#' rows that can be achieved by function \code{\link{maxconstant}}).
+#' Here, \code{v} is always 2. The code is for the workhorse function
 #' \code{paley_mat}, if necessary with rows added or removed, will be used by
 #' the interface function \code{\link{paleyCA}}.
 #'

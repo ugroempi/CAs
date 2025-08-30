@@ -327,3 +327,7 @@ PALEYcat <- rbind(cbind(t=3, v=2, cat3[,c("k", "N", "code", "q")]),
                   cbind(t=5, v=2, cat5[,c("k", "N", "code", "q")]),
                   cbind(t=6, v=2, cat6[,c("k", "N", "code", "q")]))
 
+nconst_paley <- sapply(1:178, function(obj) {print(obj); hilf <- maxconstant(paleyCA(PALEYcat$t[obj], PALEYcat$k[obj]), verbose=2); length(attr(hilf, "constant_rows")$row_set_list)})
+PALEYcat$nconst <- nconst_paley
+
+save(PALEYcat, file="D:/rtests/CAs/data/PALEYcat.rda", compress="xz")
