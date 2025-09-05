@@ -7,11 +7,13 @@
 #' @aliases productCA
 #' @aliases productCA_raw
 #'
-#' @usage productCA(D1, D2, check=TRUE, dupremove=TRUE, generalized=TRUE, ...)
+#' @usage productCA(D1, D2, c1=NA, c2=NA, check=FALSE, dupremove=TRUE, generalized=TRUE, ...)
 #' @usage productCA_raw(D1, D2)
 #'
 #' @param D1 an N x k CA of strength 2 with v levels
 #' @param D2 an M x l CA of strength 2 with v levels
+#' @param c1 number of constant rows at the top of D1; specifying this substantially speeds up the function for large D1
+#' @param c2 number of constant rows at the top of D2; specifying this substantially speeds up the function for large D2, if D1 has fewer than \code{v} constant rows
 #' @param check logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for large CAs)
 #' @param dupremove logical; if TRUE, removes duplicated rows
 #' @param generalized logical; if TRUE, exploits constant rows, which implies that function \code{\link{maxconstant}} is used to maximize constant rows,
@@ -102,14 +104,14 @@ productCA_raw <- function(D1, D2){
 }
 
 #' @export
-productCA <- function(D1, D2, check=TRUE, dupremove=TRUE, generalized=TRUE, ...){
+productCA <- function(D1, D2, c1=NA, c2=NA, check=FALSE, dupremove=TRUE, generalized=TRUE, ...){
   Call <- sys.call()
   stopifnot(is.matrix(D1)); stopifnot(is.matrix(D2))
   v <- levs1 <- unique(levels.no.NA(D1))
   levs2 <- unique(levels.no.NA(D2))
   ## at present, only for uniform CAs
   stopifnot(length(levs1)==1);stopifnot(length(levs2)==1)
-  ## both CAs need to have the same number of columns
+  ## both CAs need to have the same number of levels
   stopifnot(levs1==levs2)
   # infer start0
   start0 <- (min(D1, na.rm=TRUE)==0)
@@ -120,15 +122,19 @@ productCA <- function(D1, D2, check=TRUE, dupremove=TRUE, generalized=TRUE, ...)
   k <- ncol(D1);
   l <- ncol(D2)
   if (generalized){
-    D1 <- maxconstant(D1, verbose=2, ...);
-    nc1 <- length(attr(D1, "constant_rows")$row_set_list)
+    if (!is.na(c1) && length(unique(D1[c1,]))==1) nc1 <- c1 else{
+      D1 <- maxconstant(D1, verbose=2, ...)
+      nc1 <- length(attr(D1, "constant_rows")$row_set_list)
+    }
     if (nc1 == v){
       D1 <- D1[-(1:v),,drop=FALSE]
       nc2 <- sum(apply(D2, 1, function(obj) length(unique(obj))==1))
+      ## improving DC will not improve the run size of the result
     }else{ ## nc1 < v
-      D2 <- maxconstant(D2, verbose=2, ...)
-      nc2 <- length(attr(D2, "constant_rows")$row_set_list)
-
+      if (!is.na(c2) && length(unique(D2[c2,]))==1) nc2 <- c2 else{
+        D2 <- maxconstant(D2, verbose=2, ...)
+        nc2 <- length(attr(D2, "constant_rows")$row_set_list)
+      }
       ## ensure disjoint constant rows
       constvals1 <- D1[1:nc1, 1, drop=TRUE]
       constvals2 <- D2[1:nc2, 1, drop=TRUE]
@@ -149,8 +155,8 @@ productCA <- function(D1, D2, check=TRUE, dupremove=TRUE, generalized=TRUE, ...)
 
   ## product with up to v disjoint constant rows removed
   aus <- productCA_raw(D1, D2)
+  constrows <- which(apply(aus, 1, function(obj) length(unique(obj))==1))
   if (dupremove) aus <- unique(aus)
-  aus <- CA_to_PCA(aus)
   attr(aus, "Call") <- Call
   aus
 }

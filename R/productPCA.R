@@ -24,6 +24,7 @@
 #' @param k1 width of P block in \code{D1} (see Details section)
 #' @param l1 width of P block in \code{D2} (see Details section)
 #' @param tryhard logical: if \code{TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.
+#' @param ignorePCAstatus logical: should \code{CA_to_PCA} ignore the \code{PCAstatus} attribute of \code{D} (if any)?
 #' @param start0 \code{NULL}, or logical: do the values start with 0 (otherwise with 1)?
 #' @param ... currently not used
 #'

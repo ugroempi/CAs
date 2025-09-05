@@ -250,7 +250,7 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
                                                           fixed=TRUE)[[1]][[4]]))
         if (lineage$method=="PCAxPCA")
           D <- productPCA(D1, D2) else
-            D <- productCA(D1, D2, one_is_enough=TRUE)
+            D <- CA_to_PCA(productCA(D1, D2, one_is_enough=TRUE))
         ## for t=2 and v=3, one_is_enough is speedier and does not deteriorate N
         ## make k1 as large as possible in the k1 to k2 split
         ## by swapping design columns
