@@ -6,14 +6,18 @@
 #'
 #' @rdname productPCA
 #'
+#' @aliases pcaCA
 #' @aliases productPCA
 #' @aliases CA_to_PCA
 #' @aliases is.PCA
 #'
+#' @usage pcaCA(k, v, ...)
 #' @usage productPCA(D1, D2=NULL, k1=NULL, l1=NULL, ...)
-#' @usage CA_to_PCA(D, tryhard=FALSE, ...)
+#' @usage CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...)
 #' @usage is.PCA(D, start0=NULL, ...)
 #'
+#' @param k integer: the number of requested columns
+#' @param v integer: the number of levels for each column
 #' @param D1 an N x k CA of strength 2 with v levels, split into k1 + k2 columns for \code{productPCA}
 #' @param D2 an M x l CA of strength 2 with v levels, split into l1 + l2 columns for \code{productPCA}
 #' @param D an N x k CA of strength 2 with v levels
@@ -151,6 +155,23 @@
 #'
 
 #' @export
+pcaCA <- function(k, v, ...){
+  Call <- sys.call()
+  ## implements the product-based constructions from PCAcat
+  hilf <- PCAcat[     PCAcat[,"k"]>=k &
+                      PCAcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) stop("this pair of k and v is not available from pcaCA")
+  zeile <- hilf[which.min(hilf$N), ,drop=FALSE]
+  aus <- eval(parse(text=zeile$code))
+  attrs <- attributes(aus)
+  attrs$Call <- Call
+  attrs$dim[2] <- k
+  aus <- aus[,1:k]
+  attributes(aus) <- attrs
+  aus
+}
+
+#' @export
 productPCA <- function(D1, D2=NULL, k1=NULL, l1=NULL, ...){
   Call <- sys.call()
   hilf <- matcheck(D1, PCAcheck = TRUE)
@@ -193,7 +214,6 @@ productPCA <- function(D1, D2=NULL, k1=NULL, l1=NULL, ...){
         flexible <- NA
       }
     l1_stored <- try(hilf$PCAstatus$k1) ## read from hilf
-    type2 <- hilf$PCAstatus$type
     if ("try-error" %in% class(l1_stored))
       stop("D2 does not seem to be a PCA")
     type2 <- hilf$PCAstatus$type
@@ -300,6 +320,11 @@ is.PCA <- function(D, start0=NULL, ...){
     if (k1 < k){
       if (all(D[1:v, (k1+1):k]==1-as.numeric(start0))) type <- "SCA"
     }
+    if (type=="PCA" && k1<k){
+      for (i in (k1+1):k){
+        if (any(D[1:v,i] > (1:v)-as.numeric(start0))) return(FALSE)
+      }
+    }
     aus <- TRUE
   }else aus <- FALSE
   ## return TRUE with info attached
@@ -309,8 +334,12 @@ is.PCA <- function(D, start0=NULL, ...){
 }
 
 #' @export
-CA_to_PCA <- function(D, tryhard=FALSE, ...){
+CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...){
   Call <- sys.call()
+
+  attrs <- attributes(D)  ## reinstate later
+  attrs$Call <- c(attrs$Call, Call)
+
   ## assumes that undeclared flexible values are coded as NA
   hilf <- matcheck(D, flexible=NA)
   v <- hilf$v; k <- hilf$k; N <- hilf$N; start0 <- hilf$start0; flexible <- hilf$flexval
@@ -320,7 +349,8 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
   if (length(unique(hilf[v,]))==1){
     aus <- hilf
     aus[1:v,] <- aus[ord(aus[1:v,]),]
-    attr(aus, "PCAstatus") <- list("SCA", k1=k, k2=0)
+    attrs$PCAstatus <- list("SCA", k1=k, k2=0)
+    attributes(aus) <- attrs
     return(aus)
   }
 
@@ -331,23 +361,29 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
   kcheap <- length(good)
 
   ## there is already a PCAstatus attribute
-  if (!is.null(PCAstatus <- attr(D, "PCAstatus"))){
-    if (!is.list(PCAstatus))
-      attr(D, "PCAstatus") <- "unknown" else{
+  if (!is.null(PCAstatus <- attr(D, "PCAstatus")) & !ignorePCAstatus){
+    if (!is.list(PCAstatus)){
+        if (is.logical(PCAstatus)) if (!PCAstatus)
+          message("D has been previously checked and is not a PCA (PCAstatus=FALSE)")
+          else
+            message("D has an invalid attribute PCAstatus")
+    ## return the unchanged D for PCAstatus=FALSE or invalid PCAstatus
+        return(D)
+      }else{
       if (PCAstatus$type %in% c("PCA","SCA")){
         ## valid attribute is assumed to be correct
         if (PCAstatus$k1>=kcheap){
-          message("The properties of the PCA D cannot be improved by function CA_to_PCA.")
+          message("The properties of the PCA D cannot be improved by function CA_to_PCA without tryhard.")
           return(D)  ## return unchanged input matrix
         }
-      }else attr(D, "PCAstatus") <- "unknown"
+      }else message("D has an invalid attribute PCAstatus (invalid list)")
       }
     }
 
   ## with valid non-NULL attribute PCAstatus that is as good as
   ##    possible without row swaps, the array was already returned
-  ## with any other non-NULL attribute PCAstatus or FALSE,
-  ##    the attribute was set to "unknown"
+  ##    unless ignorePCAstatus=TRUE
+  ## with attribute PCAstatus invalid or FALSE, an unchanged array was returned
 
     ## run check after moving the columns
     ## with distinct values in the first v rows
@@ -357,16 +393,22 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
       for (i in 1:kcheap){
           D <- permvals(D, i, D[1:v, i], 1:v - as.numeric(start0))
       }
+      if (kcheap<k){
+        for (i in (kcheap+1):k){
+          D <- permvals(D, i, unique(D[, i]), 1:v - as.numeric(start0))
+        }
+      }
     PCAstatus <- is.PCA(D, start0=start0, flexible=NA)
-    attr(D, "PCAstatus") <- attr(PCAstatus, "PCAstatus")
-    attr(D, "flexible") <- attr(PCAstatus, "flexible")
+    attrs$PCAstatus <- attr(PCAstatus, "PCAstatus")
     }else{
       if (!tryhard) {
         message("The first ", v, " rows do not have any columns that can serve as the k1-part of a PCA.")
-        attr(D, "PCAstatus") <- FALSE
       }
     }
-    if (!tryhard) return(D)
+    if (!tryhard){
+      attributes(D) <- attrs
+      return(D)
+    }
 
 
   ## not all columns can be made constant for v rows
@@ -404,8 +446,11 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
           aus <- swapvals(aus, k1+i, from, to)
         }
       }
+    }else{
+      ## make the last columns comply with the rules for PCA in productPCA
+      aus <- permvals(aus, k1+1, unique(aus[,k1+1]), 1:v - as.numeric(start0))
     }
-    attr(aus, "PCAstatus") <- list(type=type, k1=k-1, k2=1)
+    attrs$PCAstatus <- list(type=type, k1=k-1, k2=1)
   } else{
     ## try pairs of columns
     pickpairs <- nchoosek(k,2)
@@ -423,10 +468,11 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
       aus <- rbind(cbind(hilf[1:v,], D[inds,xcol,drop=FALSE]),
                    cbind(hilf[-(1:v),], D[setdiff(1:N, inds), xcol, drop=FALSE]))
 
-      k1 <- k-1; k2 <- 1
+    ##  k1 <- k-1; k2 <- 1 ## hääh?
+      k1 <- k-2; k2 <- 2 ## hääh?
       aus[1:v,] <- aus[ord(aus[1:v,]),]  ## sort into entries 1:v for first k1 columns
       type <- "PCA"
-      if (length(unique(aus[1:v,(k1+1):(k1+k2)]))==1){
+      if (length(unique(aus[1:v,(k1+1):k]))==1){
         type <- "SCA"
         if (!aus[1,k1+1]==min(aus)){
           from <- aus[1,k1+1]; to <- min(aus)
@@ -435,13 +481,13 @@ CA_to_PCA <- function(D, tryhard=FALSE, ...){
           }
         }
       }
-      attr(aus, "PCAstatus") <- list(type=type, k1=k-2, k2=2)
+      attrs$PCAstatus <- list(type=type, k1=k-2, k2=2)
     }else{
       aus <- D
       message("D is not a PCA with k2 up to 2. tryhard did not improve the PCA status.")
     }
   }
-  attr(aus, "Call") <- c(attr(aus, "Call"), Call)
-   class(aus) <- c("ca", class(aus))
-   aus
+  attributes(aus) <- attrs
+  class(aus) <- c("ca", class(aus))
+  aus
 }
