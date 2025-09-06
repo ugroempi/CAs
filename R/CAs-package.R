@@ -46,9 +46,9 @@
 #' * the strength 2 cover starter construction by Colbourn et al. (2006) which is simpler than Meagher and Stevens (2005) and allows a recursive product construction (function \code{\link{CS_CMMSSY}})
 #' * the 2-level cover starter construction by Colbourn and Keri (2009), which creates strength 4, 5, and 6 CAs and is also closely related to the Paley type construction of Colbourn (2015)
 #' * direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
-#' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved later; this is behind various current best CAs of the Colbourn tables.
-#' * composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}
-#' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these are not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
+#' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved by Colbourn and Torres-Jimenez (2013); automated in function \code{\link{dpCA}} based on some ingredients; the construction is behind various current best CAs of the Colbourn tables, which are not yet achieved by the package.
+#' * composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}; automated in function \code{\link{pcaCA}} based on some ingredients
+#' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these arase not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}
 #'
 #' So far, there are three functions for mixed level CAs: \code{MCA2} implements a strength 2
@@ -74,6 +74,8 @@
 #' * \code{\link{CAEX_CAs}} and \code{\link{CAEX_lineages}},
 #' * \code{\link{TJcat}} and \code{\link{TJ2level_CAs}},
 #' * \code{\link{powerCTcat}},
+#' * \code{\link{PCAcat}}
+#' * \code{\link{DPcat}}
 #' * \code{\link{SCPHFcat}}, \code{\link{SMC_CPHFs}} and \code{\link{CL_SCPHFs}}
 #' * \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
 #' * \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
@@ -152,6 +154,8 @@
 #' Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255-262. https://doi.org/10.1016/0012-365X(73)90098-8.
 #'
 #' Katona, G. O. H. (1973). Two applications (for search theory and truth functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1, pp. 19-26. https://doi.org/10.1007/BF02018457.
+#'
+#' Kokkala, J. I., Meagher, K., Naserasr, R., Nurmela, K. J., Östergård, P. R. J., & Stevens, B. (2018). Classification of small strength-2 covering arrays. Zenodo. https://doi.org/10.5281/zenodo.1476059
 #'
 #' Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez, J., (2012). Cover starters for covering arrays of strength two. Discrete Math. vol. 312, 943-956. https://doi.org/10.1016/j.disc.2011.10.026
 #'

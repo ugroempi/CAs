@@ -5,7 +5,39 @@
    (see file D15etalOptimized.RData in colbournTableReport folder)
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
-   
+
+September 05 2025, version 0.18
+ - function pcaCA based on the data frame PCAcat:
+   implemented productPCA constructions with promising PCA ingredients (large k1)
+   from Bose (not combining only Bose, because these are in recursiveBose), all cover starter 
+   constructions with only one fixed value, and some miscCA designs
+ - function dpCA based on the data frame DPcat:
+   implemented productCA constructions with promising CA ingredients (constant rows)
+   from Bose (not combining only Bose, because these are in recursiveBose), all cover starter 
+   constructions with only one fixed value, and some miscCA designs; (basically copied the list 
+   from productPCA, more might be achievable with more deliberate array selection)
+ - implemented productPCA constructions with promising PCA ingredients (large k1)
+   from Bose (not combining only Bose, because these are in recursiveBose), all cover starter 
+   constructions with only one fixed value, and some miscCA designs
+ - adapted LCDSTCombis with some improved ingredients
+ - adapted power constructions with improved ingredients - apparently nothing changed, 
+   but this can not be verified because the old rda file on GitHub appeared to be corrupt
+ - added arguments c1 and c2 for productCA, stopped it from enforcing a PCA (it now instead 
+   keeps its constant rows at the top), and changed the default for check to FALSE
+ - included the Cohen simulated annealing CAs and two CAs from Kokkala et al. (2018) into miscCA
+ - included an array from the paper CMMSSY (2006) into miscCA
+ - modified PCAstatus to k in miscCAcat for arrays with v constant rows, 
+   and sorted miscCAcat by t, v and k
+ - removed CA_to_PCA from productCA and added it in in CAEX
+ - added new arguments for function productCA with the intention of making it faster
+ - changed SCA_MS to always return an SCA with k1=k-1
+ - made CMMSSY work as a stand-alone starter construction (always returns SCA with k1=k-1)
+ - added further cover starters from LCDST paper, most to LCDST and the shorter ones to CMMSSY 
+ - copied suitable f=1 length k cover starters of LCDST to CMMSSY, where they work for k+1
+ - improved documentation for CS construction data
+ - bug fix: productPCA did not work for PCAs for which the top right part had level>=i in row i
+ - bug fix: CA_to_PCA removed the attributes from D for the cheap variant without tryhard=TRUE
+
 August 30 2025, version 0.17
  - updated the data frame powerCTcat with 179 additional constructions, based 
    on new implementations in the recent past; also, one bug with a claim of

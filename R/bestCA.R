@@ -88,10 +88,8 @@
 #' Ns(2,12,4)
 #' bestCA(2,12,4)
 #' # example with three best constructions
-#'     ## (TJ is based on catalogued arrays, also had this but was
-#'     ##  removed for space reasons)
 #' Ns(4,8,2)
-#' # without a preference, bestCA uses CS_CK
+#' # without a preference, bestCA uses the leftmost
 #' bestCA(4,8,2)
 #' bestCA(4,8,2, preference="PALEY")
 #'
@@ -101,7 +99,7 @@
 #' ## it is, of course, also possible to directly use the
 #' ## construction functions, in this case powerCA with type="CT".
 #'
-#' # a case that is not implemented
+#' # a case that is not implemented (would be huge)
 #' Ns(6, 5000, 10)
 #' try(bestCA(6, 5000, 10))
 #'
@@ -125,7 +123,7 @@
 #' Ns(3,9,6)
 #' ## CKRS is best implemented, but 18 runs worse than eCAN
 #' eCAN(3,9,6)
-#' ## Torres-Jimenez designs are currently (June 2025) unavailable
+#' ## Torres-Jimenez designs are currently (Sep 2025) unavailable
 #' D <- bestCA(3, 9, 6)
 #' attributes(D)
 #'
@@ -136,10 +134,13 @@
 #' Ns(2,26,24) ## fuseBose is best-known
 #' dim(bestCA(2,26,24))
 #'
-#' Ns(2,26,23) ## projBoseCA is best implemented with 623 runs
+#' Ns(2,26,23) ## fuseBushtCA is best implemented,
+#'             ## projBoseCA is close
 #' dim(D <- bestCA(2,26,23))
 #' attributes(D)
-#' ## eCAN 7 runs better from NCK post processing
+#' ## eCAN from NCK post processing of projBose
+#' ## (removes 7 runs)
+#' eCAN(2,26,23)
 #'
 #' Ns(3,6,12)
 #' ## the optimum Ji and Yin OA is in the package as oa1728.12.6
@@ -234,7 +235,7 @@ labelToCode <- function(label, t, k, v, ...){
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "scphfCA"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "pcaCA", "dpCA", "scphfCA"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }
@@ -270,6 +271,14 @@ labelToCode <- function(label, t, k, v, ...){
     if (!t==3) stop('"ODbasedCA" requires t=3')
     if (!k <= v) stop('"ODbasedCA" requires k<=v')
     return(paste0("ODbasedCA(", t, ",", k, ",", v, ")"))
+  }
+  if (label == "pcaCA"){
+    if (!t==2) stop('"pcaCA" requires t=2')
+    return(paste0("pcaCA(", k, ",", v, ")"))
+  }
+  if (label == "dpCA"){
+    if (!t==2) stop('"dpCA" requires t=2')
+    return(paste0("dpCA(", k, ",", v, ")"))
   }
   if (label =="TJ"){
     ## as of June 2025, the 2-level CAs of TJ

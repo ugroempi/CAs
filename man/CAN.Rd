@@ -10,6 +10,8 @@
 \alias{N_SCA_Busht}
 \alias{N_fuseBushtCA}
 \alias{Ns_CK_doubling}
+\alias{N_pcaCA}
+\alias{N_dpCA}
 \alias{Ns_productCA}
 \alias{N_NISTcat}
 \alias{N_TJcat}
@@ -23,6 +25,8 @@
 \alias{N_recBoseCA}
 \alias{N_projBoseCA}
 \alias{ks}
+\alias{k_pcaCA}
+\alias{k_dpCA}
 \alias{ks_productCA}
 \alias{k_NISTcat}
 \alias{k_TJcat}
@@ -218,19 +222,12 @@ N_projBoseCA(2, 45, 2, cmax=25)
 N_projectionBose(45, 2)
 Ns(2, 16, 11) ## CS_LCDST is the best,
               ## projBoseCA and CS_MS are competitive
+Ns(2, 40, 12) ## pcaCA and dpCA are the best,
 Ns(3, 45, 2)  ## the best array is in the TJ or the DWYER-catalogue
-   # D <- tjCA(3, 45, 2)
-   # dim(D)
-   # # Dwyer readable with internet connection or
-   # pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
-   # # the instruction line starts with a comment character and is ignored, therefore ninstruct=0
-   # D <- readCA(paste0(pathGH, "/CA_26_3_46_2.txt"), ignore.chars=c("]", "["),
-   #        ninstruct=0, sep=",")
-   # # or
-   # D <- dwyerCA(3, 45, 2)
+              ## CK_doublingCA is close
 Ns(3, 400, 2) ## powerCT construction is best
 Ns(2, 800, 3) ## function CAEX produces the best available array
-Ns(3, 200, 3) ## CK_doubling is the best implemented construction
+Ns(3, 200, 3) ## CK_doubling is the best non-internet construction
 Ns(4, 150, 3) ## cyclotomy is very competitive
 Ns(4, 150, 2) ## TJ is best (function tjCA)
 Ns(4, 50, 2) ## Paley and Cyclotomy are the same, and both optimal
@@ -242,7 +239,7 @@ Ns(5, 50, 3) ## the best easily available CA is
    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_2067_5_50_3.txt
 Ns(5, 500, 3) ## Cyclotomy is optimal
 Ns(6, 50, 2) ## WKS is optimal
-   # WKS_CAs['50']
+   # WKS_CAs['50']; bestCA(6, 50, 2)
 Ns(6, 200, 2) ## CS_CK and Paley are optimal
 Ns(6, 2000, 2) ## Cyclotomy is optimal
 Ns(6, 200, 3) ## powerCT is best implemented,

@@ -20,6 +20,8 @@
 #' @aliases N_fuseBoseCA
 #' @aliases N_fuseBushtCA
 #' @aliases Ns_CK_doubling
+#' @aliases N_pcaCA
+#' @aliases N_dpCA
 #' @aliases Ns_productCA
 #' @aliases N_NISTcat
 #' @aliases N_TJcat
@@ -33,6 +35,8 @@
 #' @aliases N_recBoseCA
 #' @aliases N_projBoseCA
 #' @aliases ks
+#' @aliases k_pcaCA
+#' @aliases k_dpCA
 #' @aliases ks_productCA
 #' @aliases k_NISTcat
 #' @aliases k_TJcat
@@ -180,31 +184,24 @@
 #' N_projectionBose(45, 2)
 #' Ns(2, 16, 11) ## CS_LCDST is the best,
 #'               ## projBoseCA and CS_MS are competitive
+#' Ns(2, 40, 12) ## pcaCA and dpCA are the best,
 #' Ns(3, 45, 2)  ## the best array is in the TJ or the DWYER-catalogue
-#'    # D <- tjCA(3, 45, 2)
-#'    # dim(D)
-#'    # # Dwyer readable with internet connection or
-#'    # pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
-#'    # # the instruction line starts with a comment character and is ignored, therefore ninstruct=0
-#'    # D <- readCA(paste0(pathGH, "/CA_26_3_46_2.txt"), ignore.chars=c("]", "["),
-#'    #        ninstruct=0, sep=",")
-#'    # # or
-#'    # D <- dwyerCA(3, 45, 2)
+#'               ## CK_doublingCA is close
 #' Ns(3, 400, 2) ## powerCT construction is best
 #' Ns(2, 800, 3) ## function CAEX produces the best available array
-#' Ns(3, 200, 3) ## CK_doubling is the best implemented construction
+#' Ns(3, 200, 3) ## CK_doubling is the best non-internet construction
 #' Ns(4, 150, 3) ## cyclotomy is very competitive
 #' Ns(4, 150, 2) ## TJ is best (function tjCA)
 #' Ns(4, 50, 2) ## Paley and Cyclotomy are the same, and both optimal
 #' Ns(4, 50, 3) ## the best easily available CA is
 #'    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_507_4_53_3.txt
 #' Ns(5, 50, 2) ## Paley is optimal
-#' Ns(5, 500, 2) ## CS_CK is near-optimal
+#' Ns(5, 500, 2) ## CS_CK and Paley are near-optimal
 #' Ns(5, 50, 3) ## the best easily available CA is
 #'    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_2067_5_50_3.txt
 #' Ns(5, 500, 3) ## Cyclotomy is optimal
 #' Ns(6, 50, 2) ## WKS is optimal
-#'    # WKS_CAs['50']
+#'    # WKS_CAs['50']; bestCA(6, 50, 2)
 #' Ns(6, 200, 2) ## CS_CK and Paley are optimal
 #' Ns(6, 2000, 2) ## Cyclotomy is optimal
 #' Ns(6, 200, 3) ## powerCT is best implemented,
@@ -213,6 +210,7 @@
 #' Ns_CK_doubling(3, 22, 2)
 #' ## with doubling a Paley design for ceiling(22/2) columns,
 #' ## the optimum run size can be achieved
+#' ## (obtained also directly with CK_doublingCA)
 #'
 #' Ns_CK_doubling(3, 12, 3)
 #' ## the direct CKRS construction is best (ckrsCA)
@@ -227,7 +225,7 @@ Ns <- function(t, k, v, exclude=NULL){
                           "CKRS", "SCA_Busht", "fuseBoseCA", "fuseBushtCA",
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
                           "CK_doublingCA", "CK_NRB", "WKS",
-                          "CS_MS", "CS_LCDST", "CS_CK",
+                          "CS_MS", "CS_LCDST", "CS_CK", "pcaCA", "dpCA",
                           "DWYER", "NIST","TJ", "powerCT", "miscCA",
                           "compositCA", "ODbasedCA", "scphfCA"
                           ))) message("exclude contains invalid element(s)")
@@ -258,6 +256,8 @@ Ns <- function(t, k, v, exclude=NULL){
     CS_CMMSSY=ifelse("CS_CMMSSY" %in% exclude, NA,N_CS_CMMSSY(t,k,v)),
     CS_MS=ifelse("CS_MS" %in% exclude, NA,N_CS_MS(t,k,v)),
     CS_LCDST=ifelse("CS_LCDST" %in% exclude, NA,N_CS_LCDST(t,k,v)),
+    pcaCA=ifelse("pcaCA" %in% exclude, NA,N_pcaCA(t,k,v)),
+    dpCA=ifelse("dpCA" %in% exclude, NA,N_dpCA(t,k,v)),
     scphfCA=ifelse("scphfCA" %in% exclude, NA, N_scphfCA(t,k,v)),
     powerCT=ifelse("powerCT" %in% exclude, NA,N_powerCT(t,k,v)),
     TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
@@ -360,6 +360,24 @@ Ns_CK_doubling <- function(t=3, k, v){
   doubled <- as.data.frame(rbind(hilf + (v-1)*plus))
   direct <- as.data.frame(rbind(Ns(t, k, v)))
   dplyr::bind_rows(direct=direct, doubled=doubled, .id="way")
+}
+
+#' @export
+N_pcaCA <- function(t=2,k,v){
+  if (!t==2) return(NA)
+  hilf <- PCAcat[PCAcat[,"k"]>=k &
+                      PCAcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(min(hilf[,"N"]))
+}
+
+#' @export
+N_dpCA <- function(t=2,k,v){
+  if (!t==2) return(NA)
+  hilf <- DPcat[DPcat[,"k"]>=k &
+                   DPcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(min(hilf[,"N"]))
 }
 
 ## obtain sizes for product construction
@@ -543,6 +561,8 @@ ks <- function(t, N, v){
     CS_LCDST=k_CS_LCDST(N,v),
     CS_CK=k_CS_CK(t,N),
     CS_CMMSSY=k_CS_CMMSSY(t,N),
+    pcaCA=k_pcaCA(t,N,v),
+    dpCA=k_dpCA(t,N,v),
     scphfCA=k_scphfCA(t,N,v),
     powerCT=k_powerCT(t,N,v),
     DWYER=k_DWYERcat(t,N,v),
@@ -678,6 +698,24 @@ k_CKRScat <- function(t,N,v){
 k_miscCAcat <- function(t,N,v){
   hilf <- miscCAcat[miscCAcat[,"t"]==t & miscCAcat[,"N"]<=N &
                       miscCAcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(max(hilf[,"k"]))
+}
+
+#' @export
+k_pcaCA <- function(t=2,N,v){
+  if (!t==2) return(NA)
+  hilf <- PCAcat[PCAcat[,"N"]<=N &
+                   PCAcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) return(NA)
+  else return(max(hilf[,"k"]))
+}
+
+#' @export
+k_dpCA <- function(t=2,N,v){
+  if (!t==2) return(NA)
+  hilf <- DPcat[DPcat[,"N"]<=N &
+                   DPcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(max(hilf[,"k"]))
 }
