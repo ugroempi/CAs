@@ -29,6 +29,10 @@
 #' @param ... currently not used
 #'
 #' @section Details:
+#' Function \code{pcaCA} returns a PCA from - possibly recursive - application
+#' to of function \code{productPCA} according to rules provided in the data frame
+#' \code{\link{PCAcat}}.
+#'
 #' Function \code{productPCA} exploits a partitioned structure of the two CAs it combines
 #' (see Section "Partitioned Covering Array (PCA)"). The construction can be viewed as a kind of product,
 #' but is sometimes also called "cut-and-paste". It was proposed in Colbourn et al. (2006)
@@ -71,28 +75,56 @@
 #' the \code{v x k1} matrix P (with each column consisting of the identity permutation of all levels)
 #' makes up the top left block,\cr
 #' the top right \code{v x k2} block (which may be empty) is constant with all elements equal to the smallest level (for an SCA, which is a special case of a PCA)
-#' or has arbitrary levels (for a PCA),\cr
+#' or has arbitrary levels (for a PCA), however, ensuring that the level in row \code{i} must not be larger than
+#' the \code{i}th level (important for the product to work on PCAs and not on SCAs only, and always possible to achieve by level permutation),\cr
 #' and the remaining two blocks (bottom left and bottom right) may contain arbitrary elements.\cr
 #' It is beneficial for the number of columns in a product, if the left-hand side block is as wide as possible.\cr
 #' It is beneficial for recursively taking products, if the bottom left block is itself a PCA, i.e., contains \code{q} rows
 #' for which a large number of columns consists of permutations of the values 0 to \code{q-1} (also called a 2PCA).
 #'
 #' @returns
-#' Function {\code{productPCA}} returns a new PCA in \code{k1*l1 + k1*l2 + k2*l1} columns and \code{N + M - v} rows
-#' (matrix of class \code{ca}).\cr
+#' Functions \code{pcaCA} and \code{productPCA} return a matrix of class \code{ca} that
+#' is a PCA with attribute \code{PCAstatus}.\cr
+#' For \code{pcaCA}, the number of columns is as requested, and the
+#' number of rows is the smallest possible according to the pre-calculated
+#' information data frame \code{\link{PCAcat}}; it can be explored
+#' using function \code{\link{N_pcaCA}} or function \code{\link{Ns}} (where the construction is applicable).
+#' The returned matrix has its levels coded from 0 to \code{v-1}.\cr
+#' For \code{productPCA}, the number of columns is \code{k1*l1 + k1*l2 + k2*l1} (of which \code{k1*l1} make up the left part),
+#' and the number of rows is \code{N + M - v}.\cr
 #' The returned matrix has its levels coded like the ingoing matrices, i.e., integers starting with 0 or 1.
 #'
-#' Function \code{CA_to_PCA} returns an equivalent CA of S3 class \code{ca} that has PCA (or SCA) structure (see Section "Partitioned Covering Array (PCA)").
+#' Function \code{CA_to_PCA} returns an equivalent CA of S3 class \code{ca} that has PCA (or SCA) structure (see Section "Partitioned Covering Array (PCA)"),
+#' if possible.
 #'
-#' The results of functions \code{CA_to_PCA}, \code{SCA_Bose} and {\code{prodPCA}} have an attribute \code{PCAstatus},
+#' The resulting CAs have an attribute \code{PCAstatus},
 #' which is a list with elements \code{type} (PCA or SCA), \code{k1} and \code{k2}.
 #'
 #' Function \code{is.PCA} returns a logical with the analogous attribute; it can be (mis)used for checking
 #' consistency between the codings of designs by specifying \code{start0}.
 #'
-#' @references Colbourn et al. (2006), Colbourn and Torres-Jimenez (2013), Torres-Jimenez et al. (2019)
+#' @references Colbourn et al. (2006) and Torres-Jimenez et al. (2019) for the
+#' product with an SCA, Colbourn and Torres-Jimenez (2013) for the more general version
+#' with two PCAs
 #'
 #' @examples
+#' #################################################
+#' ### pcaCA
+#' #################################################
+#' ## 44 6-level columns
+#' dim(D <- pcaCA(44, 6))
+#' coverage(D, 2)
+#' ## best implemented construction
+#' Ns(2,44,6)
+#' ## as Torres-Jimenez does not share his arrays
+#' eCAN(2, 44, 6)
+#'
+#' ### larger number of columns
+#' N_pcaCA(2, 500, 8)
+#' Ns(2, 500, 8) ## not best implemented (prime power v)
+#' Ns(2, 500, 6) ## not eCAN, but best implemented (non-prime power v)
+#'
+#'
 #' #################################################
 #' ### productPCA
 #' #################################################

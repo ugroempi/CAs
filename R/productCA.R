@@ -4,23 +4,41 @@
 #'
 #' @rdname productCA
 #'
+#' @aliases dpCA
 #' @aliases productCA
 #' @aliases productCA_raw
 #'
+#' @usage dpCA(k, v, ...)
 #' @usage productCA(D1, D2, c1=NA, c2=NA, check=FALSE, dupremove=TRUE, generalized=TRUE, ...)
 #' @usage productCA_raw(D1, D2)
 #'
+#' @param k number of columns
+#' @param v number of levels
 #' @param D1 an N x k CA of strength 2 with v levels
 #' @param D2 an M x l CA of strength 2 with v levels
-#' @param c1 number of constant rows at the top of D1; specifying this substantially speeds up the function for large D1
-#' @param c2 number of constant rows at the top of D2; specifying this substantially speeds up the function for large D2, if D1 has fewer than \code{v} constant rows
-#' @param check logical; if TRUE, checks required strength of ingoing CAs (may substantially increase run time for large CAs)
-#' @param dupremove logical; if TRUE, removes duplicated rows
-#' @param generalized logical; if TRUE, exploits constant rows, which implies that function \code{\link{maxconstant}} is used to maximize constant rows,
-#' which can reduce \code{N+M} by up to \code{v} (and at least by two); the price is run time.
-#' @param ... further arguments to function \code{\link{maxconstant}}, e.g., \code{one_is_enough}, which is per default FALSE
+#' @param c1 for \code{generalized=TRUE}, number of constant rows at the top of \code{D1};
+#'           specifying this (correctly) substantially speeds up the function
+#'           for large \code{D1}
+#' @param c2 for \code{generalized=TRUE}, number of constant rows at the top of \code{D2};
+#'           specifying this substantially speeds up the function for large \code{D2},
+#'           if \code{D1} has fewer than \code{v} constant rows (ignored otherwise)
+#' @param check logical; if TRUE, checks required strength of ingoing CAs
+#'           (may substantially increase run time for large CAs)
+#' @param dupremove logical; if TRUE, removes duplicated rows of the result (if any)
+#' @param generalized logical; if TRUE, exploits constant rows.\cr
+#'            \code{TRUE} is the recommended choice, as it reduces the number of runs
+#'            from \code{N+M} to a run size between \code{N+M-v} and \code{N+M-2}, depending
+#'            on the number of constant rows.
+#' @param ... further arguments to function \code{\link{maxconstant}},
+#'           e.g., \code{one_is_enough=TRUE} in case of large \code{D1} and \code{D2}.
 #'
 #' @section Details:
+#' Function \code{dpCA} yields a uniform strength 2 CA with \code{k} columns in \code{v} levels,
+#' based on the pre-inspected combination of ingredient CAs contained in the data frame
+#' \code{\link{DPcat}}; the calculations invoked use the function \code{productCA} that implements
+#' (a simple form of) the generalized direct product construction presented in Colbourn and
+#' Torres-Jimenez (2013).
+#'
 #' Function \code{productCA} yields a CA(N + M -  min(v, s+r), 2, kl, v) from a product
 #' construction,\cr
 #' for which \code{D1} can be rearranged to have s constant rows \cr
@@ -45,6 +63,13 @@
 #' @references Colbourn and Torres-Jimenez (2013)
 #'
 #' @examples
+#' ############################
+#' #### dpCA ##################
+#' ############################
+#' Ns(2, 25, 6)
+#' D <- dpCA(25, 5)
+#' coverage(D, 2)
+#'
 #' #########################################
 #' ## productCA
 #' #########################################
@@ -89,6 +114,23 @@
 #' B <- matrix(10*(1:6), nrow=3)
 #' productCA_raw(A, B)
 #'
+
+#' @export
+dpCA <- function(k, v, ...){
+  Call <- sys.call()
+  ## implements the product-based constructions from DPcat
+  hilf <- DPcat[DPcat[,"k"]>=k &
+                DPcat[,"v"]==v,,drop=FALSE]
+  if (nrow(hilf)==0) stop("this pair of k and v is not available from dpCA")
+  zeile <- hilf[which.min(hilf$N), ,drop=FALSE]
+  aus <- eval(parse(text=zeile$code))
+  attrs <- attributes(aus)
+  attrs$Call <- Call
+  attrs$dim[2] <- k
+  aus <- aus[,1:k]
+  attributes(aus) <- attrs
+  aus
+}
 
 #' @export
 productCA_raw <- function(D1, D2){
