@@ -16,7 +16,8 @@
 #' @param k number of columns
 #' @param N number of runs
 #'
-#' @return \code{KSK} returns a matrix with \code{k} columns and \code{N} runs and levels 0 and 1
+#' @return \code{KSK} returns a matrix of class \code{ca} with
+#' \code{k} columns and \code{N} runs and levels 0 and 1
 #' in each column, with coverage strength 2.
 #'
 #' \code{N_KSK} and \code{k_KSK} return the minimum \code{N} for a given \code{k}
@@ -47,6 +48,7 @@ k_KSK <- function(N) choose(N-1, ceiling(N/2))
 
 #' @export
 KSK <- function(k=NULL, N=NULL){
+  Call <- sys.call()
   ## k is the number of columns
   ## N is the number of rows
   ## if one is NULL, it is calculated from the other
@@ -57,10 +59,15 @@ KSK <- function(k=NULL, N=NULL){
   if (is.null(k)) k <- k_KSK(N)
   if (is.null(N)) N <- N_KSK(k)
   pos1 <- nchoosek(N-1, ceiling(N/2))
-  CA <- matrix(0, N, k)
+  aus <- matrix(0, N, k)
   for (j in 1:k){
-    CA[pos1[,j]+1,j] <- 1
+    aus[pos1[,j]+1,j] <- 1
   }
-  CA
+  class(aus) <- c("ca", class(aus))
+  attr(aus, "t") <- 2
+  attr(aus, "Call") <- Call
+  attr(aus, "origin") <- "Kleitman & Spencer, and Katona"
+  attr(aus, "comment") <- "optimal"
+  aus
 }
 

@@ -241,7 +241,7 @@ class(oa1728.12.6) <- c("ca", "oa", class(oa1728.12.6))
 attr(oa1728.12.6, "t") <- 3
 attr(oa1728.12.6, "origin") <- "Lemma 3.5 of Ji and Yin 2012"
 attr(oa1728.12.6, "source") <- "orthogonal array (Ji-Yin)"
-attr(oa1728.12.6, "PCAstatus") <- is.PCA(oa1728.12.6)
+attr(oa1728.12.6, "PCAstatus") <- attr(is.PCA(oa1728.12.6), "PCAstatus")
 
 ##########################################################################
 
