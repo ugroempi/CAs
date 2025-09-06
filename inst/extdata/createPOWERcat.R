@@ -9,6 +9,8 @@ powerCTcat <- colbournBigFrame[whichCTnormal,]
 N <- powerCTcat$N
 k <- powerCTcat$k
 v <- powerCTcat$v
+plus <- sapply(strsplit(powerCTcat$Source,"+", fixed=TRUE), function(obj) ifelse(length(obj)==1, 0, obj[2]))
+plus <- as.numeric(gsub("c","",plus))
 Pbase <- as.numeric(substr(sapply(strsplit(powerCTcat$Source, "^", fixed=TRUE),
                                   function(obj) obj[1]), 9, 99))
 exponent <- as.numeric(sapply(strsplit(
@@ -116,7 +118,7 @@ powerCTcat$u3[equal2] <- 2   ## not equal to first, but equal to second
 ##             at least not on my machine)
 ## NIST instead of DWYER in constr2 and constr3 harmful
 
-require(CAs)  # version 0.16 with naively updated powerCTcat
+require(CAs)  # version 0.18 with naively updated powerCTcat
 
 powerCTcat$constr4 <- powerCTcat$constr3 <- powerCTcat$constr2 <- powerCTcat$constr1 <- ""
 powerCTcat$c4 <- powerCTcat$c3 <- powerCTcat$c2 <- powerCTcat$c1 <- 1  ## minimum achievable, increase via knowledge
@@ -280,15 +282,19 @@ rownames(powerCTcat) <- NULL
 
 save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda", compress="xz")
 
-load("D:/rtests/CAs/data/powerCTcat.rda")
 
 load("D:/rtests/CAsbak/powerCTcat_old.rda") ## has old powerCTcat
-v16_old <- powerCTcat
+v16_old <- powerCTcat ## v17_old apparently not stored OK on GitHub
+load("D:/rtests/CAs/data/powerCTcat.rda")
 merged <- merge(v16_old, powerCTcat, by=c("t","k","v","Source"))
 merged[merged$N.x<merged$N.y,]
-merged[merged$N.x>merged$N.y,]
+dim(merged[merged$N.x>merged$N.y,])
 
-
+Ns(2,20000,6)
+Ns(4, 2197,2) ## this uses a strength 5 construction
+              ## could improve powerCTcat,
+              ## but it is simpler to let N_powerCT use
+              ##    all constructions with strength at least t
 ## sanity checks
 aus <- powerCA(6, 361, 3)  ## smallest N for 3-level
-
+dim(aus)
