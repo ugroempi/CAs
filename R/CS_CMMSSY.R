@@ -2,7 +2,7 @@
 ### and circular matrix created from a cover starter vector
 ###    taken fom CMMSSYStarters
 ###
-### This is not needed beyond the Meagher Stevens construction
+### This also has some starters from LCDST
 ### However, it is easier - therefore it could be good to change Meagher and Stevens to
 ### this approach with Inf, because it would avoid using package permutations
 ###
@@ -69,11 +69,7 @@
 #' starter <- c(Inf, 0, 0, 1, 3, 2)
 #' CS_CMMSSY(7, 5, starter=starter) ## 29 runs, 7 columns
 #'
-#' CS_CMMSSY(35, 5)  ## 45 rows
-#'
-#' N_CS_CMMSSY(2, 500, 8)
-#' Ns(2, 500, 6) ## not eCAN, but best implemented
-#' Ns(2, 500, 9) ## here worse than recBoseCA_PCA
+#' CS_CMMSSY(9, 6)  ## 46 rows
 #'
 
 #' @export
@@ -99,22 +95,28 @@ CS_CMMSSY <- function(k, v, start0=TRUE, starter=NULL, ...){
     k_lookup <- k_CS_CMMSSY(N,v)  ## the column size corresponding to the N
     if (is.na(k_lookup)) stop("Unexpected error.")
     ## retrieve code that fetches starter, if possible
-    zeile <- which(CMMSSYCombis$k==k_lookup &
-                     CMMSSYCombis$v==v &
-                     CMMSSYCombis$N==N)
-    stopifnot(length(zeile)==1)
-    ## conduct productPCA construction
-    code <- CMMSSYCombis$code[zeile]
-    #if (length(grep("starter", code, fixed=TRUE)) > 0)
-    return(eval(parse(text=CMMSSYCombis$code[zeile]))[,1:k])
+    starter=CMMSSYStarters[[as.character(v)]][[as.character(k_lookup-1)]]
+    # zeile <- which(CMMSSYCombis$k==k_lookup &
+    #                  CMMSSYCombis$v==v &
+    #                  CMMSSYCombis$N==N)
+    # stopifnot(length(zeile)==1)
+    # ## conduct productPCA construction
+    # code <- CMMSSYCombis$code[zeile]
+    # #if (length(grep("starter", code, fixed=TRUE)) > 0)
+    # return(eval(parse(text=CMMSSYCombis$code[zeile]))[,1:k])
   }
 
   ## create array for a specified starter
-  ## (includes cases for stage=1 rows of CMMSSYCombis
-  ## that return here from the above eval(parse...)
+  ## and a built-in starter
+  ## that was picked above
+
   G <- createG_CMMSSY(v)
   aus <- createCS_CMMSSY(starter, v, G)[,1:k]
+  class(aus) <- c("ca", class(aus))
   aus <- CA_to_PCA(aus) ## for adding the attribute PCAstatus
+  attr(aus, "Call") <- Call
+  attr(aus, "t") <- 2
+  attr(aus, "origin") <- "Cover starter CMMSSY 2006"
   if (!start0) aus <- aus + 1
   aus
 }
@@ -125,7 +127,7 @@ N_CS_CMMSSY <- function(t=2, k, v, theoretical=FALSE){
   stopifnot(is.numeric(k), is.numeric(v))
   stopifnot(k%%1==0, v%%1==0)
   stopifnot(is.logical(theoretical))
-  if(k<2 ||  v<5 || !t==2) return(NA)
+  if(k<2 ||  v<3 || !t==2) return(NA)
   if (theoretical) return((v-1)*k + 1)
   hilf <- CMMSSYCombis[CMMSSYCombis[,"v"]==v &
                                  CMMSSYCombis[,"k"]>=k ,,drop=FALSE]

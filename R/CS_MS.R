@@ -242,5 +242,5 @@ search_CS <- function(v){
 #' @export
 SCA_MS <- function(k, v, start0=TRUE, starter=NULL, ...){
   hilf <- CS_MS(k, v, start0=start0, starter=starter, ...)
-  CA_to_PCA(hilf)
+  CA_to_PCA(hilf, tryhard=TRUE)
 }

@@ -111,10 +111,18 @@ MeagherStevensStarters <- list(
              '37'=c(0,6,14,3,5,8,12,15,4,15,5,2,11,7,2,3,2,7,15,5,12,12,10,8,4,1,5,5,7,7,10,16,10,16,9,2,4))
 )
 
-MeagherStevensCombis <- cbind(
+MeagherStevensCombis <- data.frame(
   v=(v <- rep(as.numeric(names(MeagherStevensStarters)), lengths(MeagherStevensStarters))),
   k=(k <- unlist(lapply(MeagherStevensStarters, function(obj) as.numeric(names(obj))))),
   N=(v-1)*k+1)
+
+## check k1
+PCA_k1 <- rep(0, nrow(MeagherStevensCombis))
+for (i in 1:nrow(MeagherStevensCombis)){
+  print(i)
+  PCA_k1[i] <- attr(SCA_MS(MeagherStevensCombis$k[i], MeagherStevensCombis$v[i]), "PCAstatus")$k1
+}
+table(MeagherStevensCombis$k- PCA_k1)
 
 ## check coverage
 

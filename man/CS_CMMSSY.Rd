@@ -73,11 +73,7 @@ k <- 7; v <- 5
 starter <- c(Inf, 0, 0, 1, 3, 2)
 CS_CMMSSY(7, 5, starter=starter) ## 29 runs, 7 columns
 
-CS_CMMSSY(35, 5)  ## 45 rows
-
-N_CS_CMMSSY(2, 500, 8)
-Ns(2, 500, 6) ## not eCAN, but best implemented
-Ns(2, 500, 9) ## here worse than recBoseCA_PCA
+CS_CMMSSY(9, 6)  ## 46 rows
 
 }
 \references{

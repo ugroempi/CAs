@@ -2,11 +2,14 @@
 % Please edit documentation in R/CS_LCDST.R
 \name{CS_LCDST}
 \alias{CS_LCDST}
+\alias{SCA_LCDST}
 \alias{N_CS_LCDST}
 \alias{k_CS_LCDST}
 \title{Strength 2 CAs constructed by cover starters (LCDST)}
 \usage{
 CS_LCDST(k, v, start0=TRUE, starter=NULL, ...)
+
+SCA_LCDST(k, v, start0=TRUE, starter=NULL, ...)
 
 N_CS_LCDST(t=2, k, v)
 
@@ -31,6 +34,8 @@ CAUTION: Responsibility for achieving the coverage rests with the user, please c
 }
 \value{
 \code{CS_LCDST} returns the smallest possible strength 2 CA from the Lobb et al. (2012) construction for \code{k} experimental factors in \code{v} levels; it is an \code{N x k} matrix with entries from 0 to \code{v-1} or from 1 to \code{v}, depending on \code{start0}.\cr
+
+\code{SCA_LCDST} returns the SCA form of that array (works for cases with f=1 and returns an SCA with k1=k-1).\cr
 \code{N_CS_LCDST} returns the minimum run size needed for the LCDST construction with \code{k} factors at \code{v} levels, or \code{NA}, if no such construction exists.\cr
 \code{k_CS_LCDST} returns the maximum number of \code{v}-level factors that can be accommodated in at most \code{N} runs, or \code{NA}, if no such construction exists.
 }

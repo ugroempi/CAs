@@ -12,10 +12,12 @@
 #' @rdname CS_LCDST
 #'
 #' @aliases CS_LCDST
+#' @aliases SCA_LCDST
 #' @aliases N_CS_LCDST
 #' @aliases k_CS_LCDST
 #'
 #' @usage CS_LCDST(k, v, start0=TRUE, starter=NULL, ...)
+#' @usage SCA_LCDST(k, v, start0=TRUE, starter=NULL, ...)
 #' @usage N_CS_LCDST(t=2, k, v)
 #' @usage k_CS_LCDST(t=2, N, v)
 #'
@@ -30,6 +32,7 @@
 #' @param ... currently not used
 #'
 #' @returns \code{CS_LCDST} returns the smallest possible strength 2 CA from the Lobb et al. (2012) construction for \code{k} experimental factors in \code{v} levels; it is an \code{N x k} matrix with entries from 0 to \code{v-1} or from 1 to \code{v}, depending on \code{start0}.\cr
+#' @returns \code{SCA_LCDST} returns the SCA form of that array (works for cases with f=1 and returns an SCA with k1=k-1).\cr
 #' \code{N_CS_LCDST} returns the minimum run size needed for the LCDST construction with \code{k} factors at \code{v} levels, or \code{NA}, if no such construction exists.\cr
 #' \code{k_CS_LCDST} returns the maximum number of \code{v}-level factors that can be accommodated in at most \code{N} runs, or \code{NA}, if no such construction exists.
 #'
@@ -100,13 +103,15 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
   ## a specified starter
   if (!is.null(starter)){
     stopifnot(length(starter) >= k)
-    stopifnot(starter[1] > 100)
+    #stopifnot(starter[1] > 100)
   }
   if (is.null(starter)){
     N <- N_CS_LCDST(t=2, k, v)
     if (is.na(N)) stop("This combination of k and v cannot be accommodated.")
-    k_lookup <- k_CS_LCDST(t=2,N,v)
+    k_lookup <- (LCDSTCombis$k[LCDSTCombis$v==v & LCDSTCombis$k>=k])[
+      which.min(LCDSTCombis$N[LCDSTCombis$v==v & LCDSTCombis$k>=k])]
     if (is.na(k_lookup)) stop("Unexpected error.")
+#print(k_lookup)
     ## retrieve starter
     vc <- as.character(v)
     kc <- as.character(k_lookup)
@@ -136,6 +141,13 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
     attr(aus, "CAs version") <- packageVersion("CAs")
   }
   aus
+}
+
+#' @export
+SCA_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
+  ## should be applied for cases with f=1 only
+    hilf <- CS_LCDST(k, v, start0=start0, starter=starter, ...)
+    CA_to_PCA(hilf, tryhard=TRUE)
 }
 
 ## the N and k functions
