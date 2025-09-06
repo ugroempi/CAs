@@ -4,29 +4,44 @@
 \name{ca12.2.8}
 \alias{ca12.2.8}
 \alias{ca26.4.15}
+\alias{ca23.4.8}
+\alias{ca30.5.7}
+\alias{ca41.6.6}
 \alias{oa1728.12.6}
 \alias{oa3375.15.6}
 \alias{oa9261.21.6}
+\alias{CohenSA}
 \alias{miscCAcat}
 \title{Useful arrays for covering array constructions}
 \format{
 All arrays listed here have their rows arranged such that constant rows are
-at the top; if there are fewer than \code{v} constant rows, they are
-arranged in PCA format (see \code{\link{productPCA}}).\cr
-\code{ca26.4.15} is a strength 2 CA.\cr
+at the top or in PCA format; if there are fewer than \code{v} constant rows, they are
+usually arranged in PCA format (see \code{\link{productPCA}}).\cr
+\code{ca26.4.15}, \code{ca23.4.8}, \code{ca30.5.7} and \code{ca41.6.6} are strength 2 CAs.\cr
+There is also the list \code{CohenSA} that contains CAs that were created by Cohen using
+simulated annealing.
+
 \code{oa1728.12.6}, \code{3375.15.6} and \code{oa9261.21.6} are strength 3
 orthogonal arrays (classes \code{ca} and \code{oa})
 and matrices with levels starting at 0.
-They might eventually reside in the R package \pkg{\link{DoE.base}}.\cr
+They might eventually reside in the R package \pkg{\link{DoE.base}}.
+
 \code{miscCAcat} is a data.frame that collects the properties of all the
-CAs (including orthogonal arrays) that are documented in this file.
+CAs (including orthogonal arrays and the CAs from within \code{CohenSA})
+that are documented in this file.
 It has the columns \code{t}, \code{k}, \code{v},
 \code{N}, \code{fns} (character), \code{nconst}, \code{PCAstatus} (numeric,
-holds \code{k1}; 0 implies that \code{nconst=v}, i.e., k1=k)
+holds \code{k1}; \code{v} implies that \code{nconst=v}, i.e., k1=k)
 and \code{hasNA} (logical, at present, FALSE for all entries).
 .
 
-An object of class \code{ca} (inherits from \code{matrix}, \code{array}) with 26 rows and 15 columns.
+An object of class \code{ca} (inherits from \code{ca}, \code{matrix}, \code{array}) with 26 rows and 15 columns.
+
+An object of class \code{ca} (inherits from \code{ca}, \code{ca}, \code{ca}, \code{matrix}, \code{array}) with 23 rows and 8 columns.
+
+An object of class \code{ca} (inherits from \code{matrix}, \code{array}) with 30 rows and 7 columns.
+
+An object of class \code{ca} (inherits from \code{matrix}, \code{array}) with 41 rows and 6 columns.
 
 An object of class \code{ca} (inherits from \code{oa}, \code{matrix}, \code{array}) with 1728 rows and 6 columns.
 
@@ -34,7 +49,9 @@ An object of class \code{ca} (inherits from \code{matrix}, \code{array}) with 33
 
 An object of class \code{ca} (inherits from \code{matrix}, \code{array}) with 9261 rows and 6 columns.
 
-An object of class \code{data.frame} with 12 rows and 9 columns.
+An object of class \code{list} of length 7.
+
+An object of class \code{data.frame} with 22 rows and 9 columns.
 }
 \source{
 \code{oa12.2.8} was created by the package author based on learning about
@@ -51,11 +68,19 @@ ca12.2.8
 
 ca26.4.15
 
+ca23.4.8
+
+ca30.5.7
+
+ca41.6.6
+
 oa1728.12.6
 
 oa3375.15.6
 
 oa9261.21.6
+
+CohenSA
 
 miscCAcat
 }

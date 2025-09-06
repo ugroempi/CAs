@@ -86,9 +86,10 @@ miscCA <- function(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=FALSE, makePCA=FA
       if (!maxconstant) comment <- paste0(hilf$nconst, " constant rows are possible")
       if ((maxconstant || !makePCA) && !hilf$nconst == hilf$v)
         comment <- paste0("PCA structure with k1=", hilf$PCAstatus, " can be achieved")
-      if (!comment=="") attr(aus, "comment") <- comment
-    }else{
-      aus <- get(hilf$fns)
+      if (!comment=="") attr(aus, "comment") <- c(attr(aus, "comment"), comment)
+  }else{
+    if (length(grep("CohenSA", hilf$fns))==1) aus <- eval(parse(text=hilf$fns))
+        else aus <- get(hilf$fns)
       dimnames(aus) <- NULL
       ## it is assumed that the attributes are already suitably set
       ## maxconstant and makePCA are ignored

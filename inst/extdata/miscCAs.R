@@ -3,25 +3,94 @@
 ## info collected in miscCAcat at the very top
 ##
 miscCAcat <- rbind(
-  data.frame(t=3, k=8, v=2, N=12, fns="ca12.2.8", nconst=2, PCAstatus=0, hasNA=FALSE, comment="created from paleyCA(3,23)"),
-  data.frame(t=5, k=6, v=3, N=243, fns="DoE.base::L243.3.6-1", nconst=3, PCAstatus=0, hasNA=FALSE, comment=""),
-  data.frame(t=5, k=12, v=3, N=729, fns="DoE.base::L729.3.12-1", nconst=3, PCAstatus=0, hasNA=FALSE, comment=""),
+  data.frame(t=3, k=8, v=2, N=12, fns="ca12.2.8", nconst=2, PCAstatus=8, hasNA=FALSE, comment="created from paleyCA(3,23)"),
+  data.frame(t=5, k=6, v=3, N=243, fns="DoE.base::L243.3.6-1", nconst=3, PCAstatus=6, hasNA=FALSE, comment=""),
+  data.frame(t=5, k=12, v=3, N=729, fns="DoE.base::L729.3.12-1", nconst=3, PCAstatus=12, hasNA=FALSE, comment=""),
+  data.frame(t=2, k=8, v=4, N=23, fns="ca23.4.8", nconst=2, PCAstatus=6, hasNA=FALSE, comment="found in CMMSSY (2006)"),
   data.frame(t=2, k=15, v=4, N=26, fns="ca26.4.15", nconst=1, PCAstatus=11, hasNA=FALSE, comment="SCA with k1=11 for up to 13 columns"),
-  data.frame(t=3, k=6, v=4, N=64, fns="DoE.base::L64.4.6-1", nconst=4, PCAstatus=0, hasNA=FALSE, comment=""),
-  data.frame(t=5, k=6, v=4, N=1024, fns="DoE.base::L1024.4.6-1", nconst=4, PCAstatus=0, hasNA=FALSE, comment=""),
-  data.frame(t=2, k=3, v=6, N=36, fns="DoE.base::L36.2.8.6.3[,9:11]-1", nconst=6, PCAstatus=0, hasNA=FALSE, comment=""),
+  data.frame(t=3, k=6, v=4, N=64, fns="DoE.base::L64.4.6-1", nconst=4, PCAstatus=6, hasNA=FALSE, comment=""),
+  data.frame(t=5, k=6, v=4, N=1024, fns="DoE.base::L1024.4.6-1", nconst=4, PCAstatus=6, hasNA=FALSE, comment=""),
+  data.frame(t=2, k=3, v=6, N=36, fns="DoE.base::L36.2.8.6.3[,9:11]-1", nconst=6, PCAstatus=3, hasNA=FALSE, comment=""),
   data.frame(t=2, k=4, v=10, N=100, fns="DoE.base::L100.2.4.10.4[,5:8]-1", nconst=9, PCAstatus=3, hasNA=FALSE, comment=""),
   data.frame(t=2, k=7, v=12, N=144, fns="DoE.base::L144.12.7-1", nconst=9, PCAstatus=6, hasNA=FALSE, comment=""),
   data.frame(t=3, k=6, v=12, N=1728, fns="oa1728.12.6", nconst=1, PCAstatus=4, hasNA=FALSE, comment=""),
   data.frame(t=3, k=6, v=15, N=3375, fns="oa3375.15.6", nconst=1, PCAstatus=4, hasNA=FALSE, comment=""),
-  data.frame(t=3, k=6, v=21, N=9261, fns="oa9261.21.6", nconst=1, PCAstatus=4, hasNA=FALSE, comment="")
+  data.frame(t=3, k=6, v=21, N=9261, fns="oa9261.21.6", nconst=1, PCAstatus=4, hasNA=FALSE, comment=""),
+  data.frame(t=2, k=7, v=3, N=12, fns="CohenSA$ca12.3.7", nconst=1, PCAstatus=1, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=9, v=3, N=13, fns="CohenSA$ca13.3.9", nconst=1, PCAstatus=4, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=10, v=3, N=14, fns="CohenSA$ca14.3.10", nconst=1, PCAstatus=3, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=7, v=4, N=21, fns="CohenSA$ca21.4.7", nconst=2, PCAstatus=6, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=9, v=5, N=35, fns="CohenSA$ca35.5.9", nconst=2, PCAstatus=8, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=4, v=6, N=37, fns="CohenSA$ca37.6.4", nconst=5, PCAstatus=3, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=5, v=6, N=39, fns="CohenSA$ca39.6.5", nconst=4, PCAstatus=4, hasNA=FALSE, comment="simulated annealing Cohen"),
+  data.frame(t=2, k=6, v=6, N=41, fns="ca41.6.6", nconst=6, PCAstatus=6, hasNA=FALSE, comment="Kokkala et al. 2020"),
+  data.frame(t=2, k=7, v=5, N=30, fns="ca30.5.7", nconst=3, PCAstatus=6, hasNA=FALSE, comment="Kokkala et al. 2020, included for constant runs")
 )
+
+miscCAcat <- miscCAcat[ord(miscCAcat[,c("t","v","k")]),]
 
 ## arrays from DoE.base can gain constant rows via maxconstant or
 ##      - where there are fewer than v constant rows - a PCA structure via CA_to_PCA
 ## PCAstatus=0 means that there are v constant rows - otherwise,
 ##      PCAstatus must be at least 1, as it is always possible to arrange rows such that
 ##      the first column has v distinct elements
+
+## Kokkala et al. 2018
+## most CAs are also in the Cohen SA group
+hilf <- strsplit("000000 114540 233520 302330 355210 421450 544110 001111 125121 244351 252401 313041 440531 531201 012222 131342 154032 205512 330152 443202 523432 023313 051553 142103 220243 335433 404423 515053 034234 110414 222054 341024 415304 453144 502544 045445 103255 211135 324505 432015 550325", " ", fixed=TRUE)
+ca41.6.6 <- maxconstant(CAs:::funmakefromstrings(hilf[[1]]))
+head(ca41.6.6)
+class(ca41.6.6) <- c("ca", class(ca41.6.6))
+attr(ca41.6.6, "source") <- "https://zenodo.org/records/1476059"
+attr(ca41.6.6, "origin") <- "Kokkala enumerations"
+attr(ca41.6.6, "t") <- 2
+
+
+## enumerated to have the most possible constant runs
+hilf <- strsplit("0003210 0010300 0102131 0223442 0334013 0441224 1011041 1114420 1131331 1202203 1323334 1440112 2032322 2121113 2200024 2214232 2342040 2433401 3024104 3130244 3244311 3301402 3313123 3422030 4040433 4143002 4231140 4320221 4404343 4412414", " ", fixed=TRUE)
+ca30.5.7 <- maxconstant(CAs:::funmakefromstrings(hilf[[1]]))
+head(ca30.5.7)
+class(ca30.5.7) <- c("ca", class(ca30.5.7))
+attr(ca30.5.7, "source") <- "https://zenodo.org/records/1476059"
+attr(ca30.5.7, "origin") <- "Kokkala enumerations"
+attr(ca30.5.7, "t") <- 2
+
+
+# v k = 4 k = 5 k = 6 k = 7   k = 8   k = 9   k = 10
+# 3 9      j11i  l12c  c12k    a13c    c13k    a14h
+# 4 16     16    l19k  a21k   c21‐22c c21‐22f  c21‐24h
+# 5 25     25     25   l29k   b30‐33h c30‐35h  c30‐36e
+# 6 m37k  a39d   b41h c41‐42  c41‐42h  c41‐46g  c41‐48n
+
+## 42 2,8,6 should be doable (Nurmela Tabu search, don't know where to find)
+## have sent a note to Kari Nurmela
+##
+
+# url <- "https://zenodo.org/records/1476059/files/ca_19_2_6_4.txt?download=1"
+# con <- file(url)
+# candis <- readLines(con=con)
+# k1s <- rep(NA, length(candis))
+# for (i in 1:length(candis)){
+#   hilf <- strsplit(candis[i], " ", fixed=TRUE)
+#   hilf <- setdiff(hilf[[1]], "")
+#   hilf <- CAs:::funmakefromstrings(hilf)
+#   hilf <- CA_to_PCA(hilf, tryhard=TRUE)
+#   #hilf <- maxconstant(hilf, verbose=2)
+#   #nconsts[i] <- length(attr(hilf, "constant_rows")$row_set_list)
+#   k1 <- try(attr(hilf, "PCAstatus")$k1, silent=TRUE)
+#   if (!"try-error" %in% class(k1))
+#   k1s[i] <- k1
+# }
+
+setwd("CohenSA")
+fns <- list.files()
+CohenSA <- lapply(fns, function(obj) CA_to_PCA(readCA(obj, ninstruct=0, skiplines = 1), tryhard=TRUE))
+CSAn <- sapply(CohenSA, nrow)
+CSAk <- sapply(CohenSA, ncol)
+CSAv <- sapply(CohenSA, function(obj) length(table(obj)))
+
+names(CohenSA) <- paste0("ca", paste(CSAn, CSAv, CSAk, sep="."))
+CohenSA <- lapply(CohenSA, function(obj){attr(obj, "origin") <- "simulated annealing Cohen"; attr(obj, "t") <- 2; obj})
 
 ## ca12.2.8
 ## make one row constant
@@ -47,6 +116,7 @@ table(ca26.4.15[,12])
 ca26.4.15[is.na(ca26.4.15)] <- 1 ## avoid 0 for balance
 coverage(ca26.4.15, 2)
 class(ca26.4.15) <- c("ca", class(ca26.4.15))
+ca26.4.15 <- CA_to_PCA(ca26.4.15, tryhard=TRUE)
 attr(ca26.4.15, "t") <- 2
 attr(ca26.4.15, "source") <- "simulated annealing (Torres-Jimenez)"
 attr(ca26.4.15, "origin") <- "found in Colbourn and Torres-Jimenez (2013, Figure 1)"
@@ -275,9 +345,46 @@ attr(oa9261.21.6, "origin") <- "Ji and Yin Lemma 4.1"
 attr(oa9261.21.6, "t") <- 3
 attr(oa9261.21.6, "PCAstatus") <- list(type="SCA", k1=4, k2=2)
 
+ca23.4.8 <- rbind(
+  c(2,0,1,1,0,0,1,1),
+  c(1,2,2,1,3,3,0,1),
+  c(2,3,0,0,2,1,2,1),
+  c(2,1,1,2,1,3,3,2),
+  c(3,2,1,0,1,1,0,3),
+  c(3,0,2,2,0,1,2,2),
+  c(0,3,0,1,1,2,0,2),
+  c(2,1,3,3,0,2,0,1),
+  c(1,1,2,0,2,2,1,3),
+  c(3,3,3,2,1,3,1,1),
+  c(0,0,3,2,2,0,0,0),
+  c(0,1,3,1,3,1,2,3),
+  c(1,3,1,3,3,1,1,0),
+  c(2,3,2,3,1,0,2,3),
+  c(0,2,1,3,2,3,1,2),
+  c(3,0,0,3,3,2,3,3),
+  c(1,2,0,2,0,3,1,3),
+  c(0,3,2,0,0,1,3,1),
+  c(1,2,3,0,3,0,3,2),
+  c(2,2,1,2,3,2,2,0),
+  c(1,0,2,0,1,3,2,0),
+  c(3,1,0,1,2,0,3,0),
+  c(0,3,3,3,0,1,0,0)
+)
+ca23.4.8 <- CA_to_PCA(ca23.4.8, tryhard = TRUE)
+class(ca23.4.8) <- c("ca", class(ca23.4.8))
+attr(ca23.4.8, "source") <- "Stevens PhD thesis and Nurmela bound"
+attr(ca23.4.8, "origin") <- "CMMSSY Table 7"
+attr(ca23.4.8, "t") <- 2
+
+
 # save(ca12.2.8, file="d:/rtests/CAs/data/ca12.2.8.rda", compress="xz")
+# save(ca23.4.8, file="d:/rtests/CAs/data/ca23.4.8.rda", compress="xz")
 # save(ca26.4.15, file="d:/rtests/CAs/data/ca26.4.15.rda", compress="xz")
+# save(ca41.6.6, file="d:/rtests/CAs/data/ca41.6.6.rda", compress="xz")
+# save(ca30.5.7, file="d:/rtests/CAs/data/ca30.5.7.rda", compress="xz")
+
 # save(oa1728.12.6, file="d:/rtests/CAs/data/oa1728.12.6.rda", compress="xz")
 # save(oa3375.15.6, file="d:/rtests/CAs/data/oa3375.15.6.rda", compress="xz")
 # save(oa9261.21.6, file="d:/rtests/CAs/data/oa9261.21.6.rda", compress="xz")
+# save(CohenSA, file="d:/rtests/CAs/data/CohenSA.rda", compress="xz")
 # save(miscCAcat, file="d:/rtests/CAs/data/miscCAcat.rda", compress="xz")
