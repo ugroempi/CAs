@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.17
+- **Version**: 0.18
 
 ## Warning
 
@@ -204,21 +204,25 @@ number of runs
 <li>
 
 product construction for strength 2 PCAs in <code>productPCA</code>,
-proposed by Colbourn et al. (2006), improved later; this is behind
-various current best CAs of the Colbourn tables.
+proposed by Colbourn et al. (2006), improved by Colbourn and
+Torres-Jimenez (2013); automated in function <code>dpCA</code> based on
+some ingredients; the construction is behind various current best CAs of
+the Colbourn tables, which are not yet achieved by the package.
 </li>
 
 <li>
 
 composition of arrays, i.e., cross product of levels for arbitrary
-strength (e.g., Theorem 2.8 of Zhang et al. 2014), <code>crossCAs</code>
+strength (e.g., Theorem 2.8 of Zhang et al. 2014),
+<code>crossCAs</code>; automated in function <code>pcaCA</code> based on
+some ingredients
 </li>
 
 <li>
 
 the CA EXtender for strength 2 3-level CAs (Torres-Jimenez,
 Acevedo-Juarez and Avila-George 2021), which yields the current best
-arrays for all scenarii (but, contrary to the 2-level case, these are
+arrays for all scenarii (but, contrary to the 2-level case, these arase
 not theoretically optimal and might improve in the future) in function
 <code>CAEX</code>.
 </li>
@@ -274,6 +278,16 @@ used by the package functions:
 <li>
 
 <code>powerCTcat</code>,
+</li>
+
+<li>
+
+<code>PCAcat</code>
+</li>
+
+<li>
+
+<code>DPcat</code>
 </li>
 
 <li>
@@ -548,6 +562,13 @@ Discrete Math., vol. 6, no. 3, pp. 255-262.
 Katona, G. O. H. (1973). Two applications (for search theory and truth
 functions) of Sperner type theorems, Period. Math. Hung., vol. 3, no. 1,
 pp. 19-26. <https://doi.org/10.1007/BF02018457>.
+</p>
+
+<p>
+
+Kokkala, J. I., Meagher, K., Naserasr, R., Nurmela, K. J., Östergård, P.
+R. J., & Stevens, B. (2018). Classification of small strength-2 covering
+arrays. Zenodo. <https://doi.org/10.5281/zenodo.1476059>
 </p>
 
 <p>
