@@ -18,7 +18,8 @@ N_KSK(k)
 \item{N}{number of runs}
 }
 \value{
-\code{KSK} returns a matrix with \code{k} columns and \code{N} runs and levels 0 and 1
+\code{KSK} returns a matrix of class \code{ca} with
+\code{k} columns and \code{N} runs and levels 0 and 1
 in each column, with coverage strength 2.
 
 \code{N_KSK} and \code{k_KSK} return the minimum \code{N} for a given \code{k}
