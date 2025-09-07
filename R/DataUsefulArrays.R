@@ -41,7 +41,7 @@ globalVariables(c("ca12.2.8", "ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261
 #' in the \code{extdata} folder of this package, which can be located using
 #' \code{system.file("extdata", package="CAs")}.
 #'
-#' @references Cohen, Colbourn and Ling (2003), Colbourn and Torres-Jimenez (2010), Ji and Yin (2010), Kokkala et al. (2018)
+#' @references Cohen, Colbourn and Ling (2003) and Cohen (personal communication), Colbourn and Torres-Jimenez (2010), Ji and Yin (2010), Kokkala et al. (2018)
 #'
 #' @examples
 #' attributes(ca12.2.8)

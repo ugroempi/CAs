@@ -57,6 +57,7 @@ An object of class \code{data.frame} with 22 rows and 9 columns.
 \code{oa12.2.8} was created by the package author based on learning about
 its existence (with two constant rows) from Colbourn and Torres-Jimenez (2010)
 and Cohen, Colbourn and Ling (2003).\cr
+The list \code{CohenSA} holds arrays created by Cohen via simulated annealing (personal communication).\cr
 \code{oa1728.12.6} was created by the package author using construction 2
 of Ji and Yin (2010).\cr
 The creation of the objects is documented by the R file \code{miscCAs.R}
@@ -97,6 +98,6 @@ attributes(oa9261.21.6)
 
 }
 \references{
-Cohen, Colbourn and Ling (2003), Colbourn and Torres-Jimenez (2010), Ji and Yin (2010)
+Cohen, Colbourn and Ling (2003) and Cohen (personal communication), Colbourn and Torres-Jimenez (2010), Ji and Yin (2010), Kokkala et al. (2018)
 }
 \keyword{datasets}

@@ -60,8 +60,7 @@ without adding any constant rows in the end, by making sure that each of the
 ingredient CA (this is achieved by
 swapping 0 and \code{v-1} in that respective pair).
 
-This package knows how to obtain the best available ingredient CAs (except for the missing
-constant row for 7 and 8 2-level columns), so the run size of the output object
+This package knows how to obtain the best available ingredient CAs, so the run size of the output object
 matches the Colbourn table entries (which have at least \code{k=10}). For \code{k=12},
 the arrays are even smaller than the Colbourn table entries
 (which do not reflect the benefit from having two constant elements in the ingredient CA).
