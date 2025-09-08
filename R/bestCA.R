@@ -313,7 +313,6 @@ labelToCode <- function(label, t, k, v, ...){
   }
   if (label=="projBoseCA"){
     if (!t==2) stop('"projBoseCA" requires t=2')
-    if (!v %in% primedat$q) stop("v must be prime or prime power")
     return(paste0("projBoseCA(", k, ", ", v, ")"))
   }
   if (label=="WKS"){
