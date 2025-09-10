@@ -36,8 +36,9 @@ OD3 <- function(q){
   ## treat the case for which q is not prime or prime power
   ## (yields three columns only)
   if (!q %in% primedat$q){
-    hilf <- ffCA(3,q+1)
-    hilf <- hilf[which(lengths(apply(hilf,1,unique))==3),]
+    hilf <- ffCA(3, q+1)
+    if (q>1) hilf <- hilf[which(lengths(apply(hilf,1,unique))==3),] else
+      hilf <- hilf[which(lengths(apply(hilf,1,unique))==2),]
     return(hilf)
   }
   ## initially only prime, later use gf_mult

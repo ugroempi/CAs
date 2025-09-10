@@ -360,7 +360,7 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
   if (!nrow(nlevels)==length(unique(nlevels$levels)))
     stop("nlevels$levels must not have duplicate entries")
   ## optimum N
-  optN <- ifelse(nlevels$frequency[1]==2, nlevels$levels[1^2],
+  optN <- ifelse(nlevels$frequency[1]==2, nlevels$levels[1]^2,
                  prod(nlevels$levels[1:2]))
 
   ## find a suitable construction
