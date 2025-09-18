@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "If you use this software, please include at least the information given below and the date and version."
+authors:
+  - family-names: Groemping
+    given-names: Ulrike
+title: "CAs: R package for Covering Arrays"
+url: https://github.com/ugroempi/CAs
