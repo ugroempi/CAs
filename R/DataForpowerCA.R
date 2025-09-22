@@ -38,17 +38,14 @@ globalVariables(c("powerCTcat"))
 #' and \code{\link{eCAK}} values from the Colbourn tables in \code{\link{colbournBigFrame}};\cr
 #' the columns \code{N} and \code{k} contain the run size and number of columns of actual
 #' constructions based on the CAs that are implemented in this package.\cr
-#' Implemented \code{N} are reasonably close to \code{claimedN} (i.e., less than 5% larger)
-#' for strengths 3 and 4 in general, for strength 5 with \code{claimedN} less than 73000,
-#' as well as for strength 6 with \code{claimedN} less than 69000.
-#' For large \code{claimedN} values, \code{N} may exceed \code{claimedN}
-#' by up to 45%, with worst behavior for strength 5.\cr
-#' A few CAs have \code{N} smaller than \code{claimedN},
-#' which is in most cases due to an extended k (+1, +2 or +3 in the \code{Source} entry);
-#' in two cases with large values of \code{v}, it is solely due to properly exploiting the \code{v} constant rows in the
-#' Bush construction for fewer than \code{q+1} columns. The entries for large values of \code{v}
-#' are likely not of practical relevance, as their size will
-#' be too large for even creating them on many computers.
+#' Implemented \code{N} are equal to \code{claimedN} for strengths 3 and 4,
+#' within about 10% of the optimum for strength 5 and a bit more spread-out for strength 6
+#' (note that \code{claimedN} can only be reasonably compared to \code{N}, where \code{claimedk}
+#' equals \code{k}).
+#'
+#' Constructions with \code{claimedN>1000000} have been omitted with version 0.19;
+#' this greatly improves maintenance and is not a practical limitation, as the large CAs
+#' are likely not of value and cannot be created with this package by a typical computer.\cr
 #'
 #' @source
 #' The source are the Colbourn tables, combined with
