@@ -257,7 +257,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
   attrs$dim <- NULL
   levs <- levels.no.NA(D)
   ## lower bound for the run size
-  bound <- prod(sort(levs, decreasing = TRUE)[1:2])
+  bound <- prod(sort(levs, decreasing = TRUE)[1:t])
   if (nrow(D)==bound){
     message("D is already optimal")
     return(D)

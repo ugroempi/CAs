@@ -266,16 +266,19 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
             for (c in NAcols){
               ## treat columns that will be moved to the front and have levels
               ## swapped by CA_to_PCA
-              if (length(unique(D[hilf,c]))==v){
-                ## at most one NA, because all NA are treated as identical
-                NApos <- which(is.na(D[hilf,c]))    ## only one value possible
-                D[NApos,c] <- setdiff(0:(v-1), D[hilf,c])  ## the single missing level
-              }
+              nNA <- v+1-length(unique(D[hilf,c]))
+              NApos <- which(is.na(D[hilf,c]))
+              D[NApos,c] <- setdiff(0:(v-1), D[hilf,c]) ## get the missings filled
+              # if (length(unique(D[hilf,c]))==v){
+              #   ## at most one NA, because all NA are treated as identical
+              #   NApos <- which(is.na(D[hilf,c]))    ## only one value possible
+              #   D[NApos,c] <- setdiff(0:(v-1), D[hilf,c])  ## the single missing level
+              #  }
             }
           }
           D <- D[c(hilf, setdiff(1:N, hilf)),]
         }
-        D <- CA_to_PCA(D)
+    D <- CA_to_PCA(D)
       }
     }
   } ## end of t=2, v=3

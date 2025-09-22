@@ -428,7 +428,7 @@ CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...){
       }
       if (kcheap<k){
         for (i in (kcheap+1):k){
-          D <- permvals(D, i, unique(D[, i]), 1:v - as.numeric(start0))
+          D <- permvals(D, i, setdiff(unique(D[, i]),NA), 1:v - as.numeric(start0))
         }
       }
     PCAstatus <- is.PCA(D, start0=start0, flexible=NA)
