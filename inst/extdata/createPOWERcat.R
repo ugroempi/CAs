@@ -1,4 +1,7 @@
 ## the data.frame powerCTcat can be used for implementing the construction
+## since version 0.19, it is limited to cases with at most 1 Mio runs
+## this removes the need for iterative updating, because there are no powerCT
+##      construction ingredients any more
 
 ## remove N-CT and "Arc" and "S"
 whichCTnormal <- setdiff(grep("CT", colbournBigFrame$Source),
@@ -6,6 +9,7 @@ whichCTnormal <- setdiff(grep("CT", colbournBigFrame$Source),
                            grep("Arc", colbournBigFrame$Source),
                            grep("S", colbournBigFrame$Source)))
 powerCTcat <- colbournBigFrame[whichCTnormal,]
+powerCTcat <- powerCTcat[which(powerCTcat$N<=1000000),]
 N <- powerCTcat$N
 k <- powerCTcat$k
 v <- powerCTcat$v
@@ -118,7 +122,7 @@ powerCTcat$u3[equal2] <- 2   ## not equal to first, but equal to second
 ##             at least not on my machine)
 ## NIST instead of DWYER in constr2 and constr3 harmful
 
-require(CAs)  # version 0.18 with naively updated powerCTcat
+#require(CAs)  # version 0.18 with naively updated powerCTcat
 
 powerCTcat$constr4 <- powerCTcat$constr3 <- powerCTcat$constr2 <- powerCTcat$constr1 <- ""
 powerCTcat$c4 <- powerCTcat$c3 <- powerCTcat$c2 <- powerCTcat$c1 <- 1  ## minimum achievable, increase via knowledge
@@ -269,24 +273,29 @@ powerCTcat$N <- powerCTcat$chi + (powerCTcat$N1-powerCTcat$c1)*powerCTcat$u1 +
 ## also provide real k
 homog <- which(is.na(powerCTcat$w2))
 powerCTcat$k[homog] <- powerCTcat$Pbase[homog]^powerCTcat$expon[homog]
+
 table(homog=(1:nrow(powerCTcat)) %in% homog, plus=(1:nrow(powerCTcat)) %in% grep("+", powerCTcat$Source, fixed=TRUE))
 ## all nonhomogeneous real k equal claimed k
 powerCTcat$k[setdiff(1:nrow(powerCTcat), homog)] <- powerCTcat$claimedk[setdiff(1:nrow(powerCTcat), homog)]
 table(powerCTcat$k - powerCTcat$claimedk)
 ## +2167 because of the 10000 cap in the tables
+## no longer relevant because of 1000000 cap on claimedN
 ## - x because of powerCTcat[(1:nrow(powerCTcat)) %in% grep("+", powerCTcat$Source, fixed=TRUE),]
 boxplot(N - claimedN ~ constr1, data=powerCTcat, horizontal=TRUE, las=1, ylab="",
         subset=!constr1 %in% c("NIST", "DWYER"))
 
 rownames(powerCTcat) <- NULL
 
+
+powerCTcat_interim <- powerCTcat
+powerCTcat_interim <- powerCTcat
+
+## save interim status for next attempt at improvement for the powerCT ingredients
 save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda", compress="xz")
 
-
-load("D:/rtests/CAsbak/powerCTcat_old.rda") ## has old powerCTcat
-v16_old <- powerCTcat ## v17_old apparently not stored OK on GitHub
-load("D:/rtests/CAs/data/powerCTcat.rda")
-merged <- merge(v16_old, powerCTcat, by=c("t","k","v","Source"))
+load("D:/rtests/CAsbak/powerCTcat_v0.18.rda") ## has v18CT
+## the cap on claimedN can be omitted in the future
+merged <- merge(v18CT[which(v18CT$claimedN<=1000000),], powerCTcat, by=c("t","k","v","Source"))
 merged[merged$N.x<merged$N.y,]
 dim(merged[merged$N.x>merged$N.y,])
 
