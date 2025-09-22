@@ -9,7 +9,7 @@
 \alias{tjCA}
 \title{Function to obtain the best uniform CA for a combination of t, k and v}
 \usage{
-bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
+bestCA(t, k, v, fixNA=TRUE, seed=NULL, ...)
 
 bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
 
@@ -37,15 +37,6 @@ Thus, a seed is needed for reproducibility.}
 fixing of NA values reproducible; if \code{seed=NULL},
 a seed is randomly obtained and stored in the attribute
 \code{fixNA_seed} of the returned object.}
-
-\item{preference}{character: the label for the preferred method;
-one of "PALEY", "CAEX", "CYCLOTOMY", "CKRS",
-"recBoseCA_PCA", "recBoseCA_CA", "projBoseCA", "fuseBose",
-"WKS", "CS_MS", "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"}
-
-\item{override}{logical: If TRUE, the preference overrides a
-better method, otherwise (default) it only decides
-between equally-good methods.}
 
 \item{...}{handed to construction function, currently,
 only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}
@@ -75,11 +66,6 @@ the best construction for the given scenario, and subsequently
 implements the first such construction, where the order is that
 returned by function \code{\link{Ns}}.
 
-The user can override that order by stating a preferred construction
-with the argument \code{preference}. With \code{override=TRUE},
-the preference is observed whenever possible, even if this implies
-a larger CA than necessary.
-
 Some constructions (\code{"DWYER"} and \code{"NIST"}) require an internet
 connection, because the respective CAs are not part of the package.
 
@@ -104,9 +90,8 @@ Ns(2,12,4)
 bestCA(2,12,4)
 # example with three best constructions
 Ns(4,8,2)
-# without a preference, bestCA uses the leftmost
+# bestCA uses the leftmost
 bestCA(4,8,2)
-bestCA(4,8,2, preference="PALEY")
 
 Ns(3, 1500, 2)
 ## powerCT is best
@@ -129,6 +114,15 @@ Ns(6, 50, 2)
 ## WKS is the only best
 D <- bestCA(6, 50, 2)
 dim(D)
+
+## fusing is far better than direct construction
+\dontrun{
+## slow, yields 8187 runs by fusing an 8191 run cphfCA
+## in 16 levels twice
+Ns(3,37,14)
+Ns_fuse(3,37,14,maxfuse=2)
+bestN(3,37,14)
+}
 
 Ns(3,9,7)
 ## CKRS and DWYER are best

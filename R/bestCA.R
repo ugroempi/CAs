@@ -16,7 +16,7 @@
 #' @aliases nistCA
 #' @aliases tjCA
 #'
-#' @usage bestCA(t, k, v, fixNA=TRUE, seed=NULL, preference=NULL, override=FALSE, ...)
+#' @usage bestCA(t, k, v, fixNA=TRUE, seed=NULL, ...)
 #' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
@@ -34,13 +34,6 @@
 #'       fixing of NA values reproducible; if \code{seed=NULL},
 #'       a seed is randomly obtained and stored in the attribute
 #'       \code{fixNA_seed} of the returned object.
-#' @param preference character: the label for the preferred method;
-#'            one of "PALEY", "CAEX", "CYCLOTOMY", "CKRS",
-#'            "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA", "fuseBose",
-#'            "WKS", "CS_MS", "CS_LCDST", "CS_CK", "DWYER", "NIST", "TJ"
-#' @param override logical: If TRUE, the preference overrides a
-#'           better method, otherwise (default) it only decides
-#'           between equally-good methods.
 #' @param internet logical; if FALSE, methods whose designs need an internet
 #'           connection are excluded
 #' @param exclude \code{NULL} or a character vector of method(s) to exclude,
@@ -59,11 +52,6 @@
 #' the best construction for the given scenario, and subsequently
 #' implements the first such construction, where the order is that
 #' returned by function \code{\link{Ns}}.
-#'
-#' The user can override that order by stating a preferred construction
-#' with the argument \code{preference}. With \code{override=TRUE},
-#' the preference is observed whenever possible, even if this implies
-#' a larger CA than necessary.
 #'
 #' Some constructions (\code{"DWYER"} and \code{"NIST"}) require an internet
 #' connection, because the respective CAs are not part of the package.
@@ -89,9 +77,8 @@
 #' bestCA(2,12,4)
 #' # example with three best constructions
 #' Ns(4,8,2)
-#' # without a preference, bestCA uses the leftmost
+#' # bestCA uses the leftmost
 #' bestCA(4,8,2)
-#' bestCA(4,8,2, preference="PALEY")
 #'
 #' Ns(3, 1500, 2)
 #' ## powerCT is best
@@ -114,6 +101,15 @@
 #' ## WKS is the only best
 #' D <- bestCA(6, 50, 2)
 #' dim(D)
+#'
+#' ## fusing is far better than direct construction
+#' \dontrun{
+#' ## slow, yields 8187 runs by fusing an 8191 run cphfCA
+#' ## in 16 levels twice
+#' Ns(3,37,14)
+#' Ns_fuse(3,37,14,maxfuse=2)
+#' bestN(3,37,14)
+#' }
 #'
 #' Ns(3,9,7)
 #' ## CKRS and DWYER are best
@@ -147,51 +143,53 @@
 #'
 
 #' @export
-bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
-                   preference=NULL, override=FALSE, ...){
+bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, ...){
   Call <- sys.call()
-  hilf <- Ns(t,k,v, ...)
-  if (length(hilf)==1)
-    stop("no construction for this setting has been implemented yet")
+  if (t==1) return(matrix(0:(v-1),v,k))
+  if (k <= t) return(ffCA(k , v))
   ## return a matrix with v constant rows in case k <= t
   ## there will be an error otherwise
-  if (k <= t) return(ffCA(k , v))
   internet <- curl::has_internet()
   if (!internet){
      message("there is no internet connection")
-     if (!is.null(preference)) if (preference %in% c("DWYER","NIST"))
-       stop(paste(preference, " requires an internet connection"))
-     forbidden <- which(names(hilf) %in% c("DWYER","NIST"))
-     if (length(forbidden) > 0)
-        hilf <- hilf[-forbidden]
-  }
+     # if (!is.null(preference)) if (preference %in% c("DWYER","NIST"))
+     #   stop(paste(preference, " requires an internet connection"))
+     # forbidden <- which(names(hilf) %in% c("DWYER","NIST"))
+     # if (length(forbidden) > 0)
+     #    hilf <- hilf[-forbidden]
+     hilf <- bestN(t,k,v, internet=FALSE)
+  }else
+     hilf <- bestN(t,k,v)# Ns(t,k,v, ...)
+  if (is.na(hilf))
+    stop("no construction for this setting has been implemented yet")
+  constr <- names(hilf)
   ## remove eCAN entry
   ## if it is feasible, there is another entry of the same size
-  minN <- min(hilf[-length(hilf)])
-  if (length(hilf)==0) stop("no feasible construction found")
-  constrs <- names(hilf)[which(hilf<=minN)]
+  # minN <- min(hilf[-length(hilf)])
+  # if (length(hilf)==0) stop("no feasible construction found")
+  # constrs <- names(hilf)[which(hilf<=minN)]
   ## handling of a stated preference
-  finished <- FALSE
-  if (!is.null(preference)){
-    if (preference %in% constrs){
-      aus <- eval(parse(text=labelToCode(preference, t, k, v, ...)))
-      finished <- TRUE
-    }
-    else{
-    message(preference, " is not among the best constructions.")
-    if (override & preference %in% names(hilf)){
-      message("It is used anyway because of override=TRUE.")
-      aus <- eval(parse(text=labelToCode(preference, t, k, v, ...)))
-      finished <- TRUE
-    }else{
-    if (preference %in% names(hilf))
-      message("It is not used, because override=FALSE.")
-    else
-      message("It is not even among the possible constructions.")
-    }}}
-  if (!finished){
-      aus <- eval(parse(text=labelToCode(constrs[1], t, k, v, ...)))
-  }
+  # finished <- FALSE
+  # if (!is.null(preference)){
+  #   if (preference %in% constrs){
+  #     aus <- eval(parse(text=labelToCode(preference, t, k, v, ...)))
+  #     finished <- TRUE
+  #   }
+  #   else{
+  #   message(preference, " is not among the best constructions.")
+  #   if (override & preference %in% names(hilf)){
+  #     message("It is used anyway because of override=TRUE.")
+  #     aus <- eval(parse(text=labelToCode(preference, t, k, v, ...)))
+  #     finished <- TRUE
+  #   }else{
+  #   if (preference %in% names(hilf))
+  #     message("It is not used, because override=FALSE.")
+  #   else
+  #     message("It is not even among the possible constructions.")
+  #   }}}
+  # if (!finished){
+      aus <- eval(parse(text=labelToCode(constr, t, k, v, ...)))
+  # }
   if (any(is.na(aus)) && fixNA){
     if (is.null(seed)) seed <- sample(1:32000, 1)
     nNA <- sum(is.na(aus))
@@ -200,7 +198,7 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL,
     attr(aus, "fixNA_seed") <- seed
   }
   dimnames(aus) <- NULL
-  if (is.null(attr(aus, "origin"))) attr(aus, "origin") <- ifelse(finished, preference, constrs[1])
+  if (is.null(attr(aus, "origin"))) attr(aus, "origin") <- constr
   if (is.null(attr(aus, "t"))) attr(aus, "t") <- t
   ## prepend the Call attribute
   attr(aus, "Call") <- c(Call, attr(aus, "Call"))
@@ -224,10 +222,29 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
   if (length(hilf)==0) return(NA)
   aus <- min(hilf)
   names(aus) <- names(hilf)[which.min(hilf)]
+  if (!v %in% primedat$q){
+    delta <- min(primedat$q[which(primedat$q>v)]) - v
+    hilf <- Ns_fuse(t,k,v,maxfuse=delta)
+    hilf <- hilf[,-which(colnames(hilf)=="eCAN"), drop=FALSE]
+    if (min(hilf, na.rm=TRUE) < aus){
+      locate <- which(hilf==min(hilf, na.rm=TRUE), arr.ind=TRUE)
+      aus <- min(hilf, na.rm=TRUE)
+      names(aus) <- paste(rownames(locate)[1], colnames(hilf)[locate[1,2]], sep=":")
+    }
+  }
   aus
 }
 
 labelToCode <- function(label, t, k, v, ...){
+  fuse <- FALSE
+  if (length(grep(":", label, fixed=TRUE))==1){
+    ## fuse result
+    hilf <- strsplit(label, ":", fixed=TRUE)[[1]]
+    fusenum <- as.numeric(sub("fuse", "", hilf[1]))
+    label <- hilf[2]
+    v <- v+fusenum
+    fuse <- TRUE
+  }
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("KSK","PALEY",
   "CAEX", "CYCLOTOMY", "CKRS", "miscCA", "recBoseCA_PCA", "SCA_Busht",
@@ -235,121 +252,129 @@ labelToCode <- function(label, t, k, v, ...){
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "pcaCA", "dpCA", "scphfCA"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "pcaCA", "dpCA", "scphfCA", "cphfCA", "add1CA"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }
   if (label =="KSK"){
     if (!v==2) stop('"KSK" requires v=2')
-    return(paste0("KSK(", k, ")"))
+    aus <- paste0("KSK(", k, ")")
   }
   if (label=="miscCA"){
-    return(paste0("miscCA(", t, ", ", k, ", ", v, ", ...)"))
+    aus <- paste0("miscCA(", t, ", ", k, ", ", v, ", ...)")
   }
   if (label=="compositCA"){
-    return(paste0("compositCA(", t, ", ", k, ", ", v, ", ...)"))
+    aus <- paste0("compositCA(", t, ", ", k, ", ", v, ", ...)")
   }
   if (label =="PALEY"){
     if (!v==2) stop('"PALEY" requires v=2')
-    return(paste0("paleyCA(", t, ", ", k, ")"))
+    aus <- paste0("paleyCA(", t, ", ", k, ")")
   }
   if (label =="fuseBoseCA"){
-    return(paste0("fuseBoseCA(",k, ", ", v, ", ...)"))
+    aus <- paste0("fuseBoseCA(",k, ", ", v, ", ...)")
   }
   if (label =="SCA_Busht"){
-    return(paste0("SCA_Busht(",v,",", t, ")[,1:",k,"]"))
+    aus <- paste0("SCA_Busht(",v,",", t, ")[,1:",k,"]")
   }
   if (label =="fuseBushtCA"){
-    return(paste0("fuseBushtCA(",t, ",", k, ", ", v, ", ...)"))
+    aus <- paste0("fuseBushtCA(",t, ",", k, ", ", v, ", ...)")
   }
   if (label =="CAEX"){
     if (!v==3) stop('"CAEX" requires v=3')
     if (!t==2) stop('"CAEX" requires t=2')
-    return(paste0("CAEX(", k, ")"))
+    aus <- paste0("CAEX(", k, ")")
   }
   if (label == "ODbasedCA"){
     if (!t==3) stop('"ODbasedCA" requires t=3')
     if (!k <= v) stop('"ODbasedCA" requires k<=v')
-    return(paste0("ODbasedCA(", t, ",", k, ",", v, ")"))
+    aus <- paste0("ODbasedCA(", t, ",", k, ",", v, ")")
   }
   if (label == "pcaCA"){
     if (!t==2) stop('"pcaCA" requires t=2')
-    return(paste0("pcaCA(", k, ",", v, ")"))
+    aus <- paste0("pcaCA(", k, ",", v, ")")
   }
   if (label == "dpCA"){
     if (!t==2) stop('"dpCA" requires t=2')
-    return(paste0("dpCA(", k, ",", v, ")"))
+    aus <- paste0("dpCA(", k, ",", v, ")")
   }
   if (label =="TJ"){
     ## as of June 2025, the 2-level CAs of TJ
     if (!v==2) stop('"TJ" requires v=2')
-    return(paste0("tjCA(", t, ", ", k, ", ", v, ")"))
+    aus <- paste0("tjCA(", t, ", ", k, ", ", v, ")")
   }
   if (label =="CK_doublingCA"){
     if (!t==3) stop('"CK_doublingCA" requires t=3')
-    return(paste0("CK_doublingCA(", k, ", ", v, ")"))
+    aus <- paste0("CK_doublingCA(", k, ", ", v, ")")
   }
   if (label =="CK_NRB"){
     if (!t==3) stop('"CK_NRB" requires t=3')
     if (!v %in% 3:5) stop('"CK_NRB" requires v = 3, 4, or 5')
     if (!k<=2*v) stop('"CK_NRB" requires k<=2*v')
-    return(paste0("CK_NRB(", k, ", ", v, ")"))
+    aus <- paste0("CK_NRB(", k, ", ", v, ")")
   }
   if (label=="CYCLOTOMY"){
-    return(paste0("cyclotomyCA(", t, ", ", k, ", ", v, ")"))
+    aus <- paste0("cyclotomyCA(", t, ", ", k, ", ", v, ")")
   }
   if (label=="CKRS"){
-    return(paste0("ckrsCA(", t, ", ", k, ", ", v, ")"))
+    aus <- paste0("ckrsCA(", t, ", ", k, ", ", v, ")")
   }
   if (label=="recBoseCA_PCA"){
     if (!t==2) stop('"recBoseCA_PCA" requires t=2')
     if (!v %in% primedat$q) stop("v must be prime or prime power")
-    return(paste0("recBoseCA(", t, ", ", k, ", ", v, ", type='PCA')"))
+    aus <- paste0("recBoseCA(", t, ", ", k, ", ", v, ", type='PCA')")
   }
   if (label=="recBoseCA_CA"){
     if (!t==2) stop('"recBoseCA_CA" requires t=2')
     if (!v %in% primedat$q) stop("v must be prime or prime power")
-    return(paste0("recBoseCA(", t, ", ", k, ", ", v, ", type='CA')"))
+    aus <- paste0("recBoseCA(", t, ", ", k, ", ", v, ", type='CA')")
   }
   if (label=="projBoseCA"){
     if (!t==2) stop('"projBoseCA" requires t=2')
-    return(paste0("projBoseCA(", k, ", ", v, ")"))
+    aus <- paste0("projBoseCA(", k, ", ", v, ")")
   }
   if (label=="WKS"){
     if (!t==6) stop('"WKS" requires t=6')
     if (!v==2) stop('"WKS" requires v=2')
     ## the CAs are labeled by k, and there is an entry
     ## for each k between 30 and 72 (including)
-    return(paste0('WKS_CAs[["', k, '"]]'))
+    aus <- paste0('WKS_CAs[["', k, '"]]')
   }
   if (label=="CS_MS"){
     if (!t==2) stop('"CS_MS" requires t=2')
-    return(paste0('CS_MS(', k, ', ', v, ')'))
+    aus <- paste0('CS_MS(', k, ', ', v, ')')
   }
   if (label=="CS_LCDST"){
     if (!t==2) stop('"CS_LCDST" requires t=2')
-    return(paste0('CS_LCDST(', k, ', ', v, ')'))
+    aus <- paste0('CS_LCDST(', k, ', ', v, ')')
   }
   if (label=="CS_CMMSSY"){
     if (!t==2) stop('"CS_CMMSSY" requires t=2')
-    return(paste0('CS_CMMSSY(', k, ', ', v, ')'))
+    aus <- paste0('CS_CMMSSY(', k, ', ', v, ')')
   }
   if (label=="CS_CK"){
     if (!v==2) stop('"CS_CK" requires v=2')
-    return(paste0('CS_CK(', k, ', t=', t, ')'))
+    aus <- paste0('CS_CK(', k, ', t=', t, ')')
   }
   if (label=="scphfCA"){
-    return(paste0('scphfCA(', t, ', ', k, ', ', v, ')'))
+    aus <- paste0('scphfCA(', t, ', ', k, ', ', v, ')')
+  }
+  if (label=="cphfCA"){
+    aus <- paste0('cphfCA(', t, ', ', k, ', ', v, ')')
+  }
+  if (label=="add1CA"){
+    aus <- paste0('add1CA(', t, ', ', k, ', ', v, ')')
   }
   if (label=="powerCT"){
-    return(paste0('powerCA(', t, ', ', k, ', ', v, ', type="CT")'))
+    aus <- paste0('powerCA(', t, ', ', k, ', ', v, ', type="CT")')
   }
   if (label=="DWYER"){
-    return(paste0('dwyerCA(', t, ', ', k, ', ', v, ')'))
+    aus <- paste0('dwyerCA(', t, ', ', k, ', ', v, ')')
   }
   if (label=="NIST"){
-    return(paste0('nistCA(', t, ', ', k, ', ', v, ')'))
+    aus <- paste0('nistCA(', t, ', ', k, ', ', v, ')')
   }
+  if (fuse) aus <- paste0("fuse(", aus, ", ", v, ", ", v - fusenum, ")")
+  aus
 }
 
 #' @export

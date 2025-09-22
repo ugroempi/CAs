@@ -227,14 +227,14 @@ Ns(3, 45, 2)  ## the best array is in the TJ or the DWYER-catalogue
               ## CK_doublingCA is close
 Ns(3, 400, 2) ## powerCT construction is best
 Ns(2, 800, 3) ## function CAEX produces the best available array
-Ns(3, 200, 3) ## CK_doubling is the best non-internet construction
+Ns(3, 200, 3) ## cphfCA is best
 Ns(4, 150, 3) ## cyclotomy is very competitive
 Ns(4, 150, 2) ## TJ is best (function tjCA)
 Ns(4, 50, 2) ## Paley and Cyclotomy are the same, and both optimal
 Ns(4, 50, 3) ## the best easily available CA is
    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_507_4_53_3.txt
-Ns(5, 50, 2) ## Paley is optimal
-Ns(5, 500, 2) ## CS_CK and Paley are near-optimal
+Ns(5, 50, 2) ## CS_CK and Paley are optimal
+Ns(5, 500, 2) ## CS_CK is near-optimal
 Ns(5, 50, 3) ## the best easily available CA is
    # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_2067_5_50_3.txt
 Ns(5, 500, 3) ## Cyclotomy is optimal
