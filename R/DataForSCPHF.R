@@ -1,13 +1,13 @@
-globalVariables(c("SMC_CPHFs", "CL_SCPHFs", "SCPHFcat"))
+globalVariables(c("SMC_SCPHFs", "CL_SCPHFs", "SCPHFcat"))
 
 #' Data for the SCPHF-based (permutation vector) constructions
 #'
-#' Lists SMC_CPHFs and CL_SCPHFs and data frame SCPHFcat that support the SCPHF-based constructions
+#' Lists SMC_SCPHFs and CL_SCPHFs and data frame SCPHFcat that support the SCPHF-based constructions
 #'
 #' @docType data
 #'
 #' @format
-#' \code{SMC_CPHFs} and \code{CL_SCPHFs} are lists of lists:
+#' \code{SMC_SCPHFs} and \code{CL_SCPHFs} are lists of lists:
 #'
 #' The first hierarchy level is the strength \code{t}:\cr
 #' Both lists hold two lists for strengths 3 and 4,\cr
@@ -16,9 +16,9 @@ globalVariables(c("SMC_CPHFs", "CL_SCPHFs", "SCPHFcat"))
 #'
 #' \code{SCPHFcat} is a data frame with columns \code{t}, \code{v}, \code{k}, \code{N}
 #' and \code{type}. The latter indicates the source: for "2006", the source is
-#' the Sherwood et al. (2006) paper and SCPHFs are in \code{SMC_CPHFs},\cr
+#' the Sherwood et al. (2006) paper and SCPHFs are in \code{SMC_SCPHFs},\cr
 #' for "2018" the source is work by Erin Lanus and co-authors,
-#' and SCPHFs are in \code{CL_CPHFs} (arrays found in the Dwyer (2024) GitHub repository).
+#' and SCPHFs are in \code{CL_SCPHFs} (arrays found in the Dwyer (2024) GitHub repository).
 #'
 #'
 #' @source
@@ -40,11 +40,11 @@ globalVariables(c("SMC_CPHFs", "CL_SCPHFs", "SCPHFcat"))
 #' @examples
 #' ## an impression of the content
 #' SCPHFcat
-#' SMC_CPHFs[["4"]][["3"]]
+#' SMC_SCPHFs[["4"]][["3"]]
 #'
 
 #'@rdname DataForSCPHF
-"SMC_CPHFs"
+"SMC_SCPHFs"
 
 #'@rdname DataForSCPHF
 "SCPHFcat"

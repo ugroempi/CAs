@@ -2,11 +2,14 @@
 % Please edit documentation in R/scphfCA.R
 \name{scphfCA}
 \alias{scphfCA}
+\alias{SMC}
 \alias{N_scphfCA}
 \alias{k_scphfCA}
 \title{Making CA from SCPHF}
 \usage{
 scphfCA(t, k, v, start0 = TRUE, ...)
+
+SMC(cphf, q, t, type="2006", ...)
 
 N_scphfCA(t, k, v)
 
@@ -23,14 +26,23 @@ k_scphfCA(t, N, v)
 
 \item{...}{currently not used}
 
+\item{cphf}{matrix, which is a covering perfect hash family (CPHF)}
+
+\item{q}{integer: number of levels, prime power}
+
+\item{type}{string: "2006" refers to the original implementation by Sherwood,
+Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;
+anything else uses the built-in Galois fields of package \code{\link{lhs}}}
+
 \item{N}{integer: affordable run size}
 }
 \value{
 Function \code{scphfCA} returns a matrix of class \code{ca} with attributes,
 which is a covering array of strength 3 or 4.\cr
-The internal function \code{SMC} returns a matrix with entries in 0,...,v-1, which is a covering
+The function \code{SMC} returns a matrix with entries in 0,...,q-1, which is a covering
 array of strength \code{t}, if a valid \code{cphf} for strength \code{t} is provided;
-the function is not meant for direct use, but is the workhorse behind \code{scphfCA}.
+the function is not primarily meant for direct use,
+but is the workhorse behind \code{scphfCA}. It can be used with user-provided CPHFs.
 
 Functions \code{N_scphfCA} and \code{k_scphfCA} return the required run size or the achievable number of columns, respectively.
 }
@@ -43,13 +55,15 @@ according to the process outlined in Sherwood, Martirosyan and Colbourn (2006)
 Function \code{scphfCA} implements CAs from the Sherwood et al. (2006) construction
 for length \code{t-1} h-tuples to create length \code{v^t} permutation
 vectors for \code{v} levels and strength \code{t}.
-The internal workhorse Function \code{SMC} uses a stored covering perfect hash family of a
-specific form (SCPHF); the SCPHFs are from Sherwood et al. (2006)
-and from Lanus as provided in the Dwyer (2024) GitHub repository (see \code{\link{SMC_CPHFs}}
-and \code{\link{CL_SCPHFs}}).\cr
+The workhorse function \code{SMC} uses a stored covering perfect hash family of a
+specific form (SCPHF). The built-in SCPHFs are from Sherwood et al. (2006)
+and from Lanus as provided in the Dwyer (2024) GitHub repository (see \code{\link{SMC_SCPHFs}}
+and \code{\link{CL_SCPHFs}}). Users who want to use their own SCPHF can implement it with the function
+\code{SMC}; large cases can take a long time to construct.\cr
 The construction relies on a Galois field GF(\code{v}).
 The SCPHFs from Sherwood et al. (2006) for \code{v=8} or \code{v=9} require a different Galois field
-than otherwise used in this package (created with internal function \code{mygf}).\cr
+than otherwise used in this package (created with internal function \code{mygf}); the \code{type} argument
+of function \code{SMC} can be used for requesting those (type="2006") or the default ones (type="2018").\cr
 The data frame \code{\link{SCPHFcat}} holds the overview information on which constructions
 are implemented.
 }
@@ -60,7 +74,7 @@ are implemented.
 # strength 3
 head(SCPHFcat[which(SCPHFcat$v==4),])
 ## the SCPHF for the first row (type 2006)
-SMC_CPHFs[["3"]][["4"]][["16"]]
+SMC_SCPHFs[["3"]][["4"]][["16"]]
 D <- scphfCA(3,16,4)
 dim(D)
 coverage(D,3)

@@ -7,10 +7,12 @@
 #' @rdname scphfCA
 #'
 #' @aliases scphfCA
+#' @aliases SMC
 #' @aliases N_scphfCA
 #' @aliases k_scphfCA
 #'
 #' @usage scphfCA(t, k, v, start0 = TRUE, ...)
+#' @usage SMC(cphf, q, t, type="2006", ...)
 #' @usage N_scphfCA(t, k, v)
 #' @usage k_scphfCA(t, N, v)
 #'
@@ -18,14 +20,20 @@
 #' @param k integer: requested number of columns
 #' @param v integer: number of levels, must be a prime power
 #' @param start0 logical: should the levels of the output array start with 0 (otherwise with 1)?
+#' @param cphf matrix, which is a covering perfect hash family (CPHF)
+#' @param q integer: number of levels, prime power
+#' @param type string: "2006" refers to the original implementation by Sherwood,
+#'     Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;
+#'     anything else uses the built-in Galois fields of package \code{\link{lhs}}
 #' @param N integer: affordable run size
 #' @param ... currently not used
 #'
 #' @returns Function \code{scphfCA} returns a matrix of class \code{ca} with attributes,
 #' which is a covering array of strength 3 or 4.\cr
-#' The internal function \code{SMC} returns a matrix with entries in 0,...,v-1, which is a covering
+#' The function \code{SMC} returns a matrix with entries in 0,...,q-1, which is a covering
 #' array of strength \code{t}, if a valid \code{cphf} for strength \code{t} is provided;
-#' the function is not meant for direct use, but is the workhorse behind \code{scphfCA}.
+#' the function is not primarily meant for direct use,
+#' but is the workhorse behind \code{scphfCA}. It can be used with user-provided CPHFs.
 #'
 #' Functions \code{N_scphfCA} and \code{k_scphfCA} return the required run size or the achievable number of columns, respectively.
 #'
@@ -33,13 +41,15 @@
 #' Function \code{scphfCA} implements CAs from the Sherwood et al. (2006) construction
 #' for length \code{t-1} h-tuples to create length \code{v^t} permutation
 #' vectors for \code{v} levels and strength \code{t}.
-#' The internal workhorse Function \code{SMC} uses a stored covering perfect hash family of a
-#' specific form (SCPHF); the SCPHFs are from Sherwood et al. (2006)
-#' and from Lanus as provided in the Dwyer (2024) GitHub repository (see \code{\link{SMC_CPHFs}}
-#' and \code{\link{CL_SCPHFs}}).\cr
+#' The workhorse function \code{SMC} uses a stored covering perfect hash family of a
+#' specific form (SCPHF). The built-in SCPHFs are from Sherwood et al. (2006)
+#' and from Lanus as provided in the Dwyer (2024) GitHub repository (see \code{\link{SMC_SCPHFs}}
+#' and \code{\link{CL_SCPHFs}}). Users who want to use their own SCPHF can implement it with the function
+#' \code{SMC}; large cases can take a long time to construct.\cr
 #' The construction relies on a Galois field GF(\code{v}).
 #' The SCPHFs from Sherwood et al. (2006) for \code{v=8} or \code{v=9} require a different Galois field
-#' than otherwise used in this package (created with internal function \code{mygf}).\cr
+#' than otherwise used in this package (created with internal function \code{mygf}); the \code{type} argument
+#' of function \code{SMC} can be used for requesting those (type="2006") or the default ones (type="2018").\cr
 #' The data frame \code{\link{SCPHFcat}} holds the overview information on which constructions
 #' are implemented.
 #'
@@ -51,7 +61,7 @@
 #' # strength 3
 #' head(SCPHFcat[which(SCPHFcat$v==4),])
 #' ## the SCPHF for the first row (type 2006)
-#' SMC_CPHFs[["3"]][["4"]][["16"]]
+#' SMC_SCPHFs[["3"]][["4"]][["16"]]
 #' D <- scphfCA(3,16,4)
 #' dim(D)
 #' coverage(D,3)
@@ -82,7 +92,7 @@ scphfCA <- function(t, k, v, start0=TRUE, ...){
   zeile <- zeilen[zrows + 1 - which.min(rev(zeilen$N)), ,drop=FALSE]
   vc <- as.character(zeile$v); tc <- as.character(zeile$t); kc <- as.character(zeile$k)
   if (zeile$type=="2006")
-      aus <- SMC(SMC_CPHFs[[tc]][[vc]][[kc]], zeile$v, zeile$t)
+      aus <- SMC(SMC_SCPHFs[[tc]][[vc]][[kc]], zeile$v, zeile$t)
   else
     aus <- SMC(CL_SCPHFs[[tc]][[vc]][[kc]], zeile$v, zeile$t, type="2018")
   if (!start0) aus <- aus + 1
@@ -96,6 +106,7 @@ scphfCA <- function(t, k, v, start0=TRUE, ...){
   aus
 }
 
+#' @export
 SMC <- function(cphf, q, t, type="2006", ...){
   # cphf a strength t SCPHF, with tuples of length t
   # in q^t levels
@@ -105,7 +116,7 @@ SMC <- function(cphf, q, t, type="2006", ...){
   ## type="2018" are the Lanus arrays as downloaded from Dwyer
   ## the type is relevant for the gf for 8 and 9 levels
 
-  if (q %in% c(8,9) && type=="2006") gf <- mygf(q, 11) else
+  if (q %in% c(8,9,16,25) && type=="2006") gf <- mygf(q, default=FALSE) else
     gf <- lhs::create_galois_field(q)
   ## for 9, the primitive would be 17, but that does not make a difference
   ## the cphf for q=8,9 does not work with the field from lhs
