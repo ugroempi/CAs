@@ -11,5 +11,6 @@ non-visible functions for creating ingredients
 
 OD2: ordered designs of strength 2, for the Sherwood mixed level construction
 OD3: ordered designs of strength 3, for ordered design (CCL)
+DCA: DCA according to Shokri and Moura (2025)
 }
 
