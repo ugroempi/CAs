@@ -5,6 +5,15 @@
    (see file D15etalOptimized.RData in colbournTableReport folder)
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
+   
+September 22 2025, version 0.19
+ - automated CA_to_MCA in new function MCAt
+ - implemented CPHFs of Wagner, Colbourn and Simos (2022)
+ - reduced powerCTcat to constructions with at most 1000000 runs
+ - implemented fuse for non-prime power v for bestN and bestCA, 
+   and removed the preference and override arguments from bestCA in the process
+ - fixed handling of flexible values in productCA and CAEX
+ - improved postopNCK: it now uses a good optimality bound for t>2 as well as for t=2
 
 September 05 2025, version 0.18
  - function pcaCA based on the data frame PCAcat:

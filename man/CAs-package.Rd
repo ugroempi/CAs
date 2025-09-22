@@ -44,7 +44,8 @@ So far, the following constructions for uniform CAs have been implemented:
 \item strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs (\code{\link{miscCA}})
 \item strength 3 CAs for v=q+1 with q a prime power, and k<=v, based on augmenting an ordered design with further runs (Cohen, Colbourn and Ling 2003 and 2008)
 \item the Colbourn and Torres-Jimenez (2010) power construction in function \code{\link{powerCA}}
-\item the Sherwood, Martirosyan and Colbourn (2006) construction based on SCPHFs and permutation vectors, including not only the (S)CPHFs from the Sherwood et al. paper but also those provided by Lanus (based on Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function \code{\link{scphfCA}}
+\item the Sherwood, Martirosyan and Colbourn (2006) construction based on SCPHFs and permutation vectors, including not only the SCPHFs from the Sherwood et al. paper but also those provided by Lanus (based on Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function \code{\link{scphfCA}}
+\item the construction based on CPHFs using CPHFs from Wagner, Colbourn and Simos (2022) in function \code{\link{cphfCA}}
 \item Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA to yield a strength t CA
 \item recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 \item a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBoseCA}}
@@ -88,7 +89,8 @@ but are mainly meant to be used by the package functions:
 \item \code{\link{powerCTcat}},
 \item \code{\link{PCAcat}}
 \item \code{\link{DPcat}}
-\item \code{\link{SCPHFcat}}, \code{\link{SMC_CPHFs}} and \code{\link{CL_SCPHFs}}
+\item \code{\link{SCPHFcat}}, \code{\link{SMC_SCPHFs}} and \code{\link{CL_SCPHFs}}
+\item \code{\link{CPHFcat}} and \code{\link{WCS_CPHFs}}
 \item \code{\link{MeagherStevensCombis}} and \code{\link{MeagherStevensStarters}},
 \item \code{\link{CMMSSYCombis}} and \code{\link{CMMSSYStarters}},
 \item \code{\link{LCDSTCombis}} and \code{\link{LCDSTStarters}},
@@ -194,6 +196,8 @@ Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction of Transv
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
 
 Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. doi: 10.1016/j.amc.2021.126122
+
+Wagner, M., Colbourn, C., Simos, D.E., (2022). In-Parameter-Order strategies for covering perfect hash families. Applied Mathematics and Computation 421, 126952. https://doi.org/10.1016/j.amc.2022.126952
 
 Wagner, M., Kampel, L., Simos, D.E., (2021). Heuristically Enhanced IPO Algorithms for Covering Array Generation, in: Flocchini, P., Moura, L. (Eds.), Combinatorial Algorithms, Lecture Notes in Computer Science. Springer International Publishing, Cham, pp. 571–586. https://doi.org/10.1007/978-3-030-79987-8_40
 
