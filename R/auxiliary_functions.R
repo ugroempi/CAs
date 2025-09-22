@@ -172,6 +172,7 @@ circular <- function(vec){
   aus <- matrix(NA,k,k)
   hilf <- vec
   aus[,1] <- hilf
+  if (k>1)
   for (i in 2:k){
     hilf <- c(hilf[k], hilf[1:(k-1)])
     aus[,i] <- hilf
