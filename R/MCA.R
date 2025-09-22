@@ -9,11 +9,13 @@
 #' @rdname MCA
 #'
 #' @aliases MCA2
+#' @aliases MCAt
 #' @aliases CA_to_MCA
 #' @aliases N_upper_MCA
 #' @aliases projBoseMCA
 #'
 #' @usage MCA2(nlevels, D=NULL, outerRetry=10, innerRetry=1, seed=NULL, ...)
+#' @usage MCAt(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...)
 #' @usage CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=10, innerRetry=1, seed=NULL, ...)
 #' @usage N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
 #' @usage projBoseMCA(nlevels, t=2, ...)
@@ -54,6 +56,10 @@
 #' on the result of function \code{MCA2}, regardless whether it was created with
 #' or without post-processing.
 #'
+#' Function \code{MCAt} implements an automated version of function \code{CA_to_MCA},
+#' in which the start array \code{D} for that function is automatically determined, so
+#' that the user can simply specify the required numbers of levels with the required strength.
+#'
 #' Function \code{CA_to_MCA} sets unused levels of the columns in \code{cs} to \code{NA}, i.e.,
 #' makes them flexible, as, e.g., described in Moura et al. (2003). Subsequently, the function
 #' \code{\link{postopNCK}} applies the method of Nayery et al. (2013) for
@@ -87,10 +93,10 @@
 #' where q is a prime power (the Corollary 2.2 situation);
 #' in these cases the run size is optimal ((q-1)*(q+1)=q^2-1).
 #'
-#' @returns Functions \code{MCA2} and \code{CA_to_MCA} return a matrix of class \code{ca}
-#'    with attributes of the ingoing matrix (dimensions modified),
+#' @returns Functions \code{MCA2}, \code{MCAt} and \code{CA_to_MCA} return a matrix of
+#'    class \code{ca} with attributes of the ingoing matrix (dimensions modified),
 #'    and attributes \code{Call} and \code{seed} modified,
-#'    and often with flexible values in most columns. For function \code{MCA},
+#'    and often with flexible values in most columns. For function \code{MCA2},
 #'    the number of levels is in decreasing order
 #'    (regardless of the order specified in \code{nlevels}).\cr
 #'    Function \code{N_upper_MCA} returns an upper bound for the run size of an MCA
@@ -180,6 +186,20 @@
 #' }
 #'
 #' ########################################################
+#' ### MCAt
+#' ########################################################
+#' ## with this seed, the optimum run sizes are quickly found
+#' D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=23383)
+#' ## many other seeds stop at 97 or 98 runs
+#' D <- MCAt(c(4,4,4,3,2,2), 4, innerRetry=3, seed=23383)
+#'
+#' \dontrun{
+#' ## with that seed, the optimal run size is reached in 10 iterations
+#' ## nevertheless, the run time is too long for CRAN tests
+#' A <- MCAt(c(14,10,4,4,3,3,2,2),3, innerRetry = 3, outerRetry = 20, seed=11899)
+#' }
+#'
+#' ########################################################
 #' ### CA_to_MCA
 #' ########################################################
 #' # a small example
@@ -266,6 +286,40 @@
 #' D <- CA_to_MCA(bestCA(2,13,4), 10:13, rep(3,4), outerRetry=0)
 #' dim(D)  ## better than CAgen, even without postoptimization
 #'
+
+#' @export
+MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
+  stopifnot(t>2)
+  stopifnot(t%%1==0)
+  if (!is.list(nlevels)){
+    if (!is.numeric(nlevels))
+      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+    if (is.numeric(nlevels)){
+      k <- length(nlevels)
+      levs <- nlevels
+    }else{
+      ## correct format
+      stopifnot(c("levels", "frequency") %in% names(nlevels))
+      ## decreasing order
+      if (!all(nlevels$levels==sort(nlevels$levels, decreasing=TRUE)))
+        stop("levels in nlevels must be sorted in decreasing order")
+      ## unique row elements
+      if (!nrow(nlevels)==length(unique(nlevels$levels)))
+        stop
+      k <- sum(nlevels$frequency)
+      levs <- unlist(mapply(rep, nlevels$levels, nlevels$frequency))
+    }
+  } ## now levs is numeric
+
+  stopifnot(length(levs)==k)
+  stopifnot(all(levs%%1==0))
+  stopifnot(min(levs)>=2)
+  v <- max(levs)
+  D <- bestCA(t,k,v)
+  cs <- setdiff(1:k, which(levs==v))
+  CA_to_MCA(D, cs, levs[cs], t, outerRetry = outerRetry,
+            innerRetry = innerRetry, seed=seed, ...)
+}
 
 #' @export
 CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
