@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.18
+- **Version**: 0.19
 
 ## Warning
 
@@ -126,10 +126,16 @@ the Colbourn and Torres-Jimenez (2010) power construction in function
 <li>
 
 the Sherwood, Martirosyan and Colbourn (2006) construction based on
-SCPHFs and permutation vectors, including not only the (S)CPHFs from the
+SCPHFs and permutation vectors, including not only the SCPHFs from the
 Sherwood et al. paper but also those provided by Lanus (based on
 Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function
 <code>scphfCA</code>
+</li>
+
+<li>
+
+the construction based on CPHFs using CPHFs from Wagner, Colbourn and
+Simos (2022) in function <code>cphfCA</code>
 </li>
 
 <li>
@@ -292,7 +298,13 @@ used by the package functions:
 
 <li>
 
-<code>SCPHFcat</code>, <code>SMC_CPHFs</code> and <code>CL_SCPHFs</code>
+<code>SCPHFcat</code>, <code>SMC_SCPHFs</code> and
+<code>CL_SCPHFs</code>
+</li>
+
+<li>
+
+<code>CPHFcat</code> and <code>WCS_CPHFs</code>
 </li>
 
 <li>
@@ -356,10 +368,11 @@ up to 2000 for $`t=2`$ and $`t=3`$ with $`v`$ up to 4, and decreasing
 maximum $`k`$ for larger $`t`$ and $`v`$) − these have an array for each
 individual $`k`$ − and the Colbourn table entries for $`t=2,\dots,6`$,
 $`v=2,\dots,25`$ and $`k`$ only where the necessary $`N`$ increases for
-the scenario. This choice was based on convenience and could certainly
-be improved. For large $`v`$ (far outside of the NIST domain), the
-relative performance improves versus medium $`v`$; this is presumably
-due to a worse status of best-known arrays, not to a better status of
+the scenario; these are limited to situations with $`N\le1.000.000`$.
+This choice was based on convenience and could certainly be improved.
+For large $`v`$ (far outside of the NIST domain), the relative
+performance improves versus medium $`v`$; this is presumably due to a
+worse status of best-known arrays, not to a better status of
 implementation in the package.
 
 ![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->![](README_files/figure-gfm/status1-5.png)<!-- -->![](README_files/figure-gfm/status1-6.png)<!-- -->![](README_files/figure-gfm/status1-7.png)<!-- -->![](README_files/figure-gfm/status1-8.png)<!-- -->
@@ -658,6 +671,13 @@ arrays.
 Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021).
 Covering array EXtender. Applied Mathematics and Computation 402,
 126122. doi: 10.1016/j.amc.2021.126122
+</p>
+
+<p>
+
+Wagner, M., Colbourn, C., Simos, D.E., (2022). In-Parameter-Order
+strategies for covering perfect hash families. Applied Mathematics and
+Computation 421, 126952. <https://doi.org/10.1016/j.amc.2022.126952>
 </p>
 
 <p>
