@@ -16,7 +16,7 @@
 #' @aliases nistCA
 #' @aliases tjCA
 #'
-#' @usage bestCA(t, k, v, fixNA=TRUE, seed=NULL, ...)
+#' @usage bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...)
 #' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
@@ -26,6 +26,10 @@
 #' @param t integer: the strength
 #' @param k integer: the number of columns
 #' @param v integer: the number of levels for each column
+#' @param maxN integer: the largest number of runs N for
+#'     which an array is desired; if the smallest possible N is larger,
+#'     an error is thrown; default: 1000000
+#'     (too large for being created in reaonable time on most computers)
 #' @param fixNA logical: should flexible values be fixed?\cr
 #'       If the ingoing CA has flexible values, \code{fixNA=TRUE}
 #'       randomly assigns a fixed value to each flexible value.\cr
@@ -143,7 +147,7 @@
 #'
 
 #' @export
-bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, ...){
+bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
   Call <- sys.call()
   if (t==1) return(matrix(0:(v-1),v,k))
   if (k <= t) return(ffCA(k , v))
@@ -162,6 +166,8 @@ bestCA <- function(t, k, v, fixNA=TRUE, seed=NULL, ...){
      hilf <- bestN(t,k,v)# Ns(t,k,v, ...)
   if (is.na(hilf))
     stop("no construction for this setting has been implemented yet")
+  if (hilf > maxN)
+    stop("the best construction for this setting has more than ", maxN, "runs")
   constr <- names(hilf)
   ## remove eCAN entry
   ## if it is feasible, there is another entry of the same size

@@ -9,7 +9,7 @@
 \alias{tjCA}
 \title{Function to obtain the best uniform CA for a combination of t, k and v}
 \usage{
-bestCA(t, k, v, fixNA=TRUE, seed=NULL, ...)
+bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...)
 
 bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
 
@@ -27,6 +27,11 @@ tjCA(t, k, v, ...)
 \item{k}{integer: the number of columns}
 
 \item{v}{integer: the number of levels for each column}
+
+\item{maxN}{integer: the largest number of runs N for
+which an array is desired; if the smallest possible N is larger,
+an error is thrown; default: 1000000
+(too large for being created in reaonable time on most computers)}
 
 \item{fixNA}{logical: should flexible values be fixed?\cr
 If the ingoing CA has flexible values, \code{fixNA=TRUE}
