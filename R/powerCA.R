@@ -137,7 +137,7 @@ powerCA <- function(t, k, v, type="CT", ...){
 N_powerCT <- function(t,k,v, type="CT", ...){
   ## >=t is needed, because some t=4 cases are only covered
   ## by t=5 constructions
-  hilf <- powerCTcat[powerCTcat[,"t"]>=t & powerCTcat[,"k"]>=k & powerCTcat[,"v"]==v,,drop=FALSE]
+  hilf <- powerCTcat[powerCTcat[,"t"] %in% c(t,t+1) & powerCTcat[,"k"]>=k & powerCTcat[,"v"]==v,,drop=FALSE]
   if (nrow(hilf)==0) return(NA)
   else return(min(hilf[,"N"]))
 }
