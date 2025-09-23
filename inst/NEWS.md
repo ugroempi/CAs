@@ -6,6 +6,10 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
+September 23 2025, still version 0.19
+ - improved N_powerCT by restricting the search to strengths t and t+1
+ - added a maxN argument to bestCA
+
 September 22 2025, version 0.19
  - automated CA_to_MCA in new function MCAt
  - implemented CPHFs of Wagner, Colbourn and Simos (2022)
