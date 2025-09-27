@@ -48,7 +48,8 @@
 #' Function \code{postopNCK} likely needs some tuning for speed and efficiency,
 #' but is nevertheless often successful.\cr
 #' It attempts to remove rows by trying to make entire rows
-#' contain flexible values. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
+#' contain flexible values; in fact, it removes rows that have fewer than \code{t} non-flexible values,
+#' as those cannot contribute to \code{t}-coverage. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
 #' If successful, it returns \code{D} after removal of as many as possible flexible
 #' rows, as created by \code{markflex}. If that immediate and cheap approach does not
 #' work, the function tries to iteratively improve the number of flexible values in the
@@ -321,7 +322,7 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
   N <- nrow(aus)
   vs <- levels.no.NA(aus)
   hilf <- rowSums(is.na(aus))
-  toremove <- which(hilf==k)
+  toremove <- which(hilf >= k-(t-1)) ## fewer than t columns do not contribute to t-coverage
   if (length(toremove)>0){
     if (verbose>0) message("postopNCK removed ", length(toremove), " rows,\n",
                            N - length(toremove), " rows returned")
@@ -329,6 +330,7 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
     aus <- aus[-toremove,]
     attr(aus, "rowOrder") <- orig_row
   }else{
+    ## no rows can currently be removed
     auslist <- vector(mode="list", length=innerRetry)
     exhausted <- rep(FALSE, N) ## initialize
     fixed <- numeric(0)
@@ -386,7 +388,7 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
         lastmax <- curmax
         count <- 0
         }
-      toremove <- which(hilf==k)
+      toremove <- which(hilf>=k-(t-1)) ## up to t-1 columns cannot yield t-coverage
       if (length(toremove)>0){
         if (verbose>0) message("postopNCK removed ", length(toremove), " rows,\n",
                                N - length(toremove), " rows returned")
