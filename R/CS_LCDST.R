@@ -164,7 +164,7 @@ N_CS_LCDST <- function(t=2, k, v){
   if (nrow(hilf)==0) return(NA)
   # would be a solution if N were eCAN-based
   # if (hilf[1,"f"]==4) return(hilf[1,"N"] + bestN(2,k,4)-eCAN(2,k,4)$CAN)
-  hilf[1,"N"]
+  min(hilf[,"N"])
 }
 
 #' @export
