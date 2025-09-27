@@ -286,11 +286,20 @@ boxplot(N - claimedN ~ constr1, data=powerCTcat, horizontal=TRUE, las=1, ylab=""
 
 rownames(powerCTcat) <- NULL
 
+## no power constructions involved
+table(powerCTcat$constr1)
+table(powerCTcat$constr2)
+table(powerCTcat$constr2)
+table(powerCTcat$constr4)
 
-powerCTcat_interim <- powerCTcat
-powerCTcat_interim <- powerCTcat
+which(mapply(N_powerCT, powerCTcat$t, powerCTcat$w1, powerCTcat$v)<powerCTcat$N1)
+which(mapply(N_powerCT, powerCTcat$t, powerCTcat$w2, powerCTcat$v)<powerCTcat$N2)
+which(mapply(N_powerCT, powerCTcat$t, powerCTcat$w3, powerCTcat$v)<powerCTcat$N3)
+which(mapply(N_powerCT, powerCTcat$t, powerCTcat$w4, powerCTcat$v)<powerCTcat$N4)
 
-## save interim status for next attempt at improvement for the powerCT ingredients
+fivenum(powerCTcat$N)
+
+## save
 save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda", compress="xz")
 
 load("D:/rtests/CAsbak/powerCTcat_v0.18.rda") ## has v18CT
@@ -298,6 +307,7 @@ load("D:/rtests/CAsbak/powerCTcat_v0.18.rda") ## has v18CT
 merged <- merge(v18CT[which(v18CT$claimedN<=1000000),], powerCTcat, by=c("t","k","v","Source"))
 merged[merged$N.x<merged$N.y,]
 dim(merged[merged$N.x>merged$N.y,])
+table(merged[merged$N.x>merged$N.y,]$constr1.x)
 
 Ns(2,20000,6)
 Ns(4, 2197,2) ## this uses a strength 5 construction
@@ -305,5 +315,5 @@ Ns(4, 2197,2) ## this uses a strength 5 construction
               ## but it is simpler to let N_powerCT use
               ##    all constructions with strength at least t
 ## sanity checks
-aus <- powerCA(6, 361, 3)  ## smallest N for 3-level
+system.time(aus <- powerCA(6, 361, 3))  ## smallest N for 3-level
 dim(aus)
