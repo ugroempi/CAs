@@ -355,7 +355,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
       attrs_stored$dim[1] <- N
   }
   if (optN == N){
-    message("D already has the optimum number of rows.")
+    if (Norig==N) message("D already has the optimum number of rows.")
     attrs <- attrs_stored
     attrs$Call <- c(attrs_stored$Call, Call)
     attributes(D) <- attrs
