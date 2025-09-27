@@ -325,5 +325,6 @@ outerseparate <- function(D, nlevels, ...){
       tocreatenow <- max(0, tocreatenow - ncol(hilf_expanded))
     }## end of while loop
   }## end of j loop
+  aus <- aus[which(rowSums(is.na(aus)) < ncol(aus)-1),]
   aus
 }

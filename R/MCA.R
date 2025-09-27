@@ -333,7 +333,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
   start0 <- min(D)==0
   ## assuming valid array starting at 0 or 1
   k <- ncol(D)
-  N <- nrow(D)
+  N <- Norig <- nrow(D)
   levs <- levels.no.NA(D)
   stopifnot(is.numeric(cs))
   stopifnot(is.numeric(tolevs))
@@ -345,7 +345,14 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
   levs[cs] <- tolevs
   optN <- lower_bound_CA(t, k, levs)
   for (j in 1:length(cs)){
-    D[which(D[,cs[j]]>tolevs[j] - as.numeric(start0)),cs[j]] <- sample(levs[cs[j]]-as.numeric(start0),1)
+    D[which(D[,cs[j]] > tolevs[j] - as.numeric(start0)),cs[j]] <- NA
+      # sample(levs[cs[j]] - as.numeric(start0),1)
+  }
+  hilf <- rowSums(is.na(D))
+  D <- D[which(hilf <= k-t),]
+  if (nrow(D) < N){
+      N <- nrow(D)
+      attrs_stored$dim[1] <- N
   }
   if (optN == N){
     message("D already has the optimum number of rows.")
@@ -355,8 +362,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
     return(D)
   }
   Dnow <- D
-  if (outerRetry >=1)
-  tryCatch({
+  if (outerRetry >= 1) tryCatch({
       aus <- postopNCK(Dnow, t, outerRetry = outerRetry,
                        innerRetry = innerRetry, seed=seed)
       latest_result <- aus
@@ -370,9 +376,8 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
     attributes(latest_result) <- c(dim=list(dim(latest_result)),
                                    attrs[setdiff(names(attrs),"dim")])
     return(latest_result)
-  })
-  else aus <- D
-  if (nrow(aus) == N){
+  })else aus <- D
+  if (nrow(aus) == Norig){
     if (outerRetry > 0) message("The number of rows of D could not be reduced.")
     attrs <- attrs_stored
     attrs$Call <- c(attrs_stored$Call, Call)
@@ -462,7 +467,8 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
   namesnow <- names(attrnow)
   attrs$dim <- attrnow$dim
   attrs$dimnames <- attrnow$dimnames
-  attrs[setdiff(names(attrnow), names(attrs))] <- attrnow[setdiff(names(attrnow), names(attrs))]
+  attrs[setdiff(names(attrnow), names(attrs))] <-
+    attrnow[setdiff(names(attrnow), names(attrs))]
   attributes(aus) <- attrs
   attr(aus, "Call") <- c(Call, attr(aus, "Call"))
   attr(aus, "eCAN") <- NULL  ## no longer relevant
