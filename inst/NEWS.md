@@ -6,6 +6,17 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
+September 27 2025, version 0.20
+ - improved N_CS_LCDST to return the minimum and not the first entry, because 
+   a later entry is occasionally better
+ - improved MCA2 so that the cheap reduction of run size is always included, even 
+   with outerRetry=0 (in auxiliary function outerseparate)
+ - modified MCAt to set levels to missing rather than that of last row 
+   (improves chances for immediate row removal for easy cases)
+ - improved postopNCK to remove rows that have fewer than t non-flexible values
+ - updated CPHFcat and WCS_CAs to updated source status, and updated powerCTcat 
+   accordingly
+
 September 23 2025, still version 0.19
  - improved N_powerCT by restricting the search to strengths t and t+1
  - added a maxN argument to bestCA
