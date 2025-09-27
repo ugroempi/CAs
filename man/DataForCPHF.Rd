@@ -17,7 +17,7 @@ which in turn hold lists of the implemented numbers of columns \code{k}.
 \code{nCPHF}, \code{hasNA} and \code{N}. The construction is from
 Wagner, Colbourn and Simos (2022), with arrays provided by Michael Wagner.
 
-An object of class \code{data.frame} with 292 rows and 6 columns.
+An object of class \code{data.frame} with 323 rows and 6 columns.
 }
 \source{
 Wagner, Colbourn and Simos (2022)
@@ -51,6 +51,9 @@ dim(WCS_CPHFs[["6"]][["3"]][["36"]])  ## 10 rows --> CA with 10*(3^6-1) + 1 runs
 
 }
 \references{
-Wagner, Colbourn and Simos (2022)
+Wagner, Colbourn and Simos (2022) and
+\url{https://srd.sba-research.org/data/cphfipo/cphfs.zip}
+(partly improved versus the paper, which was published based on
+an interim optimization state)
 }
 \keyword{datasets}

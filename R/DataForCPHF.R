@@ -30,7 +30,10 @@ globalVariables(c("WCS_CPHFs", "CL_SCPHFs", "CPHFcat"))
 #' \code{system.file("extdata", package="CAs")};
 #' the implemented raw CPHFs are not available in the package.
 #'
-#' @references Wagner, Colbourn and Simos (2022)
+#' @references Wagner, Colbourn and Simos (2022) and
+#' \url{https://srd.sba-research.org/data/cphfipo/cphfs.zip}
+#' (partly improved versus the paper, which was published based on
+#' an interim optimization state)
 #'
 #' @examples
 #' ## an impression of the content
