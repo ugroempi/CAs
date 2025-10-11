@@ -229,13 +229,21 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
   aus <- min(hilf)
   names(aus) <- names(hilf)[which.min(hilf)]
   if (!v %in% primedat$q){
-    delta <- min(primedat$q[which(primedat$q>v)]) - v
-    hilf <- Ns_fuse(t,k,v,maxfuse=delta)
-    hilf <- hilf[,-which(colnames(hilf)=="eCAN"), drop=FALSE]
-    if (min(hilf, na.rm=TRUE) < aus){
-      locate <- which(hilf==min(hilf, na.rm=TRUE), arr.ind=TRUE)
-      aus <- min(hilf, na.rm=TRUE)
-      names(aus) <- paste(rownames(locate)[1], colnames(hilf)[locate[1,2]], sep=":")
+    minq <- min(primedat$q[which(primedat$q>v)])
+    N_fuse <- bestN(t,k,minq)-2
+    # delta <- min(primedat$q[which(primedat$q>v)]) - v
+    # hilf <- Ns_fuse(t,k,v,maxfuse=delta)
+    # hilf <- hilf[,-which(colnames(hilf)=="eCAN"), drop=FALSE]
+    # if (min(hilf, na.rm=TRUE) < aus){
+    #   locate <- which(hilf==min(hilf, na.rm=TRUE), arr.ind=TRUE)
+    #   aus <- min(hilf, na.rm=TRUE)
+    #   names(aus) <- paste(rownames(locate)[1], colnames(hilf)[locate[1,2]], sep=":")
+    # }
+    if (!is.na(N_fuse)){
+       if (N_fuse < aus){
+         aus <- N_fuse - 2
+         names(aus) <- paste0("fuse", minq-v, ":", names(N_fuse))
+       }
     }
   }
   aus
