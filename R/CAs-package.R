@@ -48,6 +48,7 @@
 #' * the 2-level cover starter construction by Colbourn and Keri (2009), which creates strength 4, 5, and 6 CAs and is also closely related to the Paley type construction of Colbourn (2015)
 #' * direct product construction for strength 2 CAs in function \code{\link{productCA}}, with generalizations for slightly reducing the number of runs
 #' * product construction for strength 2 PCAs in \code{\link{productPCA}}, proposed by Colbourn et al. (2006), improved by Colbourn and Torres-Jimenez (2013); automated in function \code{\link{dpCA}} based on some ingredients; the construction is behind various current best CAs of the Colbourn tables, which are not yet achieved by the package.
+#' * adding a column, as detailed in Theorem 3.2 of Colbourn et al. (2010, CKRS)
 #' * composition of arrays, i.e., cross product of levels for arbitrary strength (e.g., Theorem 2.8 of Zhang et al. 2014), \code{\link{crossCAs}}; automated in function \code{\link{pcaCA}} based on some ingredients
 #' * the CA EXtender for strength 2 3-level CAs (Torres-Jimenez, Acevedo-Juarez and Avila-George 2021), which yields the current best arrays for all scenarii (but, contrary to the 2-level case, these arase not theoretically optimal and might improve in the future) in function \code{\link{CAEX}}.
 #' * identification of flexible values as in Colbourn and Torres-Jimenez (2013), and the Nayeri et al. (2013) postprocessing in function \code{\link{postopNCK}}

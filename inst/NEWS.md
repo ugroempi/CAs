@@ -6,6 +6,12 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
+October 11 2025, version 0.21
+ - improved the implementation of fusion in bestN, so that the speed of bestN 
+   is again in its prior range
+ - added function add1
+ - added a reference for crossCAs
+   
 September 27 2025, version 0.20
  - improved N_CS_LCDST to return the minimum and not the first entry, because 
    a later entry is occasionally better
