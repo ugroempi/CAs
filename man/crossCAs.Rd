@@ -50,5 +50,5 @@ eCAK(3, 1728, 12)   ## the optimal strength 3 12-level CA accommodates two more 
 
 }
 \references{
-Zhang et al. (2014)
+Chateauneuf and Kreher (2002), Zhang et al. (2014)
 }

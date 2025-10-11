@@ -21,7 +21,7 @@
 #' @returns Function \code{crossCAs} yields a CA(N*M, t, k, v*w) (N*M x k matrix of class \code{ca}).\cr
 #' The returned matrix has its levels coded like the ingoing matrices, i.e., integer starting with 0 or 1.
 #'
-#' @references Zhang et al. (2014)
+#' @references Chateauneuf and Kreher (2002), Zhang et al. (2014)
 #'
 #' @examples
 #' ################################################
