@@ -3,14 +3,14 @@
 \name{add1CA}
 \alias{add1CA}
 \alias{N_add1CA}
-\alias{add1}
+\alias{add1Column}
 \title{function to add a columns}
 \usage{
 add1CA(t, k, v, ...)
 
 N_add1CA(t, k, v)
 
-add1(D, t, v, ...)
+add1Column(D, t, v, ...)
 }
 \arguments{
 \item{t}{integer: the required strength, or the strength of \code{D} (not checked)}
@@ -25,7 +25,7 @@ add1(D, t, v, ...)
 (integer levels, starting at 0 or 1)}
 }
 \value{
-\code{add1} and \code{add1CA} return a CA of strength \code{t} in \code{v} levels in
+\code{add1Column} and \code{add1CA} return a CA of strength \code{t} in \code{v} levels in
 \code{k} columns.\cr
 It will have at most \code{\link{bestN}(t-2,k-2,v)*v*(v-1)} additional rows.\cr
 \code{N_add1CA} returns the number of runs obtainable by \code{add1CA}.
@@ -36,7 +36,7 @@ adding at most bestN(t-2,k-1,v)\emph{v}(v-1) rows.
 }
 \section{Details}{
 
-Function \code{add1CA} applies function \code{add1} the the best available
+Function \code{add1CA} applies function \code{add1Column} the the best available
 strength \code{t} CA at \code{v} levels with \code{k-1} columns in the role of \code{D}.\cr
 The construction relies on appending to \code{D} a copy of the last column of \code{D},
 followed by adding rows that consist of\cr
@@ -53,7 +53,7 @@ available).
 \examples{
 D <- powerCA(3,1331,2)
 dim(D)
-D2 <- add1(D, 3, 2)
+D2 <- add1Column(D, 3, 2)
 dim(D2)
 eCAN(3,1331,2)
 eCAN(3,1332,2)
