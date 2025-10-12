@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.20
+- **Version**: 0.21
 
 ## Warning
 
@@ -214,6 +214,12 @@ proposed by Colbourn et al. (2006), improved by Colbourn and
 Torres-Jimenez (2013); automated in function <code>dpCA</code> based on
 some ingredients; the construction is behind various current best CAs of
 the Colbourn tables, which are not yet achieved by the package.
+</li>
+
+<li>
+
+adding a column, as detailed in Theorem 3.2 of Colbourn et al. (2010,
+CKRS)
 </li>
 
 <li>
