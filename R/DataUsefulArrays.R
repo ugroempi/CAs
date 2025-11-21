@@ -9,11 +9,17 @@ globalVariables(c("ca12.2.8", "ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261
 #' @docType data
 #'
 #' @format
-#' All arrays listed here have their rows arranged such that constant rows are
+#' All arrays from this package that are listed here
+#' have their rows arranged such that constant rows are
 #' at the top or in PCA format; if there are fewer than \code{v} constant rows, they are
 #' usually arranged in PCA format (see \code{\link{productPCA}}).\cr
+#' \code{miscCAcat} also contains references to orthogonal arrays from R package \pkg{\link{DoE.base}},
+#' e.g. \code{DoE.base::L81.3.5-1}, which is an OA(81,4,5,3)
+#' (strength 4; 1 is subtracted, because OAs in that package
+#' are coded with levels starting at 1,
+#' whereas CAs in this package have levels starting at 0).\cr
 #' \code{ca26.4.15}, \code{ca23.4.8}, \code{ca30.5.7} and \code{ca41.6.6} are strength 2 CAs.\cr
-#' There is also the list \code{CohenSA} that contains CAs that were created by Cohen using
+#' There is also the list \code{CohenSA} that contains strength 2 CAs that were created by Cohen using
 #' simulated annealing.
 #'
 #' \code{oa1728.12.6}, \code{3375.15.6} and \code{oa9261.21.6} are strength 3

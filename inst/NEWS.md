@@ -10,6 +10,7 @@ November 21 2025, version 0.22
  - added arrays from Walker and Colbourn 2009 for scphfCA
  - added classical (poor) augmentation constructions 
    (CK_constrD and CKRS_augment), not included in function Ns
+ - added the L81.3.5 to miscCAcat
    
 October 11 2025, version 0.21
  - improved the implementation of fusion in bestN, so that the speed of bestN 

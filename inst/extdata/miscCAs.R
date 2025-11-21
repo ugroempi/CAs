@@ -4,6 +4,7 @@
 ##
 miscCAcat <- rbind(
   data.frame(t=3, k=8, v=2, N=12, fns="ca12.2.8", nconst=2, PCAstatus=8, hasNA=FALSE, comment="created from paleyCA(3,23)"),
+  data.frame(t=4, k=5, v=3, N=81, fns="DoE.base::L81.3.5-1", nconst=3, PCAstatus=5, hasNA=FALSE, comment=""),
   data.frame(t=5, k=6, v=3, N=243, fns="DoE.base::L243.3.6-1", nconst=3, PCAstatus=6, hasNA=FALSE, comment=""),
   data.frame(t=5, k=12, v=3, N=729, fns="DoE.base::L729.3.12-1", nconst=3, PCAstatus=12, hasNA=FALSE, comment=""),
   data.frame(t=2, k=8, v=4, N=23, fns="ca23.4.8", nconst=2, PCAstatus=6, hasNA=FALSE, comment="found in CMMSSY (2006)"),
