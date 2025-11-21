@@ -23,7 +23,8 @@
 #' @param cphf matrix, which is a covering perfect hash family (CPHF)
 #' @param q integer: number of levels, prime power
 #' @param type string: "2006" refers to the original implementation by Sherwood,
-#'     Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;
+#'     Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;\cr
+#'     string "2009" refers to SCPHFs from Walker and Colbourn (2009) which also uses non-default Galois fields for q=8,9, and uses a different one for \code{type="2006"} for q=9;\cr
 #'     anything else uses the built-in Galois fields of package \code{\link{lhs}}
 #' @param N integer: affordable run size
 #' @param ... currently not used
@@ -53,7 +54,7 @@
 #' The data frame \code{\link{SCPHFcat}} holds the overview information on which constructions
 #' are implemented.
 #'
-#' @references Sherwood, Martirosyan and Colbourn (2006), Colbourn and Lanus (2018), Colbourn, Lanus and Sarkar (2018), Dwyer (2024)
+#' @references Sherwood, Martirosyan and Colbourn (2006), Walker II and Colbourn (2009), Colbourn and Lanus (2018), Colbourn, Lanus and Sarkar (2018), Dwyer (2024)
 #'
 #' @examples
 #' # applying the construction for small SCPHF from the Sherwood et al. (2006) paper
@@ -93,15 +94,19 @@ scphfCA <- function(t, k, v, start0=TRUE, ...){
   vc <- as.character(zeile$v); tc <- as.character(zeile$t); kc <- as.character(zeile$k)
   if (zeile$type=="2006")
       aus <- SMC(SMC_SCPHFs[[tc]][[vc]][[kc]], zeile$v, zeile$t)
-  else
+  if (zeile$type=="2009")
+    aus <- SMC(WC_SCPHFs[[tc]][[vc]][[kc]], zeile$v, zeile$t, type="2009")
+  if (zeile$type=="2018")
     aus <- SMC(CL_SCPHFs[[tc]][[vc]][[kc]], zeile$v, zeile$t, type="2018")
   if (!start0) aus <- aus + 1
   aus <- aus[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "Call") <- Call
   attr(aus, "origin") <- ifelse(zeile$type=="2006",
-                                paste0("Sherwood, Martirosyan, Colbourn (2006) SCPHF"),
-                                paste0("Lanus and co-authors (2018) related SCPHF"))
+                                "Sherwood, Martirosyan, Colbourn (2006) SCPHF",
+                                ifelse(zeile$type=="2009",
+                                       "Walker and Colbourn (2009) SCPHF",
+                                       "Lanus and co-authors (2018) related SCPHF"))
   attr(aus, "t") <- t
   aus
 }
@@ -113,14 +118,13 @@ SMC <- function(cphf, q, t, type="2006", ...){
   ## matrix with the beta vectors in the order 0 top
   ## to t-1 bottom
   ## type="2006" is the original Sherwood et al. paper
+  ## type="2009" is the Walker and Colbourn 2009 paper
   ## type="2018" are the Lanus arrays as downloaded from Dwyer
   ## the type is relevant for the gf for 8 and 9 levels
 
-  if (q %in% c(8,9,16,25) && type=="2006") gf <- mygf(q, default=FALSE) else
+  if (!q %in% c(8,9,16,25) || !type %in% c("2006", "2009"))
     gf <- lhs::create_galois_field(q)
-  ## for 9, the primitive would be 17, but that does not make a difference
-  ## the cphf for q=8,9 does not work with the field from lhs
-  ##  but needs a different isomorphic variant of the gf
+  else gf <- mygf(q, type=type)
 
   ## coefficients for low powers at the top
   ## 1 will be prepended

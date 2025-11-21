@@ -149,13 +149,23 @@ createBush3PowerOf2 <- function(q){
         gf_matmult(t(betaspace), lspaceReduced, gf))
 }
 
-mygf <- function(q, default=TRUE){
+mygf <- function(q, type="2018"){
+  ## with version 0.22, changed type="default" to type="2018" (CL_SCPHFs)
+  ##     with alternatives "2006" for SMC_SCPHFs
+  ##     and               "2009" for WC_SCPHFs
   if (!q %in% c(8:9,16,25)) stop("mygf is only for 8, 9, 16, 25")
-  ## so far, there are two versions
-  ## default: lhs::create_galois_field (as of Art Owen)
-  ## other (default=FALSE): SageMath / Python function numbthy of
-  ##             https://github.com/Robert-Campbell-256/Number-Theory-Python
+  if (type=="2009" && !q %in% 8:9) stop("type 2009 is for q=8 or 9 only")
+  ## since version 0.22, there are three versions
+  ## 2018: lhs::create_galois_field (as of Art Owen)
+  ## 2006: SageMath / Python function numbthy of
+  ##    https://github.com/Robert-Campbell-256/Number-Theory-Python
+  ## 2009: https://github.com/robbywalker/ca-phf-research/blob/master/tabu/math/galois_field.cpp
+  ##    this one directly gives multiplication tables (not polynomials)
+  ## 2009 is for 8 and 9 only,
+  ##      for 8 it is the same as 2006,
+  ##      for 9 it has a different multiplication table
 
+  ## the remark below is kept for now, but is LIKELY IRRELEVANT
   ## if more versions show up, this can be handled via a primitive
   ## the value of primitive matters as follows,
   ##   q=8: 13 is the default, anything else is the alternative
@@ -169,13 +179,14 @@ mygf <- function(q, default=TRUE){
   gf <- lhs::create_galois_field(q)
 #  defaultprimitive <- q+sum(gf_minus(rep(0,gf$n),gf$xton, gf)*gf$p^(0:(gf$n-1)))
   ## 13 for 8, 14 for 9
-  if (default){
+  if (type=="2018" || !q %in% c(8:9, 16, 25)){
     mygf <- gf
   }else{
     ## the addition and multiplication tables have been typed in from the
-    ## Mathematica demonstrator
+    ## Mathematica demonstrator or taken from robbywalker github
     mygf <- gf
     if (q==8){
+      ## 2006 and 2009 use the same gf
       ## mygf$plus is unchanged vs the lhs version
       mygf$times <- rbind(
         rep(0,8),
@@ -218,6 +229,7 @@ mygf <- function(q, default=TRUE){
 
       ## multiplication table for polynomial x^2 + 2x + 2
       # if (primitive==17)
+      if (type=="2006")   ## for SMC
         mygf$times <- rbind(rep(0,9),
                         0:8,
                         c(0,2,1,6,8,7,3,5,4),
@@ -227,6 +239,21 @@ mygf <- function(q, default=TRUE){
                         c(0,6,3,8,5,2,4,1,7),
                         c(0,7,5,2,6,4,1,8,3),
                         c(0,8,4,5,1,6,7,3,2))
+        ## for Walker and Colbourn cphfs
+        ## from https://github.com/robbywalker/ca-phf-research/blob/master/tabu/math/galois_field.cpp
+
+        if (type=="2009")
+         mygf$times <- rbind(
+          rep(0,9),
+          0:8,
+          c(0, 2, 1, 6, 8, 7, 3, 5, 4),
+          c(0, 3, 6, 2, 5, 8, 1, 4, 7),
+          c(0, 4, 8, 5, 6, 1, 7, 2, 3),
+          c(0, 5, 7, 8, 1, 3, 4, 6, 2),
+          c(0, 6, 3, 1, 7, 4, 2, 8, 5),
+          c(0, 7, 5, 4, 2, 6, 8, 3, 1),
+          c(0, 8, 4, 7, 3, 2, 5, 1, 6)
+        )
 
       mygf$neg <- sapply(0:8, function(obj) which(mygf$plus[obj+1,]==0) - 1)
       mygf$inv <- sapply(1:8, function(obj) which(mygf$times[obj+1,]==1) - 1)
@@ -234,7 +261,7 @@ mygf <- function(q, default=TRUE){
       mygf$root <- NULL
     }
     if (q==16){
-
+      ## for SMC
       mygf$times <- rbind(
       c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
       c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
@@ -255,6 +282,7 @@ mygf <- function(q, default=TRUE){
       )
     }
     if (q==25){
+      ## for SMC
       mygf$times <- rbind(
         c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
         c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),

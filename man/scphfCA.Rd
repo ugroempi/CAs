@@ -31,7 +31,8 @@ k_scphfCA(t, N, v)
 \item{q}{integer: number of levels, prime power}
 
 \item{type}{string: "2006" refers to the original implementation by Sherwood,
-Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;
+Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;\cr
+string "2009" refers to SCPHFs from Walker and Colbourn (2009) which also uses non-default Galois fields for q=8,9, and uses a different one for \code{type="2006"} for q=9;\cr
 anything else uses the built-in Galois fields of package \code{\link{lhs}}}
 
 \item{N}{integer: affordable run size}
@@ -93,5 +94,5 @@ Ns(4, 10, 3)  ## best possible
 
 }
 \references{
-Sherwood, Martirosyan and Colbourn (2006), Colbourn and Lanus (2018), Colbourn, Lanus and Sarkar (2018), Dwyer (2024)
+Sherwood, Martirosyan and Colbourn (2006), Walker II and Colbourn (2009), Colbourn and Lanus (2018), Colbourn, Lanus and Sarkar (2018), Dwyer (2024)
 }

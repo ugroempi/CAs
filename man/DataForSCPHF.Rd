@@ -5,24 +5,30 @@
 \alias{SMC_SCPHFs}
 \alias{SCPHFcat}
 \alias{CL_SCPHFs}
+\alias{WC_SCPHFs}
 \title{Data for the SCPHF-based (permutation vector) constructions}
 \format{
-\code{SMC_SCPHFs} and \code{CL_SCPHFs} are lists of lists:
+\code{SMC_SCPHFs}, \code{CL_SCPHFs} and \code{WC_SCPHFs}
+are lists of lists:
 
 The first hierarchy level is the strength \code{t}:\cr
-Both lists hold two lists for strengths 3 and 4,\cr
-each of which holds lists for the implemented numbers of levels \code{v},
-which in turn hold lists of the implemented numbers of columns \code{k}.
+All lists hold at least elements for strengths 3 and 4, \code{WC_SCPHFs} also a few elements for strengths 5 and 6.\cr
+Each of these holds lists for the implemented numbers of levels \code{v},
+which in turn hold entries for the implemented numbers of columns \code{k}.
 
 \code{SCPHFcat} is a data frame with columns \code{t}, \code{v}, \code{k}, \code{N}
 and \code{type}. The latter indicates the source: for "2006", the source is
 the Sherwood et al. (2006) paper and SCPHFs are in \code{SMC_SCPHFs},\cr
+for "2009" the source is Walker and Colbourn (2009) with arrays from Walker's
+GitHub repository and arrays are in \code{WC_SCPHFs},\cr
 for "2018" the source is work by Erin Lanus and co-authors,
 and SCPHFs are in \code{CL_SCPHFs} (arrays found in the Dwyer (2024) GitHub repository).
 
-An object of class \code{data.frame} with 43 rows and 5 columns.
+An object of class \code{data.frame} with 79 rows and 5 columns.
 
 An object of class \code{list} of length 2.
+
+An object of class \code{list} of length 4.
 }
 \source{
 Reference Sherwood, Martirosyan, Colbourn (2006), CPHFs and constructions
@@ -35,9 +41,11 @@ SMC_SCPHFs
 SCPHFcat
 
 CL_SCPHFs
+
+WC_SCPHFs
 }
 \description{
-Lists SMC_SCPHFs and CL_SCPHFs and data frame SCPHFcat that support the SCPHF-based constructions
+Lists SMC_SCPHFs, CL_SCPHFs and WC_SCPHFs and data frame SCPHFcat that support the SCPHF-based constructions
 }
 \section{Details}{
 
@@ -57,6 +65,6 @@ SMC_SCPHFs[["4"]][["3"]]
 
 }
 \references{
-Colbourn and Lanus (2018), Colbourn, Lanus and Sarkar (2018), Dwyer (2024), Sherwood, Martirosyan, Colbourn (2006)
+Colbourn and Lanus (2018), Colbourn, Lanus and Sarkar (2018), Dwyer (2024), Sherwood, Martirosyan, Colbourn (2006), Walker and Colbourn (2009)
 }
 \keyword{datasets}
