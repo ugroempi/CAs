@@ -136,7 +136,7 @@ WCS <- function(cphf, q, t, type="2022", ...){
   ## type="2022" is the Wagner Colbourn Simos paper of 2022
 
   ## powers 8, 9, 16, 25 are from Python/SAGEmath (like in SMC paper for 8 and 9)
-  if (q %in% c(8,9,16,25) && type=="2022") gf <- mygf(q, default=FALSE) else
+  if (q %in% c(8,9,16,25) && type=="2022") gf <- mygf(q, type="2006") else
     gf <- lhs::create_galois_field(q)
 
   ## coefficients for low powers at the top

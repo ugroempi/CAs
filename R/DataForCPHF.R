@@ -1,4 +1,4 @@
-globalVariables(c("WCS_CPHFs", "CL_SCPHFs", "CPHFcat"))
+globalVariables(c("WCS_CPHFs", "CPHFcat"))
 
 #' Data for the CPHF-based (permutation vector) constructions
 #'

@@ -1,4 +1,4 @@
-globalVariables(c("SMC_SCPHFs", "CL_SCPHFs", "WC_CPHFs", "SCPHFcat"))
+globalVariables(c("SMC_SCPHFs", "CL_SCPHFs", "WC_SCPHFs", "SCPHFcat"))
 
 #' Data for the SCPHF-based (permutation vector) constructions
 #'
