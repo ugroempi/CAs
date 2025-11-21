@@ -300,9 +300,11 @@ which(mapply(N_powerCT, powerCTcat$t, powerCTcat$w4, powerCTcat$v)<powerCTcat$N4
 fivenum(powerCTcat$N)
 
 ## save
-save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda", compress="xz")
+save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda",
+     compress="xz")
 
-load("D:/rtests/CAsbak/powerCTcat_v0.18.rda") ## has v18CT
+load("D:/rtests/CAsbak/powerCTcat_v0.21.rda") ## has powerCT_alt
+#load("D:/rtests/CAsbak/powerCTcat_v0.18.rda") ## has v18CT
 ## the cap on claimedN can be omitted in the future
 merged <- merge(v18CT[which(v18CT$claimedN<=1000000),], powerCTcat, by=c("t","k","v","Source"))
 merged[merged$N.x<merged$N.y,]
