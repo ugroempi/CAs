@@ -7,7 +7,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.21
+- **Version**: 0.22
 
 ## Warning
 
@@ -127,9 +127,9 @@ the Colbourn and Torres-Jimenez (2010) power construction in function
 
 the Sherwood, Martirosyan and Colbourn (2006) construction based on
 SCPHFs and permutation vectors, including not only the SCPHFs from the
-Sherwood et al. paper but also those provided by Lanus (based on
-Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function
-<code>scphfCA</code>
+Sherwood et al. paper but also those provided by Walker and Colbourn
+(2009) and by Lanus (based on Colbourn and Lanus 2018 and Colbourn,
+Lanus and Sarkar 2018) in function <code>scphfCA</code>
 </li>
 
 <li>
@@ -304,8 +304,8 @@ used by the package functions:
 
 <li>
 
-<code>SCPHFcat</code>, <code>SMC_SCPHFs</code> and
-<code>CL_SCPHFs</code>
+<code>SCPHFcat</code>, <code>SMC_SCPHFs</code>, <code>CL_SCPHFs</code>,
+<code>WC_SCPHFs</code>
 </li>
 
 <li>
@@ -693,6 +693,13 @@ Algorithms for Covering Array Generation, in: Flocchini, P., Moura, L.
 (Eds.), Combinatorial Algorithms, Lecture Notes in Computer Science.
 Springer International Publishing, Cham, pp. 571–586.
 <https://doi.org/10.1007/978-3-030-79987-8_40>
+</p>
+
+<p>
+
+Walker II, R. and Colbourn, C. (2009). Tabu search for covering arrays
+using permutation vectors. Journal of Statistical Planning and Inference
+139, 69-80.
 </p>
 
 <p>
