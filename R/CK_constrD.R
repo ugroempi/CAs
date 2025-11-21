@@ -55,11 +55,12 @@
 #' dim(CK_constrDCA(6,6)) ## always strength 3
 #'
 #' @export
-CK_constrD <- function(D3, D2=NULL, check=FALSE, start0=TRUE, ...){
+CK_constrD <- function(D3, D2=NULL,
+                       check=FALSE, start0=TRUE, ...){
   if (!is.matrix(D3)) D3 <- as.matrix(D3)
   ll <- levels.no(D3)
   stopifnot(length(unique(ll))==1)
-  v <- ll[1]
+  v <- unname(ll[1])
   if (check) stopifnot(all(coverage(D3,3)==1))
   k <- ncol(D3)
   if (start0) stopifnot(min(D3)==0) else stopifnot(min(D3)==1)
@@ -69,11 +70,12 @@ CK_constrD <- function(D3, D2=NULL, check=FALSE, start0=TRUE, ...){
     stopifnot(ncol(D2)>=k-1)
     ll <- levels.no(D2)
     stopifnot(all(ll==v))
-    if (check) stopifnot(all(coverage(D2,2)==1))
+    if (check) stopifnot(all(coverage(D2, 2)==1))
     if (start0) stopifnot(min(D2)==0) else stopifnot(min(D2)==1)
   }
   ## provide the best implemented CA for D2
-  if (is.null(D2)) D2 <- bestCA(2, k-1, v) + as.numeric(!start0)
+  if (is.null(D2)) D2 <- bestCA(2, k-1, v) +
+                            as.numeric(!start0)
   if (start0){
     D3 <- D3 + 1
     D2 <- D2 + 1
