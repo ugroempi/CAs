@@ -21,11 +21,18 @@ no guarantees!
 
 **CAs** is not yet on [CRAN](https://CRAN.R-project.org). If you want to
 work with this very preliminary version (see above warning), you can
-install the package from this repository with:
+install the latest status of the package from this repository with:
 
 ``` r
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("ugroempi/CAs")
+```
+
+or obtain a specific frozen status via a tag (so far the only tag is
+`v0.21` for version 0.21):
+
+``` r
+devtools::install_github("ugroempi/CAs", ref="v0.21")
 ```
 
 ## Details
