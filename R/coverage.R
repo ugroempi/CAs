@@ -141,7 +141,7 @@ coverage <- function(D, t, isInteger=TRUE,
                         verbose=0, start0=TRUE, parallel=1){
   ## made faster by custom table function fasttab
   ## isInteger: are the values all from 0 to v-1 or from 1 to v?
-  ## start0: 0 to v-1? (relevant for isI==TRUE only)
+  ## start0: 0 to v-1? (relevant for isInteger==TRUE only)
       ## parallel: integer number of threads
       ## for t=4 with pb(48), 4 threads are very slightly slower than 7 threads and
       ##       take about half the time of 1 thread
@@ -154,10 +154,13 @@ coverage <- function(D, t, isInteger=TRUE,
   ## thus, large cases are likely not doable
   stopifnot(is.matrix(D) || is.data.frame(D))
   if (is.data.frame(D) && isInteger) D <- as.matrix(D)
+  if (is.matrix(D) && !isInteger) D <- as.data.frame(D)
   if (is.matrix(D) && start0) D <- D + 1
 
   m <- ncol(D)
   if (is.data.frame(D)){
+    ## create integers via factors
+    ## (also treats matrices for isInteger=FALSE)
     for (i in 1:m){
       D[[i]] <- as.integer(factor(D[[i]]))
     }
@@ -165,10 +168,9 @@ coverage <- function(D, t, isInteger=TRUE,
   }
   ## now D is a matrix with values starting at 1
   ## (provided that the integer versions are adequate)
-  lls <- levels.no.NA(D)
+  lls <- levels.no.NA(D)  ## does not count NA values
   projs <- nchoosek(m,t)
   # nproj <- ncol(projs)
-  ## make D into integer matrix from 1 to lls
 
   tots <- apply(projs, 2, function(obj) prod(lls[obj]))
   if (parallel==1)
