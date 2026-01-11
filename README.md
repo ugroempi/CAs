@@ -9,6 +9,8 @@ Creates covering arrays.
 - **License**: GPL-3
 - **Version**: 0.22
 
+[![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://codecov.io/github/ugroempi/CAs)
+
 ## Warning
 
 This is a very preliminary version of R package **CAs**. Changes that
