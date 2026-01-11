@@ -158,12 +158,12 @@ coverage <- function(D, t, isInteger=TRUE,
   if (is.matrix(D)) if (!is.numeric(D))
     stop("isInteger is TRUE, but D has non-numeric content")
   if (is.matrix(D) && start0){
-    if (!all(apply(D, 2, min)==0))
+    if (!all(apply(D, 2, min, na.rm=TRUE)==0))
       stop("start0 is TRUE, but columns do not start at 0")
     D <- D + 1
   }
   if (is.matrix(D) && !start0){
-    if (!all(apply(D, 2, min)==1))
+    if (!all(apply(D, 2, min, na.rm=TRUE)==1))
       stop("start0 is FALSE, but columns do not start at 1")
   }
   m <- ncol(D)
