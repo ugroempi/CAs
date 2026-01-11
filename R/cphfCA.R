@@ -150,7 +150,7 @@ WCS <- function(cphf, q, t, type="2022", ...){
           sfsmisc::digitsBase(cphf[obj,], q, ndigits=t))
   ## betaspace contains the beta coefficients
   ## top/left is for the highest power, bottom for the lowest,
-  ##      which is the default auf digitsBase
+  ##      which is the default of digitsBase
   betaspace <- t(sfsmisc::digitsBase(0:(q^t-1), q, ndigits=t))
   unique(do.call("rbind",
                  lapply(lspace, function(obj)
