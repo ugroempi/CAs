@@ -1,4 +1,7 @@
 
+[![R](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml/badge.svg)](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml)
+[![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://codecov.io/github/ugroempi/CAs)
+
 <!--- DO NOT EDIT:  AUTOMATICALLY GENERATED from README.Rmd -->
 
 # CAs
@@ -8,8 +11,6 @@ Creates covering arrays.
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
 - **Version**: 0.22
-
-[![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://codecov.io/github/ugroempi/CAs)
 
 ## Warning
 
