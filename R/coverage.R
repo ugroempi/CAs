@@ -187,15 +187,23 @@ coverage <- function(D, t, isInteger=TRUE,
   else{
     stopifnot(requireNamespace("parallel"))
     stopifnot(parallel <= parallel::detectCores())
+    run_parallel <- function(...) {
+      ## the following is supposed to work also on error exits
     mycl <- parallel::makePSOCKcluster(parallel)
+    on.exit({
+      parallel::stopCluster(mycl)
+      rm(mycl)
+      gc()
+    }, add = TRUE)
     parallel::clusterExport(mycl, c("projs", "D"), envir=environment())
     parallel::clusterExport(mycl, c("fasttab"), envir=environment(CAs:::fasttab))
 #    tabs <- parallel::parLapply(mycl, 1:nproj,
 #                       function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
-    tabs <- parallel::parApply(mycl, projs,2,
+    parallel::parApply(mycl, projs,2,
                                 function(obj) fasttab(D[, obj, drop=FALSE]))
-    parallel::stopCluster(mycl); rm(mycl)
-  }
+    }
+    tabs <- run_parallel()}
+  if (!exists("tabs", where=-1,inherits=FALSE)) stop("an error occurred during parallel processing")
   if (is.matrix(tabs)){
     ncovereds <- apply(tabs, 2, function(obj) sum(obj>0))
     whichnotcovereds <- apply(tabs, 2, function(obj) which(obj==0))
