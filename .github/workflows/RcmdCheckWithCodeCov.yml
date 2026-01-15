@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.CodeCovUG }}
+      GITHUB_PAT: ${{ secrets.GitHubFineGrainedUG }}
     steps:
       - name: Check that GitHub PAT works
         run: |
