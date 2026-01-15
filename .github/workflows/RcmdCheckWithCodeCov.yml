@@ -42,7 +42,7 @@ jobs:
         run: |
           Rscript -e 'install.packages(c("testthat","covr"), repos = "https://cloud.r-project.org")'
       - name: Run tests and generate coverage (Cobertura XML)
-        # run tests and produce a coverage.xml suitable for Codecov
+          # run tests and produce a coverage.xml suitable for Codecov
         run: |
           # run any test command you use; example using testthat:
           Rscript -e 'if (file.exists("tests/testthat")) testthat::test_dir("tests/testthat")'
@@ -54,9 +54,9 @@ jobs:
           files: ./coverage.xml
           flags: unittests
           token: ${{ secrets.CODECOV_TOKEN }}  # optional if app not installed
-        # uses: codecov/codecov-action@v5
-        # with:
-        #  token: ${{ secrets.CODECOV_TOKEN }}
+          # uses: codecov/codecov-action@v5
+          # with:
+          #  token: ${{ secrets.CODECOV_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
