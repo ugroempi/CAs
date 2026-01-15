@@ -22,12 +22,12 @@ jobs:
     steps:
       - name: Check that GitHub PAT works
         run: |
-        echo "User:"
-        curl -sS -H "Authorization: token $GITHUB_PAT" https://api.github.com/user | jq .
-        echo "Repo:"
-        curl -sS -H "Authorization: token $GITHUB_PAT" https://api.github.com/repos/ugroempi/CAs | jq .
-        #  curl -i -H "Authorization: token $GITHUB_PAT" \
-        #  https://api.github.com/repos/ugroempi/CAs/contents/DESCRIPTION || true
+          echo "User:"
+          curl -sS -H "Authorization: token $GITHUB_PAT" https://api.github.com/user | jq .
+          echo "Repo:"
+          curl -sS -H "Authorization: token $GITHUB_PAT" https://api.github.com/repos/ugroempi/CAs | jq .
+          #  curl -i -H "Authorization: token $GITHUB_PAT" \
+          #  https://api.github.com/repos/ugroempi/CAs/contents/DESCRIPTION || true
       - uses: actions/checkout@v4
       - name: Set up R ${{ matrix.r-version }}
         uses: r-lib/actions/setup-r@v2
