@@ -23,7 +23,7 @@ jobs:
       - name: Check that GitHub PAT works
         run: |
           curl -i -H "Authorization: token $GITHUB_PAT" \
-          https://api.github.com/repos/ugroempi/CAs/DESCRIPTION || true
+          https://api.github.com/repos/ugroempi/CAs/contents/DESCRIPTION || true
       - uses: actions/checkout@v4
       - name: Set up R ${{ matrix.r-version }}
         uses: r-lib/actions/setup-r@v2
