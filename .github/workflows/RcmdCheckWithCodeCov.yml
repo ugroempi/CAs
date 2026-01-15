@@ -32,6 +32,8 @@ jobs:
           Rscript -e 'install.packages("remotes", repos = "https://cloud.r-project.org")'
           # install package dependencies declared in DESCRIPTION
           Rscript -e 'if (file.exists("DESCRIPTION")) remotes::install_deps(dependencies = TRUE)'
+          Rscript -e 'install.packages(c("devtools"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'devtools::install_github("ugroempi/CAs")'
       - name: Install testing + coverage tools
         run: |
           Rscript -e 'install.packages(c("testthat","covr"), repos = "https://cloud.r-project.org")'
