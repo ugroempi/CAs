@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+      GITHUB_PAT: ${{ secrets.CodeCovUG }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up R ${{ matrix.r-version }}
