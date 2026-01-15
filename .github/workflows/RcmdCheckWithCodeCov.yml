@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: 26e5a0be-fd39-48a8-b43b-5a06550e9783
+      GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up R ${{ matrix.r-version }}
