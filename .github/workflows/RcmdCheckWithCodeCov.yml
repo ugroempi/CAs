@@ -38,6 +38,10 @@ jobs:
           Rscript -e 'install.packages("remotes", repos = "https://cloud.r-project.org")'
           # install package dependencies declared in DESCRIPTION
           Rscript -e 'remotes::install_github("ugroempi/CAs", dependencies=TRUE)'
+      - name: Install system libs for curl
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
       - name: Install testing + coverage tools
         run: |
           Rscript -e 'install.packages(c("testthat","covr"), repos = "https://cloud.r-project.org")'
