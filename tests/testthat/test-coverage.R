@@ -32,7 +32,7 @@ test_that("coverage", {
     expect_true(length(cD1$ncovereds)==36L)
     expect_true(length(cD13$ncovereds)==84L)
     expect_identical(unname(lengths(cD23)), c(rep(1L, 4), rep(84L, 3), 3L*84L, 84L, 84L))
-    expect_s3_class(cD23$tabs, "list")
+    expect_type(cD23$tabs, "list")
 
     D <- as.data.frame(D)
     cD1 <- coverage(D, 2, verbose=1)
@@ -62,7 +62,7 @@ test_that("coverage", {
     expect_true(length(cD1$ncovereds)==36L)
     expect_true(length(cD13$ncovereds)==84L)
     expect_identical(unname(lengths(cD23)), c(rep(1L, 4), rep(84L, 3), 3L*84L, 84L, 84L))
-    expect_s3_class(cD23$tabs, "list")
+    expect_type(cD23$tabs, "list")
 
 #######################################################################
 ## create test case designs from a
