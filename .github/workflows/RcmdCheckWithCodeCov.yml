@@ -42,7 +42,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
       - name: Install package CAs
-        run: 
+        run: |
           Rscript -e 'remotes::install_github("ugroempi/CAs", dependencies=TRUE)'
       - name: Install testing + coverage tools
         run: |
