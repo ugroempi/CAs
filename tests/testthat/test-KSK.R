@@ -1,3 +1,4 @@
+library(CAs)
 test_that("KSK", {
   expect_error(KSK(),
                regexp = "At least one of k and N must be specified")

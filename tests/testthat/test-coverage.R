@@ -1,3 +1,4 @@
+library(CAs)
 test_that("coverage", {
          perfect <- coverage(bestCA(3,8,4),3)
 

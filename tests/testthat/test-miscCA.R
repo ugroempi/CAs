@@ -1,3 +1,4 @@
+library(CAs)
 test_that("miscCA", {
   expect_error(miscCA(),
                regexp = '"t"')
