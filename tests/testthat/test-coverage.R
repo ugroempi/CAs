@@ -10,10 +10,10 @@ test_that("coverage", {
     cD13 <- coverage(D, 3, verbose=1)
     cD23 <- coverage(D, 3, verbose=2)
 
-    expect_is(cD1, "coverage")
-    expect_is(cD2, "coverage")
-    expect_is(cD13, "coverage")
-    expect_is(cD23, "coverage")
+    expect_s3_class(cD1, "coverage")
+    expect_s3_class(cD2, "coverage")
+    expect_s3_class(cD13, "coverage")
+    expect_s3_class(cD23, "coverage")
 
     expect_identical(length(cD1), 7L)
     expect_identical(length(cD2), 10L)
@@ -32,7 +32,7 @@ test_that("coverage", {
     expect_true(length(cD1$ncovereds)==36L)
     expect_true(length(cD13$ncovereds)==84L)
     expect_identical(unname(lengths(cD23)), c(rep(1L, 4), rep(84L, 3), 3L*84L, 84L, 84L))
-    expect_is(cD23$tabs, "list")
+    expect_s3_class(cD23$tabs, "list")
 
     D <- as.data.frame(D)
     cD1 <- coverage(D, 2, verbose=1)
@@ -40,10 +40,10 @@ test_that("coverage", {
     cD13 <- coverage(D, 3, verbose=1)
     cD23 <- coverage(D, 3, verbose=2)
 
-    expect_is(cD1, "coverage")
-    expect_is(cD2, "coverage")
-    expect_is(cD13, "coverage")
-    expect_is(cD23, "coverage")
+    expect_s3_class(cD1, "coverage")
+    expect_s3_class(cD2, "coverage")
+    expect_s3_class(cD13, "coverage")
+    expect_s3_class(cD23, "coverage")
 
     expect_identical(length(cD1), 7L)
     expect_identical(length(cD2), 10L)
@@ -62,7 +62,7 @@ test_that("coverage", {
     expect_true(length(cD1$ncovereds)==36L)
     expect_true(length(cD13$ncovereds)==84L)
     expect_identical(unname(lengths(cD23)), c(rep(1L, 4), rep(84L, 3), 3L*84L, 84L, 84L))
-    expect_is(cD23$tabs, "list")
+    expect_s3_class(cD23$tabs, "list")
 
 #######################################################################
 ## create test case designs from a
@@ -109,87 +109,87 @@ Ddflist_noninteger <- lapply(Dlist_noninteger, as.data.frame)
 
 perfect <- coverage(bestCA(3,8,4),3)
 
-    testthat::test_that("CA-based test for coverage inputs (uniform inputs only)", {
-    testthat::expect_error(
+    test_that("CA-based test for coverage inputs (uniform inputs only)", {
+    expect_error(
       coverage(Ddflist_start1[[4]], t=6, isInteger=TRUE, start0=TRUE, parallel=4),
       regexp="start0 is TRUE, but columns do not start at 0"
     )
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist[[2]], t=4, isInteger=FALSE, start0=FALSE, parallel=4)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist_start1[[1]], t=2, isInteger=TRUE, start0=FALSE, parallel=4),
       perfect)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist_noninteger[[4]], t=6, isInteger=FALSE, start0=FALSE, parallel=4)$simple,
       0)
-    testthat::expect_error(
+    expect_error(
       coverage(Dlist_noninteger[[3]], t=5, isInteger=TRUE, start0=TRUE, parallel=4),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist_noninteger[[2]], t=4, isInteger=FALSE, start0=TRUE, parallel=1)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist_noninteger[[4]], t=5, isInteger=FALSE, start0=TRUE, parallel=4),
       perfect)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist[[2]], t=3, isInteger=TRUE, start0=TRUE, parallel=4),
       perfect)
 ## modified isInteger setting for the following row,
 ## in order to have also error with start0=FALSE
-    testthat::expect_error(
+    expect_error(
       coverage(Ddflist[[3]], t=4, isInteger=TRUE, start0=FALSE, parallel=4),
       regexp="start0 is FALSE, but columns do not start at 1"
     )
-    testthat::expect_error(
+    expect_error(
       coverage(Dlist_start1[[3]], t=4, isInteger=TRUE, start0=TRUE, parallel=1),
       regexp="start0 is TRUE, but columns do not start at 0"
     )
-    testthat::expect_error(
+    expect_error(
       coverage(Ddflist_noninteger[[1]], t=2, isInteger=TRUE, start0=FALSE, parallel=1),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist[[1]], t=3, isInteger=FALSE, start0=FALSE, parallel=1)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist[[1]], t=3, isInteger=TRUE, start0=TRUE, parallel=1)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist_noninteger[[3]], t=4, isInteger=FALSE, start0=FALSE, parallel=1),
       perfect)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist_noninteger[[1]], t=2, isInteger=FALSE, start0=TRUE, parallel=4),
       perfect)
-    testthat::expect_error(
+    expect_error(
       coverage(Ddflist_noninteger[[2]], t=4, isInteger=TRUE, start0=TRUE, parallel=4),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist_start1[[2]], t=3, isInteger=FALSE, start0=FALSE, parallel=1),
       perfect)
-    testthat::expect_error(
+    expect_error(
       coverage(Dlist_noninteger[[2]], t=3, isInteger=TRUE, start0=FALSE, parallel=1),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
-    testthat::expect_error(
+    expect_error(
       coverage(Ddflist_noninteger[[3]], t=5, isInteger=TRUE, start0=FALSE, parallel=1),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist_noninteger[[1]], t=3, isInteger=FALSE, start0=TRUE, parallel=4)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist_start1[[3]], t=5, isInteger=FALSE, start0=TRUE, parallel=4)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Dlist_start1[[4]], t=6, isInteger=TRUE, start0=FALSE, parallel=1)$simple,
       0)
-    testthat::expect_identical(
+    expect_identical(
       coverage(Ddflist[[4]], t=5, isInteger=FALSE, start0=TRUE, parallel=1),
       perfect)
-    testthat::expect_error(
+    expect_error(
       coverage(Dlist_noninteger[[4]], t=5, isInteger=TRUE, start0=FALSE, parallel=1),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
