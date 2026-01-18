@@ -1,6 +1,8 @@
 library(CAs)
 test_that("coverage", {
          perfect <- coverage(bestCA(3,8,4),3)
+         covNA <- perfect
+         for (i in 1:4) covNA[[i]] <- NA
 
     ## a simple mixed-level CA of strength 2
     ## that has also a few flexible values
@@ -34,6 +36,56 @@ test_that("coverage", {
     expect_identical(unname(lengths(cD23)), c(rep(1L, 4), rep(84L, 3), 3L*84L, 84L, 84L))
     expect_type(cD23$tabs, "list")
 
+    ## check coverplot output
+    expect_error(coverplot(cD13),
+                 "If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
+    expect_identical(length(coverplot(cD13, t=3, plot=FALSE)), 4L)
+    expect_error(coverplot(coverage(D,3)),
+          "If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
+    expect_error(coverplot(cD13),
+          "If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
+    expect_error(coverplot(coverage(D,3), t=3),
+          "coverageD must be a coverage object from function coverage with verbose at least 1")
+    expect_error(coverplot(D), "coverageD must have class 'coverage'. Did you want to specify a design D?")
+    expect_error(coverplot(D=D), "If coverageD is missing, both D and t must be specified.")
+    expect_true(length(coverplot(D=D, t=3, plot=FALSE))==4L)
+    expect_identical(names(coverplot(D=D, t=3, plot=FALSE)),
+                     c("x","y","t","coverage"))
+    expect_identical(names(coverplot(cD23, plot=FALSE)),
+                     c("x","y","t","coverage"))
+    expect_equal(coverplot(D=D, t=3),
+                 coverplot(cD23))
+    expect_equal(coverplot(D=D, t=3, plot=FALSE),
+                     coverplot(cD23, plot=FALSE))
+    expect_equal(coverplot(D=D, t=3, type="tuples"),
+                 coverplot(cD23, type="tuples"))
+
+    #### now for coverage_iter
+    cD1perfect <- coverage_iter(D, 2, abortnot1=TRUE)
+    cD2perfect <- coverage_iter(D, 2, abortnot1=FALSE)
+    cD1not1 <- coverage_iter(D, 3, abortnot1=TRUE)
+    cD2not1 <- coverage_iter(D, 3, abortnot1=FALSE)
+
+    expect_s3_class(cD1perfect, "coverage")
+    expect_s3_class(cD2perfect, "coverage")
+    expect_s3_class(cD1not1, "coverage")
+    expect_s3_class(cD2not1, "coverage")
+
+    expect_identical(length(cD1perfect), 4L)
+    expect_identical(length(cD2perfect), 4L)
+    expect_identical(length(cD1not1), 5L)
+    expect_identical(length(cD2not1), 4L)
+
+    ##
+    expect_identical(cD1perfect[1:4], unclass(perfect))
+    expect_identical(cD2perfect[1:4], unclass(perfect))
+    expect_identical(cD1not1[1:4], unclass(covNA))
+    expect_equal(cD2not1$total*332, 179)
+    expect_identical(cD2not1$ave*1728, 1103)
+    expect_identical(cD2not1$min*24, 7)
+    expect_identical(cD2not1$simple*21, 1)
+
+    ### with data.frame D
     D <- as.data.frame(D)
     cD1 <- coverage(D, 2, verbose=1)
     cD2 <- coverage(D, 2, verbose=2)
@@ -63,6 +115,39 @@ test_that("coverage", {
     expect_true(length(cD13$ncovereds)==84L)
     expect_identical(unname(lengths(cD23)), c(rep(1L, 4), rep(84L, 3), 3L*84L, 84L, 84L))
     expect_type(cD23$tabs, "list")
+
+    ## now for coverage_iter
+    cD1perfect <- coverage_iter(D, 2, abortnot1=TRUE)
+    cD2perfect <- coverage_iter(D, 2, abortnot1=FALSE)
+    cD1not1 <- coverage_iter(D, 3, abortnot1=TRUE)
+    cD2not1 <- coverage_iter(D, 3, abortnot1=FALSE)
+
+    expect_s3_class(cD1perfect, "coverage")
+    expect_s3_class(cD2perfect, "coverage")
+    expect_s3_class(cD1not1, "coverage")
+    expect_s3_class(cD2not1, "coverage")
+
+    expect_identical(length(cD1perfect), 4L)
+    expect_identical(length(cD2perfect), 4L)
+    expect_identical(length(cD1not1), 5L)
+    expect_identical(length(cD2not1), 4L)
+
+    ##
+    expect_identical(cD1perfect[1:4], unclass(perfect))
+    expect_identical(cD2perfect[1:4], unclass(perfect))
+    expect_identical(cD1not1[1:4], unclass(covNA))
+    expect_equal(cD2not1$total*332, 179)
+    expect_identical(cD2not1$ave*1728, 1103)
+    expect_identical(cD2not1$min*24, 7)
+    expect_identical(cD2not1$simple*21, 1)
+
+    ## tabs as a matrix for uniform CAs with verbose=2
+    cD <- coverage(KSK(k=12), 3, verbose=2)
+    expect_true(length(cD$ncovereds)==220L)
+    expect_type(cD$tabs, "integer")
+    expect_true(is.matrix(cD$tabs))
+    expect_true(ncol(cD$tabs)==220L)
+    expect_true(nrow(cD$tabs)==8L) ## for the combinations
 
 #######################################################################
 ## create test case designs from a
@@ -194,4 +279,92 @@ perfect <- coverage(bestCA(3,8,4),3)
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
 })
+
+### now for coverage_iter with factor H: abortnot1 instead of parallel
+  expect_error(
+    coverage_iter(Ddflist_start1[[4]], t=6, isInteger=TRUE, start0=TRUE, abortnot1=TRUE),
+    regexp="start0 is TRUE, but columns do not start at 0"
+  )
+  suppressMessages(expect_identical(
+    coverage_iter(Dlist[[2]], t=4, isInteger=FALSE, start0=FALSE, abortnot1=TRUE)$message,
+    "First projection with strength 4 coverage violated: 1:2:3:4"))
+  expect_identical(
+    coverage_iter(Dlist_start1[[1]], t=2, isInteger=TRUE, start0=FALSE, abortnot1=TRUE),
+    perfect)
+  suppressMessages({
+    hilf <- coverage_iter(Ddflist_noninteger[[4]], t=6, isInteger=FALSE, start0=FALSE, abortnot1=TRUE)
+    expect_identical(hilf$message,
+                     "First projection with strength 6 coverage violated: 1:2:3:4:5:6")
+    expect_identical(hilf[1:4], unclass(covNA))
+  })
+  expect_error(
+    coverage_iter(Dlist_noninteger[[3]], t=5, isInteger=TRUE, start0=TRUE, abortnot1=TRUE),
+    regexp="isInteger is TRUE, but D has non-numeric content"
+  )
+  expect_identical(
+    coverage_iter(Dlist_noninteger[[2]], t=4, isInteger=FALSE, start0=TRUE, abortnot1=FALSE)$simple,
+    0)
+  expect_identical(
+    coverage_iter(Dlist_noninteger[[4]], t=5, isInteger=FALSE, start0=TRUE, abortnot1=TRUE),
+    perfect)
+  expect_identical(
+    coverage_iter(Ddflist[[2]], t=3, isInteger=TRUE, start0=TRUE, abortnot1=TRUE),
+    perfect)
+  ## modified isInteger setting for the following row,
+  ## in order to have also error with start0=FALSE
+  expect_error(
+    coverage_iter(Ddflist[[3]], t=4, isInteger=TRUE, start0=FALSE, abortnot1=TRUE),
+    regexp="start0 is FALSE, but columns do not start at 1"
+  )
+  expect_error(
+    coverage_iter(Dlist_start1[[3]], t=4, isInteger=TRUE, start0=TRUE, abortnot1=FALSE),
+    regexp="start0 is TRUE, but columns do not start at 0"
+  )
+  expect_error(
+    coverage_iter(Ddflist_noninteger[[1]], t=2, isInteger=TRUE, start0=FALSE, abortnot1=FALSE),
+    regexp="isInteger is TRUE, but D has non-numeric content"
+  )
+  expect_identical(
+    coverage_iter(Dlist[[1]], t=3, isInteger=FALSE, start0=FALSE, abortnot1=FALSE)$simple,
+    0)
+  expect_identical(
+    coverage_iter(Ddflist[[1]], t=3, isInteger=TRUE, start0=TRUE, abortnot1=FALSE)$simple,
+    0)
+  expect_identical(
+    coverage_iter(Dlist_noninteger[[3]], t=4, isInteger=FALSE, start0=FALSE, abortnot1=FALSE),
+    perfect)
+  expect_identical(
+    coverage_iter(Ddflist_noninteger[[1]], t=2, isInteger=FALSE, start0=TRUE, abortnot1=TRUE),
+    perfect)
+  expect_error(
+    coverage_iter(Ddflist_noninteger[[2]], t=4, isInteger=TRUE, start0=TRUE, abortnot1=TRUE),
+    regexp="isInteger is TRUE, but D has non-numeric content"
+  )
+  expect_identical(
+    coverage_iter(Ddflist_start1[[2]], t=3, isInteger=FALSE, start0=FALSE, abortnot1=FALSE),
+    perfect)
+  expect_error(
+    coverage_iter(Dlist_noninteger[[2]], t=3, isInteger=TRUE, start0=FALSE, abortnot1=FALSE),
+    regexp="isInteger is TRUE, but D has non-numeric content"
+  )
+  expect_error(
+    coverage_iter(Ddflist_noninteger[[3]], t=5, isInteger=TRUE, start0=FALSE, abortnot1=FALSE),
+    regexp="isInteger is TRUE, but D has non-numeric content"
+  )
+  suppressMessages(expect_identical(
+    coverage_iter(Dlist_noninteger[[1]], t=3, isInteger=FALSE, start0=TRUE, abortnot1=TRUE)$message,
+    "First projection with strength 3 coverage violated: 1:2:3"))
+  suppressMessages(expect_identical(
+    coverage_iter(Ddflist_start1[[3]], t=5, isInteger=FALSE, start0=TRUE, abortnot1=TRUE)$message,
+    "First projection with strength 5 coverage violated: 1:2:3:4:5"))
+  expect_identical(
+    coverage_iter(Dlist_start1[[4]], t=6, isInteger=TRUE, start0=FALSE, abortnot1=FALSE)$simple,
+    0)
+  expect_identical(
+    coverage_iter(Ddflist[[4]], t=5, isInteger=FALSE, start0=TRUE, abortnot1=FALSE),
+    perfect)
+  expect_error(
+    coverage_iter(Dlist_noninteger[[4]], t=5, isInteger=TRUE, start0=FALSE, abortnot1=FALSE),
+    regexp="isInteger is TRUE, but D has non-numeric content"
+  )
 })
