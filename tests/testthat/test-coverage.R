@@ -12,10 +12,10 @@ test_that("coverage functionality works", {
     cD13 <- coverage(D, 3, verbose=1)
     cD23 <- coverage(D, 3, verbose=2)
 
-    expect_s3_class(cD1, "coverage")
-    expect_s3_class(cD2, "coverage")
-    expect_s3_class(cD13, "coverage")
-    expect_s3_class(cD23, "coverage")
+    expect_s3_class(cD1, "CAcoverage")
+    expect_s3_class(cD2, "CAcoverage")
+    expect_s3_class(cD13, "CAcoverage")
+    expect_s3_class(cD23, "CAcoverage")
 
     expect_identical(length(cD1), 7L)
     expect_identical(length(cD2), 10L)
@@ -46,7 +46,7 @@ test_that("coverage functionality works", {
           "If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
     expect_error(coverplot(coverage(D,3), t=3),
           "coverageD must be a coverage object from function coverage with verbose at least 1")
-    expect_error(coverplot(D), "coverageD must have class 'coverage'. Did you want to specify a design D?")
+    expect_error(coverplot(D), "coverageD must have class 'CAcoverage'. Did you want to specify a design D?")
     expect_error(coverplot(D=D), "If coverageD is missing, both D and t must be specified.")
     expect_true(length(coverplot(D=D, t=3, plot=FALSE))==4L)
     expect_identical(names(coverplot(D=D, t=3, plot=FALSE)),
@@ -66,10 +66,10 @@ test_that("coverage functionality works", {
     cD1not1 <- coverage_iter(D, 3, abortnot1=TRUE)
     cD2not1 <- coverage_iter(D, 3, abortnot1=FALSE)
 
-    expect_s3_class(cD1perfect, "coverage")
-    expect_s3_class(cD2perfect, "coverage")
-    expect_s3_class(cD1not1, "coverage")
-    expect_s3_class(cD2not1, "coverage")
+    expect_s3_class(cD1perfect, "CAcoverage")
+    expect_s3_class(cD2perfect, "CAcoverage")
+    expect_s3_class(cD1not1, "CAcoverage")
+    expect_s3_class(cD2not1, "CAcoverage")
 
     expect_identical(length(cD1perfect), 4L)
     expect_identical(length(cD2perfect), 4L)
@@ -92,10 +92,10 @@ test_that("coverage functionality works", {
     cD13 <- coverage(D, 3, verbose=1)
     cD23 <- coverage(D, 3, verbose=2)
 
-    expect_s3_class(cD1, "coverage")
-    expect_s3_class(cD2, "coverage")
-    expect_s3_class(cD13, "coverage")
-    expect_s3_class(cD23, "coverage")
+    expect_s3_class(cD1, "CAcoverage")
+    expect_s3_class(cD2, "CAcoverage")
+    expect_s3_class(cD13, "CAcoverage")
+    expect_s3_class(cD23, "CAcoverage")
 
     expect_identical(length(cD1), 7L)
     expect_identical(length(cD2), 10L)
@@ -122,10 +122,10 @@ test_that("coverage functionality works", {
     cD1not1 <- coverage_iter(D, 3, abortnot1=TRUE)
     cD2not1 <- coverage_iter(D, 3, abortnot1=FALSE)
 
-    expect_s3_class(cD1perfect, "coverage")
-    expect_s3_class(cD2perfect, "coverage")
-    expect_s3_class(cD1not1, "coverage")
-    expect_s3_class(cD2not1, "coverage")
+    expect_s3_class(cD1perfect, "CAcoverage")
+    expect_s3_class(cD2perfect, "CAcoverage")
+    expect_s3_class(cD1not1, "CAcoverage")
+    expect_s3_class(cD2not1, "CAcoverage")
 
     expect_identical(length(cD1perfect), 4L)
     expect_identical(length(cD2perfect), 4L)

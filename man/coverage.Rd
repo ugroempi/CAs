@@ -41,7 +41,7 @@ strength \code{t} coverage is not perfect ?}
 order; ignored for \code{abortnot1=FALSE}; for \code{abortnot1=TRUE}, assumes that all
 projections up to \code{start.proj - 1} were already successfully checked}
 
-\item{coverageD}{a class \code{coverage} object created by function \code{coverage} with at least \code{verbose=1}.
+\item{coverageD}{a class \code{CAcoverage} object created by function \code{coverage} with at least \code{verbose=1}.
 for \code{verbose} less than 2, \code{t} must be specified. If \code{coverageD} is specified,
 all arguments referring to the design \code{D}, except for \code{t} in case of verbosity 1 only, are ignored.}
 
@@ -60,7 +60,7 @@ all arguments referring to the design \code{D}, except for \code{t} in case of v
 \item{...}{further arguments to polygon}
 }
 \value{
-Functions \code{coverage} and \code{coverage_iter} return an object of S3 class \code{coverage}, which is a
+Functions \code{coverage} and \code{coverage_iter} return an object of S3 class \code{CAcoverage}, which is a
 list with elements
 \item{total}{total proportion of covered \code{t}-tuples}
 \item{ave}{average of \code{t}-tuple proportions taken over projections}
@@ -108,7 +108,7 @@ then there are three with 3 in the second position, then two with 4, and finally
 Thus, for \code{start.proj=7}, \code{start.proj} will be reduced to 5, and the projection
 is 1:3:4 (the first that starts with 1:3).
 
-Per default, the print method for class \code{coverage} prints the first four
+Per default, the print method for class \code{CAcoverage} prints the first four
 elements only.
 
 Function \code{coverplot}, with \code{type=projections}, plots the

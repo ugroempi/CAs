@@ -31,7 +31,7 @@
 #' @param start.proj integer, the number of the projection to start with in lexicographical
 #' order; ignored for \code{abortnot1=FALSE}; for \code{abortnot1=TRUE}, assumes that all
 #' projections up to \code{start.proj - 1} were already successfully checked
-#' @param coverageD a class \code{coverage} object created by function \code{coverage} with at least \code{verbose=1}.
+#' @param coverageD a class \code{CAcoverage} object created by function \code{coverage} with at least \code{verbose=1}.
 #' for \code{verbose} less than 2, \code{t} must be specified. If \code{coverageD} is specified,
 #' all arguments referring to the design \code{D}, except for \code{t} in case of verbosity 1 only, are ignored.
 #' @param type \code{"projections"} (default) or \code{"tuples"}
@@ -42,7 +42,7 @@
 #' @param plot logical (default \code{TRUE}): generate the plot?
 #' @param ... further arguments to polygon
 #'
-#' @return Functions \code{coverage} and \code{coverage_iter} return an object of S3 class \code{coverage}, which is a
+#' @return Functions \code{coverage} and \code{coverage_iter} return an object of S3 class \code{CAcoverage}, which is a
 #' list with elements
 #' \item{total}{total proportion of covered \code{t}-tuples}
 #' \item{ave}{average of \code{t}-tuple proportions taken over projections}
@@ -85,7 +85,7 @@
 #' Thus, for \code{start.proj=7}, \code{start.proj} will be reduced to 5, and the projection
 #' is 1:3:4 (the first that starts with 1:3).
 #'
-#' Per default, the print method for class \code{coverage} prints the first four
+#' Per default, the print method for class \code{CAcoverage} prints the first four
 #' elements only.
 #'
 #' Function \code{coverplot}, with \code{type=projections}, plots the
@@ -250,7 +250,7 @@ coverage <- function(D, t, isInteger=TRUE,
                 notcovereds=whichnotcovereds)
   ## remaining cases (anything but 1 and 2)
   if (!verbose %in% c(1,2)) aus <- list(total=total, ave=ave, min=min, simple=simple)
-  class(aus) <- c("coverage", class(aus))
+  class(aus) <- c("CAcoverage", class(aus))
   aus
 }
 
@@ -341,7 +341,7 @@ coverage_iter <- function(D, t, isInteger=TRUE,
                                  " coverage violated: ",
                                  paste(curproj, collapse=":"))
                   )
-      class(aus) <- c("coverage", "list")
+      class(aus) <- c("CAcoverage", "list")
       return(aus)
     }
     simple <- simple + (hilf==curtot)
@@ -356,7 +356,7 @@ coverage_iter <- function(D, t, isInteger=TRUE,
   aus <- list(total=as.numeric(gmp::div.bigz(totcov,tot)),
               ave=ave/nproj, min=min,
               simple=as.numeric(gmp::div.bigz(simple,nproj)))
-  class(aus) <- c("coverage", "list")
+  class(aus) <- c("CAcoverage", "list")
   return(aus)  },
   interrupt = function(e) {
     message("Interrupted by user. Printing last completed projection id.")
@@ -394,8 +394,8 @@ coverplot <- function(coverageD, D=NULL, t=NULL, isInteger=TRUE, start0=TRUE,
        stop("If coverageD is missing, both D and t must be specified.")
     hilf <- coverage(D, t, verbose=1, isInteger=isInteger, start0=start0)
   }else{
-    if (!"coverage" %in% class(coverageD))
-      stop("coverageD must have class 'coverage'. Did you want to specify a design D?")
+    if (!"CAcoverage" %in% class(coverageD))
+      stop("coverageD must have class 'CAcoverage'. Did you want to specify a design D?")
     if (length(coverageD) < 10 && missing(t))
       stop("If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
     if (length(coverageD) < 7) stop("coverageD must be a coverage object from function coverage with verbose at least 1" )
