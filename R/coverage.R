@@ -400,7 +400,7 @@ coverplot <- function(coverageD, D=NULL, t=NULL, isInteger=TRUE, start0=TRUE,
       stop("If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
     if (length(coverageD) < 7) stop("coverageD must be a coverage object from function coverage with verbose at least 1" )
     hilf <- coverageD[1:7]
-    class(hilf) <- c("coverage", class(hilf))
+    class(hilf) <- c("CAcoverage", class(hilf))
     if (missing(t)) t <- as.integer(nrow(coverageD$projections))
     rm(coverageD)  ## free storage space
   }
