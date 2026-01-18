@@ -12,7 +12,7 @@ coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
 coverage_iter(D, t, isInteger=TRUE, start0=TRUE,
        progress=FALSE, abortnot1=FALSE, start.proj=1)
 
-coverplot(D, t, isInteger=TRUE, start0=TRUE,
+coverplot(coverageD, D=NULL, t=NULL, isInteger=TRUE, start0=TRUE,
     type="projections",
     main=NULL, xlab=NULL, ylab=NULL,
     col=rgb(0,0,1,0.5), las=1, plot=TRUE, ...)
@@ -41,6 +41,10 @@ strength \code{t} coverage is not perfect ?}
 order; ignored for \code{abortnot1=FALSE}; for \code{abortnot1=TRUE}, assumes that all
 projections up to \code{start.proj - 1} were already successfully checked}
 
+\item{coverageD}{a class \code{coverage} object created by function \code{coverage} with at least \code{verbose=1}.
+for \code{verbose} less than 2, \code{t} must be specified. If \code{coverageD} is specified,
+all arguments referring to the design \code{D}, except for \code{t} in case of verbosity 1 only, are ignored.}
+
 \item{type}{\code{"projections"} (default) or \code{"tuples"}}
 
 \item{main}{title of plot}
@@ -56,12 +60,21 @@ projections up to \code{start.proj - 1} were already successfully checked}
 \item{...}{further arguments to polygon}
 }
 \value{
-\code{coverage} returns an object of class coverage, which is a
-list with elements \code{total}, \code{ave}, \code{min} and \code{simple},
-with increasing detail added for verbose 1 or 2 (function \code{coverage}) or
-where a run was aborted because of \code{abortnot1=TRUE} (function \code{coverage_iter}).
+Functions \code{coverage} and \code{coverage_iter} return an object of S3 class \code{coverage}, which is a
+list with elements
+\item{total}{total proportion of covered \code{t}-tuples}
+\item{ave}{average of \code{t}-tuple proportions taken over projections}
+\item{min}{the minimum proportion of \code{t}-tuples covered among the projections}
+\item{simple}{proportion of projections which are fully covered}
+\item{tots}{\code{coverage} with \code{verbose=1}: the number of \code{t}-tuples for the projections}
+\item{ncovered}{\code{coverage} with \code{verbose=1}: the number of covered \code{t}-tuples for the projections}
+\item{proportions}{\code{coverage} with \code{verbose=1}: \code{ncovered/tots}-tuples for the projection}
+\item{projections}{\code{coverage} with \code{verbose=2}: the projections in a \code{t}-row matrix, a column for each projection}
+\item{tabs}{\code{coverage} with \code{verbose=2}: a list of tables (for mixed levels CAs) or a matrix (for uniform CAs) that shows the number of coverages for each tuple in each projection; the row order of \code{tabs} is the same as is used for the numbering of tuples in \code{notcovered} (see next item) }
+\item{notcovereds}{\code{coverage} with \code{verbose=2}: a list of vectors of position numbers of the not-covered tuples for the projection, where position numbers arise having the left-most factor changing fastest}
+\item{message}{\code{coverage_iter} with \code{abortnot1=TRUE}: message which projection was the first uncovered one and thus stopped the calculations}
 
-The \code{coverplot} functions return a list of \code{x}, \code{y}, \code{t}
+The \code{coverplot} functions return a list of coordinates \code{x} and \code{y}, strength \code{t}
 and \code{proportions} (from call with \code{verbose=1}).
 }
 \description{
@@ -69,23 +82,6 @@ functions for calculating covering proportions for a given strength,
 and for visualizing those
 }
 \section{Details}{
-
-The proportions calculated are the proportion of covered
-\code{t}-tuples (\code{total}, taking the tuples as units), the average proportion of covered
-\code{t}-tuples taken over the \code{t}-factor projections (\code{ave}),
-the \code{min}imum proportion of \code{t}-tuples covered taken over the \code{t}-factor
-projections, and the proportion of \code{t}-factor projections that are
-completely covered (\code{simple}).
-
-For function \code{coverage}, if verbosity is requested, there are additional list elements:
-
-for \code{verbose=1} the number of covered tuples for each projection (\code{ncovereds}),
-the proportion this number represents (\code{proportions}),
-
-for \code{verbose=2} the frequency tables of tuples (\code{tabs}),\cr
-a list of identification indices of uncovered tuples for each projection (\code{uncovereds})\cr
-and the \code{projections} as a \code{t x choose(k, t)}-matrix that can be used as the legend
-for the columns of \code{tabs} for the elements of \code{uncovered}.
 
 Function \code{coverage_iter} calculates the same quantities as function \code{coverage};
 instead of creating all projections at once, it creates them iteratively, which is slower
@@ -145,10 +141,21 @@ print(coverage(plan, 2, verbose=2), digits=4, verbose=TRUE)
 ## two of three projections fully covered,
 ## one covered 5/6 only
 
-coverplot(plan, 2, type="projections")
+cD2 <- coverage(plan, 2, verbose=2)
+coverplot(cD2, type="projections") ## 2/3 at 1, 1/3 at 5/6=0.833333
 ## the not fully covered projection involves the 3-level
 ## column and thus has 6/(6+6+4)=37.5 pct of the tuples instead of 1/3
-coverplot(plan, 2, type="tuples")
+coverplot(cD2, type="tuples")
+
+## it is also possible to call coverplot on the design itself
+##    however, repeated calls will then require recalculation
+##    of coverage, which can be demanding.
+##    Where storage space is problematic for verbose=2,
+##    working directly with the design may be doable
+##    (but time is likely also an issue).
+##
+coverplot(D=plan, t=2, type="projections")
+coverplot(D=plan, t=2, type="tuples")
 
 ## the Hadamard based 16 run design for 14 columns
 ##    that is available from FrF2::pb;

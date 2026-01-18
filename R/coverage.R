@@ -12,7 +12,7 @@
 #' @usage coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
 #' @usage coverage_iter(D, t, isInteger=TRUE, start0=TRUE,
 #'        progress=FALSE, abortnot1=FALSE, start.proj=1)
-#' @usage coverplot(D, t, isInteger=TRUE, start0=TRUE,
+#' @usage coverplot(coverageD, D=NULL, t=NULL, isInteger=TRUE, start0=TRUE,
 #'     type="projections",
 #'     main=NULL, xlab=NULL, ylab=NULL,
 #'     col=rgb(0,0,1,0.5), las=1, plot=TRUE, ...)
@@ -31,6 +31,9 @@
 #' @param start.proj integer, the number of the projection to start with in lexicographical
 #' order; ignored for \code{abortnot1=FALSE}; for \code{abortnot1=TRUE}, assumes that all
 #' projections up to \code{start.proj - 1} were already successfully checked
+#' @param coverageD a class \code{coverage} object created by function \code{coverage} with at least \code{verbose=1}.
+#' for \code{verbose} less than 2, \code{t} must be specified. If \code{coverageD} is specified,
+#' all arguments referring to the design \code{D}, except for \code{t} in case of verbosity 1 only, are ignored.
 #' @param type \code{"projections"} (default) or \code{"tuples"}
 #' @param main title of plot
 #' @param xlab,ylab axis titles
@@ -39,32 +42,24 @@
 #' @param plot logical (default \code{TRUE}): generate the plot?
 #' @param ... further arguments to polygon
 #'
-#' @return \code{coverage} returns an object of class coverage, which is a
-#' list with elements \code{total}, \code{ave}, \code{min} and \code{simple},
-#' with increasing detail added for verbose 1 or 2 (function \code{coverage}) or
-#' where a run was aborted because of \code{abortnot1=TRUE} (function \code{coverage_iter}).
+#' @return Functions \code{coverage} and \code{coverage_iter} return an object of S3 class \code{coverage}, which is a
+#' list with elements
+#' \item{total}{total proportion of covered \code{t}-tuples}
+#' \item{ave}{average of \code{t}-tuple proportions taken over projections}
+#' \item{min}{the minimum proportion of \code{t}-tuples covered among the projections}
+#' \item{simple}{proportion of projections which are fully covered}
+#' \item{tots}{\code{coverage} with \code{verbose=1}: the number of \code{t}-tuples for the projections}
+#' \item{ncovered}{\code{coverage} with \code{verbose=1}: the number of covered \code{t}-tuples for the projections}
+#' \item{proportions}{\code{coverage} with \code{verbose=1}: \code{ncovered/tots}-tuples for the projection}
+#' \item{projections}{\code{coverage} with \code{verbose=2}: the projections in a \code{t}-row matrix, a column for each projection}
+#' \item{tabs}{\code{coverage} with \code{verbose=2}: a list of tables (for mixed levels CAs) or a matrix (for uniform CAs) that shows the number of coverages for each tuple in each projection; the row order of \code{tabs} is the same as is used for the numbering of tuples in \code{notcovered} (see next item) }
+#' \item{notcovereds}{\code{coverage} with \code{verbose=2}: a list of vectors of position numbers of the not-covered tuples for the projection, where position numbers arise having the left-most factor changing fastest}
+#' \item{message}{\code{coverage_iter} with \code{abortnot1=TRUE}: message which projection was the first uncovered one and thus stopped the calculations}
 #'
-#' The \code{coverplot} functions return a list of \code{x}, \code{y}, \code{t}
+#' The \code{coverplot} functions return a list of coordinates \code{x} and \code{y}, strength \code{t}
 #' and \code{proportions} (from call with \code{verbose=1}).
 #'
 #' @section Details:
-#' The proportions calculated are the proportion of covered
-#' \code{t}-tuples (\code{total}, taking the tuples as units), the average proportion of covered
-#' \code{t}-tuples taken over the \code{t}-factor projections (\code{ave}),
-#' the \code{min}imum proportion of \code{t}-tuples covered taken over the \code{t}-factor
-#' projections, and the proportion of \code{t}-factor projections that are
-#' completely covered (\code{simple}).
-#'
-#' For function \code{coverage}, if verbosity is requested, there are additional list elements:
-#'
-#' for \code{verbose=1} the number of covered tuples for each projection (\code{ncovereds}),
-#' the proportion this number represents (\code{proportions}),
-#'
-#' for \code{verbose=2} the frequency tables of tuples (\code{tabs}),\cr
-#' a list of identification indices of uncovered tuples for each projection (\code{uncovereds})\cr
-#' and the \code{projections} as a \code{t x choose(k, t)}-matrix that can be used as the legend
-#' for the columns of \code{tabs} for the elements of \code{uncovered}.
-#'
 #' Function \code{coverage_iter} calculates the same quantities as function \code{coverage};
 #' instead of creating all projections at once, it creates them iteratively, which is slower
 #' but doable for large cases for which function \code{coverage} fails for memory reasons.
@@ -120,10 +115,21 @@
 #' ## two of three projections fully covered,
 #' ## one covered 5/6 only
 #'
-#' coverplot(plan, 2, type="projections")
+#' cD2 <- coverage(plan, 2, verbose=2)
+#' coverplot(cD2, type="projections") ## 2/3 at 1, 1/3 at 5/6=0.833333
 #' ## the not fully covered projection involves the 3-level
 #' ## column and thus has 6/(6+6+4)=37.5 pct of the tuples instead of 1/3
-#' coverplot(plan, 2, type="tuples")
+#' coverplot(cD2, type="tuples")
+#'
+#' ## it is also possible to call coverplot on the design itself
+#' ##    however, repeated calls will then require recalculation
+#' ##    of coverage, which can be demanding.
+#' ##    Where storage space is problematic for verbose=2,
+#' ##    working directly with the design may be doable
+#' ##    (but time is likely also an issue).
+#' ##
+#' coverplot(D=plan, t=2, type="projections")
+#' coverplot(D=plan, t=2, type="tuples")
 #'
 #' ## the Hadamard based 16 run design for 14 columns
 #' ##    that is available from FrF2::pb;
@@ -244,7 +250,7 @@ coverage <- function(D, t, isInteger=TRUE,
                 notcovereds=whichnotcovereds)
   ## remaining cases (anything but 1 and 2)
   if (!verbose %in% c(1,2)) aus <- list(total=total, ave=ave, min=min, simple=simple)
-  class(aus) <- "coverage"
+  class(aus) <- c("coverage", class(aus))
   aus
 }
 
@@ -256,11 +262,22 @@ coverage_iter <- function(D, t, isInteger=TRUE,
   ## progress=TRUE costs a little bit of time for each projection
   stopifnot(is.matrix(D) || is.data.frame(D))
   if (is.data.frame(D) && isInteger) D <- as.matrix(D)
-  if (is.matrix(D) && start0) D <- D + 1
-
+  if (is.matrix(D) && !isInteger) D <- as.data.frame(D)
+  if (is.matrix(D)) if (!is.numeric(D))
+    stop("isInteger is TRUE, but D has non-numeric content")
+  if (is.matrix(D) && start0){
+    if (!all(apply(D, 2, min, na.rm=TRUE)==0))
+      stop("start0 is TRUE, but columns do not start at 0")
+    D <- D + 1
+  }
+  if (is.matrix(D) && !start0){
+    if (!all(apply(D, 2, min, na.rm=TRUE)==1))
+      stop("start0 is FALSE, but columns do not start at 1")
+  }
   m <- ncol(D)
-  if (t > m) stop("t > m")
   if (is.data.frame(D)){
+    ## create integers via factors
+    ## (also treats matrices for isInteger=FALSE)
     for (i in 1:m){
       D[[i]] <- as.integer(factor(D[[i]]))
     }
@@ -364,7 +381,7 @@ prepcoverplot <- function(ts, type="projections",
 }
 
 #' @export
-coverplot <- function(D, t, isInteger=TRUE, start0=TRUE,
+coverplot <- function(coverageD, D=NULL, t=NULL, isInteger=TRUE, start0=TRUE,
                       type="projections",
                       main=NULL,
                       xlab=NULL,
@@ -372,7 +389,21 @@ coverplot <- function(D, t, isInteger=TRUE, start0=TRUE,
                       plot=TRUE, ...){
   ## isInteger: are the values all from 0 to v-1 or from 1 to v?
   ## start0: 0 to v-1? (relevant for isI==TRUE only)
-  hilf <- coverage(D, t, verbose=1, isInteger=isInteger, start0=start0)
+  if (missing(coverageD)){
+    if (is.null(D) || is.null(t))
+       stop("If coverageD is missing, both D and t must be specified.")
+    hilf <- coverage(D, t, verbose=1, isInteger=isInteger, start0=start0)
+  }else{
+    if (!"coverage" %in% class(coverageD))
+      stop("coverageD must have class 'coverage'. Did you want to specify a design D?")
+    if (length(coverageD) < 10 && missing(t))
+      stop("If t is not given, coverageD must be a coverage object from function coverage with verbose=2")
+    if (length(coverageD) < 7) stop("coverageD must be a coverage object from function coverage with verbose at least 1" )
+    hilf <- coverageD[1:7]
+    class(hilf) <- c("coverage", class(hilf))
+    if (missing(t)) t <- as.integer(nrow(coverageD$projections))
+    rm(coverageD)  ## free storage space
+  }
   if (type=="projections"){
     tab <- table(hilf$proportions)
     x <- pctcombis <- c(0, rep(cumsum(rev(tab))/sum(tab), each=2), 0,0)
