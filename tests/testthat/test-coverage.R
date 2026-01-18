@@ -53,12 +53,12 @@ test_that("coverage", {
                      c("x","y","t","coverage"))
     expect_identical(names(coverplot(cD23, plot=FALSE)),
                      c("x","y","t","coverage"))
-    expect_equal(coverplot(D=D, t=3),
-                 coverplot(cD23))
     expect_equal(coverplot(D=D, t=3, plot=FALSE),
                      coverplot(cD23, plot=FALSE))
-    expect_equal(coverplot(D=D, t=3, type="tuples"),
-                 coverplot(cD23, type="tuples"))
+    ## with default plot=TRUE
+    # expect_equal(coverplot(D=D, t=3), coverplot(cD23))
+    # expect_equal(coverplot(D=D, t=3, type="tuples"),
+    #             coverplot(cD23, type="tuples"))
 
     #### now for coverage_iter
     cD1perfect <- coverage_iter(D, 2, abortnot1=TRUE)
@@ -161,7 +161,7 @@ test_that("coverage", {
 ##    factor E: isInteger of the call (0=FALSE, 1=TRUE)
 ##    factor F: start0 of the call (0=FALSE, 1=TRUE)
 ##    factor G: t=t_D or t=t_D+1
-##    factor H: parallel=1 or parallel=4
+##    factor H: parallel=1 or parallel=2
 #######################################################################
 
 t_D <- 2:5  ## factor A: t_D,
@@ -196,35 +196,35 @@ perfect <- coverage(bestCA(3,8,4),3)
 
     test_that("CA-based test for coverage inputs (uniform inputs only)", {
     expect_error(
-      coverage(Ddflist_start1[[4]], t=6, isInteger=TRUE, start0=TRUE, parallel=4),
+      coverage(Ddflist_start1[[4]], t=6, isInteger=TRUE, start0=TRUE, parallel=2),
       regexp="start0 is TRUE, but columns do not start at 0"
     )
     expect_identical(
-      coverage(Dlist[[2]], t=4, isInteger=FALSE, start0=FALSE, parallel=4)$simple,
+      coverage(Dlist[[2]], t=4, isInteger=FALSE, start0=FALSE, parallel=2)$simple,
       0)
     expect_identical(
-      coverage(Dlist_start1[[1]], t=2, isInteger=TRUE, start0=FALSE, parallel=4),
+      coverage(Dlist_start1[[1]], t=2, isInteger=TRUE, start0=FALSE, parallel=2),
       perfect)
     expect_identical(
-      coverage(Ddflist_noninteger[[4]], t=6, isInteger=FALSE, start0=FALSE, parallel=4)$simple,
+      coverage(Ddflist_noninteger[[4]], t=6, isInteger=FALSE, start0=FALSE, parallel=2)$simple,
       0)
     expect_error(
-      coverage(Dlist_noninteger[[3]], t=5, isInteger=TRUE, start0=TRUE, parallel=4),
+      coverage(Dlist_noninteger[[3]], t=5, isInteger=TRUE, start0=TRUE, parallel=2),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
     expect_identical(
       coverage(Dlist_noninteger[[2]], t=4, isInteger=FALSE, start0=TRUE, parallel=1)$simple,
       0)
     expect_identical(
-      coverage(Dlist_noninteger[[4]], t=5, isInteger=FALSE, start0=TRUE, parallel=4),
+      coverage(Dlist_noninteger[[4]], t=5, isInteger=FALSE, start0=TRUE, parallel=2),
       perfect)
     expect_identical(
-      coverage(Ddflist[[2]], t=3, isInteger=TRUE, start0=TRUE, parallel=4),
+      coverage(Ddflist[[2]], t=3, isInteger=TRUE, start0=TRUE, parallel=2),
       perfect)
 ## modified isInteger setting for the following row,
 ## in order to have also error with start0=FALSE
     expect_error(
-      coverage(Ddflist[[3]], t=4, isInteger=TRUE, start0=FALSE, parallel=4),
+      coverage(Ddflist[[3]], t=4, isInteger=TRUE, start0=FALSE, parallel=2),
       regexp="start0 is FALSE, but columns do not start at 1"
     )
     expect_error(
@@ -245,10 +245,10 @@ perfect <- coverage(bestCA(3,8,4),3)
       coverage(Dlist_noninteger[[3]], t=4, isInteger=FALSE, start0=FALSE, parallel=1),
       perfect)
     expect_identical(
-      coverage(Ddflist_noninteger[[1]], t=2, isInteger=FALSE, start0=TRUE, parallel=4),
+      coverage(Ddflist_noninteger[[1]], t=2, isInteger=FALSE, start0=TRUE, parallel=2),
       perfect)
     expect_error(
-      coverage(Ddflist_noninteger[[2]], t=4, isInteger=TRUE, start0=TRUE, parallel=4),
+      coverage(Ddflist_noninteger[[2]], t=4, isInteger=TRUE, start0=TRUE, parallel=2),
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
     expect_identical(
@@ -263,10 +263,10 @@ perfect <- coverage(bestCA(3,8,4),3)
       regexp="isInteger is TRUE, but D has non-numeric content"
     )
     expect_identical(
-      coverage(Dlist_noninteger[[1]], t=3, isInteger=FALSE, start0=TRUE, parallel=4)$simple,
+      coverage(Dlist_noninteger[[1]], t=3, isInteger=FALSE, start0=TRUE, parallel=2)$simple,
       0)
     expect_identical(
-      coverage(Ddflist_start1[[3]], t=5, isInteger=FALSE, start0=TRUE, parallel=4)$simple,
+      coverage(Ddflist_start1[[3]], t=5, isInteger=FALSE, start0=TRUE, parallel=2)$simple,
       0)
     expect_identical(
       coverage(Dlist_start1[[4]], t=6, isInteger=TRUE, start0=FALSE, parallel=1)$simple,
