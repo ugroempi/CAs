@@ -53,7 +53,7 @@ jobs:
           # run any test command you use; example using testthat:
           Rscript -e 'if (file.exists("tests/testthat")) testthat::test_dir("tests/testthat")'
           # compute package coverage and write cobertura XML
-          Rscript -e 'cov <- covr::package_coverage(); covr::to_cobertura(cov, file = "coverage.xml")'
+          Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_cobertura(cov, file = "coverage.xml")'
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
