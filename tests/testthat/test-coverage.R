@@ -295,7 +295,7 @@ perfect <- coverage(bestCA(3,8,4),3)
     hilf <- coverage_iter(Ddflist_noninteger[[4]], t=6, isInteger=FALSE, start0=FALSE, abortnot1=TRUE)
     expect_identical(hilf$message,
                      "First projection with strength 6 coverage violated: 1:2:3:4:5:6")
-    expect_identical(hilf[1:4], covNA)
+    expect_identical(unclass(hilf[1:4]), unclass(covNA))
   })
   expect_error(
     coverage_iter(Dlist_noninteger[[3]], t=5, isInteger=TRUE, start0=TRUE, abortnot1=TRUE),
