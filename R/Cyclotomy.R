@@ -104,6 +104,9 @@
 cyclotomyCA <- function(t, k, v, ...){
   Call <- sys.call()
   hilf <- CYCLOTOMYcat[CYCLOTOMYcat$t>=t & CYCLOTOMYcat$v==v & CYCLOTOMYcat$k>=k,]
+  if (t > 6) stop("t is too large")
+  if (v > 21) stop("v is too large")
+  if (nrow(hilf)==0) stop("k is too large for the combination of t and v")
   N <- min(hilf$N)
   hilf <- hilf[which.min(hilf$N),,drop=FALSE]
   N <- hilf$N
