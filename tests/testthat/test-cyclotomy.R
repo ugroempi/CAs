@@ -40,10 +40,19 @@ expect_error(cyclotomyCA(7,12,4), "t is too large")
 expect_error(cyclotomyCA(5,12,30), "v is too large")
 ## non-error
 expect_equal(cyclotomyCA(-3, 12,4), cyclotomyCA(2, 12,4))
+})
 
+test_that("cyclotomy works for prime power 8", {
 #### also do v=8 (because of gf)
   # 3 8   194  1552   193   4a  cyc(193,8, type='4a')
   D <- cyclotomyCA(3, 194, 8)
   expect_equal(dim(D), c(1552, 194))
   expect_equal(max(D), 7)
+  expect_equal(dim(cyc(8,3, primitive=4)), c(8,8))
+  expect_error(dim(cyc(8,3, primitive=1)), "wrong primitive")
+})
+
+test_that("function cyc works", {
+  expect_equal(dim(cyc(31,3,type="1")), c(31, 31))
+  expect_error(cyc(31,3,k=32), "k can be at most 31")
 })

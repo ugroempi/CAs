@@ -297,19 +297,21 @@ MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
     if (is.numeric(nlevels)){
       k <- length(nlevels)
       levs <- nlevels
-    }else{
+    }}else{
       ## correct format
       stopifnot(c("levels", "frequency") %in% names(nlevels))
       ## decreasing order
       if (!all(nlevels$levels==sort(nlevels$levels, decreasing=TRUE)))
         stop("levels in nlevels must be sorted in decreasing order")
-      ## unique row elements
-      if (!nrow(nlevels)==length(unique(nlevels$levels)))
-        stop
+      if (!length(nlevels$levels)==length(nlevels$frequency))
+         stop("the components 'levels' and 'frequency' must have the same length")
+      if (!length(nlevels$levels)==length(unique(nlevels$levels)))
+         stop("nlevels$levels must have unique elements")
+      nlevels <- as.data.frame(nlevels[c("levels", "frequency")])
       k <- sum(nlevels$frequency)
       levs <- unlist(mapply(rep, nlevels$levels, nlevels$frequency))
     }
-  } ## now levs is numeric
+   ## now levs is numeric
 
   stopifnot(length(levs)==k)
   stopifnot(all(levs%%1==0))
@@ -415,11 +417,13 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
   ## decreasing order
   if (!all(nlevels$levels==sort(nlevels$levels, decreasing=TRUE)))
     stop("levels in nlevels must be sorted in decreasing order")
-  ## unique row elements
-  if (!nrow(nlevels)==length(unique(nlevels$levels)))
-    stop("nlevels$levels must not have duplicate entries")
+  if (!length(nlevels$levels)==length(nlevels$frequency))
+    stop("the components 'levels' and 'frequency' must have the same length")
+  if (!length(nlevels$levels)==length(unique(nlevels$levels)))
+    stop("nlevels$levels must have unique elements")
+  nlevels <- as.data.frame(nlevels[c("levels", "frequency")])
   ## optimum N
-  optN <- ifelse(nlevels$frequency[1]==2, nlevels$levels[1]^2,
+  optN <- ifelse(nlevels$frequency[1]>=2, nlevels$levels[1]^2,
                  prod(nlevels$levels[1:2]))
 
   ## find a suitable construction
@@ -482,11 +486,14 @@ N_upper_MCA <- function(nlevels, t=2, internet=TRUE, ...){
   if (!is.list(nlevels))
     if (!is.numeric(nlevels))
       stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
-
     if (is.numeric(nlevels)){
       k <- length(nlevels)
       v <- max(nlevels)
     }else{
+      if (!all(c("levels", "frequency") %in% names(nlevels)))
+        stop("nlevels must have components 'levels' and 'frequency'")
+      if (!length(nlevels$levels)==length(nlevels$frequency))
+        stop("the components 'levels' and 'frequency' must have the same length")
       k <- sum(nlevels$frequency)
       v <- max(nlevels$levels)
     }
@@ -506,10 +513,20 @@ projBoseMCA <- function(nlevels, t=2, ...){
     if (length(levels) > 2) stop("projBoseMCA not applicable for more than two different numbers of levels")
     nlevels <- data.frame(levels=levels, frequency=sapply(levels, function(obj) sum(nlevels==obj)))
   }else{
+    ## correct format
+    stopifnot(c("levels", "frequency") %in% names(nlevels))
+    ## decreasing order
+    if (!length(nlevels$levels)==length(unique(nlevels$levels)))
+      stop("nlevels$levels must have unique elements")
+    if (length(nlevels$levels)>2)
+      stop("projBoseMCA not applicable for more than two different numbers of levels")
+    if (!all(nlevels$levels==sort(nlevels$levels, decreasing=TRUE)))
+      stop("levels in nlevels must be sorted in decreasing order")
+    if (!length(nlevels$levels)==length(nlevels$frequency))
+      stop("the components 'levels' and 'frequency' must have the same length")
+    nlevels <- as.data.frame(nlevels[c("levels", "frequency")])
     nlevels_ordered <- rep(nlevels$levels, nlevels$frequency)
     levels <- nlevels$levels
-    if (length(levels) > 2) stop("projBoseMCA not applicable for more than two different numbers of levels")
-    if (!all(sort(levels, decreasing = TRUE)==levels)) stop("data.frame nlevels must be sorted with levels in descending order")
   }
   ## now, nlevels is a data.frame with levels sorted in decreasing order
   c_temp <- min(nlevels$frequency)
