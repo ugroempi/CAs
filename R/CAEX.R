@@ -198,7 +198,7 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
   if (is.null(k) && is.null(N))
     stop("at least one of k and N must be specified")
   if (!is.logical(maxk1) || length(maxk1) != 1)
-    stop("maxk1 must be a single logical value (TRUE or FALSE)")
+    stop("maxk1 must be a single logical value")
 
   if (!is.null(k) && !is.null(N)){
     N <- NULL

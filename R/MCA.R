@@ -361,16 +361,23 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
     stop("cs (column numbers to modify) must be specified")
   if (missing(tolevs))
     stop("tolevs (target number of levels) must be specified")
-  if (is.null(t) || !is.numeric(t))
-    stop("D does not have a valid attribute 't', please specify the strength t")
-  if (length(t) != 1 || t < 1 || t != as.integer(t))
+  
+  # Validate t parameter - distinguish between missing attribute and invalid parameter
+  if (missing(t)) {
+    # t was not provided as a parameter, check if it exists as an attribute
+    t <- attr(D, "t")
+    if (is.null(t) || !is.numeric(t))
+      stop("D does not have a valid attribute 't', please specify the strength t")
+  }
+  # Now validate the t value (whether from attribute or parameter)
+  if (!is.numeric(t) || length(t) != 1 || t < 1 || t != as.integer(t))
     stop("t must be a single positive integer")
   if (!is.numeric(cs))
     stop("cs must be a numeric vector of column numbers")
   if (any(cs < 1 | cs != as.integer(cs)))
     stop("all elements in cs must be positive integers")
   if (any(cs > ncol(D)))
-    stop("all elements in cs must be valid column numbers (between 1 and ", ncol(D), ")")
+    stop("all elements in cs must be valid column numbers (must not exceed ", ncol(D), ")")
   if (!is.numeric(tolevs))
     stop("tolevs must be a numeric vector")
   if (any(tolevs < 2 | tolevs != as.integer(tolevs)))
@@ -384,8 +391,11 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
   N <- Norig <- nrow(D)
   levs <- levels.no.NA(D)
   
-  if (any(tolevs > levs[cs]))
-    stop("tolevs cannot be larger than the current number of levels in the corresponding columns")
+  if (any(tolevs > levs[cs])){
+    bad_cols <- cs[which(tolevs > levs[cs])]
+    stop("tolevs cannot be larger than the current number of levels; ",
+         "problem in column(s): ", paste(bad_cols, collapse=", "))
+  }
   attrs_stored <- attributes(D)
   levs[cs] <- tolevs
   optN <- lower_bound_CA(t, k, levs)
@@ -459,7 +469,6 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
       stop("all elements of nlevels must be integers >= 2")
     k <- length(nlevels)
     tab <- table(nlevels)
-    if (!(k==sum(tab))) stop("nlevels must have non-NA entries only")
     nlevels <- data.frame(
       levels=as.numeric(rev(names(tab))),
       frequency=rev(unname(as.numeric(tab))))

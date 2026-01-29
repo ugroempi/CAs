@@ -246,8 +246,28 @@ test_that("MCAt: validates nlevels data.frame format", {
     "nlevels must have components 'levels' and 'frequency'"
   )
   expect_error(
+    MCAt(nlevels=data.frame(levels=c("3","2"), frequency=c(2,3)), t=3),
+    "components 'levels' and 'frequency' in nlevels must be numeric"
+  )
+  expect_error(
+    MCAt(nlevels=data.frame(levels=c(3,2,1), frequency=c(2,3,4)), t=3),
+    "all 'levels' in nlevels must be integers >= 2"
+  )
+  expect_error(
+    MCAt(nlevels=data.frame(levels=c(3,2), frequency=c(0,3)), t=3),
+    "all 'frequency' values in nlevels must be positive integers"
+  )
+  expect_error(
     MCAt(nlevels=data.frame(levels=c(2,3), frequency=c(2,3)), t=3),
     "levels in nlevels must be sorted in decreasing order"
+  )
+  expect_error(
+    MCAt(nlevels=data.frame(levels=c(3,2), frequency=c(2,3,4)), t=3),
+    "components 'levels' and 'frequency' must have the same length"
+  )
+  expect_error(
+    MCAt(nlevels=data.frame(levels=c(3,3,2), frequency=c(2,3,4)), t=3),
+    "nlevels\\$levels must have unique elements"
   )
 })
 
