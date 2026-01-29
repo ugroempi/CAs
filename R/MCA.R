@@ -289,17 +289,38 @@
 
 #' @export
 MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
-  stopifnot(t>2)
-  stopifnot(t%%1==0)
+  # Input validation with meaningful error messages
+  if (missing(t))
+    stop("t (interaction strength) must be specified")
+  if (!is.numeric(t) || length(t) != 1 || t < 1 || t != as.integer(t))
+    stop("t must be a single positive integer")
+  if (t <= 2)
+    stop("t must be greater than 2 (for t=2, use MCA2 instead)")
+  if (missing(nlevels))
+    stop("nlevels must be specified")
+  
   if (!is.list(nlevels)){
     if (!is.numeric(nlevels))
-      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+      stop("if not a list or a data.frame, nlevels must be a vector of numbers of levels")
+    if (length(nlevels) == 0)
+      stop("nlevels must have at least one element")
+    if (any(is.na(nlevels)))
+      stop("nlevels must have non-NA entries only")
+    if (any(nlevels < 2 | nlevels != as.integer(nlevels)))
+      stop("all elements of nlevels must be integers >= 2")
     if (is.numeric(nlevels)){
       k <- length(nlevels)
       levs <- nlevels
     }}else{
       ## correct format
-      stopifnot(c("levels", "frequency") %in% names(nlevels))
+      if (!all(c("levels", "frequency") %in% names(nlevels)))
+        stop("nlevels must have components 'levels' and 'frequency'")
+      if (!is.numeric(nlevels$levels) || !is.numeric(nlevels$frequency))
+        stop("components 'levels' and 'frequency' in nlevels must be numeric")
+      if (any(nlevels$levels < 2 | nlevels$levels != as.integer(nlevels$levels)))
+        stop("all 'levels' in nlevels must be integers >= 2")
+      if (any(nlevels$frequency < 1 | nlevels$frequency != as.integer(nlevels$frequency)))
+        stop("all 'frequency' values in nlevels must be positive integers")
       ## decreasing order
       if (!all(nlevels$levels==sort(nlevels$levels, decreasing=TRUE)))
         stop("levels in nlevels must be sorted in decreasing order")
@@ -328,21 +349,43 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
                       outerRetry=10, innerRetry=1, seed=NULL, ...){
   Call <- sys.call()
   if (is.null(seed)) seed <- sample(32000,1)
-  if (is.null(t) || !(is.numeric(t)))
-    stop("D does not have a valid attribute 't',\nplease specify the strength t")
-  stopifnot(is.matrix(D))
-  stopifnot(is.numeric(D))
+  
+  # Input validation with meaningful error messages
+  if (missing(D))
+    stop("D (covering array) must be specified")
+  if (!is.matrix(D))
+    stop("D must be a matrix")
+  if (!is.numeric(D))
+    stop("D must be numeric")
+  if (missing(cs))
+    stop("cs (column numbers to modify) must be specified")
+  if (missing(tolevs))
+    stop("tolevs (target number of levels) must be specified")
+  if (is.null(t) || !is.numeric(t))
+    stop("D does not have a valid attribute 't', please specify the strength t")
+  if (length(t) != 1 || t < 1 || t != as.integer(t))
+    stop("t must be a single positive integer")
+  if (!is.numeric(cs))
+    stop("cs must be a numeric vector of column numbers")
+  if (any(cs < 1 | cs != as.integer(cs)))
+    stop("all elements in cs must be positive integers")
+  if (any(cs > ncol(D)))
+    stop("all elements in cs must be valid column numbers (between 1 and ", ncol(D), ")")
+  if (!is.numeric(tolevs))
+    stop("tolevs must be a numeric vector")
+  if (any(tolevs < 2 | tolevs != as.integer(tolevs)))
+    stop("all elements in tolevs must be integers >= 2")
+  if (length(cs) != length(tolevs))
+    stop("cs and tolevs must have the same length")
+  
   start0 <- min(D)==0
   ## assuming valid array starting at 0 or 1
   k <- ncol(D)
   N <- Norig <- nrow(D)
   levs <- levels.no.NA(D)
-  stopifnot(is.numeric(cs))
-  stopifnot(is.numeric(tolevs))
-  stopifnot(all((c(t,cs,tolevs) %% 1) == 0))
-  stopifnot(length(cs)==length(tolevs))
-  stopifnot(all(tolevs>1))
-  stopifnot(all(tolevs<=levs[cs]))
+  
+  if (any(tolevs > levs[cs]))
+    stop("tolevs cannot be larger than the current number of levels in the corresponding columns")
   attrs_stored <- attributes(D)
   levs[cs] <- tolevs
   optN <- lower_bound_CA(t, k, levs)
@@ -400,10 +443,20 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
                  seed=NULL, ...){
   Call <- sys.call()
   if (is.null(seed)) seed <- sample(32000, 1)
+  
+  # Input validation with meaningful error messages
+  if (missing(nlevels))
+    stop("nlevels must be specified")
   if (!is.list(nlevels)){
     if (!is.numeric(nlevels))
-      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+      stop("if not a list or a data.frame, nlevels must be a vector of numbers of levels")
   if (is.numeric(nlevels)){
+    if (length(nlevels) == 0)
+      stop("nlevels must have at least one element")
+    if (any(is.na(nlevels)))
+      stop("nlevels must have non-NA entries only")
+    if (any(nlevels < 2 | nlevels != as.integer(nlevels)))
+      stop("all elements of nlevels must be integers >= 2")
     k <- length(nlevels)
     tab <- table(nlevels)
     if (!(k==sum(tab))) stop("nlevels must have non-NA entries only")
@@ -413,7 +466,14 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
     }
   } ## now nlevels is a list or data.frame
   ## correct format
-  stopifnot(c("levels", "frequency") %in% names(nlevels))
+  if (!all(c("levels", "frequency") %in% names(nlevels)))
+    stop("nlevels must have components 'levels' and 'frequency'")
+  if (!is.numeric(nlevels$levels) || !is.numeric(nlevels$frequency))
+    stop("components 'levels' and 'frequency' in nlevels must be numeric")
+  if (any(nlevels$levels < 2 | nlevels$levels != as.integer(nlevels$levels)))
+    stop("all 'levels' in nlevels must be integers >= 2")
+  if (any(nlevels$frequency < 1 | nlevels$frequency != as.integer(nlevels$frequency)))
+    stop("all 'frequency' values in nlevels must be positive integers")
   ## decreasing order
   if (!all(nlevels$levels==sort(nlevels$levels, decreasing=TRUE)))
     stop("levels in nlevels must be sorted in decreasing order")

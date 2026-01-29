@@ -67,10 +67,29 @@
 #' @export
 powerCA <- function(t, k, v, type="CT", ...){
   Call <- sys.call()
+  
+  # Input validation with meaningful error messages
+  if (missing(t))
+    stop("t (interaction strength) must be specified")
+  if (!is.numeric(t) || length(t) != 1 || t < 1 || t != as.integer(t))
+    stop("t must be a single positive integer")
+  if (missing(k))
+    stop("k (number of columns) must be specified")
+  if (!is.numeric(k) || length(k) != 1 || k < 1 || k != as.integer(k))
+    stop("k must be a single positive integer")
+  if (missing(v))
+    stop("v (number of levels) must be specified")
+  if (!is.numeric(v) || length(v) != 1 || v < 2 || v != as.integer(v))
+    stop("v must be a single integer >= 2")
+  if (!is.character(type) || length(type) != 1)
+    stop("type must be a single character string")
+  if (type != "CT")
+    stop("currently only type='CT' is implemented")
+  
   pick <- which(powerCTcat$t >= t &
                   powerCTcat$k >= k &
                   powerCTcat$v == v )
-  if (length(pick)==0) stop("no construction for this setting")
+  if (length(pick)==0) stop("no construction for this setting (t=", t, ", k=", k, ", v=", v, ")")
   hilf <- powerCTcat[pick,,drop=FALSE]
   r <- which.min(hilf$N)
   ## provide new t, which can be larger than requested t

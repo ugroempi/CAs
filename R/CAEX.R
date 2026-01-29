@@ -185,9 +185,20 @@
 #' @export
 CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
   call <- sys.call()
-  stopifnot(t==2, v==3)
-  if (is.null(k) && is.null(N)) stop("at least one of k and N must be specified")
-  stopifnot(is.logical(maxk1))
+  
+  # Input validation with meaningful error messages
+  if (!is.numeric(t) || length(t) != 1 || t != as.integer(t))
+    stop("t must be a single integer")
+  if (t != 2)
+    stop("currently only t=2 is implemented")
+  if (!is.numeric(v) || length(v) != 1 || v != as.integer(v))
+    stop("v must be a single integer")
+  if (v != 3)
+    stop("currently only v=3 is implemented")
+  if (is.null(k) && is.null(N))
+    stop("at least one of k and N must be specified")
+  if (!is.logical(maxk1) || length(maxk1) != 1)
+    stop("maxk1 must be a single logical value (TRUE or FALSE)")
 
   if (!is.null(k) && !is.null(N)){
     N <- NULL
@@ -195,19 +206,17 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
   }
   if (is.null(N)){
     ## check input k
-    stopifnot(length(k)==1)
-    stopifnot(is.numeric(k))
-    stopifnot(k%%1==0)
-    stopifnot(k>=1)
+    if (!is.numeric(k) || length(k) != 1 || k < 1 || k != as.integer(k))
+      stop("k must be a single positive integer")
     ## determine N
     suppressMessages(N <- N_TJcat(t, k, v))
-    if (is.na(N)) stop("The requested k =", k, " cannot be accommodated.")
+    if (is.na(N)) stop("The requested k=", k, " cannot be accommodated")
   }else{
     ## check input N
-    stopifnot(length(N)==1)
-    stopifnot(is.numeric(N))
-    stopifnot(N%%1==0)
-    stopifnot(N>=9)
+    if (!is.numeric(N) || length(N) != 1 || N != as.integer(N))
+      stop("N must be a single integer")
+    if (N < 9)
+      stop("N must be at least 9")
     if (N==10){
       N <- 9
       message("N has been reduced to 9, the largest possible N <= 10")
