@@ -158,7 +158,24 @@ coverage <- function(D, t, isInteger=TRUE,
   ## loop variant was as fast or slightly faster for 1 thread,
   ##    but much slower with foreach and doParallel
   ## thus, large cases are likely not doable
-  stopifnot(is.matrix(D) || is.data.frame(D))
+  
+  # Input validation with meaningful error messages
+  if (!is.matrix(D) && !is.data.frame(D))
+    stop("D must be a matrix or data.frame")
+  if (missing(t))
+    stop("t (interaction strength) must be specified")
+  if (!is.numeric(t) || length(t) != 1 || t < 1 || t != as.integer(t))
+    stop("t must be a single positive integer")
+  if (ncol(D) < t)
+    stop("t (", t, ") cannot be larger than the number of columns in D (", ncol(D), ")")
+  if (!is.logical(isInteger) || length(isInteger) != 1)
+    stop("isInteger must be a single logical value")
+  if (!is.logical(start0) || length(start0) != 1)
+    stop("start0 must be a single logical value")
+  if (!is.numeric(parallel) || length(parallel) != 1 || parallel < 1 || parallel != as.integer(parallel))
+    stop("parallel must be a single positive integer")
+  if (!is.numeric(verbose) || length(verbose) != 1 || verbose < 0 || verbose != as.integer(verbose))
+    stop("verbose must be a non-negative integer")
   if (is.data.frame(D) && isInteger) D <- as.matrix(D)
   if (is.matrix(D) && !isInteger) D <- as.data.frame(D)
   if (is.matrix(D)) if (!is.numeric(D))

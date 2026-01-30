@@ -55,7 +55,19 @@ KSK <- function(k=NULL, N=NULL){
   ## issue: the design for k < maxk is not necessarily the best choice of columns
   ## KSKnk is a data frame in sysdata.rda and holds the maximum number of columns
   ##    that can be done in a given number of runs.
-  if (is.null(k) && is.null(N)) stop("At least one of k and N must be specified")
+  
+  # Input validation with meaningful error messages
+  if (is.null(k) && is.null(N))
+    stop("At least one of k and N must be specified")
+  if (!is.null(k)){
+    if (!is.numeric(k) || length(k) != 1 || k < 1 || k != as.integer(k))
+      stop("k must be a single positive integer")
+  }
+  if (!is.null(N)){
+    if (!is.numeric(N) || length(N) != 1 || N < 2 || N != as.integer(N))
+      stop("N must be a single integer >= 2")
+  }
+  
   if (is.null(k)) k <- k_KSK(N)
   if (is.null(N)) N <- N_KSK(k)
   pos1 <- nchoosek(N-1, ceiling(N/2))
