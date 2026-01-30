@@ -23,7 +23,7 @@ test_that("coverage: validates D parameter", {
 
 test_that("coverage: validates t parameter", {
   D <- matrix(c(0,0,1,1,0,1,0,1), ncol=2)
-  
+
   expect_error(
     coverage(D),
     "t \\(interaction strength\\) must be specified"
@@ -56,7 +56,7 @@ test_that("coverage: validates t parameter", {
 
 test_that("coverage: validates isInteger parameter", {
   D <- matrix(c(0,0,1,1,0,1,0,1), ncol=2)
-  
+
   expect_error(
     coverage(D, t=2, isInteger="TRUE"),
     "isInteger must be a single logical value"
@@ -73,7 +73,7 @@ test_that("coverage: validates isInteger parameter", {
 
 test_that("coverage: validates start0 parameter", {
   D <- matrix(c(0,0,1,1,0,1,0,1), ncol=2)
-  
+
   expect_error(
     coverage(D, t=2, start0="TRUE"),
     "start0 must be a single logical value"
@@ -86,7 +86,7 @@ test_that("coverage: validates start0 parameter", {
 
 test_that("coverage: validates parallel parameter", {
   D <- matrix(c(0,0,1,1,0,1,0,1), ncol=2)
-  
+
   expect_error(
     coverage(D, t=2, parallel="1"),
     "parallel must be a single positive integer"
@@ -111,7 +111,7 @@ test_that("coverage: validates parallel parameter", {
 
 test_that("coverage: validates verbose parameter", {
   D <- matrix(c(0,0,1,1,0,1,0,1), ncol=2)
-  
+
   expect_error(
     coverage(D, t=2, verbose="0"),
     "verbose must be a non-negative integer"
@@ -182,7 +182,7 @@ test_that("MCA2: validates nlevels data.frame format", {
     "levels in nlevels must be sorted in decreasing order"
   )
   expect_error(
-    MCA2(nlevels=data.frame(levels=c(3,2), frequency=c(2,3,4))),
+    MCA2(nlevels=list(levels=c(3,2), frequency=c(2,3,4))),
     "components 'levels' and 'frequency' must have the same length"
   )
   expect_error(
@@ -262,7 +262,7 @@ test_that("MCAt: validates nlevels data.frame format", {
     "levels in nlevels must be sorted in decreasing order"
   )
   expect_error(
-    MCAt(nlevels=data.frame(levels=c(3,2), frequency=c(2,3,4)), t=3),
+    MCAt(nlevels=list(levels=c(3,2), frequency=c(2,3,4)), t=3),
     "components 'levels' and 'frequency' must have the same length"
   )
   expect_error(
@@ -421,7 +421,7 @@ test_that("CAEX: validates t parameter", {
   )
   expect_error(
     CAEX(k=5, t=3),
-    "currently only t=2 is implemented"
+    "CAEX requires t=2"
   )
 })
 
@@ -436,7 +436,7 @@ test_that("CAEX: validates v parameter", {
   )
   expect_error(
     CAEX(k=5, v=4),
-    "currently only v=3 is implemented"
+    "CAEX requires v=3"
   )
 })
 
@@ -517,7 +517,7 @@ test_that("CA_to_MCA: validates D parameter", {
 
 test_that("CA_to_MCA: validates cs and tolevs parameters", {
   D <- matrix(c(0,0,0,1,1,1,2,2,2,0,1,2,0,1,2,0,1,2), ncol=3)
-  
+
   expect_error(
     CA_to_MCA(D=D, tolevs=2, t=2),
     "cs \\(column numbers to modify\\) must be specified"
@@ -559,18 +559,18 @@ test_that("CA_to_MCA: validates cs and tolevs parameters", {
 test_that("CA_to_MCA: validates t parameter", {
   D <- matrix(c(0,0,0,1,1,1,2,2,2,0,1,2,0,1,2,0,1,2), ncol=3)
   attr(D, "t") <- NULL
-  
+
   expect_error(
     CA_to_MCA(D=D, cs=1, tolevs=2),
     "D does not have a valid attribute 't'"
   )
-  
+
   attr(D, "t") <- "2"
   expect_error(
     CA_to_MCA(D=D, cs=1, tolevs=2),
     "D does not have a valid attribute 't'"
   )
-  
+
   D <- matrix(c(0,0,0,1,1,1,2,2,2,0,1,2,0,1,2,0,1,2), ncol=3)
   expect_error(
     CA_to_MCA(D=D, cs=1, tolevs=2, t="2"),
