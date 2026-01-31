@@ -298,7 +298,7 @@ MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
     stop("t must be greater than 2 (for t=2, use MCA2 instead)")
   if (missing(nlevels))
     stop("nlevels must be specified")
-  
+
   if (!is.list(nlevels)){
     if (!is.numeric(nlevels))
       stop("if not a list or a data.frame, nlevels must be a vector of numbers of levels")
@@ -349,7 +349,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
                       outerRetry=10, innerRetry=1, seed=NULL, ...){
   Call <- sys.call()
   if (is.null(seed)) seed <- sample(32000,1)
-  
+
   # Input validation with meaningful error messages
   if (missing(D))
     stop("D (covering array) must be specified")
@@ -361,7 +361,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
     stop("cs (column numbers to modify) must be specified")
   if (missing(tolevs))
     stop("tolevs (target number of levels) must be specified")
-  
+
   # Validate t parameter - distinguish between missing attribute and invalid parameter
   if (missing(t)) {
     # t was not provided as a parameter, check if it exists as an attribute
@@ -384,13 +384,13 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
     stop("all elements in tolevs must be integers >= 2")
   if (length(cs) != length(tolevs))
     stop("cs and tolevs must have the same length")
-  
+
   start0 <- min(D)==0
   ## assuming valid array starting at 0 or 1
   k <- ncol(D)
   N <- Norig <- nrow(D)
   levs <- levels.no.NA(D)
-  
+
   if (any(tolevs > levs[cs])){
     bad_cols <- cs[which(tolevs > levs[cs])]
     stop("tolevs cannot be larger than the current number of levels; ",
@@ -453,7 +453,7 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
                  seed=NULL, ...){
   Call <- sys.call()
   if (is.null(seed)) seed <- sample(32000, 1)
-  
+
   # Input validation with meaningful error messages
   if (missing(nlevels))
     stop("nlevels must be specified")
@@ -573,7 +573,7 @@ N_upper_MCA <- function(nlevels, t=2, internet=TRUE, ...){
 projBoseMCA <- function(nlevels, t=2, ...){
   if (!is.list(nlevels))
     if (!is.numeric(nlevels))
-      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+      stop("if not a list or a data.frame, nlevels must be a vector of numbers of levels")
 
   if (is.numeric(nlevels)){
     nlevels_ordered <- nlevels
