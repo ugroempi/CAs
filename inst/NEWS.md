@@ -6,6 +6,9 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
+February 21 2025, version 0.23
+ - added functionality for SCAs
+
 November 21 2025, version 0.22
  - added arrays from Walker and Colbourn 2009 for scphfCA
  - added classical (poor) augmentation constructions 

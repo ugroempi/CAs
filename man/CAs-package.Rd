@@ -77,6 +77,17 @@ removal of as many rows as possible via the Nayeri et al. (2013) construction. F
 but still often relevant.\cr
 \code{\link{projBoseMCA}} implements the mixed level construction by Stevens, Ling and Mendelsohn (2002)
 in the form stated by Colbourn (2008) in his Corollary 2.2, and the construction of Colbourn's Theorem 2.3.
+
+Furthermore, there are functions for the creation and inspection of sequence covering arrays
+(SCAs) (Kuhn et al. 2012, Murray and Colbourn 2015 (not yet implemented), Torres-Jimenez et al. 2022):
+\itemize{
+\item \code{\link{greedySCA_naive}}, \code{\link{greedySCA_Kuhn}}, \code{\link{greedySCA_TJ}}
+and their iterative versions,
+\item \code{\link{coverageSCA}} for assessing coverage,
+\item \code{\link{reduce_rows_iterative_complete}} for reducing the run size of an SCA.
+}
+
+These functions are limited to SCAs for relatively small numbers of columns and strengths.
 }
 
 \section{Exported objects}{
@@ -172,6 +183,8 @@ Katona, G. O. H. (1973). Two applications (for search theory and truth functions
 
 Kokkala, J. I., Meagher, K., Naserasr, R., Nurmela, K. J., Östergård, P. R. J., & Stevens, B. (2018). Classification of small strength-2 covering arrays. Zenodo. https://doi.org/10.5281/zenodo.1476059
 
+Kuhn, D.R., Higdon, J.M., Lawrence, J.F., Kacker, R.N. (2012). Combinatorial Methods for Event Sequence Testing. ICST '12: Proceedings of the 2012 IEEE Fifth International Conference on Software Testing, Verification and Validation, 601-609. https://doi.org/10.1109/ICST.2012.147
+
 Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez, J., (2012). Cover starters for covering arrays of strength two. Discrete Math. vol. 312, 943-956. https://doi.org/10.1016/j.disc.2011.10.026
 
 Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. https://doi.org/10.1023/B:DESI.0000029232.40302.6d.
@@ -183,6 +196,8 @@ Meagher, K., (2005a). Group Construction of Covering Arrays: Part 2. (Unpublishe
 Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative Independence Graphs and Extremal Set Partition Theory. PhD thesis. University of Ottawa, Ottawa.
 
 Moura, L., Stardom, J., Stevens, B., Williams, A. (2003). Covering arrays with mixed alphabet sizes. J of Combinatorial Designs 11, 413-432. https://doi.org/10.1002/jcd.10059
+
+Murray, P.C., Colbourn, C.J. (2015). Sequence Covering Arrays and Linear Extensions. In: Jan, K., Miller, M., Froncek, D. (eds) Combinatorial Algorithms. IWOCA 2014. Lecture Notes in Computer Science(), vol 8986. Springer, Cham. https://doi.org/10.1007/978-3-319-19315-1_24
 
 Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized post-optimization of covering arrays. European Journal of Combinatorics 34, 91-103. https://doi.org/10.1016/j.ejc.2012.07.017
 
@@ -196,7 +211,9 @@ Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction of Transv
 
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. \url{https://www.tamps.cinvestav.mx/~oc/}.
 
-Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. doi: 10.1016/j.amc.2021.126122
+Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. https://doi.org/10.1016/j.amc.2021.126122
+
+Torres-Jimenez, J., Ramirez-Acuna, D.O., Acevedo-Juarez, B., Avila-George, H. (2022). New upper bounds for sequence Covering Arrays using a 3-stage approach. Expert Systems With Applications 207, 118022. https://doi.org/10.1016/j.eswa.2022.118022
 
 Wagner, M., Colbourn, C., Simos, D.E., (2022). In-Parameter-Order strategies for covering perfect hash families. Applied Mathematics and Computation 421, 126952. https://doi.org/10.1016/j.amc.2022.126952
 
