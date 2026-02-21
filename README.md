@@ -288,13 +288,14 @@ sequence covering arrays (SCAs) (Kuhn et al. 2012, Murray and Colbourn
 
 <li>
 
-<code>coverageSCA</code> for assessing coverage,
+<code>coverageSCA</code> and <code>identify_needed</code> for assessing
+coverage and usefulness / redundancy of SCA entries,
 </li>
 
 <li>
 
-<code>reduce_rows_iterative_complete</code> for reducing the run size of
-an SCA.
+<code>reduce_rows_iterative_complete</code> and
+<code>optimize_SCA</code> for reducing the run size of an SCA.
 </li>
 
 </ul>
