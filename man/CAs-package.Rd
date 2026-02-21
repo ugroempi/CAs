@@ -83,8 +83,8 @@ Furthermore, there are functions for the creation and inspection of sequence cov
 \itemize{
 \item \code{\link{greedySCA_naive}}, \code{\link{greedySCA_Kuhn}}, \code{\link{greedySCA_TJ}}
 and their iterative versions,
-\item \code{\link{coverageSCA}} for assessing coverage,
-\item \code{\link{reduce_rows_iterative_complete}} for reducing the run size of an SCA.
+\item \code{\link{coverageSCA}} and \code{\link{identify_needed}} for assessing coverage and usefulness / redundancy of SCA entries,
+\item \code{\link{reduce_rows_iterative_complete}} and \code{\link{optimize_SCA}} for reducing the run size of an SCA.
 }
 
 These functions are limited to SCAs for relatively small numbers of columns and strengths.

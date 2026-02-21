@@ -8,7 +8,7 @@
 #' @aliases iter_greedySCA_TJ
 #'
 #' @usage greedySCA_TJ(k, t, postopt=TRUE, seed=NULL, ...)
-#' @usage iter_greedySCA_TJ(niter, k, t, postopt=FALSE, seed_init=NULL, verbose=TRUE, ...)
+#' @usage iter_greedySCA_TJ(niter, k, t, seed_init=NULL, verbose=TRUE, ...)
 #'
 #' @param k positive integer (at least t); the number of columns
 #' @param t the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k

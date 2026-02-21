@@ -7,7 +7,7 @@
 \usage{
 greedySCA_TJ(k, t, postopt=TRUE, seed=NULL, ...)
 
-iter_greedySCA_TJ(niter, k, t, postopt=FALSE, seed_init=NULL, verbose=TRUE, ...)
+iter_greedySCA_TJ(niter, k, t, seed_init=NULL, verbose=TRUE, ...)
 }
 \arguments{
 \item{k}{positive integer (at least t); the number of columns}
