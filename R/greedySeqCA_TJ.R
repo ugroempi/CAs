@@ -1,14 +1,14 @@
-#' Greedy random creation of an SCA
+#' Greedy random creation of an SeqCA
 #'
 #' for k columns and strength t according to an algorithm by Torres-Jimenez et al. (2022)
 #'
-#' @rdname greedySCA_TJ
+#' @rdname greedySeqCA_TJ
 #'
-#' @aliases greedySCA_TJ
-#' @aliases iter_greedySCA_TJ
+#' @aliases greedySeqCA_TJ
+#' @aliases iter_greedySeqCA_TJ
 #'
-#' @usage greedySCA_TJ(k, t, postopt=TRUE, seed=NULL, ...)
-#' @usage iter_greedySCA_TJ(niter, k, t, seed_init=NULL, verbose=TRUE, ...)
+#' @usage greedySeqCA_TJ(k, t, postopt=TRUE, seed=NULL, ...)
+#' @usage iter_greedySeqCA_TJ(niter, k, t, seed_init=NULL, verbose=TRUE, ...)
 #'
 #' @param k positive integer (at least t); the number of columns
 #' @param t the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k
@@ -19,17 +19,17 @@
 #' @param verbose logical (default TRUE), controlling how much printed output is created
 #' @param ... currently not used
 #'
-#' @returns a strength t SCA with k columns; all rows contain the integers 1 to k.
+#' @returns a strength t SeqCA with k columns; all rows contain the integers 1 to k.
 #'
 #' @section Details:
-#' The function \code{greedySCA_TJ} implements the construction of Torres-Jimenez et al. (2022). It
+#' The function \code{greedySeqCA_TJ} implements the construction of Torres-Jimenez et al. (2022). It
 #'   uses an approach based on directed acyclic graphs and relies on the R package igraph for that
 #'   purpose.\cr
 #'   For \code{postopt=TRUE}, it then *identifies the redundant elements and removes all rows that
 #'   contain redundant elements only (would be easiest, but at present not done)* applies iterative run size reduction
 #'   using function \code{reduce_rows_iterative_complete}.
 #'
-#' The function \code{iter_greedySCA_TJ} iteratively repeats the process and keeps the best
+#' The function \code{iter_greedySeqCA_TJ} iteratively repeats the process and keeps the best
 #' outcome.
 #'
 #' Torres-Jimenez et al. (2022) describe a 3-stage approach, the third stage of which is
@@ -41,7 +41,7 @@
 #' @section Use of AI:
 #' Claude 4 was involved in the development of these functions (mainly for debugging).
 #'
-#' @seealso [greedySCA_naive()] for a naive greedy random assembly of an SCA and [greedySCA_Kuhn()] for the greedy method by Kuhn et al. (2012)
+#' @seealso [greedySeqCA_naive()] for a naive greedy random assembly of an SeqCA and [greedySeqCA_Kuhn()] for the greedy method by Kuhn et al. (2012)
 #'
 #' @author Ulrike Groemping
 #'
@@ -49,30 +49,30 @@
 #'
 #' @examples
 #' ## without post-optimization
-#' nrow(greedySCA_TJ(5, 3, seed=2323, postopt=FALSE))
+#' nrow(greedySeqCA_TJ(5, 3, seed=2323, postopt=FALSE))
 #' ## relatively unlucky
-#' nrow(greedySCA_TJ(5, 3, seed=222, postopt=FALSE))
+#' nrow(greedySeqCA_TJ(5, 3, seed=222, postopt=FALSE))
 #' ## relatively lucky
-#' nrow(A <- greedySCA_TJ(5, 3, seed=8881, postopt=FALSE))
-#' coverageSCA(A, 3)
-#' coverageSCA(A, 4)
+#' nrow(A <- greedySeqCA_TJ(5, 3, seed=8881, postopt=FALSE))
+#' coverageSeqCA(A, 3)
+#' coverageSeqCA(A, 4)
 #'
 #' ## with post-optimization
 #' ## differences become smaller (still relevant esp. for larger cases)
-#' nrow(greedySCA_TJ(5, 3, seed=2323))
+#' nrow(greedySeqCA_TJ(5, 3, seed=2323))
 #' ## relatively unlucky
-#' nrow(greedySCA_TJ(5, 3, seed=222))
+#' nrow(greedySeqCA_TJ(5, 3, seed=222))
 #' ## very lucky
-#' nrow(A <- greedySCA_TJ(5, 3, seed=8881))
-#' coverageSCA(A, 3)
-#' coverageSCA(A, 4) ## worse coverage of 4-sequences than for larger SCA
+#' nrow(A <- greedySeqCA_TJ(5, 3, seed=8881))
+#' coverageSeqCA(A, 3)
+#' coverageSeqCA(A, 4) ## worse coverage of 4-sequences than for larger SeqCA
 #'
 #' ## iteration
-#' nrow(iter_greedySCA_TJ(10, 5, 3, seed_init=222)) ## start unlucky
+#' nrow(iter_greedySeqCA_TJ(10, 5, 3, seed_init=222)) ## start unlucky
 #'   ## larger niter brings the run size down to 8
 
 #' @export
-greedySCA_TJ <- function(k, t, postopt=TRUE, seed=NULL, ...){
+greedySeqCA_TJ <- function(k, t, postopt=TRUE, seed=NULL, ...){
   ## work with numbers 1 to k (not 0 to k-1)
   call <- sys.call()
   combs <- combn(k,t)
@@ -142,13 +142,13 @@ greedySCA_TJ <- function(k, t, postopt=TRUE, seed=NULL, ...){
 }
 
 #' @export
-iter_greedySCA_TJ <- function(niter, k, t, seed_init=NULL, verbose=TRUE, ...){
+iter_greedySeqCA_TJ <- function(niter, k, t, seed_init=NULL, verbose=TRUE, ...){
   nzeilen <- Inf
   curmat <- NULL
   for (i in 1:niter){
     if (verbose) cat("=== Iteration: ", i, "\n")
     if (i==1) seed <- seed_init else seed <- NULL
-    hilf <- greedySCA_TJ(k, t, seed=seed)
+    hilf <- greedySeqCA_TJ(k, t, seed=seed)
     if (nrow(hilf) < nzeilen){
       curmat <- hilf
       nzeilen <- nrow(curmat)

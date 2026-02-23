@@ -27,7 +27,7 @@ identify_redundant_elements <- function(A, t) {
 print_redundancy <- function(A, t) {
   result <- identify_redundant_elements(A, t)
 
-  cat("SCA dimensions:", nrow(A), "x", ncol(A), "\n")
+  cat("SeqCA dimensions:", nrow(A), "x", ncol(A), "\n")
   cat("Total elements:", nrow(A) * ncol(A), "\n")
   cat("Useful elements:", result$n_useful, "\n")
   cat("Redundant elements:", result$n_redundant, "\n")

@@ -1,14 +1,14 @@
-#' Greedy random creation of an SCA
+#' Greedy random creation of an SeqCA
 #'
 #' for k columns and strength t according to an algorithm by Kuhn et al. (2012)
 #'
-#' @rdname greedySCA_Kuhn
+#' @rdname greedySeqCA_Kuhn
 #'
-#' @aliases greedySCA_Kuhn
-#' @aliases iter_greedySCA_Kuhn
+#' @aliases greedySeqCA_Kuhn
+#' @aliases iter_greedySeqCA_Kuhn
 #'
-#' @usage greedySCA_Kuhn(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...)
-#' @usage iter_greedySCA_Kuhn(niter, k, t, nsamp=10, postopt=FALSE,
+#' @usage greedySeqCA_Kuhn(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...)
+#' @usage iter_greedySeqCA_Kuhn(niter, k, t, nsamp=10, postopt=FALSE,
 #'     seed_init=NULL, verbose=TRUE, ...)
 #'
 #' @param k positive integer (at least t); the number of columns
@@ -21,23 +21,23 @@
 #' @param verbose logical (default TRUE), controlling how much printed output is created
 #' @param ... currently not used
 #'
-#' @returns a strength t SCA with k columns; all rows contain the integers 1 to k.
+#' @returns a strength t SeqCA with k columns; all rows contain the integers 1 to k.
 #'
 #' @section Details:
-#' The function \code{greedySCA_Kuhn} implements the construction of Kuhn et al. (2012). It starts
+#' The function \code{greedySeqCA_Kuhn} implements the construction of Kuhn et al. (2012). It starts
 #'   from t! random permutations of the the integers 1,...,k and adds a further random permutation,
 #'   until all orders of all t-tuples are covered.\cr
 #'   For \code{postopt=TRUE}, it then *identifies the redundant elements and removes all rows that
 #'   contain redundant elements only (would be easiest, but at present not done)* applies iterative run size reduction
 #'   using function \code{reduce_rows_iterative_complete}.
 #'
-#' The function \code{iter_greedySCA_Kuhn} iteratively repeats the process and keeps the best
+#' The function \code{iter_greedySeqCA_Kuhn} iteratively repeats the process and keeps the best
 #' outcome.
 #'
 #' @section Use of AI:
 #' Claude 4 was involved in the development of these functions (mainly for debugging).
 #'
-#' @seealso [greedySCA_naive()] for a naive random assembly of an SCA and [greedySCA_TJ()] for the graph-based greedy stage method of Torres-Jimenez et al. (2022)
+#' @seealso [greedySeqCA_naive()] for a naive random assembly of an SeqCA and [greedySeqCA_TJ()] for the graph-based greedy stage method of Torres-Jimenez et al. (2022)
 #'
 #' @author Ulrike Groemping
 #'
@@ -45,30 +45,30 @@
 #'
 #' @examples
 #' ## without post-optimization
-#' nrow(greedySCA_Kuhn(5, 3, seed=2323, postopt=FALSE))
+#' nrow(greedySeqCA_Kuhn(5, 3, seed=2323, postopt=FALSE))
 #' ## relatively unlucky
-#' nrow(greedySCA_Kuhn(5, 3, seed=2415, postopt=FALSE))
+#' nrow(greedySeqCA_Kuhn(5, 3, seed=2415, postopt=FALSE))
 #' ## relatively lucky
-#' nrow(A <- greedySCA_Kuhn(5, 3, seed=16, postopt=FALSE))
-#' coverageSCA(A, 3)
-#' coverageSCA(A, 4)
+#' nrow(A <- greedySeqCA_Kuhn(5, 3, seed=16, postopt=FALSE))
+#' coverageSeqCA(A, 3)
+#' coverageSeqCA(A, 4)
 #'
 #' ## with post-optimization
 #' ## differences become smaller (still relevant esp. for larger cases)
-#' nrow(greedySCA_Kuhn(5, 3, seed=2323))
+#' nrow(greedySeqCA_Kuhn(5, 3, seed=2323))
 #' ## relatively unlucky
-#' nrow(greedySCA_Kuhn(5, 3, seed=2415))
+#' nrow(greedySeqCA_Kuhn(5, 3, seed=2415))
 #' ## relatively lucky
-#' nrow(A <- greedySCA_Kuhn(5, 3, seed=16))
-#' coverageSCA(A, 3)
-#' coverageSCA(A, 4) ## worse coverage of 4-sequences than for larger SCA
+#' nrow(A <- greedySeqCA_Kuhn(5, 3, seed=16))
+#' coverageSeqCA(A, 3)
+#' coverageSeqCA(A, 4) ## worse coverage of 4-sequences than for larger SeqCA
 #'
 #' ## iteration
-#' nrow(iter_greedySCA_Kuhn(10, 5, 3, seed_init=2415)) ## start unlucky
+#' nrow(iter_greedySeqCA_Kuhn(10, 5, 3, seed_init=2415)) ## start unlucky
 #'   ## larger niter brings the run size down to 8
 
 #' @export
-greedySCA_Kuhn <- function(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...){
+greedySeqCA_Kuhn <- function(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...){
   ## work with numbers 1 to k (not 0 to k-1)
   call <- sys.call()
   combs <- combn(k,t)
@@ -144,14 +144,14 @@ greedySCA_Kuhn <- function(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...){
 }
 
 #' @export
-iter_greedySCA_Kuhn <- function(niter, k, t, nsamp=10, postopt=FALSE,
+iter_greedySeqCA_Kuhn <- function(niter, k, t, nsamp=10, postopt=FALSE,
                                 seed_init=NULL, verbose=TRUE, ...){
   nzeilen <- Inf
   curmat <- NULL
   for (i in 1:niter){
     if (verbose) cat("=== Iteration: ", i, "\n")
     if (i==1) seed <- seed_init else seed <- NULL
-    hilf <- greedySCA_Kuhn(k, t, nsamp=nsamp, postopt=postopt, seed=seed)
+    hilf <- greedySeqCA_Kuhn(k, t, nsamp=nsamp, postopt=postopt, seed=seed)
     if (nrow(hilf) < nzeilen){
       curmat <- hilf
       nzeilen <- nrow(curmat)

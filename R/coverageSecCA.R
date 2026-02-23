@@ -1,14 +1,14 @@
-#' Checking coverage for SCAs
+#' Checking coverage for SeqCAs
 #'
-#' for a given SCA A and a strength t
+#' for a given SeqCA A and a strength t
 #'
-#' @rdname coverageSCA
+#' @rdname coverageSeqCA
 #'
-#' @aliases coverageSCA
+#' @aliases coverageSeqCA
 #'
-#' @usage coverageSCA(A, t, stop_at_first_failure=FALSE, verbose=FALSE, ...)
+#' @usage coverageSeqCA(A, t, stop_at_first_failure=FALSE, verbose=FALSE, ...)
 #'
-#' @param A a sequence covering array (SCA) with k columns and elements 1,...,k in each row
+#' @param A a sequence covering array (SeqCA) with k columns and elements 1,...,k in each row
 #' @param t the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k
 #' @param stop_at_first_failure logical; if \code{TRUE}, the function returns FALSE instead of a number
 #' @param verbose logical; if \code{TRUE}, the returned object has an attribute \code{uncovered} with the uncovered sequences
@@ -22,27 +22,27 @@
 #' It is particularly relevant to check whether the coverage is perfect, i.e., the outcome is 1. If this is the only interest, one can stop at the first failure.
 #'
 #' @examples
-#' ### create a trivial SCA of strength 2
+#' ### create a trivial SeqCA of strength 2
 #' A <- rbind(1:5, 5:1)
-#' coverageSCA(A, 2)
-#' coverageSCA(A, 3) ## covers a third of the 3-factor orders
+#' coverageSeqCA(A, 2)
+#' coverageSeqCA(A, 3) ## covers a third of the 3-factor orders
 #'
-#' ## a naive greedy SCA of strength 3
-#' A <- greedySCA_naive(5, 3, seed=2323)
+#' ## a naive greedy SeqCA of strength 3
+#' A <- greedySeqCA_naive(5, 3, seed=2323)
 #' dim(A)
-#' coverageSCA(A,3)
+#' coverageSeqCA(A,3)
 #'
 #' A <- reduce_rows_iterative_complete(A, 3)
 #'
 #' ## also works from worse starting matrix
-#' A <- greedySCA_naive(5, 3, seed=589)
+#' A <- greedySeqCA_naive(5, 3, seed=589)
 #' dim(A)
 #' A <- reduce_rows_iterative_complete(A, 3)
 #' dim(A)   ## substantially reduced in very short time
 #'
 #' @export
-coverageSCA <- function(A, t, stop_at_first_failure=FALSE, verbose=FALSE, ...) {
-  ## Input: A = SCA(N; t, k) - a matrix with N rows and k columns
+coverageSeqCA <- function(A, t, stop_at_first_failure=FALSE, verbose=FALSE, ...) {
+  ## Input: A = SeqCA(N; t, k) - a matrix with N rows and k columns
   ## Output: a coverage proportion,
   ##         or the logical FALSE
 
@@ -90,12 +90,12 @@ coverageSCA <- function(A, t, stop_at_first_failure=FALSE, verbose=FALSE, ...) {
           function(obj) paste(obj, collapse="->"))
     attr(aus, "uncovered") <- uncovered
   }
-  class(aus) <- c("coverageSCA", class(aus))
+  class(aus) <- c("coverageSeqCA", class(aus))
   aus
 }
 
 #' @export
-print.coverageSCA <- function(x, ...){
+print.coverageSeqCA <- function(x, ...){
   attributes(x) <- NULL
   print(x)
 }
