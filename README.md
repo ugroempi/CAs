@@ -276,31 +276,31 @@ form stated by Colbourn (2008) in his Corollary 2.2, and the
 construction of Colbourn’s Theorem 2.3.
 
 Furthermore, there are functions for the creation and inspection of
-sequence covering arrays (SCAs) (Kuhn et al. 2012, Murray and Colbourn
+sequence covering arrays (SeqCAs) (Kuhn et al. 2012, Murray and Colbourn
 2015 (not yet implemented), Torres-Jimenez et al. 2022):
 <ul>
 
 <li>
 
-<code>greedySCA_naive</code>, <code>greedySCA_Kuhn</code>,
-<code>greedySCA_TJ</code> and their iterative versions,
+<code>greedySeqCA_naive</code>, <code>greedySeqCA_Kuhn</code>,
+<code>greedySeqCA_TJ</code> and their iterative versions,
 </li>
 
 <li>
 
-<code>coverageSCA</code> and <code>identify_needed</code> for assessing
-coverage and usefulness / redundancy of SCA entries,
+<code>coverageSeqCA</code> and <code>identify_needed</code> for
+assessing coverage and usefulness / redundancy of SeqCA entries,
 </li>
 
 <li>
 
 <code>reduce_rows_iterative_complete</code> and
-<code>optimize_SCA</code> for reducing the run size of an SCA.
+<code>optimize_SeqCA</code> for reducing the run size of an SeqCA.
 </li>
 
 </ul>
 
-These functions are limited to SCAs for relatively small numbers of
+These functions are limited to SeqCAs for relatively small numbers of
 columns and strengths.
 
 ## Exported objects

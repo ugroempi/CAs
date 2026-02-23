@@ -6,7 +6,13 @@
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
    
-February 21 2025, version 0.23
+February xx 2026, still version 0.23
+ - changed the acronym for "sequential covering array" to SeqCA instead of SCA 
+   in order to avoid confusion with the special structure CA that is abbreviated as SCA
+ - added function SeqCA_Levenshtein for optimal strength t SeqCAs with t+1 columns
+ - improved the perturbation in simulated annealing for the optimize_SCA function
+
+February 21 2026, version 0.23
  - added functionality for SCAs
 
 November 21 2025, version 0.22
