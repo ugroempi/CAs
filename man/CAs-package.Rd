@@ -79,15 +79,15 @@ but still often relevant.\cr
 in the form stated by Colbourn (2008) in his Corollary 2.2, and the construction of Colbourn's Theorem 2.3.
 
 Furthermore, there are functions for the creation and inspection of sequence covering arrays
-(SCAs) (Kuhn et al. 2012, Murray and Colbourn 2015 (not yet implemented), Torres-Jimenez et al. 2022):
+(SeqCAs) (Kuhn et al. 2012, Murray and Colbourn 2015 (not yet implemented), Torres-Jimenez et al. 2022):
 \itemize{
-\item \code{\link{greedySCA_naive}}, \code{\link{greedySCA_Kuhn}}, \code{\link{greedySCA_TJ}}
+\item \code{\link{greedySeqCA_naive}}, \code{\link{greedySeqCA_Kuhn}}, \code{\link{greedySeqCA_TJ}}
 and their iterative versions,
-\item \code{\link{coverageSCA}} and \code{\link{identify_needed}} for assessing coverage and usefulness / redundancy of SCA entries,
-\item \code{\link{reduce_rows_iterative_complete}} and \code{\link{optimize_SCA}} for reducing the run size of an SCA.
+\item \code{\link{coverageSeqCA}} and \code{\link{identify_needed}} for assessing coverage and usefulness / redundancy of SeqCA entries,
+\item \code{\link{reduce_rows_iterative_complete}} and \code{\link{optimize_SeqCA}} for reducing the run size of an SeqCA.
 }
 
-These functions are limited to SCAs for relatively small numbers of columns and strengths.
+These functions are limited to SeqCAs for relatively small numbers of columns and strengths.
 }
 
 \section{Exported objects}{

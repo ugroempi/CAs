@@ -2,12 +2,12 @@
 % Please edit documentation in R/identify_needed.R
 \name{identify_needed}
 \alias{identify_needed}
-\title{Identifying needed and redundant elements of SCAs}
+\title{Identifying needed and redundant elements of SeqCAs}
 \usage{
 identify_needed(A, t, ...)
 }
 \arguments{
-\item{A}{a sequence covering array (SCA) with k columns and elements 1,...,k in each row}
+\item{A}{a sequence covering array (SeqCA) with k columns and elements 1,...,k in each row}
 
 \item{t}{the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k}
 
@@ -17,11 +17,11 @@ identify_needed(A, t, ...)
 a logical matrix of the same dimensions as \code{A} with \code{TRUE} for needed values and \code{FALSE} for values that can be moved.
 }
 \description{
-from a given SCA A and its strength t
+from a given SeqCA A and its strength t
 }
 \section{The meanings of TRUE and FALSE in the resulting matrix}{
 
-In an SCA of strength t,
+In an SeqCA of strength t,
 it is guaranteed that all orders of all t-tuples of elements of 1,...,k
 are covered; the ordered tuples are also counted as covered if they are
 interleaved by other values. For example, the sequence 1->4->3->2->5
@@ -41,12 +41,12 @@ Claude 4 was involved in the development of this function.
 }
 
 \examples{
-### create a trivial SCA of strength 2
+### create a trivial SeqCA of strength 2
 A <- rbind(1:5, 5:1)
 identify_needed(A,2)
 
-## a naive greedy SCA
-A <- greedySCA_naive(5, 3, seed=2323, postop=FALSE)
+## a naive greedy SeqCA
+A <- greedySeqCA_naive(5, 3, seed=2323, postop=FALSE)
 dim(A)
 ## identify the necessary elements
 (neededs <- identify_needed(A,3))
@@ -56,7 +56,7 @@ A <- A[!rowSums(neededs)==0,]
 neededs <- neededs[!rowSums(neededs)==0,]
 dim(A)
 ## all sequences are still covered
-(cove <- coverageSCA(A, 3))
+(cove <- coverageSeqCA(A, 3))
 ## the count_effective attribute of cove shows
 ## that the last three rows are only needed for 1 sequence each
 attr(cove, "count_effective")

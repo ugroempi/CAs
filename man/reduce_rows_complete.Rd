@@ -3,14 +3,14 @@
 \name{reduce_rows_complete}
 \alias{reduce_rows_complete}
 \alias{reduce_rows_iterative_complete}
-\title{Reducing the number of rows for an SCA}
+\title{Reducing the number of rows for an SeqCA}
 \usage{
 reduce_rows_complete(A, t, verbose=FALSE, ...)
 
 reduce_rows_iterative_complete(A, t, verbose=FALSE, ...)
 }
 \arguments{
-\item{A}{a sequence covering array (SCA) with k columns and elements 1,...,k in each row}
+\item{A}{a sequence covering array (SeqCA) with k columns and elements 1,...,k in each row}
 
 \item{t}{the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k}
 
@@ -19,7 +19,7 @@ reduce_rows_iterative_complete(A, t, verbose=FALSE, ...)
 \item{...}{currently not used}
 }
 \value{
-an SCA with attributes
+an SeqCA with attributes
 }
 \description{
 by covering all t-orders that are missing after removing a certain row through
@@ -36,14 +36,14 @@ Claude 4 was heavily involved in the development of these functions.
 }
 
 \examples{
-# a naive greedy SCA
-A <- greedySCA_naive(6, 4, seed=17)
+# a naive greedy SeqCA
+A <- greedySeqCA_naive(6, 4, seed=17)
 dim(A)  ## 67 rows
-coverageSCA(A, 4) ## perfect coverage
+coverageSeqCA(A, 4) ## perfect coverage
 \dontrun{
   Areduced <- reduce_rows_iterative_complete(A, 4)
   dim(Areduced)  ## 42 runs, i.e. reduced by about 1/3
-  coverageSCA(Areduced,4)   ## still perfect coverage
+  coverageSeqCA(Areduced,4)   ## still perfect coverage
 }
 
 

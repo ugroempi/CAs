@@ -1,4 +1,4 @@
-#' Reducing the number of rows for an SCA
+#' Reducing the number of rows for an SeqCA
 #'
 #' by covering all t-orders that are missing after removing a certain row through
 #' rearrangements of redundant elements in other rows
@@ -11,12 +11,12 @@
 #' @usage reduce_rows_complete(A, t, verbose=FALSE, ...)
 #' @usage reduce_rows_iterative_complete(A, t, verbose=FALSE, ...)
 #'
-#' @param A a sequence covering array (SCA) with k columns and elements 1,...,k in each row
+#' @param A a sequence covering array (SeqCA) with k columns and elements 1,...,k in each row
 #' @param t the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k
 #' @param verbose logical; if \code{TRUE}, printed output is more detailed
 #' @param ... currently not used
 #'
-#' @returns an SCA with attributes
+#' @returns an SeqCA with attributes
 #'
 #' @section Details:
 #' This can likely be made faster by first ordering the rows in decreasing order of the count_effective attribute of coverage.
@@ -25,25 +25,25 @@
 #' Claude 4 was heavily involved in the development of these functions.
 #'
 #' @examples
-#' # a naive greedy SCA
-#' A <- greedySCA_naive(6, 4, seed=17)
+#' # a naive greedy SeqCA
+#' A <- greedySeqCA_naive(6, 4, seed=17)
 #' dim(A)  ## 67 rows
-#' coverageSCA(A, 4) ## perfect coverage
+#' coverageSeqCA(A, 4) ## perfect coverage
 #' \dontrun{
 #'   Areduced <- reduce_rows_iterative_complete(A, 4)
 #'   dim(Areduced)  ## 42 runs, i.e. reduced by about 1/3
-#'   coverageSCA(Areduced,4)   ## still perfect coverage
+#'   coverageSeqCA(Areduced,4)   ## still perfect coverage
 #' }
 #'
 
 #'
 #' @export
 reduce_rows_complete <- function(A, t, verbose = FALSE, ...) {
-  ## Input: A = SCA(N; t, k) matrix with perfect coverage
+  ## Input: A = SeqCA(N; t, k) matrix with perfect coverage
   ##        useful = matrix of same dimensions indicating useful elements
   ## Output: A with one row removed (if possible without losing coverage)
-  stopifnot(coverageSCA(A, t) == 1)
-  ## coverageSCA also checks the other properties of A
+  stopifnot(coverageSeqCA(A, t) == 1)
+  ## coverageSeqCA also checks the other properties of A
 
   Norig <- N <- nrow(A)
 
@@ -64,7 +64,7 @@ reduce_rows_complete <- function(A, t, verbose = FALSE, ...) {
   }
 
   redundant_rows <- integer(0)
-  coverpct <- coverageSCA(A, t)
+  coverpct <- coverageSeqCA(A, t)
   all_subsequences <- attr(coverpct, "sequences")
   count_effective <- attr(coverpct, "count_effective")
   which_first <- attr(coverpct, "which_first")
@@ -84,7 +84,7 @@ reduce_rows_complete <- function(A, t, verbose = FALSE, ...) {
   ## Step 3: Initialize
   deleteRow <- -1
   bestMissings <- Inf
-  bestSCA <- A
+  bestSeqCA <- A
 
   ## Step 4-22: For each row
   #for (i in N:1) { appears to work faster and better when starting at 1
@@ -190,24 +190,24 @@ reduce_rows_complete <- function(A, t, verbose = FALSE, ...) {
     if (success) {
      # print("hier1")
       deleteRow <- i
-      bestSCA <- scaB[-i, , drop = FALSE]
-      useful <- identify_needed(bestSCA, t)
+      bestSeqCA <- scaB[-i, , drop = FALSE]
+      useful <- identify_needed(bestSeqCA, t)
       which_first <- which_firstB[-i]
       if (any(rowSums(useful)==0)){
-        bestSCA <- bestSCA[!rowSums(useful)==0,]
+        bestSeqCA <- bestSeqCA[!rowSums(useful)==0,]
         useful <- useful[!rowSums(useful)==0,]
         which_first <- which_first[!rowSums(useful)==0]
       }
-      N <- nrow(bestSCA)
+      N <- nrow(bestSeqCA)
       if (verbose) cat("  Achieved reduction to ", N, "rows from ", Norig, "rows\n")
     }
-  return(bestSCA)
+  return(bestSeqCA)
 } ## end of function
 
 
 #' @export
 reduce_rows_iterative_complete <- function(A, t, verbose = FALSE, ...) {
-  stopifnot(coverageSCA(A, t)==1) ## also checks properties of A
+  stopifnot(coverageSeqCA(A, t)==1) ## also checks properties of A
   original_rows <- nrow(A)
   k <- ncol(A)
   current_A <- A
