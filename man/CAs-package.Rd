@@ -79,12 +79,13 @@ but still often relevant.\cr
 in the form stated by Colbourn (2008) in his Corollary 2.2, and the construction of Colbourn's Theorem 2.3.
 
 Furthermore, there are functions for the creation and inspection of sequence covering arrays
-(SeqCAs) (Kuhn et al. 2012, Murray and Colbourn 2015 (not yet implemented), Torres-Jimenez et al. 2022):
+(SeqCAs) (Levenshtein 1991 as detailed in Na 2021, Kuhn et al. 2012, Murray and Colbourn 2015 (not yet implemented), Torres-Jimenez et al. 2022):
 \itemize{
+\item \code{\link{SeqCA_Levenshtein}} for algebraic creation of a SeqCA of strength t with t+1 columns,
 \item \code{\link{greedySeqCA_naive}}, \code{\link{greedySeqCA_Kuhn}}, \code{\link{greedySeqCA_TJ}}
 and their iterative versions,
 \item \code{\link{coverageSeqCA}} and \code{\link{identify_needed}} for assessing coverage and usefulness / redundancy of SeqCA entries,
-\item \code{\link{reduce_rows_iterative_complete}} and \code{\link{optimize_SeqCA}} for reducing the run size of an SeqCA.
+\item \code{\link{reduce_rows_iterative_complete}} and \code{\link{optimize_SeqCA}} for reducing the run size of a SeqCA.
 }
 
 These functions are limited to SeqCAs for relatively small numbers of columns and strengths.
@@ -185,6 +186,8 @@ Kokkala, J. I., Meagher, K., Naserasr, R., Nurmela, K. J., Östergård, P. R. J.
 
 Kuhn, D.R., Higdon, J.M., Lawrence, J.F., Kacker, R.N. (2012). Combinatorial Methods for Event Sequence Testing. ICST '12: Proceedings of the 2012 IEEE Fifth International Conference on Software Testing, Verification and Validation, 601-609. https://doi.org/10.1109/ICST.2012.147
 
+Levenshtein, V.I. (1991). Perfect codes in the metric of deletions and insertions. Diskretnaya Matematik 3(1), 3-20.
+
 Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez, J., (2012). Cover starters for covering arrays of strength two. Discrete Math. vol. 312, 943-956. https://doi.org/10.1016/j.disc.2011.10.026
 
 Martirosyan, S. and Trung, T.V. (2004). On t-Covering Arrays. Des. Codes Cryptogr., vol. 32, no. 2, pp. 323–339. https://doi.org/10.1023/B:DESI.0000029232.40302.6d.
@@ -198,6 +201,8 @@ Meagher, K., (2005b). Covering Arrays on Graphs: Qualitative Independence Graphs
 Moura, L., Stardom, J., Stevens, B., Williams, A. (2003). Covering arrays with mixed alphabet sizes. J of Combinatorial Designs 11, 413-432. https://doi.org/10.1002/jcd.10059
 
 Murray, P.C., Colbourn, C.J. (2015). Sequence Covering Arrays and Linear Extensions. In: Jan, K., Miller, M., Froncek, D. (eds) Combinatorial Algorithms. IWOCA 2014. Lecture Notes in Computer Science(), vol 8986. Springer, Cham. https://doi.org/10.1007/978-3-319-19315-1_24
+
+Na, J. (2021). Perfect Sequence Covering Arrays. Master's thesis at Simon Fraser University. https://summit.sfu.ca/_flysystem/fedora/2022-09/etd21570.pdf
 
 Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized post-optimization of covering arrays. European Journal of Combinatorics 34, 91-103. https://doi.org/10.1016/j.ejc.2012.07.017
 

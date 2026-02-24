@@ -85,6 +85,12 @@ by initially implementing the simulated annealing pseudo code from the paper;
 it worked reasonably well for everything except implementing the perturbation.
 }
 
+\section{Warning}{
+
+The implementation of simulated annealing is very preliminary,
+and the \code{probreshuffle} argument does not work yet for positive probabilities.
+}
+
 \examples{
 ## a small SeqCA with originally 13 rows that is post-optimized quickly to 9
 A_TJ <- greedySeqCA_TJ(6,3, postopt = FALSE, seed=2323)

@@ -64,6 +64,10 @@
 #' by initially implementing the simulated annealing pseudo code from the paper;
 #' it worked reasonably well for everything except implementing the perturbation.
 #'
+#' @section Warning:
+#' The implementation of simulated annealing is very preliminary,
+#' and the \code{probreshuffle} argument does not work yet for positive probabilities.
+#'
 #' @seealso [greedySeqCA_TJ()] for the greedy method by
 #' Torres-Jimenez et al. (2022) and
 #' [reduce_rows_iterative_complete()] for the

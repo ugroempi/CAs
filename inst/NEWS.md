@@ -5,8 +5,9 @@
    (see file D15etalOptimized.RData in colbournTableReport folder)
  - TODO: check handling of flexible values by postopNCK and the mixed level 
    design creation functions
+ - check / conceptualize / improve class seqca
    
-February xx 2026, still version 0.23
+February 24 2026, still version 0.23
  - changed the acronym for "sequential covering array" to SeqCA instead of SCA 
    in order to avoid confusion with the special structure CA that is abbreviated as SCA
  - added function SeqCA_Levenshtein for optimal strength t SeqCAs with t+1 columns

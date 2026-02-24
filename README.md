@@ -276,9 +276,16 @@ form stated by Colbourn (2008) in his Corollary 2.2, and the
 construction of Colbourn’s Theorem 2.3.
 
 Furthermore, there are functions for the creation and inspection of
-sequence covering arrays (SeqCAs) (Kuhn et al. 2012, Murray and Colbourn
-2015 (not yet implemented), Torres-Jimenez et al. 2022):
+sequence covering arrays (SeqCAs) (Levenshtein 1991 as detailed in Na
+2021, Kuhn et al. 2012, Murray and Colbourn 2015 (not yet implemented),
+Torres-Jimenez et al. 2022):
 <ul>
+
+<li>
+
+<code>SeqCA_Levenshtein</code> for algebraic creation of a SeqCA of
+strength t with t+1 columns,
+</li>
 
 <li>
 
@@ -295,7 +302,7 @@ assessing coverage and usefulness / redundancy of SeqCA entries,
 <li>
 
 <code>reduce_rows_iterative_complete</code> and
-<code>optimize_SeqCA</code> for reducing the run size of an SeqCA.
+<code>optimize_SeqCA</code> for reducing the run size of a SeqCA.
 </li>
 
 </ul>
@@ -639,6 +646,12 @@ Verification and Validation, 601-609.
 
 <p>
 
+Levenshtein, V.I. (1991). Perfect codes in the metric of deletions and
+insertions. Diskretnaya Matematik 3(1), 3-20.
+</p>
+
+<p>
+
 Lobb, J.R., Colbourn, C.J., Danziger, P., Stevens, B., Torres-Jimenez,
 J., (2012). Cover starters for covering arrays of strength two. Discrete
 Math. vol. 312, 943-956. <https://doi.org/10.1016/j.disc.2011.10.026>
@@ -684,6 +697,13 @@ Murray, P.C., Colbourn, C.J. (2015). Sequence Covering Arrays and Linear
 Extensions. In: Jan, K., Miller, M., Froncek, D. (eds) Combinatorial
 Algorithms. IWOCA 2014. Lecture Notes in Computer Science(), vol 8986.
 Springer, Cham. <https://doi.org/10.1007/978-3-319-19315-1_24>
+</p>
+
+<p>
+
+Na, J. (2021). Perfect Sequence Covering Arrays. Master’s thesis at
+Simon Fraser University.
+<https://summit.sfu.ca/_flysystem/fedora/2022-09/etd21570.pdf>
 </p>
 
 <p>
