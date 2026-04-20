@@ -24,31 +24,18 @@ no guarantees!
 
 **CAs** is not yet on [CRAN](https://CRAN.R-project.org). If you want to
 work with this very preliminary version (see above warning), you can
-install **the latest status of the package** from this repository with:
+install the latest status of the package from this repository with:
 
 ``` r
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("ugroempi/CAs")
 ```
 
-or with the recommended newer tool 
-
-``` r
-if (!require(pak)) install.packages("pak")
-pak::pak("ugroempi/CAs")
-```
-
-or **obtain a specific frozen status via a tag** (so far the only tag is
+or obtain a specific frozen status via a tag (so far the only tag is
 `v0.21` for version 0.21):
 
 ``` r
 devtools::install_github("ugroempi/CAs", ref="v0.21")
-```
-
-or (recommended)
-
-``` r
-pak::pak("ugroempi/CAs@v.021")
 ```
 
 ## Details
@@ -58,8 +45,8 @@ array implementation relative to the empirical covering array numbers
 (eCANs) of the Colbourn tables, for v up to 10.*
 
 This package constructs covering arrays, i.e., arrays that cover all
-$`t`$-ary combinations of a set of factors at least once. The focus is
-on mathematical constructions. Initially, the package only offers arrays
+$t$-ary combinations of a set of factors at least once. The focus is on
+mathematical constructions. Initially, the package only offers arrays
 for which all columns have the same number of levels.
 
 The goal is to implement as many constructions as possible that yield
@@ -277,16 +264,16 @@ by Groemping (2025), that is based on expanding some columns of a (mixed
 or) uniform CA, after reducing their number of levels, by replacing the
 flexible values of those columns with suitable small matrices and
 replicating the rest of those columns the corresponding number of times.
-Its details can be found in Groemping (2025).<br />
-<code>CA_to_MCA</code> takes a uniform (or mixed level) array, removes
-levels (makes them flexible) as required.<br /> Both constructions may
-benefit from subsequent removal of as many rows as possible via the
-Nayeri et al. (2013) construction. For <code>CA_to_MCA</code>, this is
-the crucial step; for <code>MCA2</code>, gains are less dramatic, but
-still often relevant.<br /> <code>projBoseMCA</code> implements the
-mixed level construction by Stevens, Ling and Mendelsohn (2002) in the
-form stated by Colbourn (2008) in his Corollary 2.2, and the
-construction of Colbourn’s Theorem 2.3.
+Its details can be found in Groemping (2025).<br> <code>CA_to_MCA</code>
+takes a uniform (or mixed level) array, removes levels (makes them
+flexible) as required.<br> Both constructions may benefit from
+subsequent removal of as many rows as possible via the Nayeri et
+al. (2013) construction. For <code>CA_to_MCA</code>, this is the crucial
+step; for <code>MCA2</code>, gains are less dramatic, but still often
+relevant.<br> <code>projBoseMCA</code> implements the mixed level
+construction by Stevens, Ling and Mendelsohn (2002) in the form stated
+by Colbourn (2008) in his Corollary 2.2, and the construction of
+Colbourn’s Theorem 2.3.
 
 Furthermore, there are functions for the creation and inspection of
 sequence covering arrays (SeqCAs) (Levenshtein 1991 as detailed in Na
@@ -427,17 +414,16 @@ The figures show performance percentages relative to the best-known
 arrays as collated by Colbourn, status November 2024; there are figures
 for up to 10 levels and figures for up to 25 levels; the reference
 scenarii are created as the union of situations for which NIST (2008)
-has arrays ($`t=2,\dots,6`$, $`v=2,\dots,6`$ but not both 6, with $`k`$
-up to 2000 for $`t=2`$ and $`t=3`$ with $`v`$ up to 4, and decreasing
-maximum $`k`$ for larger $`t`$ and $`v`$) − these have an array for each
-individual $`k`$ − and the Colbourn table entries for $`t=2,\dots,6`$,
-$`v=2,\dots,25`$ and $`k`$ only where the necessary $`N`$ increases for
-the scenario; these are limited to situations with $`N\le1.000.000`$.
-This choice was based on convenience and could certainly be improved.
-For large $`v`$ (far outside of the NIST domain), the relative
-performance improves versus medium $`v`$; this is presumably due to a
-worse status of best-known arrays, not to a better status of
-implementation in the package.
+has arrays ($t=2,\dots,6$, $v=2,\dots,6$ but not both 6, with $k$ up to
+2000 for $t=2$ and $t=3$ with $v$ up to 4, and decreasing maximum $k$
+for larger $t$ and $v$) − these have an array for each individual $k$ −
+and the Colbourn table entries for $t=2,\dots,6$, $v=2,\dots,25$ and $k$
+only where the necessary $N$ increases for the scenario; these are
+limited to situations with $N\le1.000.000$. This choice was based on
+convenience and could certainly be improved. For large $v$ (far outside
+of the NIST domain), the relative performance improves versus medium
+$v$; this is presumably due to a worse status of best-known arrays, not
+to a better status of implementation in the package.
 
 ![](README_files/figure-gfm/status1-1.png)<!-- -->![](README_files/figure-gfm/status1-2.png)<!-- -->![](README_files/figure-gfm/status1-3.png)<!-- -->![](README_files/figure-gfm/status1-4.png)<!-- -->![](README_files/figure-gfm/status1-5.png)<!-- -->![](README_files/figure-gfm/status1-6.png)<!-- -->![](README_files/figure-gfm/status1-7.png)<!-- -->![](README_files/figure-gfm/status1-8.png)<!-- -->
 
@@ -756,8 +742,9 @@ of Transversal Covers Using Group Divisible Designs. Ars Combinatoria
 <p>
 
 Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering
-arrays.
-<a href="https://www.tamps.cinvestav.mx/~oc/">https://www.tamps.cinvestav.mx/~oc/</a>.
+arrays. Formerly available at <code>www . tamps . cinvestav . mx / ~oc
+/</code> (blanks must be removed, but no longer functional, no
+alternative location known).
 </p>
 
 <p>
