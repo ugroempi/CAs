@@ -7,8 +7,11 @@
 #' @aliases optimize_SeqCA
 #' @aliases simulated_annealing_sca
 #'
-#' @usage optimize_SeqCA(A, t, sa_params = list(), target=factorial(t), skipsa=FALSE, skipreduce=FALSE, verbose = FALSE, ...)
-#' @usage simulated_annealing_sca(A, t, maxAccepted = 100, maxAttempts = 1000, initialTemperature = 100, finalTemperature = 0.1, temperatureReduction = 0.95, probreshuffle=0, verbose = FALSE, ...)
+#' @usage optimize_SeqCA(A, t, sa_params = list(), target=factorial(t),
+#'            skipsa=FALSE, skipreduce=FALSE, verbose = FALSE, ...)
+#' @usage simulated_annealing_sca(A, t, maxAccepted = 100, maxAttempts = 500,
+#'            initialTemperature = 100, finalTemperature = 0.1,
+#'            temperatureReduction = 0.95, probreshuffle=0, verbose = FALSE, ...)
 #'
 #' @param A an SeqCA of strength \code{t}, or for \code{simulated_annealing_sca}, a partial SeqCA for which coverage is to be completed
 #' @param t the strength for which the coverage of all permutations of length t must be guaranteed for all \code{combn(k,t)} t-element subsets of 1,...,k (k the number of columns of A)
@@ -109,7 +112,7 @@ simulated_annealing_sca <- function(A, t,
                                     initialTemperature = 100,
                                     finalTemperature = 0.1,
                                     temperatureReduction = 0.95,
-                                    probreshuffle = 0.5,
+                                    probreshuffle = 0,
                                     verbose = FALSE, ...) {
   ## Input: A = partial SeqCA with some missing subsequences
   ## Output: complete or improved partial SeqCA

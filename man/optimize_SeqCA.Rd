@@ -5,9 +5,12 @@
 \alias{optimize_SeqCA}
 \title{Simulated Annealing for improving an SeqCA}
 \usage{
-optimize_SeqCA(A, t, sa_params = list(), target=factorial(t), skipsa=FALSE, skipreduce=FALSE, verbose = FALSE, ...)
+optimize_SeqCA(A, t, sa_params = list(), target=factorial(t),
+           skipsa=FALSE, skipreduce=FALSE, verbose = FALSE, ...)
 
-simulated_annealing_sca(A, t, maxAccepted = 100, maxAttempts = 1000, initialTemperature = 100, finalTemperature = 0.1, temperatureReduction = 0.95, probreshuffle=0, verbose = FALSE, ...)
+simulated_annealing_sca(A, t, maxAccepted = 100, maxAttempts = 500,
+           initialTemperature = 100, finalTemperature = 0.1,
+           temperatureReduction = 0.95, probreshuffle=0, verbose = FALSE, ...)
 }
 \arguments{
 \item{A}{an SeqCA of strength \code{t}, or for \code{simulated_annealing_sca}, a partial SeqCA for which coverage is to be completed}
