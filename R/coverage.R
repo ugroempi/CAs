@@ -158,7 +158,7 @@ coverage <- function(D, t, isInteger=TRUE,
   ## loop variant was as fast or slightly faster for 1 thread,
   ##    but much slower with foreach and doParallel
   ## thus, large cases are likely not doable
-  
+
   # Input validation with meaningful error messages
   if (!is.matrix(D) && !is.data.frame(D))
     stop("D must be a matrix or data.frame")
@@ -219,7 +219,7 @@ coverage <- function(D, t, isInteger=TRUE,
       gc()
     }, add = TRUE)
     parallel::clusterExport(mycl, c("projs", "D"), envir=environment())
-    parallel::clusterExport(mycl, c("fasttab"), envir=environment(CAs:::fasttab))
+    parallel::clusterExport(mycl, c("fasttab"), envir=environment(fasttab))
 #    tabs <- parallel::parLapply(mycl, 1:nproj,
 #                       function(obj) fasttab(D[,projs[,obj], drop=FALSE]))
     parallel::parApply(mycl, projs,2,

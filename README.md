@@ -1,6 +1,6 @@
 
 [![R](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml/badge.svg)](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml)
-[![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://codecov.io/github/ugroempi/CAs)
+[![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://app.codecov.io/github/ugroempi/CAs)
 
 <!--- DO NOT EDIT:  AUTOMATICALLY GENERATED from README.Rmd -->
 

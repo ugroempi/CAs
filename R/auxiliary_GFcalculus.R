@@ -89,7 +89,7 @@ gf_prod_list <- function (ll, gf, checks = TRUE)
       stop("all elements of ll must have the same length")
 
   }
-  gfprodnow <- function(obj1, obj2) CAs:::gf_prod(obj1, obj2, gf)
+  gfprodnow <- function(obj1, obj2) gf_prod(obj1, obj2, gf)
   base::Reduce(gfprodnow, ll)
 }
 

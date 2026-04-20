@@ -159,7 +159,7 @@ cycvec <- function(v, q, gf=NULL, primitive=NULL){
   cur <- p  ## current primitive
   for (i in 1:(q-1)) {
     xstart[cur+1] <- i  ## exponent of the primitive is 1
-    cur <- SOAs:::gf_prod(cur, p, gf) # next exponent
+    cur <- gf_prod(cur, p, gf) # next exponent
   }
   if (!all(table(xstart)==1)) stop("wrong primitive")
   xstart%%v
@@ -257,9 +257,56 @@ subia <- function(ia1, ia2){
 
 #' @exportS3Method NULL
 #'
-levels.no <- DoE.base:::levels.no
+## include levels.no here in order to avoid complaints
+## identical to DoE.base and SOAs
+levels.no <- function (x){
+    if ("no" %in% class(x))
+      stop("DoE.base:::levels.no is not a method for the generic base::levels")
+    xx <- x
+    ff <- FALSE
+    if (is.data.frame(xx)) {
+      if (any(ff <- sapply(xx, is.factor)))
+        nflevs <- sapply(xx[ff], nlevels)
+    }
+    aus <- apply(xx, 2, function(v) length(unique(v)))
+    if (any(ff))
+      aus[ff] <- nflevs
+    aus
+  }
 ord <- DoE.base::ord
-nchoosek <- DoE.base:::nchoosek
+## include nchoosek here in order to avoid complaints
+## identical to DoE.base and SOAs
+nchoosek <- function (n, k){
+    if (!is.numeric(n) || !is.numeric(k) || is.na(n) || is.na(k) ||
+        length(n) != 1 || length(k) != 1)
+      stop("arguments must be non-NA numeric scalars.")
+    if (k > n || k < 0)
+      stop("Arguments must satisfy 0 <= k <= n.")
+    nck = choose(n, k)
+    res = matrix(NA, nrow = k, ncol = nck)
+    res[, 1] = 1:k
+    j = 2
+    repeat {
+      if (j > nck)
+        break
+      res[, j] = res[, j - 1]
+      i = k
+      repeat {
+        res[i, j] = res[i, j] + 1
+        if (res[i, j] <= n - (k - i))
+          break
+        i = i - 1
+        stopifnot(i >= 1)
+      }
+      if (i < k)
+        res[(i + 1):k, j] = res[i, j] + 1:(k - i)
+      j = j + 1
+    }
+    stopifnot(all(res[, nck] == (n - k + 1):n))
+    stopifnot(all(res <= n) && all(res >= 1))
+    return(res)
+  }
+
 ## check for rows with the interaction in design D
 rho <- function(D, ia, start0=TRUE){
   ## D the design

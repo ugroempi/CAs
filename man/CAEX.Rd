@@ -133,7 +133,7 @@ dimsAchieved <- t(sapply(allCAEX, dim))
 colnames(dimsAchieved) <- c("N","k")
 k1Achieved <- sapply(allCAEX, function(obj) attr(obj, "PCAstatus")$k1)
 (CAEXinfos <- cbind(as.data.frame(cbind(dimsAchieved, k1=k1Achieved)),
-     method=unlist(lapply(CAs:::CAEX_lineages[[1]][[1]],
+     method=unlist(lapply(CAEX_lineages[[1]][[1]],
            function(obj) ifelse(is.character(obj), "stored", obj[1]))),
      k1_paper=c(4,4,6,7,14,15,22,31,34,45,69,76,99,144,138,185,294,295,414,
                 582,655,872,1327,1426,1938,2918,3210,4163,6262,6842,8838,

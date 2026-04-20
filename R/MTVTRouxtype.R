@@ -23,7 +23,7 @@
 #'
 #' @section Details:
 #'
-#' The constructions are based on a strength \code{t} CA A, a strength {t-1} CA B, a strength \code{t-2} CA C
+#' The constructions are based on a strength \code{t} CA A, a strength \code{t-1} CA B, a strength \code{t-2} CA C
 #' and, for one of the strength 4 constructions (with Theorem 4.3) as well as for the strength 5 construction,
 #' a strength 2 CA D.
 #' These ingredient CAs have c columns at \code{v} levels, where \code{c=ceiling(k/2)}, except

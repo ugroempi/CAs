@@ -92,7 +92,7 @@ while(i < nmax){
       else{
         ## check further values of a
         for (a in 1:(q-1)){
-          xnowa <- xstart[SOAs:::gf_sum(pick-1,rep(a,t),gf)+1]
+          xnowa <- xstart[gf_sum(pick-1,rep(a,t),gf)+1]
           if (all(vnow==xnowa)) fullfillnow <- TRUE
           ## leave a loop after success
           if (fullfillnow) break
@@ -149,7 +149,7 @@ checkcond2 <- function(t,v,q, iter=FALSE, progress=FALSE){
       else{
         ## check further values of a
         for (a in 1:(q-1)){
-          xnowa <- xstart[SOAs:::gf_sum(pick-1,rep(a,t),gf)+1]
+          xnowa <- xstart[gf_sum(pick-1,rep(a,t),gf)+1]
           if (all(vnow==xnowa)) fullfillnow <- TRUE
           ## leave a loop after success
           if (fullfillnow) break
@@ -207,7 +207,7 @@ checkcond3 <- function(t,v,q,iter=FALSE, progress=FALSE){
         ## check further values of a
         if (!fullfillnow){
         for (a in 1:(q-1)){
-          xnowa <- xstart[SOAs:::gf_sum(pick-1,rep(a,t),gf)+1]
+          xnowa <- xstart[gf_sum(pick-1,rep(a,t),gf)+1]
           ## check for r==0
           if (all(vnow==xnowa)) fullfillnow <- TRUE
           else{
@@ -308,7 +308,7 @@ checkcond4 <- function(t,v,q,iter=FALSE, progress=FALSE){
         ## check further values of a
         if (!fullfillnow){
           for (a in 1:(q-1)){
-            xnowa <- xstart[SOAs:::gf_sum(pick-1,rep(a,t),gf)+1]
+            xnowa <- xstart[gf_sum(pick-1,rep(a,t),gf)+1]
             ## check for r==0
             if (all(vnow==xnowa)) fullfillnow <- TRUE
             else{

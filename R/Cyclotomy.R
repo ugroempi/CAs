@@ -174,7 +174,7 @@ cyc <- function(q, v, k=NULL, type=NULL, primitive=NULL){
     cur <- p  ## current primitive
     for (i in 1:(q-1)) {
       xstart[cur+1] <- i  ## exponent of the primitive
-      cur <- SOAs:::gf_prod(cur, p, gf)
+      cur <- gf_prod(cur, p, gf)
     }
     if (!all(table(xstart)==1)) stop("wrong primitive")
     xstart <- xstart%%v

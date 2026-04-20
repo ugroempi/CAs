@@ -7,7 +7,7 @@ Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
 Description: Implements mathematical constructions of covering arrays. Provides  
     diagnostic functions for assessing coverage properties.
 Depends: R (>= 3.5.0)
-Imports: lhs, DoE.base, SOAs, sets, prepplot, primes, igraph, permutations, dplyr, curl, gmp, conf.design, sfsmisc, combinat
+Imports: lhs, DoE.base, sets, prepplot, primes, igraph, permutations, dplyr, curl, gmp, conf.design, sfsmisc, combinat
 Suggests: parallel, FrF2, testthat (>= 3.0.0)
 License: GPL-3
 LazyData: true

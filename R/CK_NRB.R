@@ -47,7 +47,7 @@ CK_NRB <- function(k, v){
   ## the function is dealt with in three portions
   if (v==3){
       ## copy-paste from Chateauneuf Colbourn Kreher 1999
-      aus <- t(CAs:::funmakefromstrings(
+      aus <- t(funmakefromstrings(
       c("012211200220110021121022021001012",
       "122102002101102211200220110012012" ,
       "221010021211020112022201000121012" ,
@@ -64,7 +64,7 @@ CK_NRB <- function(k, v){
       ## creation of ca88.4.8
       ## M is copy-paste from Chateauneuf Colbourn Kreher 1999
       ## with typos fixed
-      M <- CAs:::funmakefromstrings(
+      M <- funmakefromstrings(
       c("0000000",
       "0233121" ,
       "1023312" ,
