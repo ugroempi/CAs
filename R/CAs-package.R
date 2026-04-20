@@ -201,7 +201,7 @@
 #'
 #' Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction of Transversal Covers Using Group Divisible Designs. Ars Combinatoria 63, 145-159.
 #'
-#' Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. Formerly available at \code{https://www . tamps.cinvestav . mx / ~oc/} (blanks must be removed, but no longer functional, no alternative location known).
+#' Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering arrays. Formerly available at \code{www . tamps . cinvestav . mx / ~oc /} (blanks must be removed, but no longer functional, no alternative location known).
 #'
 #' Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. https://doi.org/10.1016/j.amc.2021.126122
 #'
