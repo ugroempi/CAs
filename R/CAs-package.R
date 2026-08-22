@@ -129,7 +129,7 @@
 #'
 #' Cohen, M.B., Colbourn, C.J., Ling, A.C.H. (2008). Constructing strength three covering arrays with augmented annealing. Discrete Mathematics 308, 2709-2722. https://doi.org/10.1016/j.disc.2006.06.036
 #'
-#' Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6, t≤k ≤10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
+#' Colbourn, C.J. (without year). Covering array tables: 2 <= v <= 25, 2 <= t <= 6, t <= k <= 10000, 2005–23. \url{https://www.public.asu.edu/~ccolbou/src/tabby}.
 #'
 #' Colbourn, C.J., (2004). Combinatorial aspects of covering arrays. Matematiche (Catania) 59, 125-172.
 #'

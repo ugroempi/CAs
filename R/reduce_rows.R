@@ -133,6 +133,7 @@ reduce_rows_complete <- function(A, t, verbose = FALSE, ...) {
       for (row_j in setdiff(1:N, i)) {
         ## inner loop for replacement rows
         ################## this part should never be reached
+        ################## but it is reached regularly in iter_greedySeqCA_TJ
         if (funcheck(scaB[row_j, ], seq)) {
             if (row_j < i) print("This is surprising and should not have happened")
             ## is already covered without reshuffling

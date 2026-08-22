@@ -25,7 +25,7 @@
 #' replacing the levels of the DHHF with the columns of the corresponding CA from
 #' \code{Dlist},\cr
 #' leaving out the rho_i constant rows of the ith CA and adding a few (chi) constant rows back
-#' in, if needed, where chi = max(0, v − sum_i=1^c u_i*(v - rho_i)).
+#' in, if needed, where chi = max(0, v - sum_i=1^c u_i*(v - rho_i)).
 #' The construction is from Theorem 2.3 of Colbourn and Torres-Jimenez (2010).\cr
 #' The function uses function \code{maxconstant} to maximize the constant rows of the CAs.
 #'

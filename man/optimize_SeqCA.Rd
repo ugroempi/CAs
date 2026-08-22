@@ -78,7 +78,7 @@ but for these, the run time will often be prohibitive.
 
 If \code{optimize_SeqCA} is stuck in simulated annealing iterations,
 having achieved some progress but neither improving nor finishing, the process can
-be interrupted by pressing the \if{html}{\out{<ESC>}}-key, in which case it will return the last successful outcome.
+be interrupted by pressing the \code{<ESC>}-key, in which case it will return the last successful outcome.
 }
 
 \section{Use of AI}{

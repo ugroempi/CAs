@@ -60,7 +60,7 @@
 #'
 #' If \code{optimize_SeqCA} is stuck in simulated annealing iterations,
 #' having achieved some progress but neither improving nor finishing, the process can
-#' be interrupted by pressing the <ESC>-key, in which case it will return the last successful outcome.
+#' be interrupted by pressing the \code{<ESC>}-key, in which case it will return the last successful outcome.
 #'
 #' @section Use of AI:
 #' Claude 4 was heavily involved in the development of these functions,

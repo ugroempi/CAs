@@ -31,7 +31,7 @@ Function to construct a larger CA by replacing levels of a DHF with columns of a
 A PHF is a perfect hash family, a DHF a distributed hash family (weaker condition).\cr
 Function \code{DHF2CA} yields a CA(chi + (N-rho)*M, t, k, v) from replacing the levels
 of the DHF (or the PHF) with the columns of the CA, leaving out the constant rows of the CA
-and adding a few (chi) back in, if needed, where chi=max(0, rho - (M - 1)(v − rho)),
+and adding a few (chi) back in, if needed, where chi=max(0, rho - (M - 1)(v - rho)),
 according to Corollary 2.4 of Colbourn and Torres-Jimenez (2010).\cr
 The function uses function \code{maxconstant} to maximize the constant rows of the CA.
 
