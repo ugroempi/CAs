@@ -1,7 +1,7 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.23
+Version: 0.24
 Authors@R: person(given = "Ulrike",
                     family = "Groemping",
                     role = c("aut", "cre"),
@@ -18,5 +18,5 @@ Encoding: UTF-8
 URL: https://github.com/ugroempi/CAs
 BugReports: https://github.com/ugroempi/CAs/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

@@ -10,7 +10,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.23
+- **Version**: 0.24
 
 ## Warning
 
@@ -403,10 +403,8 @@ can only be accessed with an internet connection.
 
 The R objects are available in the <code>data</code> folder of the
 package, corresponding raw data and construction code can be found in
-the <code>extdata</code> folder of the package, which can be located in
-the directory <code>inst/extdata</code> of the GitHub repo or, for a
-given R installation, using <code>system.file(“extdata”,
-package=“CAs”)</code> from within R.
+the <code>extdata</code> folder for the package, which can be located in
+the directory <code>inst/extdata</code> of the GitHub repo.
 
 ## Current status of package implementation (for uniform CAs only)
 
@@ -483,8 +481,8 @@ three covering arrays with augmented annealing. Discrete Mathematics
 
 <p>
 
-Colbourn, C.J. (without year). Covering array tables: 2 ≤v ≤25, 2 ≤t≤6,
-t≤k ≤10000, 2005–23.
+Colbourn, C.J. (without year). Covering array tables: 2 \<= v \<= 25, 2
+\<= t \<= 6, t \<= k \<= 10000, 2005–23.
 <a href="https://www.public.asu.edu/~ccolbou/src/tabby">https://www.public.asu.edu/~ccolbou/src/tabby</a>.
 </p>
 
