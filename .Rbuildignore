@@ -2,12 +2,9 @@
 ^\.Rproj\.user$
 ^\.gitignore$
 ^\.Rhistory$
-^\.CITATION\.cff$
+^\CITATION\.cff$
 ^.*\.yml$
 ^.*\.md$
 ^\.github$
 ^README_files$
-<<<<<<< HEAD
 ^inst/extdata$
-=======
->>>>>>> a47cc28eb7751079a6ca8abd5c9545b652ad8f10
