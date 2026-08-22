@@ -1,2 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.gitignore$
+^\.Rhistory$
+^\.CITATION\.cff$
+^.*\.yml$
+^.*\.md$
+^\.github$
+^README_files$
+^inst/extdata$
