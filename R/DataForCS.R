@@ -65,8 +65,8 @@ globalVariables(c("LCDSTStarters", "LCDSTCombis",
 #' For more details, see also the documentation of functions
 #' \code{\link{CS_MS}}, \code{\link{CS_LCDST}} and \code{\link{CS_CK}}.\cr
 #' The creation of the objects is documented by R files in the \code{extdata}
-#' folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")}.
+#' folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo.
 #'
 #' @references Meagher and Stevens (2005), Colbourn and Keri (2009),
 #' Lobb, Colbourn, Danziger, Stevens and Torres-Jimenez (2012, LCDST)

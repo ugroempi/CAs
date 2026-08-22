@@ -19,8 +19,8 @@ globalVariables(c("WKScat", "WCS_CAs"))
 #' The reference is Wagner, Kampel and Simos (2021), and the arrays
 #' were downloaded at \url{https://srd.sba-research.org/data/sipo/}.\cr
 #' The creation of the objects is documented by R files in the \code{extdata}
-#' folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")}; the relatively large
+#' folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo; the relatively large
 #' raw arrays are not provided there, as they are available on the web.
 #'
 #' @section Details:

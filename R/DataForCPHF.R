@@ -26,8 +26,8 @@ globalVariables(c("WCS_CPHFs", "CPHFcat"))
 #' \code{\link{cphfCA}}.\cr
 #' The creation of the objects is documented in the R file
 #' \code{WCS_CPHFs_from_read.R} in the \code{extdata}
-#' folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")};
+#' folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo;
 #' the implemented raw CPHFs are not available in the package.
 #'
 #' @references Wagner, Colbourn and Simos (2022) and

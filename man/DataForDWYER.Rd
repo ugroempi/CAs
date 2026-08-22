@@ -14,8 +14,8 @@ The source is Dwyer (2024), who cites personal communications with Colbourn as t
 source of many of the arrays; there is some overlap between this repository and
 \code{\link{CKRScat}}.\cr
 The creation of the object is documented by an R file in the \code{extdata}
-folder of this package, which can be located using
-\code{system.file("extdata", package="CAs")}; the many
+folder for this package, which can be located in the directory \code{inst/extdata}
+of the GitHub repo; the many
 raw arrays are not provided there, as they are available on the web.
 }
 \usage{

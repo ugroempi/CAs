@@ -15,8 +15,8 @@ globalVariables("NISTcat")
 #' @source
 #' The source is NIST (2008).\cr
 #' The creation of the object is documented by the R file \code{NISTcat_create.R}
-#' in the \code{extdata} folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")}; the many
+#' in the \code{extdata} folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo; the many
 #' raw arrays are not provided there, as they are available on the web.
 #'
 #' @section Details:

@@ -44,8 +44,8 @@ globalVariables(c("ca12.2.8", "ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261
 #' \code{oa1728.12.6} was created by the package author using construction 2
 #' of Ji and Yin (2010).\cr
 #' The creation of the objects is documented by the R file \code{miscCAs.R}
-#' in the \code{extdata} folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")}.
+#' in the \code{extdata} folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo.
 #'
 #' @references Cohen, Colbourn and Ling (2003) and Cohen (personal communication), Colbourn and Torres-Jimenez (2010), Ji and Yin (2010), Kokkala et al. (2018)
 #'

@@ -25,8 +25,8 @@ Colbourn and Torres-Jimenez (2010).\cr
 The data have been compiled based on the data.frame \code{colbournBigFrame}
 that holds the information from the Colbourn tables, and based on the paper by
 Colbourn and Torres-Jimenez (2010) for the construction. The code can be found
-the \code{extdata} folder of this package, which can be located using
-\code{system.file("extdata", package="CAs")}.
+the \code{extdata} folder for this package, which can be located in the directory \code{inst/extdata}
+of the GitHub repo.
 }
 \usage{
 powerCTcat

@@ -21,8 +21,8 @@ globalVariables("colbournBigFrame")
 #' \url{https://web.archive.org/web/20231118015055/https://www.public.asu.edu/~ccolbou/src/tabby},
 #' and a web version of the data frame is at \url{https://github.com/ugroempi/CAs/blob/main/ColbournTables.md}.\cr
 #' The creation of the object is documented by the R file \code{colbournBigFrame_create.R} in the \code{extdata}
-#' folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")}
+#' folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo.
 #'
 #' @section Details:
 #' Until recently, the Colbourn (without year) tables were an authoritative source

@@ -107,10 +107,8 @@
 #'
 #' The R objects are available in the \code{data} folder of the package,
 #' corresponding raw data and construction code can be found in the
-#' \code{extdata} folder of the package, which can be located in the
-#' directory \code{inst/extdata} of the GitHub repo or, for a given
-#' R installation, using \code{system.file("extdata", package="CAs")}
-#' from within R.
+#' \code{extdata} folder for the package, which can be located in the
+#' directory \code{inst/extdata} of the GitHub repo.
 #'
 #' @author Author: Ulrike Groemping, BHT Berlin.
 #'

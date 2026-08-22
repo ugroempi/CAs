@@ -29,8 +29,8 @@ globalVariables(c("PCAcat", "DPcat"))
 #' based on ingredients created with the functions \code{\link{SCA_Bose}}, \code{\link{miscCA}},
 #' \code{\link{CS_MS}}, \code{\link{CS_LCDST}} (\code{f=1} only) and \code{\link{CS_CMMSSY}}.\cr
 #' The creation of the objects is documented by the R files \code{create_PCAcat.R} and
-#' \code{create_DPcat.R} in the \code{extdata} folder of this package, which can be located using
-#' \code{system.file("extdata", package="CAs")}. That folder also holds the candidate ingredients
+#' \code{create_DPcat.R} in the \code{extdata} folder for this package, which can be located in the directory \code{inst/extdata}
+#' of the GitHub repo. That folder also holds the candidate ingredients
 #' used in the constructions in the file \code{PCA_cands.rda} and \code{DP_cands.rda}.
 #'
 #' @references Colbourn et al. (2006), Colbourn and Torres-Jimenez (2013), Bose (1938), Meagher and Stevens (2005), Colbourn and Keri (2009),

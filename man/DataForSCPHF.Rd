@@ -53,8 +53,8 @@ For more details, see also the documentation of function
 \code{\link{scphfCA}}.\cr
 The creation of the objects is documented in the R files \code{SherwoodMartirosyanColbournCPHF.R},
 \code{Lanus_SCPHFs_from_DwyerRepo.R} and \code{SCPHF_dimchecks.R} in the \code{extdata}
-folder of this package, which can be located using
-\code{system.file("extdata", package="CAs")}; the implemented raw SCPHFs from the DWYER
+folder for this package, which can be located in the directory \code{inst/extdata}
+of the GitHub repo; the implemented raw SCPHFs from the DWYER
 repo are in the sub folder \code{SCPHFs} of that folder.
 }
 

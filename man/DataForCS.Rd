@@ -102,8 +102,8 @@ Lists ...Combis and ...Starters support cover starter constructions.
 For more details, see also the documentation of functions
 \code{\link{CS_MS}}, \code{\link{CS_LCDST}} and \code{\link{CS_CK}}.\cr
 The creation of the objects is documented by R files in the \code{extdata}
-folder of this package, which can be located using
-\code{system.file("extdata", package="CAs")}.
+folder for this package, which can be located in the directory \code{inst/extdata}
+of the GitHub repo.
 }
 
 \examples{

@@ -46,8 +46,8 @@ Small corrections to Colbourn's Table 1 were needed for primes 7,
 13 (strength 3 not possible) and 17 (no row can be removed).
 
 The creation of the objects is documented by R files in the \code{extdata}
-folder of this package, which can be located using
-\code{system.file("extdata", package="CAs")}.
+folder for this package, which can be located in the directory \code{inst/extdata}
+of the GitHub repo.
 }
 \usage{
 PALEYcat
