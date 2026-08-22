@@ -2,8 +2,10 @@ Package: CAs
 Type: Package
 Title: Creating Covering Arrays
 Version: 0.23
-Author: Ulrike Groemping
-Maintainer: Ulrike Groemping <ulrike.groemping@bht-berlin.de>
+Authors@R: person(given = "Ulrike",
+                    family = "Groemping",
+                    role = c("aut", "cre"),
+                    email = "ulrike.groemping@bht-berlin.de")
 Description: Implements mathematical constructions of covering arrays. Provides  
     diagnostic functions for assessing coverage properties.
 Depends: R (>= 3.5.0)
