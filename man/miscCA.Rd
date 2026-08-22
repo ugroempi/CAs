@@ -25,13 +25,13 @@ a seed is randomly obtained and stored in the attribute
 
 \item{maxconstant}{logical: should constant rows be maximized ?\cr
 ignored for internal arrays, applied for arrays loaded
-from package \pkg{\link{DoE.base}} only;
+from package \pkg{\link[DoE.base]{DoE.base}} only;
 per default, the array is not modified and may not even
 have a single constant row}
 
 \item{makePCA}{logical: should a PCA structure be enforced ?\cr
 ignored for internal arrays, applied for arrays loaded
-from package \pkg{\link{DoE.base}} only\cr
+from package \pkg{\link[DoE.base]{DoE.base}} only\cr
 If both \code{makePCA} and \code{maxconstant} are TRUE,
 \code{maxconstant} takes precedence.}
 
@@ -65,5 +65,5 @@ Ns(2,14,4)  ## best possible
 }
 \references{
 Ji and Yin (2010), Colbourn and Torres-Jimenez (2013), Kuhfeld (w/o year),
-\pkg{\link{DoE.base}}
+\pkg{\link[DoE.base]{DoE.base}}
 }

@@ -26,7 +26,7 @@
 #'        It handles CPHFs for which the first entry of the permutation vector refers to the highest power,
 #'        and which were constructed with Galois fields from SageMath or the Python \code{numbthy} module
 #'        (relevant only for prime powers 8, 9, 16, 25; also implemented in this package via the internal function \code{mygf})\cr
-#'        Any type different from the default requests use of the built-in Galois fields of R package \code{\link{lhs}}.
+#'        Any type different from the default requests use of the built-in Galois fields of R package \pkg{\link[lhs]{lhs}}.
 #' @param ... currently not used
 #'
 #' @returns Function \code{cphfCA} returns a matrix of class \code{ca} with attributes,
@@ -59,7 +59,7 @@
 #' require a different Galois field than otherwise used in this package; these deviating
 #' Galois fields are created with the internal function \code{mygf}; function \code{WCS} takes
 #' the argument \code{type}, with which these Galois fields are activated (per default), but can
-#' also be deactivated in favor of the Galois fields of package \code{\link{lhs}}
+#' also be deactivated in favor of the Galois fields of package \pkg{\link[lhs]{lhs}}
 #' by specifying any type different from \code{"2022"}.\cr
 #' The data frame \code{\link{CPHFcat}} holds the overview information on which constructions
 #' are implemented for function \code{cphfCA}.

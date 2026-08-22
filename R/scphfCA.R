@@ -25,7 +25,7 @@
 #' @param type string: "2006" refers to the original implementation by Sherwood,
 #'     Martirosyan and Colbourn (2006), which uses non-default Galois fields for q=8,9;\cr
 #'     string "2009" refers to SCPHFs from Walker and Colbourn (2009) which also uses non-default Galois fields for q=8,9, and uses a different one for \code{type="2006"} for q=9;\cr
-#'     anything else uses the built-in Galois fields of package \code{\link{lhs}}
+#'     anything else uses the built-in Galois fields of package \pkg{\link[lhs]{lhs}}
 #' @param N integer: affordable run size
 #' @param ... currently not used
 #'

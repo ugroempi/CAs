@@ -13,7 +13,7 @@ globalVariables(c("ca12.2.8", "ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261
 #' have their rows arranged such that constant rows are
 #' at the top or in PCA format; if there are fewer than \code{v} constant rows, they are
 #' usually arranged in PCA format (see \code{\link{productPCA}}).\cr
-#' \code{miscCAcat} also contains references to orthogonal arrays from R package \pkg{\link{DoE.base}},
+#' \code{miscCAcat} also contains references to orthogonal arrays from R package \pkg{\link[DoE.base]{DoE.base}},
 #' e.g. \code{DoE.base::L81.3.5-1}, which is an OA(81,4,5,3)
 #' (strength 4; 1 is subtracted, because OAs in that package
 #' are coded with levels starting at 1,
@@ -25,7 +25,7 @@ globalVariables(c("ca12.2.8", "ca26.4.15", "oa1728.12.6", "oa3375.15.6", "oa9261
 #' \code{oa1728.12.6}, \code{3375.15.6} and \code{oa9261.21.6} are strength 3
 #' orthogonal arrays (classes \code{ca} and \code{oa})
 #' and matrices with levels starting at 0.
-#' They might eventually reside in the R package \pkg{\link{DoE.base}}.
+#' They might eventually reside in the R package \pkg{\link[DoE.base]{DoE.base}}.
 #'
 #' \code{miscCAcat} is a data.frame that collects the properties of all the
 #' CAs (including orthogonal arrays and the CAs from within \code{CohenSA})
