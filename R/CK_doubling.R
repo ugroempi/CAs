@@ -34,7 +34,12 @@
 #'
 #' @details
 #' \code{CK_doublingCA} is the interface function that uses the workhorse
-#' function \code{CK_doubling}.
+#' function \code{CK_doubling} and should normally be used.
+#'
+#' When directly using \code{CK_doubling}, the user
+#' is responsible for ensuring validity of ingoing \code{D3} and, if provided, \code{D2}.
+#' For \code{check=FALSE}, a result with strength less than 3 will be returned
+#' in case of inadequate ingoing matrices.
 #'
 #' Chateauneuf and Kreher's (2002) doubling contributes a few best-known
 #' strength 3 CAs to the Colbourn tables; in particular, where v is a prime
@@ -58,6 +63,8 @@
 #' @examples
 #' (E1 <- CK_doublingCA(8, 2))
 #' coverage(E1, 3)  ## successful
+#' ## faster TRUE/FALSE check
+#' caverify::ca_verify(E1, 3)$coverage
 #' eCAN(3,8,2)   ## not optimal, but close
 #'
 #' ## the above was achieved with these ingredients:
@@ -100,17 +107,17 @@ CK_doubling <- function(D3, D2=NULL, check=FALSE, start0=TRUE, ...){
   ll <- levels.no(D3)
   stopifnot(length(unique(ll))==1)
   v <- ll[1]
-  if (check) stopifnot(all(coverage(D3,3)==1))
-  k <- ncol(D3)
   if (start0) stopifnot(min(D3)==0) else stopifnot(min(D3)==1)
+  if (check) stopifnot(ca_verify(D3, 3)$covered)
+  k <- ncol(D3)
   ## checks for non-NULL D2
   if (!is.null(D2)){
     if (!is.matrix(D2)) D2 <- as.matrix(D2)
     stopifnot(ncol(D2)>=k)
     ll <- levels.no(D2)
     stopifnot(all(ll==v))
-    if (check) stopifnot(all(coverage(D2,2)==1))
     if (start0) stopifnot(min(D2)==0) else stopifnot(min(D2)==1)
+    if (check) stopifnot(ca_verify(D2,2)$covered)
   }
   ## provide the best implemented CA for D2
   if (is.null(D2)) D2 <- bestCA(2, k, v) + as.numeric(!start0)

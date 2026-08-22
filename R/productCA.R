@@ -158,8 +158,8 @@ productCA <- function(D1, D2, c1=NA, c2=NA, check=FALSE, dupremove=TRUE, general
   # infer start0
   start0 <- (min(D1, na.rm=TRUE)==0)
   if(check){
-    stopifnot(all(coverage(D1, 2, start0=start0)==1))
-    stopifnot(all(coverage(D2, 2, start0=start0)==1))
+    stopifnot(caverify::ca_verify(D1, 2)$covered)
+    stopifnot(caverify::ca_verify(D2, 2)$covered)
   }
   k <- ncol(D1);
   l <- ncol(D2)

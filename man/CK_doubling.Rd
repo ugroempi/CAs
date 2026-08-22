@@ -56,7 +56,12 @@ and M runs (Thms 4.1 and 4.5)
 }
 \details{
 \code{CK_doublingCA} is the interface function that uses the workhorse
-function \code{CK_doubling}.
+function \code{CK_doubling} and should normally be used.
+
+When directly using \code{CK_doubling}, the user
+is responsible for ensuring validity of ingoing \code{D3} and, if provided, \code{D2}.
+For \code{check=FALSE}, a result with strength less than 3 will be returned
+in case of inadequate ingoing matrices.
 
 Chateauneuf and Kreher's (2002) doubling contributes a few best-known
 strength 3 CAs to the Colbourn tables; in particular, where v is a prime
@@ -68,6 +73,8 @@ the designs are at present (13 Feb 2025) best-known for v >= 5.
 \examples{
 (E1 <- CK_doublingCA(8, 2))
 coverage(E1, 3)  ## successful
+## faster TRUE/FALSE check
+caverify::ca_verify(E1, 3)$coverage
 eCAN(3,8,2)   ## not optimal, but close
 
 ## the above was achieved with these ingredients:

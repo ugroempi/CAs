@@ -9,6 +9,8 @@
 #' @aliases prepcoverplot
 #' @aliases coverplot
 #'
+#' @import caverify
+#'
 #' @usage coverage(D, t, isInteger=TRUE, verbose=0, start0=TRUE, parallel=1)
 #' @usage coverage_iter(D, t, isInteger=TRUE, start0=TRUE,
 #'        progress=FALSE, abortnot1=FALSE, start.proj=1)
@@ -60,6 +62,11 @@
 #' and \code{proportions} (from call with \code{verbose=1}).
 #'
 #' @section Details:
+#' If one only needs a TRUE/FALSE check of whether or not perfect coverage is reached,
+#' accompanied by the number of uncovered t-tuples and some examples, function
+#' \code{\link[caverify]{ca_verify}} of package \pkg{caverify} is much faster than function
+#' \code{coverage}.
+#'
 #' Function \code{coverage_iter} calculates the same quantities as function \code{coverage};
 #' instead of creating all projections at once, it creates them iteratively, which is slower
 #' but doable for large cases for which function \code{coverage} fails for memory reasons.
@@ -99,6 +106,8 @@
 #' For function \code{coverage_iter}, in case of starting at projection \code{start.now},
 #' the user is responsible to ensure that all prior runs have also been checked; the calculated
 #' values assume that the prior runs showed perfect coverage.
+#'
+#' @seealso [caverify::ca_verify()]
 #'
 #' @examples
 #' ## fixed levels

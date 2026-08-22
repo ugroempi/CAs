@@ -85,7 +85,8 @@ eCAN(3,16,4)   ## size matches eCAN
 CL_SCPHFs[["3"]][["4"]][["55"]]
 D <- scphfCA(3,55,4)
 dim(D)
-\dontrun{coverage(D,3, parallel=4)}
+\dontrun{coverage(D,3, parallel=4)} ## about 3 seconds
+caverify::ca_verify(D, 3)
 Ns(3,55,4)   ## best implemented
 
 # strength 4

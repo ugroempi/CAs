@@ -83,6 +83,11 @@ and for visualizing those
 }
 \section{Details}{
 
+If one only needs a TRUE/FALSE check of whether or not perfect coverage is reached,
+accompanied by the number of uncovered t-tuples and some examples, function
+\code{\link[caverify]{ca_verify}} of package \pkg{caverify} is much faster than function
+\code{coverage}.
+
 Function \code{coverage_iter} calculates the same quantities as function \code{coverage};
 instead of creating all projections at once, it creates them iteratively, which is slower
 but doable for large cases for which function \code{coverage} fails for memory reasons.
@@ -166,4 +171,7 @@ if (require(FrF2)){
    print(coverage(CA3.2tothe14, 3, isInteger=FALSE))
    }
 
+}
+\seealso{
+\code{\link[caverify:ca_verify]{caverify::ca_verify()}}
 }

@@ -117,7 +117,7 @@ recursiveBoseHartman <- function(q, A=NULL, d=NULL, ...){
     }
     stopifnot(all(A %in% 0:(q-1)))
     if(length(unique(levels.no(A)))>1) stop("All columns of A must have the same number of levels.")
-    stopifnot(all(coverage(A,2)==1))
+    stopifnot(caverify::ca_verify(A,2)$covered)
   }
   if (is.null(d)){
     k <- ncol(A)
@@ -153,8 +153,10 @@ N_k_recursiveBoseHartman_A <- function(q, A, ...){
     A <- A - 1
   }
   stopifnot(all(A %in% 0:(q-1)))
-  if(length(unique(levels.no(A)))>1) stop("All columns of A must have the same number of levels.")
-  if (!all(coverage(A,2)==1)) stop("A must be a strength 2 covering array.")
+  if(length(unique(levels.no(A)))>1)
+    stop("All columns of A must have the same number of levels.")
+  if (!caverify::ca_verify(A,2)$covered)
+    stop("A must be a strength 2 covering array.")
   N <- nrow(A); k <- ncol(A)  ## ingoing N and k
   return(c(N=N+q^2-q, k=q*k+1))
 }

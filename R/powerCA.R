@@ -67,7 +67,7 @@
 #' @export
 powerCA <- function(t, k, v, type="CT", ...){
   Call <- sys.call()
-  
+
   # Input validation with meaningful error messages
   if (missing(t))
     stop("t (interaction strength) must be specified")
@@ -85,7 +85,7 @@ powerCA <- function(t, k, v, type="CT", ...){
     stop("type must be a single character string")
   if (type != "CT")
     stop("currently only type='CT' is implemented")
-  
+
   pick <- which(powerCTcat$t >= t &
                   powerCTcat$k >= k &
                   powerCTcat$v == v )
@@ -187,7 +187,7 @@ k_powerCT <- function(t,N,v, type="CT", ...){
 #     D <- D - 1
 #   }
 #   if (check){
-#     stopifnot(all(coverage(D,t)==1))
+#     stopifnot(caverify::ca_verify(D, t)$covered)
 #   }
 #   ## need a difference matrix D(k, choose(t,2)+1, 1)
 #

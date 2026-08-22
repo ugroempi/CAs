@@ -61,7 +61,7 @@ CK_constrD <- function(D3, D2=NULL,
   ll <- levels.no(D3)
   stopifnot(length(unique(ll))==1)
   v <- unname(ll[1])
-  if (check) stopifnot(all(coverage(D3,3)==1))
+  if (check) stopifnot(caverify::ca_verify(D3,3)$covered)
   k <- ncol(D3)
   if (start0) stopifnot(min(D3)==0) else stopifnot(min(D3)==1)
   ## checks for non-NULL D2
@@ -70,7 +70,7 @@ CK_constrD <- function(D3, D2=NULL,
     stopifnot(ncol(D2)>=k-1)
     ll <- levels.no(D2)
     stopifnot(all(ll==v))
-    if (check) stopifnot(all(coverage(D2, 2)==1))
+    if (check) stopifnot(caverify::ca_verify(D2, 2)$covered)
     if (start0) stopifnot(min(D2)==0) else stopifnot(min(D2)==1)
   }
   ## provide the best implemented CA for D2

@@ -200,6 +200,8 @@ dim(D)
 eCAN(2,405,3) ## slightly worse than the best CA, which is obtained as CAEX(N=27)
 is.PCA(D) ## is already good and cannot be further improved by the simple method used in CA_to_PCA
 \dontrun{coverage(D, 2)} ## slightly longer run time
+## faster with ca_verify
+caverify::ca_verify(D, 2)
 
 }
 \references{

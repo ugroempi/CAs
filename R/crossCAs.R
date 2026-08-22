@@ -61,8 +61,8 @@ crossCAs <- function(A, B, t=NULL, check=FALSE, ...){
    k <- ncol(A); l <- ncol(B); stopifnot(k==l)
    N <- nrow(A); M <- nrow(B)
    if(check){
-     stopifnot(all(coverage(A, t)==1))
-     stopifnot(all(coverage(B, t)==1))
+     stopifnot(caverify::ca_verify(A, t)$covered)
+     stopifnot(caverify::ca_verify(B, t)$covered)
    }
    aus <- matrix(NA, N*M, k)
    if (!start0) {
