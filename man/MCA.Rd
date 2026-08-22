@@ -142,14 +142,16 @@ coverage(D, 2)
 N_upper_MCA(c(rep(2,10), 8))
 
 ## another case for which N_upper_MCA seems to be tight
+## (postopNCK cannot achieve an improvement in reasonable time)
 N_upper_MCA(c(rep(5,8), 3,3))
 D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
 dim(D)
 head(D); tail(D)
 
 \dontrun{
-## optimize run size (using a good seed)
-D <- MCA2(c(rep(2,30), rep(3,2)), seed=17369, outerRetry=3)
+## different setting,
+## optimize run size within the call (using a good seed)
+D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
 coverage(D, 2)
 attributes(D)
 ## reasonably quickly reduces to 11 runs on my Windows machine
@@ -166,31 +168,19 @@ coverage(D, 2)
 D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
          outerRetry=0)
 \dontrun{
-## this runs for a long while, and it is not known whether a reduction
-## can be achieved; the code can be interrupted and returns the latest
-## improved array (if any)
 Doptimized <- postopNCK(D, 2)
+## This runs for a long while,
+## and it is not known whether it eventually improves
+## run size for the 168 columns to fewer than 46 runs
+## (never waited long enough).
 }
 
-## calls with more extreme numbers of levels
-D <- MCA2(c(13,11,rep(4,8), rep(2,20)), outerRetry=0)
-## 169 x 30
-## minimum run size is known to be 13*11=143
-## obtained relatively fast with postopNCK
-
-D <- MCA2(c(13,rep(4,8), rep(3,12), rep(2,20)), outerRetry=0)
-## 169 x 41
-## lower bound for run size is 13 * 4 = 52
-## postopNCK with seed 3318, innerRetry=3:
-##    169 quickly shrunk to 64 runs (after 9 outer retries)
-##    reasonably quickly to 59 runs (after 13 outer retries),
-##    then slowly to 53 runs (after 19 outer retries)
-##    stopping short of reaching the known lower bound 52
-##    within the default settings for outer retries
-
-## use the argument D;
-## even this naive version, though starting large, is quickly reduced
-## to adequate size (sometimes even faster than smaller one)
+## use the argument D for starting with a naive
+##      CA of 45 runs for 30 5-level columns
+## (default would start with CA(29, 2, 7, 5), which is the best for
+##      seven 5-level columns and permits expansion as required);
+## run size optimization quickly reduces the 45 runs to 23 runs
+## (20 is the lower bound)
 D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
          outerRetry=0)
 \dontrun{
@@ -200,15 +190,17 @@ D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
 ########################################################
 ### MCAt
 ########################################################
-## with this seed, the optimum run sizes are quickly found
-D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=23383)
-## many other seeds stop at 97 or 98 runs
-D <- MCAt(c(4,4,4,3,2,2), 4, innerRetry=3, seed=23383)
-
+## create a strength 4 CA, initially unoptimized
+D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
+dim(D) ## much larger than the optimum run size
 \dontrun{
-## with that seed, the optimal run size is reached in 10 iterations
-## nevertheless, the run time is too long for CRAN tests
-A <- MCAt(c(14,10,4,4,3,3,2,2),3, innerRetry = 3, outerRetry = 20, seed=11899)
+## with seed 888, the optimum is quickly reached
+Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
+dim(Doptimized)
+  ## optimum 4*4*3*2=96
+  ## many other seeds stop at 97 or 98 runs after longer iteration
+  ## could also use
+     D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=888)
 }
 
 ########################################################
@@ -225,38 +217,15 @@ coverage(Dmixed, 3)
 ## works
 
 ## five 3-level columns in 33 runs
-D <- bestCA(3,5,3)
+D <- bestCA(3,5,3)  ## CA(33,3,5,3)
 ## to four 3-level columns and one 2-level column in 33 runs,
-## i.e., a lengthy search cannot reduce the number of runs;
-## the 27 run OA(27,3,4,3) cannot easily be expanded by a 2-level column
-## without increasing the number of levels
 \dontrun{
-Dmixed <- CA_to_MCA(D, cs=5, tolev=2, t=3) ## last three columns reduced to 2 levels,
+Dmixed <- CA_to_MCA(D, cs=5, tolev=2, t=3) ## last column reduced to 2 levels
+## a lengthy search cannot reduce the number of runs
 }
-
-## larger example
-D <- bestCA(3, 12, 5)
-dim(D)
-## 225 runs for 555555555555 levels
-## can be reduced to 177 runs for 555554433222 levels
-## not run because of run time;
-## more reduction might be possible, though the eighth interim run
-## of the second round already failed
-\dontrun{
-Dmixed <- CA_to_MCA(D, cs=6:12, tolevs=c(4,4,3,3,2,2,2), seed=28661)
-dim(Dmixed)  ## 184 x 12
-head(Dmixed)
-tail(Dmixed)
-## still looks promising for further row reductions
-## no problem to continue from the result array that already
-##     has the correct number of levels
-## could also use postopNCK directly, but no need
-Dmixed2 <- CA_to_MCA(Dmixed, cs=6:12, tolevs=c(4,4,3,3,2,2,2), seed=7199)
-dim(Dmixed2)
-tail(Dmixed2)
-## there may still be potential for more reduction,
-## but not too bad
-}
+## D can be easily reduced to the optimal 27 runs,
+## if two columns are reduced to 2 levels each:
+Dmixed <- CA_to_MCA(D, cs=4:5, tolev=c(2,2), t=3)
 
 ######################################################
 ####           projBoseMCA               #############
@@ -266,38 +235,11 @@ tail(Dmixed2)
 ## and two larger than the others)
 D <- projBoseMCA(c(rep(4,6),6))
 head(D)
-dim(D) ## 24 runs like IPOG-F for CAgen
+dim(D)
 
 D <- projBoseMCA(c(rep(6,8),8))
 head(D)
-dim(D) ## 48 runs, better than the 60 for IPOG-F
-       ## which is best for CAgen and the 58 of JMP Pro
-       ## as of 11 August 2025
-
-## the single different number can also be smaller
-## then not guaranteed to be optimal
-D <- projBoseMCA(c(rep(6,8),7))
-head(D)
-dim(D) ## 48 runs, better than the 60 for IPOG-F
-       ##  42 would be a guaranteed optimal
-
-D <- projBoseMCA(c(rep(6,8),4))
-head(D)
-dim(D) ## 48 runs, better than the 55 for IPOG-F
-       ##  36 would be a guaranteed optimal
-
-## cases with two groups of alphabet sizes
-## the larger alphabet must be more frequent
-D <- projBoseMCA(c(rep(4,5), rep(3,4)))
-dim(D)  ## based on q=8 and c=4,
-        ## there could be up to 9 4-level columns
-D <- projBoseMCA(c(rep(4,9), rep(3,4)))
-dim(D)  ## 60 runs, larger than 30 for IPOG-F2
-
-## better use CA_to_MCA for this setting
-D <- CA_to_MCA(bestCA(2,13,4), 10:13, rep(3,4), outerRetry=0)
-dim(D)  ## better than CAgen, even without postoptimization
-
+dim(D)
 }
 \references{
 Colbourn (2008), Groemping (2025), Moura et al. (2003), Nayeri et al. (2013),

@@ -98,45 +98,10 @@ the smallest number for a strength 3 array in the same number of
 ## Paley-based CA that is optimal
 D <- paleyCA(t=4, k=67)
 dim(D)
-# coverage(D, 4) ## commented out, as it runs too long
+caverify::ca_verify(D, 4)
 eCAN(4, 67, 2)
 # as good as the optimum cyclotomy construction
 # (and actually the same)
-
-D <- paleyCA(t=3, k=10)
-dim(D)
-coverage(D, 3)
-eCAN(3, 10, 2)
-eCAK(3, 12, 2)
-k_PALEYcat(3, 12, 2)
-# as good as optimum (first columns of Hadamard matrix)
-
-D <- paleyCA(t=5, k=300)
-dim(D)
-eCAN(5, 300, 2)
-eCAK(5, 359, 2)
-k_PALEYcat(5, 359, 2)
-## as good as the derived design from the Colbourn / Keri construction
-
-D <- paleyCA(t=5, k=400)
-dim(D)
-eCAN(5, 400, 2) ## current best-known
-
-D <- paleyCA(t=5, k=80)
-dim(D)
-eCAN(5, 80, 2) ## current best-known slightly better
-
-D <- paleyCA(t=5, k=192)
-dim(D)
-eCAN(5, 192, 2) ## current best-known 13 fewer runs
-
-D <- paleyCA(t=6, k=29)
-dim(D)
-N_PALEYcat(t=6, k=29)
-eCAN(6, 29, 2) ## current best-known much better
-k_PALEYcat(t=6, N=720) ## good for larger number of factors
-eCAN(6, 360, 2) ## as good as the current-best
-eCAK(6, 720, 2) ## design from the Colbourn / Keri construction
 
 ## other Paley-related functions
 # conference matrix (square q x q matrix with diagonal 0)
@@ -156,7 +121,9 @@ coverage(D12I, 3)
 coverage(D12I, 4)
 coverage(D12II, 3)
 coverage(D12II, 4)
-# paleyHad(13) and paleyHad(27) have different coverages
+# paleyHad(13) of construction II
+# and paleyHad(27) of construction I for N=28
+# have different coverage properties
 # for t=4
 
 show_paleyHad(maxN=36)

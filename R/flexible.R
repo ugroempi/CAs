@@ -83,6 +83,7 @@
 #' coverage(A, 3)
 #' (AwithFlex <- markflex(A, 3))
 #' coverage(AwithFlex, 3)
+#' caverify::ca_verify(AwithFlex, 3)
 #'
 #' ## also works for mixed levels
 #' (L18withFlex <- markflex(DoE.base::L18, 2))
@@ -133,10 +134,6 @@
 #' dim(plan_postopNCK)
 #' coverage(plan_postopNCK, 2)
 #'
-#' plan_postopNCKfixtworows <- postopNCK(plan, 2, fixrows=2, innerRetry=2)
-#' dim(plan_postopNCKfixtworows)
-#' coverage(plan_postopNCKfixtworows, 2)
-#'
 #' ## postopNCK is fast on trivial problems like the above,
 #' ## but may take its time otherwise
 
@@ -146,7 +143,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
   }
-  
+
   # Input validation for t
   if (missing(t)) {
     stop("t (interaction strength) must be specified")
@@ -157,22 +154,22 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
   if (t < 2) {
     stop("t must be at least 2")
   }
-  
+
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
-  
+
   # Check t against k
   if (t > k) {
     stop(sprintf("t (%d) cannot be larger than the number of columns in D (%d)", t, k))
   }
-  
+
   uniform <- FALSE
   if (length(unique(v))==1){
     uniform <- TRUE
     v <- v[1]
   }
-  
+
   # Input validation for fixrows
   if (!is.numeric(fixrows) || length(fixrows) != 1 || fixrows < 0 || fixrows != floor(fixrows)) {
     stop("fixrows must be a single non-negative integer")
@@ -180,7 +177,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
   if (fixrows > N) {
     stop(sprintf("fixrows (%d) cannot be larger than the number of rows in D (%d)", fixrows, N))
   }
-  
+
   # Input validation for verbose
   if (!is.numeric(verbose) || length(verbose) != 1 || verbose < 0 || verbose != floor(verbose)) {
     stop("verbose must be a non-negative integer")
@@ -236,12 +233,12 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
 #' @export
 flexpos <- function(D, t, ...){
   ## creates logical matrix with flexible positions set to TRUE
-  
+
   # Input validation for D
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
   }
-  
+
   # Input validation for t
   if (missing(t)) {
     stop("t (interaction strength) must be specified")
@@ -252,13 +249,13 @@ flexpos <- function(D, t, ...){
   if (t < 2) {
     stop("t must be at least 2")
   }
-  
+
   if (any(is.na(D))) message("Note: Some flexible positions are already fixed. This reduces the positions that can be found.")
 
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
-  
+
   # Check t against k
   if (t > k) {
     stop(sprintf("t (%d) cannot be larger than the number of columns in D (%d)", t, k))
@@ -298,7 +295,7 @@ flexprofile <- function(D, ...){
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
   }
-  
+
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
@@ -318,7 +315,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
   }
-  
+
   # Input validation for t
   if (missing(t)) {
     stop("t (interaction strength) must be specified")
@@ -329,7 +326,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
   if (t < 2) {
     stop("t must be at least 2")
   }
-  
+
   # Get matrix dimensions before other validations
   if (is.matrix(D)) {
     N <- nrow(D)
@@ -338,12 +335,12 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
     N <- nrow(D)
     k <- ncol(D)
   }
-  
+
   # Check t against k
   if (t > k) {
     stop(sprintf("t (%d) cannot be larger than the number of columns in D (%d)", t, k))
   }
-  
+
   # Input validation for fixrows
   if (!is.numeric(fixrows) || length(fixrows) != 1 || fixrows < 0 || fixrows != floor(fixrows)) {
     stop("fixrows must be a single non-negative integer")
@@ -351,12 +348,12 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
   if (fixrows > N) {
     stop(sprintf("fixrows (%d) cannot be larger than the number of rows in D (%d)", fixrows, N))
   }
-  
+
   # Input validation for verbose
   if (!is.numeric(verbose) || length(verbose) != 1 || verbose < 0 || verbose != floor(verbose)) {
     stop("verbose must be a non-negative integer")
   }
-  
+
   # Input validation for retry parameters
   if (!is.numeric(outerRetry) || length(outerRetry) != 1 || outerRetry <= 0 || outerRetry != floor(outerRetry)) {
     stop("outerRetry must be a single positive integer")
@@ -370,14 +367,14 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
   if (!is.numeric(innerMaxnochange) || length(innerMaxnochange) != 1 || innerMaxnochange <= 0 || innerMaxnochange != floor(innerMaxnochange)) {
     stop("innerMaxnochange must be a single positive integer")
   }
-  
+
   # Input validation for seed
   if (!is.null(seed)) {
     if (!is.numeric(seed) || length(seed) != 1 || seed != floor(seed)) {
       stop("seed must be NULL or a single integer")
     }
   }
-  
+
   Call <- sys.call()
   attrs <- attributes(D)
   attrs$dim <- NULL
@@ -563,12 +560,12 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
 #' @export
 uniquecount <- function(D, t, ...){
   ## creates logical matrix with flexible positions set to TRUE
-  
+
   # Input validation for D
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
   }
-  
+
   # Input validation for t
   if (missing(t)) {
     stop("t (interaction strength) must be specified")
@@ -579,7 +576,7 @@ uniquecount <- function(D, t, ...){
   if (t < 2) {
     stop("t must be at least 2")
   }
-  
+
   if (any(is.na(D))) {
     message("All flexible positions were fixed at 0.")
     D[is.na(D)] <- 0
@@ -588,7 +585,7 @@ uniquecount <- function(D, t, ...){
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
-  
+
   # Check t against k
   if (t > k) {
     stop(sprintf("t (%d) cannot be larger than the number of columns in D (%d)", t, k))

@@ -87,12 +87,12 @@
 #' dim(A_TJ)
 #'
 #' A_TJ_reduced <- optimize_SeqCA(A_TJ, 3, target=9, verbose=TRUE)
-#' A_TJ_redwoSimAnneal <- optimize_SeqCA(A_TJ, 3, skipsa=TRUE, verbose=TRUE)
 #' coverageSeqCA(A_TJ_reduced, 3)
-#' ## one less row is possible, but requires a very slow simulated
+#' \dontrun{
+#' ## one less row is possible, but requires a somewhat slow simulated
 #' ## annealing optimization
 #' A_TJ_reduced8 <- optimize_SeqCA(A_TJ, 3, target=8, verbose=TRUE)
-#' \dontrun{
+#'
 #' ## without setting the target, one would have to wait until
 #' ## the simulated annealing for reducing to 7 runs failed
 #'   optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)

@@ -93,14 +93,16 @@ B <- KSK(k=12)
 dim(A); dim(B)
 E <- productCA(A, B)
 dim(E)
-coverage(E, 2)
+## check coverage with the fast function
+caverify::ca_verify(E, 2)
 ## 19 + 7 - 2 runs, twice as large as the optimal 12
 eCAN(2,228,2)
 
 A <- lhs::createBose(4, 5, bRandom=FALSE)
 dim(A)
 E <- productCA(A, A)
-coverage(E, 2)
+## check coverage with the fast function
+caverify::ca_verify(E, 2)
 dim(E)  ## 30 runs with 25 columns, close to optimal
 eCAN(2, 25, 4) ## 29 runs
 eCAK(2, 30, 4) ## 30 columns

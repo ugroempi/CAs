@@ -64,21 +64,17 @@ nrow(greedySeqCA_TJ(5, 3, seed=222, postopt=FALSE))
 ## relatively lucky
 nrow(A <- greedySeqCA_TJ(5, 3, seed=8881, postopt=FALSE))
 coverageSeqCA(A, 3)
-coverageSeqCA(A, 4)
 
 ## with post-optimization
 ## differences become smaller (still relevant esp. for larger cases)
-nrow(greedySeqCA_TJ(5, 3, seed=2323))
-## relatively unlucky
-nrow(greedySeqCA_TJ(5, 3, seed=222))
-## very lucky
-nrow(A <- greedySeqCA_TJ(5, 3, seed=8881))
+## formerly relatively unlucky
+nrow(A <- greedySeqCA_TJ(5, 3, seed=222))
 coverageSeqCA(A, 3)
-coverageSeqCA(A, 4) ## worse coverage of 4-sequences than for larger SeqCA
 
-## iteration
-nrow(iter_greedySeqCA_TJ(10, 5, 3, seed_init=222)) ## start unlucky
-  ## larger niter brings the run size down to 8
+## iteration, with good seed
+nrow(Aiter <- iter_greedySeqCA_TJ(8, 5, 3, seed_init=9055))
+  ## brings the run size down to 7
+coverageSeqCA(Aiter, 3)
 }
 \references{
 Torres-Jimenez et al. (2022)

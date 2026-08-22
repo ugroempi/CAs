@@ -99,6 +99,7 @@ A <- cyc(19,2)
 coverage(A, 3)
 (AwithFlex <- markflex(A, 3))
 coverage(AwithFlex, 3)
+caverify::ca_verify(AwithFlex, 3)
 
 ## also works for mixed levels
 (L18withFlex <- markflex(DoE.base::L18, 2))
@@ -148,10 +149,6 @@ eCAN(2,7,3)
 plan_postopNCK <- postopNCK(plan, 2, outerRetry=1)
 dim(plan_postopNCK)
 coverage(plan_postopNCK, 2)
-
-plan_postopNCKfixtworows <- postopNCK(plan, 2, fixrows=2, innerRetry=2)
-dim(plan_postopNCKfixtworows)
-coverage(plan_postopNCKfixtworows, 2)
 
 ## postopNCK is fast on trivial problems like the above,
 ## but may take its time otherwise
