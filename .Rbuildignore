@@ -4,7 +4,8 @@
 ^\.Rhistory$
 ^\CITATION\.cff$
 ^.*\.yml$
-^.*\.md$
+^README\.md$
+^ColbournTables\.md$
 ^\.github$
 ^README_files$
-^inst/extdata$
+^inst/extdata
