@@ -40,13 +40,13 @@ jobs:
       - name: Install system libs for curl
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev libglpk-dev
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev libglpk-dev libxml2-dev
       - name: Install package CAs
         run: |
           Rscript -e 'remotes::install_local(dependencies=TRUE)'
       - name: Install testing + coverage tools
         run: |
-          Rscript -e 'install.packages("covr", repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("covr", "xml"), repos = "https://cloud.r-project.org")'
       - name: Run tests and generate coverage (Cobertura XML)
         # run tests and produce a coverage.xml suitable for Codecov
         run: |
