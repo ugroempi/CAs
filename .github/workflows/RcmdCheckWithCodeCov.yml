@@ -40,18 +40,16 @@ jobs:
       - name: Install system libs for curl
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+          sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev libglpk-dev libxml2-dev
       - name: Install package CAs
         run: |
-          Rscript -e 'remotes::install_github("ugroempi/CAs", dependencies=TRUE)'
+          Rscript -e 'remotes::install_local(dependencies=TRUE)'
       - name: Install testing + coverage tools
         run: |
-          Rscript -e 'install.packages(c("testthat","covr","xml2"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("covr", "xml2"), repos = "https://cloud.r-project.org")'
       - name: Run tests and generate coverage (Cobertura XML)
-          # run tests and produce a coverage.xml suitable for Codecov
+        # run tests and produce a coverage.xml suitable for Codecov
         run: |
-          # run any test command you use; example using testthat:
-          Rscript -e 'if (file.exists("tests/testthat")) testthat::test_dir("tests/testthat")'
           # compute package coverage and write cobertura XML
           Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_cobertura(cov, file = "coverage.xml")'
       - name: Upload coverage reports to Codecov
