@@ -43,7 +43,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
       - name: Install package CAs
         run: |
-          Rscript -e 'remotes::install_github("ugroempi/CAs", dependencies=TRUE)'
+          Rscript -e 'remotes::install_local(dependencies=TRUE)'
       - name: Install testing + coverage tools
         run: |
           Rscript -e 'install.packages(c("testthat","covr","xml2"), repos = "https://cloud.r-project.org")'
