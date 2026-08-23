@@ -5,6 +5,7 @@
 ^\CITATION\.cff$
 ^.*\.yml$
 ^README\.md$
+^README\.Rmd$
 ^ColbournTables\.md$
 ^\.github$
 ^README_files$
