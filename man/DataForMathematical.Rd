@@ -31,7 +31,10 @@ where hope is that they are correct.\cr
 One instance from the Colbourn tables was removed,
 as its apparent underlying q is not a prime,
 but 13*229 so that either a different construction was used
-or the entry carries wrong information.\cr
+or the entry carries wrong information. For three further instances,
+the run size was corrected to reflect the correct construction 4a instead of the
+erroneous construction 3a underlying the run size in the Colbourn tables
+(thanks to Christopher Smolen for highlighting the coverage violation).\cr
 The cases that were checked
 were found correct. It was not possible with the
 available computing resources to check the actual coverage for

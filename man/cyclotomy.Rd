@@ -52,18 +52,25 @@ construction type.
 
 Function \code{cyclotomyCA} allows to specify \code{t}, \code{k} and \code{v} and to
 obtain the smallest \emph{implemented} CA from the cyclotomy construction
-for this specification (if one exists); note that it is very well possible that there is
-a smaller CA for the purpose from a cyclotomy construction. This package only automatically
+for this specification (if one exists). This package only automatically
 implements those CAs that have optimum size as of the state of the Colbourn tables of best bounds
-of November 2024; this is because various mistakes were found in tables of Colbourn (2010),
+of November 2024.
+
+As various mistakes were found in tables of Colbourn (2010),
 and the package author does not want to take responsibility for the strength of CAs according to
-those tables from the paper. Users who know that a certain prime power \code{q}
-yields a smaller CA for their requirements can use function \code{cyc} for creating that CA.\cr
+those tables from the paper, the tables from Colbourn (2010) were not used for implementing further
+cyclotomy-based CAs. It is very well possible that there is a smaller CA for the purpose from a
+cyclotomy construction; users who know that a certain prime power \code{q}
+yields a smaller CA for their requirements can use function \code{cyc} for creating that CA.
+
 The implemented constructions include three strength 5 cases attributed to
 Torres-Jimenez, for which \code{q\%\%v==2} (and not 1, as required in Colbourn 2010).
 Limited checks by sampling suggest that these are OK, but no full checks have been conducted,
 and the implementation trusts that the Colbourn tables are correct (except in one case, which was
-omitted because the alleged \code{q} is not a prime or prime power (13*229)).
+omitted because the alleged \code{q} is not a prime or prime power (13*229), and in three further instances
+(q=127, 2161, 2311), for which the size found in the Colbourn tables is too small, as it is
+based on construction 3a, while construction 4a is needed (thanks to Christopher Smolen for highlighting
+the coverage violation)).
 
 The function \code{cyc} is meant for experts and yields designs with columns in \code{v} levels based on
 prime or prime power \code{q} as follows:
@@ -99,6 +106,15 @@ but coverage properties are only guaranteed for well-chosen parameters!
 }
 
 \examples{
+## the main function for practical use
+CA768.3.128.6 <- cyclotomyCA(3, 128, 6)  ## strength 3 CA with 128 columns in 2 levels each
+## the best existing CA, though a bit worse than claimed in the Colbourn tables,
+## because the construction claimed there does not cover all triples (one of very few mistakes)
+dim(CA768.3.128.6)
+eCAN(3,128,6)
+Ns(3,128,6)
+
+## function cyc for expert use
 ## construction 1
 ## 2-level
 CA19.3.19.2 <- cyc(19, 2) ## q=19, k=19

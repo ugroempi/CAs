@@ -37,14 +37,19 @@ globalVariables("colbournBigFrame")
 #'
 #' As the source information in the Colbourn tables is sometimes very terse,
 #' it is not always intelligible for uninitiated humans,
-#' including the package author.
+#' including the package author. The function \code{\link{Ns}} always includes the
+#' \code{eCAN} value from \code{colbournBigFrame} without source information.
+#' There are some instances for which
+#' a better CA has meanwhile been found, but there are also a few instances, for which
+#' a claimed size in \code{colbournBigFrame} is wrong; these have not been corrected,
+#' as the table (at present) reflects a historic state of the Colbourn tables.
 #'
 #' @references Colbourn (without year)
 #'
 #' @examples
 #' head(colbournBigFrame)
 #' ## Kleitman and Spencer () and Katona () provide the only construction
-#' ## that is known to be globally optimal.
+#' ## that is known to be globally optimal for v=2 and t=2.
 #' ## It is implemented in function \code{\link{KSK}}.
 #'
 #' tail(colbournBigFrame)
@@ -59,6 +64,9 @@ globalVariables("colbournBigFrame")
 #' ## 137 of the 144 table entries that use a projection construction
 #' ## were improved by postprocessing (which is not yet (?) available in this package)
 #'
+#' ## an example for an erroneous entry for cyclotomy
+#' colbournBigFrame[2224,]
+#' Ns(3, 128, 6) ## Cyclotomy needs 768 runs (construction 4a, not 3a)
 
 #'@rdname colbournBigFrame
 "colbournBigFrame"
