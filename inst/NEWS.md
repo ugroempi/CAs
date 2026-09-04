@@ -1,11 +1,25 @@
 # NEWS
 
- - TODO: check Call attribute for MCA2 and postopNCK, in the combination
-   it apparently loses the MCA2 call 
-   (see file D15etalOptimized.RData in colbournTableReport folder)
- - TODO: check handling of flexible values by postopNCK and the mixed level 
-   design creation functions
- - check / conceptualize / improve class seqca
+September 05 2026, still version 0.24
+ - bug fix to function DHHF2CA (corrected the handling of constant rows, especially 
+   where a constant row needs to be added; this fixes a bug in powerCA, where the
+   result of powerCA(3,1584,2) did not cover all 1,1,1 triples; 
+   found by Christopher Smolen)
+ - added tests for DHHF2CA, and modified tests for powerCA
+ - bug fix to function cyclotomyCA, by changing the type of three rows in 
+   CYCLOTOMYcat from the erroneous 3a (driven by a mistake in the Colbourn tables)
+   to 4a (proven conclusively for the smallest case and by sampling only for the 
+   larger cases); this bug was also found by Christopher Smolen, who also did 
+   an extensive sampling check on the two larger cases
+ - added an example for the main user function 
+   cyclotomyCA
+
+August 2026, version 0.24
+ - moved external data to .Rbuildignore so that the R package is small enough
+ - reduced example run time
+ - imported package caverify in order to make use of the fast coverage checks 
+   of function ca_verify
+ - made a few formal fixes for CRAN, like authors@R
    
 February 24 2026, still version 0.23
  - changed the acronym for "sequential covering array" to SeqCA instead of SCA 
