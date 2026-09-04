@@ -112,19 +112,24 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
   ## nconst contains the rho_i of Theorem 2.3 of Colbourn and Torres-Jimenez
   ## in the order of Dlist
   chi <- max(0, v - sum(uis*(v-nconst)))
-      ## if chi > 0, some constant rows have to be added back i
-
+      ## if chi > 0, some constant rows have to be added back in
 
   const <- mapply(function(obj1, obj2) c(obj1[1:obj2,1]),
                   Drem, as.list(nconst), SIMPLIFY = FALSE)
+       ## list of vectors of the constant levels for each element of Dlist
+  nonconst <- lapply(const, function(obj) setdiff(levs, obj))
+       ## list of the other levels
 
   Drem <- mapply(function(obj1, obj2) obj1[-(1:obj2),,drop=FALSE],Drem, as.list(nconst),
                  SIMPLIFY = FALSE)
        ## Drem must be a list of matrices
        ## matrices without constant rows to use in every step
-  nonconst <- lapply(const, function(obj) setdiff(levs, obj))
+
+  ## prepare an empty matrix of the correct size
   aus <- matrix(NA, chi + sum(uis*(Nis-nconst)), k)
-    Y <- vector(mode="list", length=M+1) ## for covered elements
+
+  Y <- vector(mode="list", length=M) ## for covered constant tuples
+                                     ## even though constant rows are omitted
     Nbisher <- 0
     Mbisher <- 0
     for (j in 1:cblocks){
@@ -133,20 +138,24 @@ DHHF2CA <- function(P, Dlist, v=max(Dlist[[1]])+1, ...){
       ## it might improve the situation if the matrix Drem[[j]]
       ## would be adapted such that its constant rows have as many levels
       ## as possible from coveredbisher (for j>=2)
-      ## Where this is encountered, a message should complain about exceeding chi
+      ## Where there would be room for improvement,
+      ## a message should complain about exceeding chi
       Ninow <- Nis[j]
-      for (r in 1:uis[j]){
+      for (r in (Mbisher + 1):(Mbisher + uis[j])){
         aus[(Nbisher+1):(Nbisher+Ninow-nconstnow),] <-
-          (Drem[[j]][,P[Mbisher+r,]] + (r-1)*nconstnow) %% v
-        r <- Mbisher + r
-        Y[[r]] <- setdiff(levs, (constnow + nconstnow) %% v)
+          (Drem[[j]][,P[r,]] + (r-Mbisher-1)*nconstnow) %% v
+           ### modify Drem[[j]] so that different constant tuples are covered
+           ### for every row that uses it
+        # prior row for assigning Y[[r]], do not understand its logic
+         Y[[r]] <- setdiff(levs, (constnow + (r-Mbisher-1)*nconstnow) %% v)
         Nbisher <- Nbisher + Ninow - nconstnow
       }
       Mbisher <- Mbisher + uis[j]
       coveredbisher <- sort(unique(unlist(Y[1:Mbisher])))
     }
-
-  ## Yr the levels that are not constant in the CA used for row r
+  ## Y[[r]] the levels that are not constant in the CA used for row r
+    ## and whose constant tuples were therefore covered by the CA of that row
+    ## coveredbisher holds the union of those levels
   ## YMp1 the levels that were constant for all rows (there are such levels for chi>0)
   if (chi>0){
     YMp1 <- setdiff(levs, coveredbisher)

@@ -106,7 +106,7 @@ powerCA <- function(t, k, v, type="CT", ...){
   D1 <- eval(parse(text=labelToCode(hilf$constr1[r], t, w1, v)))[,1:w1]
   if (N1 > 250) D1 <- maxconstant(D1, one_is_enough = TRUE) else D1 <- maxconstant(D1)
 
-  OAlist <- list(D1)
+  CAlist <- list(D1)
 
   u2 <- hilf$u2[r]; u3 <- hilf$u3[r]; u4 <- hilf$u4[r]
 
@@ -116,19 +116,19 @@ powerCA <- function(t, k, v, type="CT", ...){
     N2 <- hilf$N2[r]
     D2=eval(parse(text=labelToCode(hilf$constr2[r], t, w2, v)))[,1:w2]
     if (N2 > 250) D2 <- maxconstant(D2, one_is_enough = TRUE) else D2 <- maxconstant(D2)
-    OAlist <- append(OAlist, list(D2))
+    CAlist <- append(CAlist, list(D2))
     if (u3 > 0){
       w3 <- hilf$w3[r]
       N3 <- hilf$N3[r]
       D3 <- eval(parse(text=labelToCode(hilf$constr3[r], t, w3, v)))[,1:w3]
       if (N3 > 250) D3 <- maxconstant(D3, one_is_enough = TRUE) else D3 <- maxconstant(D3)
-      OAlist <- append(OAlist, list(D3))
+      CAlist <- append(CAlist, list(D3))
       if (u4 > 0){
         w4 <- hilf$w4[r]
         N4 <- hilf$N4[r]
         D4 <- eval(parse(text=labelToCode(hilf$constr4[r], t, w4, v)))[,1:w4]
         if (N4 > 250) D4 <- maxconstant(D4, one_is_enough = TRUE) else D4 <- maxconstant(D4)
-        OAlist <- append(OAlist, list(D4))
+        CAlist <- append(CAlist, list(D4))
         rs <- (M-u4+1):M
         red <- w1 - w4
         DHF <- Tred(DHF, rs, red)
@@ -141,7 +141,7 @@ powerCA <- function(t, k, v, type="CT", ...){
     red <- w1-w2
     DHF <- Tred(DHF, rs, red)
   }
-  aus <- DHHF2CA(DHF, OAlist, v=v, one_is_enough=TRUE)[, 1:k]
+  aus <- DHHF2CA(DHF, CAlist, v=v, one_is_enough=TRUE)[, 1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "Call") <- Call
   attr(aus, "t") <- t
