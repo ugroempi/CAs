@@ -25,12 +25,18 @@
 #' @returns The output object is a matrix of class \code{ca}.
 #'
 #' @section Details:
-#' The file \code{fn} may start with comment lines that begin with a comment symbol, and an instruction line.\cr
+#' The file may contain blank lines and comment lines whose first non-whitespace
+#' character is the comment symbol. These lines are ignored.\cr
 #' The first line after removing the comments lines contains instructions about the file content,
-#' in the form N k v1^k1 v2^k2 ... It is permissible for the instructions line
+#' in the form N k v1^k1 v2^k2 ..., with fields separated by spaces or tabs.
+#' It is permissible for the instructions line
 #' to have a single string without blanks or \code{^} (e.g., for the strength)
 #' after the exponential notation for the columns; this will be ignored in the
 #' reading process. \code{ninstruct=0} indicates that there is no instruction line.\cr
+#' Each data line must contain the same number of entries. When an instruction
+#' line is present, the data must have exactly N rows and k columns. A single
+#' row or column is retained as a matrix. These checks validate the file shape,
+#' not the covering strength of the array.\cr
 #' All columns of the array must have the same starting value, i.e., start all with 0 or all with 1.
 #'
 
@@ -39,16 +45,21 @@
 readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
                    ninstruct=1, skiplines=0, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...){
   zeilen <- readLines(con=path)
-  zeilen <- zeilen[!nchar(zeilen)==0]
-  zeilen <- zeilen[!substr(zeilen,1,1)==comment.symbol]
+  zeilen <- zeilen[nzchar(trimws(zeilen))]
+  zeilen <- zeilen[!substr(trimws(zeilen),1,1)==comment.symbol]
   if (skiplines > 0) zeilen <- zeilen[-(1:skiplines)]
   stopifnot(ninstruct %in% c(0,1))
+  if (length(zeilen)==0) stop("no array data found")
   v <- NULL
   if (ninstruct==1){
     ## process instruction information
-    instruct <- strsplit(zeilen[1], " ", fixed=TRUE)
-    N <- as.numeric(instruct[[1]][[1]])
-    k <- as.numeric(instruct[[1]][[2]])
+    instruct <- strsplit(trimws(zeilen[1]), "[[:space:]]+")
+    dims <- suppressWarnings(as.numeric(instruct[[1]][1:2]))
+    if (anyNA(dims) || any(!is.finite(dims)) ||
+        any(dims < 1 | dims %% 1 != 0))
+      stop("instruction line must start with positive integer N and k")
+    N <- dims[1]
+    k <- dims[2]
     hilf <- lapply(instruct[[1]][-(1:2)], function(obj)
       as.numeric(unlist(strsplit(obj, "^", fixed=TRUE))))
     hilf <- hilf[lengths(hilf)==2]
@@ -65,7 +76,8 @@ readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
     }
     # v <- as.numeric(strsplit(instruct[[1]][[3]],"^", fixed=TRUE)[[1]][[1]])
     zeilen <- zeilen[-1]
-    stopifnot(length(zeilen)==N)
+    if (length(zeilen)!=N)
+      stop("number of data rows does not match N in the instruction line")
   }
 
   ## zeilen is a character vector
@@ -75,15 +87,23 @@ readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
     }
   }
   if (nosep){
+    if (length(unique(nchar(zeilen)))!=1)
+      stop("data rows must all have the same number of entries")
     zeilen <- funmakefromstrings(zeilen)
     colnames(zeilen) <- paste0("V", 1:ncol(zeilen))
   }
   else{
-    zeilen <- t(sapply(zeilen,
-                     function(obj) as.matrix(read.table(text=obj,
-                                    na.strings=flexible.symbols, ...))))
-    rownames(zeilen) <- NULL
+    rows <- lapply(zeilen, function(obj) as.matrix(read.table(text=obj,
+                                    na.strings=flexible.symbols, ...)))
+    widths <- vapply(rows, ncol, integer(1))
+    if (any(vapply(rows, nrow, integer(1))!=1) ||
+        any(widths==0) || length(unique(widths))!=1)
+      stop("data rows must all have the same number of entries")
+    zeilen <- do.call(rbind, rows)
+    dimnames(zeilen) <- list(NULL, NULL)
   }
+  if (ninstruct==1 && ncol(zeilen)!=k)
+    stop("number of data columns does not match k in the instruction line")
   class(zeilen) <- c("ca", class(zeilen))
   if (is.null(origin)) attr(zeilen, "origin") <- path else
     attr(zeilen, "origin") <- origin
