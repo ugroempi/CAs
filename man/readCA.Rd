@@ -37,12 +37,18 @@ reads a text file into a matrix of class ca (for covering array)
 }
 \section{Details}{
 
-The file \code{fn} may start with comment lines that begin with a comment symbol, and an instruction line.\cr
+The file may contain blank lines and comment lines whose first non-whitespace
+character is the comment symbol. These lines are ignored.\cr
 The first line after removing the comments lines contains instructions about the file content,
-in the form N k v1^k1 v2^k2 ... It is permissible for the instructions line
+in the form N k v1^k1 v2^k2 ..., with fields separated by spaces or tabs.
+It is permissible for the instructions line
 to have a single string without blanks or \code{^} (e.g., for the strength)
 after the exponential notation for the columns; this will be ignored in the
 reading process. \code{ninstruct=0} indicates that there is no instruction line.\cr
+Each data line must contain the same number of entries. When an instruction
+line is present, the data must have exactly N rows and k columns. A single
+row or column is retained as a matrix. These checks validate the file shape,
+not the covering strength of the array.\cr
 All columns of the array must have the same starting value, i.e., start all with 0 or all with 1.
 }
 
