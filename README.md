@@ -10,7 +10,7 @@ Creates covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.24-1
+- **Version**: 0.24-2
 
 ## Warning
 

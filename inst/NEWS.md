@@ -1,5 +1,9 @@
 # NEWS
 
+September 22 2026, version 0.24-2
+ - added missing usage entries for some N_- and k_-functions
+ - shortened example times for powerCA and MTVTRouxtype
+
 September 21 2026, version 0.24-1
  - added version requirement for package caverify (because of logic applied 
    for flexible values and applicability for mixed level CAs)
