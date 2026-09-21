@@ -55,13 +55,11 @@
 #' D <- powerCA(3, 25, 2)
 #' dim(D)
 #' coverage(D, 3)
-#' Ns(3, 25, 2) ## too large for so few columns
 #'
 #' ## a larger example
 #' Ns(6, 25, 2) ## way too large for so few columns
 #' ks(6, 5321, 2) ## would cover many more columns
-#' dim(powerCA(6,5000,2))
-#' Ns(6, 5000, 2) ## eCAN is PowerCZ
+#' eCAN(6, 5321, 2) ## eCAN is PowerCZ
 #'
 
 #' @export

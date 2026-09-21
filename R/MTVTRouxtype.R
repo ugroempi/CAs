@@ -62,7 +62,8 @@
 #'   N_upper_MTVTRouxtypeCA(4,12,3) ## two duplicates were removed
 #'   N_upper_MTVTRouxtypeCA(4,12,3, theoretical=TRUE) ## ingredients are optimal
 #'   coverage(D, 4)
-#'   eCAN(t=4, k=12, v=3)  ## D is far from optimal
+#'   Ns(t=4, k=12, v=3)  ## D is far from optimal
+#'                      ## the method is not part of Ns
 #'
 #'   ## the other method is worse for small k
 #'   dim(Dworse <- MTVTRouxtypeCA(4,12,3, method="large"))
@@ -71,25 +72,8 @@
 #'
 #'   dim(D5 <- MTVTRouxtypeCA(5, 10, 4))
 #'   N_upper_MTVTRouxtypeCA(5, 10, 4) ## 48 duplicates were removed
-#'   coverage(D5, 5)
-#'   eCAN(t=5, k=10, v=4)  ## run size of D5 is far from optimal
-#'
-#'   dim(Dlarge <- MTVTRouxtypeCA(4, 360, 3))
-#'   N_upper_MTVTRouxtypeCA(4, 360, 3) ## no duplicated rows removed
-#'   dim(Dlarge <- MTVTRouxtypeCA(4, 360, 3, method="large")) ## better
-#'   N_upper_MTVTRouxtypeCA(4, 360, 3, method="large") ## 42 duplicated rows removed
-#'   Ns(4,360,3)  ## not competitive
-#'
-#' \dontrun{
-#' ## needs an internet connection for downloading two arrays
-#' ## and also takes some time for its construction
-#'   N_upper_MTVTRouxtypeCA(5, 100, 4, method="large")
-#'   N_upper_MTVTRouxtypeCA(5, 100, 4) ## better
-#'   N_upper_MTVTRouxtypeCA(5, 100, 4, method="large", theoretical=TRUE)
-#'   N_upper_MTVTRouxtypeCA(5, 100, 4, theoretical=TRUE)
-#'   Ns(5, 100, 4) ## much worse than eCAN, but better than other implemented constructions
-#'   dim(DLarge <- MTVTRouxtypeCA(5, 100, 4, method="large"))
-#' }
+#'   caverify::ca_verify(D5, 5)
+#'   Ns(t=5, k=10, v=4)  ## run size of D5 is far from optimal
 #'
 
 #' @export
