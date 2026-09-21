@@ -1,5 +1,10 @@
 # NEWS
 
+September 21 2026, version 0.24-1
+ - added version requirement for package caverify (because of logic applied 
+   for flexible values and applicability for mixed level CAs)
+ - updated version number
+
 September 05 2026, still version 0.24
  - bug fix to function DHHF2CA (corrected the handling of constant rows, especially 
    where a constant row needs to be added; this fixes a bug in powerCA, where the

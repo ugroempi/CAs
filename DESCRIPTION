@@ -1,7 +1,7 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.24
+Version: 0.24-1
 Authors@R: person(given = "Ulrike",
                     family = "Groemping",
                     role = c("aut", "cre"),
@@ -9,7 +9,7 @@ Authors@R: person(given = "Ulrike",
 Description: Implements mathematical constructions of covering arrays. Provides  
     diagnostic functions for assessing coverage properties.
 Depends: R (>= 3.5.0)
-Imports: lhs, DoE.base, caverify, sets, prepplot, primes, igraph, permutations, dplyr, curl, gmp, conf.design, sfsmisc, combinat
+Imports: lhs, DoE.base, caverify (>= 0.2.0), sets, prepplot, primes, igraph, permutations, dplyr, curl, gmp, conf.design, sfsmisc, combinat
 Suggests: parallel, FrF2, testthat (>= 3.0.0)
 License: GPL-3
 LazyData: true
