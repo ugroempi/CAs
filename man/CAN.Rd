@@ -83,6 +83,12 @@ N_recBoseCA(t=2, k, v, type="PCA")
 
 N_projBoseCA(t=2, k, v, cmax=3)
 
+N_SCA_Busht(t, k, v)
+
+N_dpCA(t=2, k, v)
+
+N_pcaCA(t=2, k, v)
+
 ks(t, N, v)
 
 ks_productCA(t=2, N, v)
@@ -107,7 +113,15 @@ k_CAEX(t=2, N, v=3)
 
 k_fuseBoseCA(t=2, N, v)
 
+k_fuseBushtCA(t,N,v)
+
 k_recBoseCA(t=2, N, v, type="PCA")
+
+k_SCA_Busht(t, N, v)
+
+k_dpCA(t=2, N, v)
+
+k_pcaCA(t=2, N, v)
 }
 \arguments{
 \item{t}{coverage strength}

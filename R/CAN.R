@@ -72,6 +72,9 @@
 #' @usage N_CAEX(t=2, k, v=3)
 #' @usage N_recBoseCA(t=2, k, v, type="PCA")
 #' @usage N_projBoseCA(t=2, k, v, cmax=3)
+#' @usage N_SCA_Busht(t, k, v)
+#' @usage N_dpCA(t=2, k, v)
+#' @usage N_pcaCA(t=2, k, v)
 #' @usage ks(t, N, v)
 #' @usage ks_productCA(t=2, N, v)
 #' @usage k_NISTcat(t, N, v)
@@ -84,7 +87,11 @@
 #' @usage k_CYCLOTOMYcat(t, N, v)
 #' @usage k_CAEX(t=2, N, v=3)
 #' @usage k_fuseBoseCA(t=2, N, v)
+#' @usage k_fuseBushtCA(t,N,v)
 #' @usage k_recBoseCA(t=2, N, v, type="PCA")
+#' @usage k_SCA_Busht(t, N, v)
+#' @usage k_dpCA(t=2, N, v)
+#' @usage k_pcaCA(t=2, N, v)
 #'
 #' @param t coverage strength
 #' @param k number of columns
