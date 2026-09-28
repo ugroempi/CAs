@@ -65,6 +65,43 @@ cyclo <- cyclo[!cyclo$q==2977,]
 
 ## sort by t and within t by v
 cyclo <- cyclo[DoE.base::ord(cyclo),]
+
+## problem pointed out by Christopher Smolen (included Sep 2nd 2026)
+# At q=127 (t=3, k=128, v=6,
+#     N=762) the built array misses 32,004 tuples across 5,334 projections.
+# Your own coverage() agrees with caverify exactly, and checkcond3a(3,
+#     6, 127) returns FALSE, while it returns TRUE on control cases whose
+# arrays verify. I also tried all 36 primitive roots of GF(127) and none
+# yields a covering array, so it is not the choice of primitive. The two
+# larger rows, q=2161 (t=3, v=20) and q=2311 (t=3, v=21), fail on
+# 50-column subsets, and a subset of a covering array must itself cover,
+# so that is proof even though full verification at those sizes is not
+# feasible. The other 210 rows of CYCLOTOMYcat all pass, 16 by full
+# verification and 194 by four different 50-column screens each, so the
+# problem is isolated to these three.
+#
+# The good news is the repair is in the same family it seems. Type 3b
+# works at all three field sizes. At q=127 that gives CA(792; 3, 128,
+#     6), which I verified fully. At q=2161 and q=2311 it gives 43,600 and
+# 48,951 runs, each passing all four screens, and the pattern is tidy,
+# 3b costs exactly v(v-1) rows more than the failing 3a size in all
+# three cases. So the fix looks like three catalogue rows pointing to 3b
+# with the corrected run counts.
+
+## correct the three respective rows by setting the type to 4a
+## and increasing the run size by v
+pick <- which(cyclo$q==127)
+cyclo[pick,]$N <- cyclo[pick,]$N + cyclo[pick,]$v
+cyclo[pick,]$type <- "4a"
+
+pick <- which(cyclo$q==2161)
+cyclo[pick,]$N <- cyclo[pick,]$N + cyclo[pick,]$v
+cyclo[pick,]$type <- "4a"
+
+pick <- which(CYCLOTOMYcat$q==2311)
+cyclo[pick,]$N <- cyclo[pick,]$N + cyclo[pick,]$v
+cyclo[pick,]$type <- "4a"
+
 ## add code column
 rownames(cyclo) <- NULL
 
