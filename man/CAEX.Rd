@@ -114,7 +114,7 @@ is.PCA(D)
 
 ## from two CAs with flexible values
 ## not run because of slightly longish run time
-\dontrun{
+\donttest{
 D <- CAEX(N=43)
 attributes(D)
 }
@@ -123,7 +123,7 @@ attributes(D)
 ##############################################################
 ## available constructions from function CAEX
 ##############################################################
-\dontrun{
+\donttest{
 # this would run too long for some arrays
 # longest about 07 min for N=49 (using productCA, like two other cases)
 # about 13 s for N=50 (using productPCA, like most cases)
@@ -142,7 +142,7 @@ k1Achieved <- sapply(allCAEX, function(obj) attr(obj, "PCAstatus")$k1)
 ## see optimality by comparing with
 ## TJcat[which(TJcat[,"t"]==2 & TJcat[,"v"]==3 & TJcat[,"N"]<=50)[-1],c("k","N")])
 
-     N      k    k1  method k1_paper
+#     N      k    k1  method k1_paper
 # 11 11      5     4  stored        4
 # 12 12      7     4  stored        4
 # 13 13      9     6  stored        6
