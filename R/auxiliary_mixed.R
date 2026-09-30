@@ -101,8 +101,6 @@ find_mix_construction_separate <- function(nlevels, ...){
     ## N is not enough, increase
     Nold <- N
     N <- bestN(2, sum(columnsneeded_separate), vmax)
-    # print("eins")
-    # print(N)
     percolumn_new <- sapply(nlevels$levels, function(obj) one_to_howmany(N, vmax, obj))
     columnsneeded_separate_new <- ceiling(nlevels$frequency/percolumn_new)
     names(columnsneeded_separate_new) <- nlevels$levels
@@ -114,8 +112,6 @@ find_mix_construction_separate <- function(nlevels, ...){
       ## therefore another adjustment attempt
       Noldlarge <- N
       N <- bestN(2, sum(columnsneeded_separate_new), vmax)
-      # print("zwei")
-      # print(N)
       percolumn_new2 <- sapply(nlevels$levels, function(obj) one_to_howmany(N, vmax, obj))
       columnsneeded_separate_new2 <- ceiling(nlevels$frequency/percolumn_new2)
       names(columnsneeded_separate_new2) <- nlevels$levels
@@ -161,7 +157,6 @@ find_mix_construction <- function(nlevels, ...){
     if (N < hilf$N) break
   }
   know <- hilf$k - j ## new k
-print(know) ## 4, NIST 43 runs
 
   ## for this N, what's needed?
 
