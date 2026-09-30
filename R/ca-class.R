@@ -11,6 +11,8 @@
 #' @param x the object to be printed
 #' @param \dots further arguments to \code{print.default}
 #'
+#' @returns The print method invisibly returns the input objext \code{x}
+#'
 #' @section Details:
 #' The print method for class \code{ca} suppresses printing of most attributes,
 #' but indicates which attributes are available.
@@ -40,5 +42,6 @@ print.ca <- function(x, ...){
           xnam, ", attrname)):")
       print(attrs)
     }
+    invisible(x)
  }
 

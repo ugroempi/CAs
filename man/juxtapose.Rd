@@ -7,10 +7,10 @@
 juxtapose(D1, D2, jcol=NULL, start0=TRUE, ...)
 }
 \arguments{
-\item{D1}{a CA with levels as integers 0, ..., v-1 or 1,...,v}
+\item{D1}{a CA with levels as integers 0, ..., v-1 or 1,...,v (may have different number of levels for each column, but same coding)}
 
 \item{D2}{a CA like \code{D1}, same number of columns, same numbers of levels,
-except perhaps for the \code{jcol}th column; must have the same coding as \code{D3}}
+except perhaps for the \code{jcol}th column; must have the same coding as \code{D1}}
 
 \item{jcol}{the id of the column to be concatenated; if \code{NULL},
 it is either the only column id for which the numbers of levels differ, or 1.}
@@ -18,6 +18,15 @@ it is either the only column id for which the numbers of levels differ, or 1.}
 \item{start0}{logical: Do integer valued levels start with 0 ? (Otherwise, they must start with 1.)}
 
 \item{...}{further arguments to function \code{\link{coverage}}}
+}
+\value{
+If \code{D1} is a \code{N1 x k} CA of strength \code{t}
+and \code{D2} is a \code{N2 x k} CA of strength \code{t},
+the function returns an  \code{(N1 + N2) x k} matrix of class \code{ca},
+which is a CA of strength \code{t} and has the same numbers of levels
+as the ingoing arrays, except for the juxtaposed column \code{jcol},
+for which the number of levels is the sum of the
+numbers of levels of the ingoing CA.
 }
 \description{
 Two CAs D1 and D2 with the same strength t, the same number of columns k,

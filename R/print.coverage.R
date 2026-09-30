@@ -6,6 +6,8 @@
 #' @param ... further arguments to print
 #' @param verbose logical, if TRUE, prints the verbose content as well
 #'
+#' @returns invisibly returns \code{x}
+#'
 #' @exportS3Method base::print
 print.CAcoverage <- function(x, ..., verbose=FALSE){
    print(unlist(x[1:4]), ...)
@@ -13,5 +15,6 @@ print.CAcoverage <- function(x, ..., verbose=FALSE){
      cat("\n")
      print(x[-(1:4)], ...)
    }
+  invisible(x)
 }
 

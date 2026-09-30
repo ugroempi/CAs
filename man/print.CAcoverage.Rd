@@ -13,6 +13,9 @@
 
 \item{verbose}{logical, if TRUE, prints the verbose content as well}
 }
+\value{
+invisibly returns \code{x}
+}
 \description{
 print method for class CAcoverage
 }

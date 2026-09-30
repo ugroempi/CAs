@@ -11,6 +11,9 @@
 
 \item{\dots}{further arguments to \code{print.default}}
 }
+\value{
+The print method invisibly returns the input objext \code{x}
+}
 \description{
 This documentation file documents the class ca (for CAs = Covering Arrays) and its method.
 }
