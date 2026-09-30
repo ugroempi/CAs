@@ -61,7 +61,7 @@ N_add1CA(3,1332,2)
 
 dim(add1CA(3,1332,2))
 
-\dontrun{
+\donttest{
 A <- add1CA(6,2504,2)
 dim(A)
 eCAN(6,2504,2) ## much better

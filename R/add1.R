@@ -52,7 +52,7 @@
 #'
 #' dim(add1CA(3,1332,2))
 #'
-#' \dontrun{
+#' \donttest{
 #' A <- add1CA(6,2504,2)
 #' dim(A)
 #' eCAN(6,2504,2) ## much better
@@ -120,7 +120,6 @@ add2 <- function(D, t, v, ...){
   stopifnot(t>=2)
   k <- ncol(D)
   aus <- cbind(D, D[,k], D[,k])
-  print("hier0")
   if (t==2){
     hilf <- maxconstant(bestCA(2,3,v), remove=TRUE)
     aus <- rbind(aus,
@@ -141,11 +140,9 @@ add2 <- function(D, t, v, ...){
     ## t-tuples with triples of the last three columns
     hilf2 <- maxconstant(bestCA(3,3,v), remove=TRUE)
     hilf1 <- bestCA(t-3,k-1,v)
-print("hier")
     ## t-tuples with pairs of the last three columns
     hilf22 <- maxconstant(bestCA(2,3,v), remove=TRUE)
     hilf21 <- bestCA(t-2,k-1,v)
-print("hier2")
     aus <- rbind(aus,
                  cbind(kronecker(matrix(1,nrow=nrow(hilf22),ncol=1),hilf21),
                        kronecker(hilf22, matrix(1,nrow=nrow(hilf21),ncol=1))),
