@@ -148,7 +148,7 @@ D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
 dim(D)
 head(D); tail(D)
 
-\dontrun{
+\donttest{
 ## different setting,
 ## optimize run size within the call (using a good seed)
 D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
@@ -167,7 +167,7 @@ coverage(D, 2)
 ## alternative call for the same setting
 D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
          outerRetry=0)
-\dontrun{
+\donttest{
 Doptimized <- postopNCK(D, 2)
 ## This runs for a long while,
 ## and it is not known whether it eventually improves
@@ -183,7 +183,7 @@ Doptimized <- postopNCK(D, 2)
 ## (20 is the lower bound)
 D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
          outerRetry=0)
-\dontrun{
+\donttest{
    Doptimized <- postopNCK(D, 2)
 }
 
@@ -193,7 +193,7 @@ D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
 ## create a strength 4 CA, initially unoptimized
 D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
 dim(D) ## much larger than the optimum run size
-\dontrun{
+\donttest{
 ## with seed 888, the optimum is quickly reached
 Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
 dim(Doptimized)
@@ -219,7 +219,7 @@ coverage(Dmixed, 3)
 ## five 3-level columns in 33 runs
 D <- bestCA(3,5,3)  ## CA(33,3,5,3)
 ## to four 3-level columns and one 2-level column in 33 runs,
-\dontrun{
+\donttest{
 Dmixed <- CA_to_MCA(D, cs=5, tolev=2, t=3) ## last column reduced to 2 levels
 ## a lengthy search cannot reduce the number of runs
 }

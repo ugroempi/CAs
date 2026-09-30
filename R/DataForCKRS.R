@@ -39,9 +39,9 @@ globalVariables(c("CKRScat", "CKRS_CAs"))
 #' fivenum(CKRScat$N)
 #' xtabs(~ v + t, CKRScat)
 #'
-#' ## the following is not run because of run times
+#' ## the following is not tested because of run times
 #' ## in CRAN checks
-#' \dontrun{
+#' \donttest{
 #' fun <- function(t,k,v) eCAN(t,k,v)$CAN
 #' fun <- Vectorize(fun)
 #' diff <- CKRScat[,"N"]-fun(CKRScat[,"t"], CKRScat[,"k"], CKRScat[,"v"])

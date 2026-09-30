@@ -88,7 +88,7 @@ dim(aus)     ## 38 duplicate rows removed, still relevantly worse than current b
 Ns(4, 19, 2)
 
 ## best for 6-level is in DWYERcat, 2768 runs for 9 columns in 6 levels
-\dontrun{
+\donttest{
   pathGH <- "https://raw.githubusercontent.com/aadwyer/CA_Database/main/Repository/CA"
   # the instruction line starts with a comment character and is ignored,
   # therefore ninstruct=0

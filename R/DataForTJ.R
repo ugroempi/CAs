@@ -60,9 +60,9 @@ globalVariables(c("TJcat", "TJ2level_CAs"))
 #' fivenum(TJcat$N)
 #' xtabs(~ v + t, TJcat)
 #'
-#' ## the following is not run because of run times
+#' ## the following is not tested because of run times
 #' ## in CRAN checks
-#' \dontrun{
+#' \donttest{
 #' fun <- function(t,k,v) eCAN(t,k,v)$CAN
 #' fun <- Vectorize(fun)
 #' diff <- TJcat[,"N"]-fun(TJcat[,"t"], TJcat[,"k"], TJcat[,"v"])

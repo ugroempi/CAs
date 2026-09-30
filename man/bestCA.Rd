@@ -121,7 +121,7 @@ D <- bestCA(6, 50, 2)
 dim(D)
 
 ## fusing is far better than direct construction
-\dontrun{
+\donttest{
 ## slow, yields 8187 runs by fusing an 8191 run cphfCA
 ## in 16 levels twice
 Ns(3,37,14)

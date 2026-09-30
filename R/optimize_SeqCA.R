@@ -88,7 +88,7 @@
 #'
 #' A_TJ_reduced <- optimize_SeqCA(A_TJ, 3, target=9, verbose=TRUE)
 #' coverageSeqCA(A_TJ_reduced, 3)
-#' \dontrun{
+#' \donttest{
 #' ## one less row is possible, but requires a somewhat slow simulated
 #' ## annealing optimization
 #' A_TJ_reduced8 <- optimize_SeqCA(A_TJ, 3, target=8, verbose=TRUE)
@@ -98,7 +98,7 @@
 #'   optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)
 #' }
 #'
-#' \dontrun{
+#' \donttest{
 #' ## much slower
 #' nrow(A <- greedySeqCA_Kuhn(6, 4, seed=75))  ## 52 before, 41 after reduce
 #' aus <- optimize_SeqCA(A, 4, skipreduce=TRUE, verbose=TRUE)

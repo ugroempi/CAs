@@ -54,9 +54,9 @@ head(DPcat)
 tail(DPcat)
 boxplot(N ~ v, DPcat, las=1, horizontal=TRUE)
 
-## the following is not run because of run times
+## the following is not tested because of run times
 ## in CRAN checks
-\dontrun{
+\donttest{
 fun <- function(k,v) eCAN(2,k,v)$CAN
 fun <- Vectorize(fun)
 diff <- PCAcat[,"N"]-fun(PCAcat[,"k"], PCAcat[,"v"])

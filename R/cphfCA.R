@@ -75,7 +75,7 @@
 #' WCS_CPHFs[["3"]][["4"]][["71"]]
 #' D <- cphfCA(3,71,4)
 #' dim(D)
-#' \dontrun{
+#' \donttest{
 #'   coverage(D,3)
 #' }
 #' Ns(3,71,4)   ## size is current best but not eCAN
@@ -85,7 +85,7 @@
 #' rowSums(is.na(WCS_CPHFs[["4"]][["3"]][["3504"]]))
 #' ## many flexible values in the last row,
 #' ## eCAN claims one row less for this construction
-#' \dontrun{
+#' \donttest{
 #'   ## creation of this CA is slow because of the many columns
 #'   D <- cphfCA(4,3504,3)  ## about 3 minutes on author's machine
 #'   dim(D)

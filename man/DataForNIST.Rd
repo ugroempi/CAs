@@ -40,9 +40,9 @@ head(NISTcat)
 tail(NISTcat)
 xtabs(~t+v, as.data.frame(NISTcat))
 
-## the following is not run because of run times
+## the following is not tested because of run times
 ## in CRAN checks
-\dontrun{
+\donttest{
 fun <- function(t,k,v) eCAN(t,k,v)$CAN
 fun <- Vectorize(fun)
 diff <- NISTcat[,"N"]-fun(NISTcat[,"t"], NISTcat[,"k"], NISTcat[,"v"])

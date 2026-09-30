@@ -68,9 +68,9 @@ globalVariables(c("CYCLOTOMYcat", "PALEYcat"))
 #' tail(CYCLOTOMYcat)
 #' xtabs(~ t + v, CYCLOTOMYcat)
 #'
-#' ## the following is not run because of run times
+#' ## the following is not tested because of run times
 #' ## in CRAN checks
-#' \dontrun{
+#' \donttest{
 #' fun <- function(t,k,v) eCAN(t,k,v)$CAN
 #' fun <- Vectorize(fun)
 #' diff <- PALEYcat[,"N"]-fun(PALEYcat[,"t"], PALEYcat[,"k"], PALEYcat[,"v"])

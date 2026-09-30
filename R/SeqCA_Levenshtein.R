@@ -46,7 +46,7 @@
 #' ## t=6, k=7
 #' dim(SeqCA_Levenshtein(7))
 #'
-#' \dontrun{
+#' \donttest{
 #' ## runs about 26 seconds in R 4.3 on Windows 11
 #' ## with 32 GB RAM and Intel(R) Core(TM) i7-10610U CPU @ 1.80GHz (2.30 GHz)
 #'
