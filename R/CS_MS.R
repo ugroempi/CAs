@@ -232,7 +232,7 @@ search_CS <- function(v){
     ## the dimension is correct, but the coverage is not
     hilf <- coverage(t(mat)-1, 2)
     if (all(unlist(hilf)==1)) {
-      print(starter)
+      # print(starter)
       return(list(v=v, k=k, starter=starter, G=G))
     }
           }
