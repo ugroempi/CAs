@@ -99,10 +99,13 @@ D <- maxconstant(paleyCA(3,23))
 rowSums(D)
 ## keep 8 columns with row 2 equal to 1
 D <- D[,which(D[2,]==1)[5:12]]
-ca12.2.8 <- postopNCK(D, 3, fixrows=2, innerRetry = 3, seed=17190)
+## ca12.2.8 <- postopNCK(D, 3, fixrows=2, innerRetry = 3, seed=17190)
+##      an earlier version of package CAs produced this design with the above seed
+ca12.2.8 <- postopNCK(D, 3, fixrows=2, outerRetry=7, innerRetry = 3, seed=111)
 attr(ca12.2.8, "rowOrder") <- NULL
 attr(ca12.2.8, "seed") <- NULL
 attr(ca12.2.8, "Call") <- NULL
+## keep the seed from the early production version (before 0.24.3)
 attr(ca12.2.8, "origin") <- c("from paleyCA(3,23) by making one row constant,",
                               "picking last eight columns with second row also constant,",
                               "and reducing to 12 runs via postopNCK with seed 17190")

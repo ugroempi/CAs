@@ -465,8 +465,8 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
       message("inner retry: ", r)
       count <- 0
       pick <- which.max(hilf[!exhausted])
-      ## positions must be moved, because exausted rows are prepended
-      pick <- pick + sum(exhausted[1:pick])
+      ## positions must be moved, because exhausted rows are prepended
+      pick <- pick + sum(exhausted) ## [1:pick])
       lastmax <- max(hilf)
       while (count <= innerMaxnochange){
       #if (hilf[pick] <= hilf[N]) pick <- N
