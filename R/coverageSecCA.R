@@ -33,6 +33,7 @@
 #' coverageSeqCA(A,3)
 #'
 #' A <- reduce_rows_iterative_complete(A, 3)
+#' dim(A)
 #'
 #' ## also works from worse starting matrix
 #' A <- greedySeqCA_naive(5, 3, seed=589)

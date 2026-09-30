@@ -50,9 +50,9 @@
 #' @examples
 #' ## without post-optimization
 #' nrow(greedySeqCA_TJ(5, 3, seed=2323, postopt=FALSE))
-#' ## relatively unlucky
+#' ## relatively unlucky:
 #' nrow(greedySeqCA_TJ(5, 3, seed=222, postopt=FALSE))
-#' ## relatively lucky
+#' ## relatively lucky:
 #' nrow(A <- greedySeqCA_TJ(5, 3, seed=8881, postopt=FALSE))
 #' coverageSeqCA(A, 3)
 #'

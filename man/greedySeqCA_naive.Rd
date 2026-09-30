@@ -52,9 +52,9 @@ Claude 4 was involved in the development of these functions.
 \examples{
 ## without post-optimization
 nrow(greedySeqCA_naive(5, 3, seed=2323, postopt=FALSE))
-## relatively unlucky
+## relatively unlucky:
 nrow(greedySeqCA_naive(5, 3, seed=2415, postopt=FALSE))
-## relatively lucky
+## relatively lucky:
 nrow(A <- greedySeqCA_naive(5, 3, seed=9456, postopt=FALSE))
 coverageSeqCA(A, 3)
 coverageSeqCA(A, 4)
@@ -62,9 +62,9 @@ coverageSeqCA(A, 4)
 ## with post-optimization
 ## differences become less dramatic (but still relevant)
 nrow(greedySeqCA_naive(5, 3, seed=2323))
-## relatively unlucky
+## relatively unlucky:
 nrow(greedySeqCA_naive(5, 3, seed=2415))
-## relatively lucky
+## relatively lucky:
 nrow(A <- greedySeqCA_naive(5, 3, seed=9456))
 coverageSeqCA(A, 3)
 coverageSeqCA(A, 4) ## worse coverage of 4-sequences than for larger SeqCA

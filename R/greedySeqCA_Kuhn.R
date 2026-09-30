@@ -46,9 +46,9 @@
 #' @examples
 #' ## without post-optimization
 #' nrow(greedySeqCA_Kuhn(5, 3, seed=2323, postopt=FALSE))
-#' ## relatively unlucky
+#' ## relatively unlucky:
 #' nrow(greedySeqCA_Kuhn(5, 3, seed=2415, postopt=FALSE))
-#' ## relatively lucky
+#' ## relatively lucky:
 #' nrow(A <- greedySeqCA_Kuhn(5, 3, seed=16, postopt=FALSE))
 #' coverageSeqCA(A, 3)
 #' coverageSeqCA(A, 4)
@@ -56,12 +56,10 @@
 #' ## with post-optimization
 #' ## differences become smaller (still relevant esp. for larger cases)
 #' nrow(greedySeqCA_Kuhn(5, 3, seed=2323))
-#' ## relatively unlucky
+#' ## relatively unlucky:
 #' nrow(greedySeqCA_Kuhn(5, 3, seed=2415))
-#' ## relatively lucky
-#' nrow(A <- greedySeqCA_Kuhn(5, 3, seed=16))
-#' coverageSeqCA(A, 3)
-#' coverageSeqCA(A, 4) ## worse coverage of 4-sequences than for larger SeqCA
+#' ## relatively lucky:
+#' nrow(A <- greedySeqCA_Kuhn(5, 3, seed=16)) ## unchanged
 #'
 #' ## iteration
 #' nrow(iter_greedySeqCA_Kuhn(10, 5, 3, seed_init=2415)) ## start unlucky
