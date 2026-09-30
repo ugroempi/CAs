@@ -46,16 +46,12 @@ tail(WKScat)
 fivenum(WKScat$N)  ## 440.0 530.5 605.0 669.0 718.0
 fivenum(WKScat$k)  ## 30.0 40.5 51.0 61.5 72.0
 
-## the following is not run because of run times
-## in CRAN checks
-\dontrun{
 fun <- function(t,k,v) eCAN(t,k,v)$CAN
 fun <- Vectorize(fun)
 diff <- WKScat[,"N"]-fun(WKScat[,"t"], WKScat[,"k"], WKScat[,"v"])
 fivenum(diff)
 ## 0 0 0 0 0
 ## at present, they are all optimal
-}
 
 }
 \references{
