@@ -386,9 +386,9 @@ coverage_iter <- function(D, t, isInteger=TRUE,
   return(aus)  },
   interrupt = function(e) {
     message("Interrupted by user. Printing last completed projection id.")
-    print(paste("Coverage ", t, " OK for first ", i-1, " projections."))
+    message(paste("Coverage ", t, " OK for first ", i-1, " projections."))
     if (abortnot1)
-       print(paste("You might restart with start.proj set to ", i))
+       message(paste("You might restart with start.proj set to ", i))
   })
 }
 

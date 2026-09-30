@@ -130,11 +130,11 @@ greedySeqCA_Kuhn <- function(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...){
       nuncovered <- sum(1-checkbits)
     }}
   if (postopt){
-    print(paste("Number of rows before postopt: ", nrow(ts)))
+    message(paste("Number of rows before postopt: ", nrow(ts)))
     ## this is more demanding than just removing redundant rows
     ## might downgrade to do only that ?
     ts <- reduce_rows_iterative_complete(ts, t)
-    print(paste("Number of rows after postopt: ", nrow(ts)))
+    message(paste("Number of rows after postopt: ", nrow(ts)))
   }
   rownames(ts) <- NULL
   class(ts) <- c("sca", class(ts))

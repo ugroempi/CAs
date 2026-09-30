@@ -237,7 +237,7 @@ checkcond3 <- function(t,v,q,iter=FALSE, progress=FALSE){
 checkcond3a <- function(t,v,q,iter=FALSE, progress=FALSE, type3=TRUE){
   if (type3){
     if (!checkcond3(t,v,q,iter=iter, progress=progress)) return(FALSE)
-    else(print("type 3 successful, continue with check of type 1 for t-1"))
+    else(message("type 3 successful, continue with check of type 1 for t-1"))
   }
   checkcond1(t-1,v,q,progress=progress)
 }
@@ -247,7 +247,7 @@ checkcond3a <- function(t,v,q,iter=FALSE, progress=FALSE, type3=TRUE){
 checkcond3b <- function(t,v,q,iter=FALSE, progress=FALSE, type3=TRUE){
   if (type3){
   if (!checkcond3(t,v,q,iter=iter, progress=progress)) return(FALSE)
-    else(print("type 3 successful, continue with check of type 2 for t-1"))
+    else(message("type 3 successful, continue with check of type 2 for t-1"))
   }
   checkcond2(t-1,v,q,iter=iter, progress=progress)
 }
@@ -341,7 +341,7 @@ checkcond4a <- function(t,v,q,iter=FALSE, progress=FALSE, type4=TRUE){
   ##  checkcond4a(3,4,37) should yield TRUE
   if (type4){
     if (!checkcond4(t,v,q, iter=iter, progress=progress)) return(FALSE)
-    else(print("type 4 successful, continue with check of type 1 for t-1"))
+    else(message("type 4 successful, continue with check of type 1 for t-1"))
   }
   checkcond1(t-1,v,q,iter=iter, progress=progress)
 }
@@ -350,7 +350,7 @@ checkcond4a <- function(t,v,q,iter=FALSE, progress=FALSE, type4=TRUE){
 checkcond4b <- function(t,v,q,iter=FALSE, progress=FALSE, type4=TRUE){
   if (type4){
     if (!checkcond4(t,v,q, iter=iter, progress=progress)) return(FALSE)
-    else(print("type 4 successful, continue with check of type 2 for t-1"))
+    else(message("type 4 successful, continue with check of type 2 for t-1"))
   }
   checkcond2(t-1,v,q,iter=iter, progress=progress)
 }
