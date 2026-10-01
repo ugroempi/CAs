@@ -8,16 +8,18 @@ Authors@R: person(given = "Ulrike",
                     email = "ulrike.groemping@bht-berlin.de")
 Description: Implements covering arrays, as proposed in 
     Groemping (2025) <doi:10.1109/ICSTW64639.2025.10962463>. 
-    Mathematical constructions of covering arrays are provided, 
-    as detailed at <https://github.com/ugroempi/CAs>. Both uniform 
-    and mixed-level covering arrays are created and can be assessed 
-    for their coverage properties. The creation of mixed-level arrays 
-    according to Groemping (2025) 
+    Uniform and mixed-level covering arrays are created and 
+    can be assessed for their coverage properties. 
+    The mathematical background of the constructions is provided 
+    in the technical reports Groemping (2026) 
+    <https://www1.bht-berlin.de/FB_II/reports/Report-2026-001.pdf> 
+    for the uniform arrays and Groemping (2025) 
     <https://www1.bht-berlin.de/FB_II/reports/Report-2025-001.pdf> 
-    relies heavily on the post-processing method by Nayeri, Colbourn 
-    and Konjevod (2013) <doi:10.1016/j.ejc.2012.07.017>. 
-    There are also preliminary tools for the creation of sequence 
-    covering arrays.
+    for the mixed-level constructions. The post-processing method 
+    by Nayeri, Colbourn, and Konjevod (2013) 
+    <doi:10.1016/j.ejc.2012.07.017> is also 
+    provided. In addition, there are preliminary tools for the 
+    creation of sequence covering arrays.
 Depends: R (>= 3.5.0)
 Imports: lhs, DoE.base, caverify (>= 0.2.0), sets, prepplot, primes, igraph, permutations, dplyr, curl, gmp, conf.design, sfsmisc, combinat
 Suggests: parallel, FrF2, testthat (>= 3.0.0)
