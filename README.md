@@ -7,18 +7,18 @@
 # The R package CAs
 
 Implements covering arrays, as proposed in Groemping (2025)
-<https://doi.org/10.1109/ICSTW64639.2025.10962463> . Uniform and
-mixed-level covering arrays are created and can be assessed for their
-coverage properties. The mathematical background of the constructions is
-provided in the technical reports Groemping (2026)
+[doi:10.1109/ICSTW64639.2025.10962463](https://doi.org/10.1109/ICSTW64639.2025.10962463).
+Uniform and mixed-level covering arrays are created and can be assessed
+for their coverage properties. The mathematical background of the
+constructions is provided in the technical reports Groemping (2026)
 <https://www1.bht-berlin.de/FB_II/reports/Report-2026-001.pdf> for the
 uniform arrays and Groemping (2025)
 <https://www1.bht-berlin.de/FB_II/reports/Report-2025-001.pdf> for the
 mixed-level constructions. The post-processing method by Nayeri,
 Colbourn, and Konjevod (2013)
-<https://doi.org/10.1016/j.ejc.2012.07.017> is also provided. In
-addition, there are preliminary tools for the creation of sequence
-covering arrays.
+[doi:10.1016/j.ejc.2012.07.017](https://doi.org/10.1016/j.ejc.2012.07.017)
+is also provided. In addition, there are preliminary tools for the
+creation of sequence covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3

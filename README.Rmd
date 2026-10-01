@@ -1,0 +1,264 @@
+---
+output: 
+  github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+rd <- tools::parse_Rd(file.path("man", "CAs-package.Rd"))
+license <- packageDescription("CAs", fields="License")
+version <- packageDescription("CAs", fields="Version")
+rd_html <- capture.output(tools::Rd2HTML(rd))
+library(CAs)
+require(prepplot)
+
+## Note:  These functions are internal to the tools package, but are not exposed
+##    and are therefore not intended to be used and are subject to change.
+##    for that reason, they are replicated here to ensure they stay consistent
+##    with this document
+
+## based on tools:::RdTags
+rd_get_tags <- function(Rd)
+{
+  res <- lapply(Rd, attr, "Rd_tag")
+  if (length(res)) 
+      simplify2array(res, FALSE)
+  else character()
+}
+
+## based on tools:::.Rd_get_metadata
+rd_get_metadata <- function(x, tag)
+{
+  x <- x[rd_get_tags(x) == sprintf("\\%s", tag)]
+  if (!length(x)) 
+      character()
+  else unique(trimws(vapply(x, paste, "", collapse = "\n")))
+}
+
+## might also want to capture html output for markdown.  This is more fragile
+rd_html_get <- function(rd_html, from_h3, to_h3)
+{
+  #from_h3 <- "Details"
+  #to_h3 <- "Author"
+  ind_from <- grep(paste0("<h3>", from_h3), rd_html)
+  ind_to <- grep(paste0("<h3>", to_h3), rd_html)
+  if (length(ind_from) != 1 | length(ind_to) != 1 | all(ind_from == ind_to))
+  {
+    stop("from_h3 or to_h3 are not specified correctly")
+  }
+  return(rd_html[(ind_from + 1):(ind_to - 1)])
+}
+
+my_Rd_expr_doi <- function (x) 
+{
+    x <- tools:::.canonicalize_doi(x)
+    sprintf("[doi: %s](https://doi.org/%s)", x, x)
+}
+```
+
+
+[![R](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml/badge.svg)](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml) 
+[![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://app.codecov.io/github/ugroempi/CAs)
+
+<!--- DO NOT EDIT:  AUTOMATICALLY GENERATED from README.Rmd -->
+
+# The R package CAs
+
+```{r description, results = "asis"}
+hilf <- rd_get_metadata(rd, "description")
+hilf <- gsub('\nc(\"\\\\Sexpr[results=rd]{tools:::Rd_expr_doi(\\\"#1\\\")}\", \"', "[doi:", hilf, fixed=TRUE)
+hilf <- gsub('tools:::Rd_expr_doi(\\\"', "](https://doi.org/", hilf, fixed=TRUE)
+hilf <- gsub('\\\"', "", hilf, fixed=TRUE)
+hilf <- gsub('\nlist(\"', "", hilf, fixed=TRUE)
+hilf <- gsub("\n", " ", hilf)
+hilf <- gsub("  ", " ", hilf)
+hilf <- gsub(" .", ".", hilf, fixed=TRUE)
+# hilf <- gsub("doi:", "https://doi.org/", hilf)
+hilf <- gsub('(\"', "", hilf, fixed=TRUE)
+hilf <- gsub('\")', "", hilf, fixed=TRUE)
+# hilf <- my_Rd_expr_doi(hilf)
+cat(hilf)
+```
+
+```{r authors_license_version, results = "asis"}
+x <- rd_get_metadata(rd, "author")
+x <- gsub("Author", "- **Author**", x)
+y <- paste0("- **License**: ", license)
+z <- paste0("- **Version**: ", version)
+cat(x,"\n",y,"\n",z)
+```
+
+## Warning
+This is a very preliminary version of R package **CAs**. 
+Changes that break backwards compatibility can and will occur without warning.\cr
+Important changes/bug fixes are stated in the [NEWS](https://github.com/ugroempi/CAs/blob/main/inst/NEWS.md) file, but no guarantees! 
+
+## Installation
+**CAs** is not yet on [CRAN](https://CRAN.R-project.org). If you want to work with this very preliminary version (see above warning), you can install the latest status of the package from this repository with:
+
+```{r install_option, eval=FALSE, echo=TRUE}
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("ugroempi/CAs")
+```
+
+or obtain a specific frozen status via a tag (so far the only tag is `v0.21` for version 0.21):
+
+```{r install_option_tagged, eval=FALSE, echo=TRUE}
+devtools::install_github("ugroempi/CAs", ref="v0.21")
+```
+
+## Details
+*At the end of this README file, charts depict the current status of array implementation relative to the empirical covering array numbers (eCANs) of the Colbourn tables, for v up to 10.*
+
+```{r details, results = "asis"}
+temp <- rd_html_get(rd_html, "Details", "Exported objects") 
+
+# change equations back to $ for eqn and $$ for deqn
+#   Find <code class=\"reqn\"> and then the very next </code>
+
+start_token <- '<code class="reqn">'
+end_token <- '</code>'
+deqn_start_token <- '<p style="text-align: center;"><code class="reqn">'
+p_token <- '<p>'
+p_end_token <- '</p>'
+p_align_token <- '<p style="text-align: center;">'
+
+ind_start <- grep(start_token, temp)
+ind_deqn_start <- grep(deqn_start_token, temp)
+
+for (i in 1:length(temp))
+{
+  ## /deqn
+  if (i %in% ind_deqn_start)
+  {
+    temp[i] <- gsub(start_token, "\n$$", temp[i])
+    if (!grepl(end_token, temp[i]))
+      stop("closing </code> tag is not on the same line as the start for an equation")
+    temp[i] <- gsub(end_token, "$$\n", temp[i])
+  }
+  ## /eqn
+  if (i %in% setdiff(ind_start, ind_deqn_start))
+  {
+    temp[i] <- gsub(start_token, "$", temp[i])
+    if (!grepl(end_token, temp[i]))
+      stop("closing </code> tag is not on the same line as the start for an equation")
+    temp[i] <- gsub(end_token, "$", temp[i])
+  }
+}
+
+## <p> tags
+temp <- gsub(p_token, "\n", temp)
+temp <- gsub(p_end_token, "\n", temp)
+temp <- gsub(p_align_token, "\n", temp)
+
+cat(temp)
+```
+
+## Exported objects
+```{r expcatobj, results = "asis"}
+temp2 <- rd_html_get(rd_html, "Exported objects", "Author") 
+
+p_token <- '<p>'
+p_end_token <- '</p>'
+p_align_token <- '<p style="text-align: center;">'
+
+## <p> tags
+temp2 <- gsub(p_token, "\n", temp2)
+temp2 <- gsub(p_end_token, "\n", temp2)
+temp2 <- gsub(p_align_token, "\n", temp2)
+
+cat(temp2)
+```
+
+
+## Current status of package implementation (for uniform CAs only)
+
+The figures show performance percentages relative to the best-known arrays as collated by Colbourn, status November 2024; there are figures for up to 10&nbsp;levels and figures for up to 25&nbsp;levels; the reference scenarii are created as the union of situations for which NIST (2008) has arrays ($t=2,\dots,6$, $v=2,\dots,6$ but not both 6, with $k$ up to 2000 for $t=2$ and $t=3$ with $v$ up to 4, and decreasing maximum $k$ for larger $t$ and $v$) &minus;&nbsp;these have an array for each individual $k$ &minus; and the Colbourn table entries for $t=2,\dots,6$, $v=2,\dots,25$ and $k$ only where the necessary $N$ increases for the scenario; these are limited to situations with $N\le1.000.000$. This choice was based on convenience and could certainly be improved. For large $v$ (far outside of the NIST domain), the relative performance improves versus medium $v$; this is presumably due to a worse status of best-known arrays, not to a better status of implementation in the package.
+
+```{r status1, message=FALSE, fig.width=8, fig.height=5.5}
+## status_dat.rda was created by function status in file C:/rtests/CAsbak/inspectNs.R
+bpFun <- function(ratiolim, vmax=10){
+  load("C:/rtests/CAsbak/status_dat_0.22.rda")
+  CAsVersion <- 0.22  ## !!! intentionally not automatic, because the status info 
+                      ## !!! update is sometimes delayed versus the package update
+  hilf <- status_dat[which(status_dat$v<=vmax & status_dat$N<=1000000),]
+  par(mfrow=c(2,3), oma=c(0,0,3,0), mar=c(3.1, 3.1, 2.1, 1.1), cex=1.2, cex.main=1.2)
+  for (t in 2:6){
+    tab <- table(v=hilf[hilf$t==t,]$v,
+          solution=((hilf[hilf$t==t,]$currentbestN/hilf[hilf$t==t,]$N) <= ratiolim))
+    if (ncol(tab)==1) tab <- as.table(cbind('FALSE'=0, tab))
+    bpt <- barplot(100*prop.table(tab,1)[,2],
+          col=ifelse(sapply(2:25, function(obj) obj %in% CAs:::primedat$q), "steelblue3", "lightsteelblue1"),
+          horiz=TRUE, las=1, plot=FALSE)
+    prepplot::prepplot(c(0,100), c(0,vmax+1), gridx=TRUE, las=1,
+        main=paste0("t = ", t), ylab="v", mgpx=c(1.5,0.05,0), 
+          yticks=bpt[1:(vmax-1)], yticklabs=2:vmax)
+    barplot(100*prop.table(tab,1)[,2],
+          col=ifelse(sapply(2:25, function(obj) obj %in% CAs:::primedat$q), "steelblue3", "lightsteelblue1"),
+          horiz=TRUE, add=TRUE, las=1, axes=FALSE, axisnames=FALSE, ann=FALSE)
+    }
+  prepplot::prepplot(c(0,1), c(0,1), axes=FALSE)
+  legend(-0.1, 1, legend=c("v prime power", "other v"), fill=c("steelblue3", "lightsteelblue1"),
+         bty = "n", xpd=NA)
+  mtext(side=3, line=1, font = 2, cex=1.5, text=paste0("Percentage of strength t ", 
+  ifelse(ratiolim<10, paste0("CAs with N at most ",
+                                    100*ratiolim, " % of eCAN"), 
+                      "scenarii for which there is any solution")),
+        outer=TRUE)
+  mtext(side=1, line=-1, font = 1, cex=1, text=paste0("Package version: ", CAsVersion), outer=TRUE)
+  box(which="outer")
+}
+
+bpFun(Inf)
+bpFun(1.25)
+bpFun(1.05)
+bpFun(1)
+
+bpFun(Inf,25)
+bpFun(1.25,25)
+bpFun(1.05,25)
+bpFun(1,25)
+
+```
+
+
+## References
+
+**The Colbourn Covering array tables are currently unavailable at their usual location; temporarily, access is provided** [here](https://github.com/ugroempi/CAs/blob/main/ColbournTables.md).
+
+```{r references, results = "asis"}
+temp <- rd_html_get(rd_html, "References", "See") 
+for (i in seq_along(temp))
+{
+  if (grepl("[\\]+Sexpr[[]results=rd,stage=build[]][{].+[}]", temp[i]))
+  {
+    m <- regexpr("[\\]+Sexpr[[]results=rd,stage=build[]][{].+[}]", temp[i])
+    text1 <- substring(temp[i], 1, m-1)
+    code <- substring(temp[i], m, m + attr(m, "match.length"))
+    if (m + attr(m, "match.length") >= nchar(temp[i]))
+    {
+      text2 <- ""
+    } else
+    {
+      text2 <- substring(temp[i], m + attr(m,"match.length") + 1, nchar(temp[i]))
+    }
+    code <- gsub(".*[{]", "", code)
+    code <- gsub("[}].*", "", code)
+    code <- gsub("tools:::Rd_expr_doi", "my_Rd_expr_doi", code)
+    temp[i] <- paste(text1, eval(parse(text=code)), text2)
+  }
+}
+
+# this is a fix for Issue 19 - https://github.com/bertcarnell/SOAs/issues/19
+line_found <- grep("[_]II", temp)
+posit_found <- gregexpr("[_]II", temp[line_found])
+temp2 <- temp
+# temp2[line_found] <- paste0(substring(temp[line_found], 1, posit_found[[1]][2]-1),
+#                             "&#95;",
+#                             substring(temp[line_found], posit_found[[1]][2]+1, nchar(temp[line_found])))
+temp2[line_found] <- gsub("[>]http", ">`http", temp[line_found])
+temp2[line_found] <- gsub("pdf[<]", "pdf`<", temp2[line_found])
+
+cat(temp2)
+```
+

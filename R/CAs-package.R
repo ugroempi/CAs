@@ -1,19 +1,4 @@
 #' Overview of Package CAs
-#' @description Implements covering arrays, as proposed in
-#'     Groemping (2025) <doi:10.1109/ICSTW64639.2025.10962463>.
-#'     Uniform and mixed-level covering arrays are created and
-#'     can be assessed for their coverage properties.
-#'     The mathematical background of the constructions
-#'     is provided in the technical reports Groemping (2026)
-#'     <https://www1.bht-berlin.de/FB_II/reports/Report-2026-001.pdf>
-#'     for the uniform arrays and Groemping (2025)
-#'     <https://www1.bht-berlin.de/FB_II/reports/Report-2025-001.pdf>
-#'     for the mixed-level constructions.
-#'     The post-processing method by Nayeri, Colbourn, and Konjevod (2013)
-#'     <doi:10.1016/j.ejc.2012.07.017> is also provided.
-#'     In addition, there are preliminary tools for the creation of
-#'     sequence covering arrays.
-#'
 #' @section Details:
 #' This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 #' The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
