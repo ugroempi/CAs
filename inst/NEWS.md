@@ -1,5 +1,14 @@
 # NEWS
 
+October 3 2026, version 0.24-3
+ - made the package description more informative
+ - modified handling of NULL seeds: these are no longer 
+   made reproducible
+ - added missing \value sections (@returns)
+ - replaced \dontrun with \donttest
+ - removed some print commands, replaced others with message
+ - made a few minor edits
+
 September 22 2026, version 0.24-2
  - added missing usage entries for some N_- and k_-functions
  - shortened example times for powerCA and MTVTRouxtype
