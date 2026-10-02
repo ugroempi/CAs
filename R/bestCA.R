@@ -35,9 +35,8 @@
 #'       randomly assigns a fixed value to each flexible value.\cr
 #'       Thus, a seed is needed for reproducibility.
 #' @param seed \code{NULL} or an integer seed for making the
-#'       fixing of NA values reproducible; if \code{seed=NULL},
-#'       a seed is randomly obtained and stored in the attribute
-#'       \code{fixNA_seed} of the returned object.
+#'       fixing of NA values reproducible; a non-NULL seed is
+#'       stored in the attribute \code{fixNA_seed} of the returned object.
 #' @param internet logical; if FALSE, methods whose designs need an internet
 #'           connection are excluded
 #' @param exclude \code{NULL} or a character vector of method(s) to exclude,
@@ -197,7 +196,6 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
       aus <- eval(parse(text=labelToCode(constr, t, k, v, ...)))
   # }
   if (any(is.na(aus)) && fixNA){
-    if (is.null(seed)) seed <- sample(1:32000, 1)
     nNA <- sum(is.na(aus))
     set.seed(seed)
     aus[is.na(aus)] <- sample(0:(v-1), nNA, replace=TRUE)

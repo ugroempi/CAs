@@ -17,9 +17,9 @@
 #'       randomly assigns a fixed value to each flexible value.\cr
 #'       Thus, a seed is needed for reproducibility.
 #' @param seed \code{NULL} or an integer seed for making the
-#'       fixing of NA values reproducible; if \code{seed=NULL},
-#'       a seed is randomly obtained and stored in the attribute
-#'       \code{fixNA_seed} of the returned object.
+#'       fixing of NA values reproducible; a non-NULL seed
+#'       is stored in the attribute \code{fixNA_seed}
+#'       of the returned object.
 #' @param maxconstant logical: should constant rows be maximized ?\cr
 #'       ignored for internal arrays, applied for arrays loaded
 #'       from package \pkg{\link[DoE.base]{DoE.base}} only;
@@ -42,7 +42,7 @@
 #' \pkg{\link[DoE.base]{DoE.base}}
 #'
 #' @examples
-#' # a CA from DoE.base
+#' # a CA (without flexible values) from DoE.base
 #' miscCA(3, 5, 4)
 #'
 #' ## without making rows constant and without enforcing PCA
@@ -50,7 +50,8 @@
 #'
 #' # a CA that is internally stored
 #' # it has a single flexible value, which is per default fixed
-#' attributes(D <- miscCA(2, 14, 4))
+#' # the seed makes the fixing reproducible
+#' attributes(D <- miscCA(2, 14, 4, seed=374))
 #' Ns(2,14,4)  ## best possible
 #'
 
@@ -109,7 +110,6 @@ miscCA <- function(t, k, v, fixNA=TRUE, seed=NULL, maxconstant=FALSE, makePCA=FA
       if (!fixNA)
         attr(aus, "flexible") <- list(value=NA, profile=colSums(is.na(aus)))
       else{
-        if (is.null(seed)) seed <- sample(1:32000, 1)
         attr(aus, "fixNA_seed") <- seed
         tobefilled <- which(is.na(aus))
         nfill <- length(tobefilled)

@@ -31,8 +31,7 @@
 #'       run size reduction will not be attempted.
 #' @param innerRetry positive integer value, passed to \code{\link{postopNCK}};
 #'       it is sometimes but not always beneficial to increase it versus the default 1
-#' @param seed the seed for making \code{\link{postopNCK}} reproducible;\cr
-#'        if \code{NULL}, it will be randomly determined and reported with the result
+#' @param seed the seed for making \code{\link{postopNCK}} reproducible
 #' @param D a strength \code{t} CA (it may have mixed levels)
 #' @param cs integer vector of column numbers
 #' @param tolevs integer vector of target numbers of levels for the columns indicated
@@ -69,16 +68,17 @@
 #' again for removing even more rows.
 #'
 #' Without specifying a seed, the results will differ from call to call.
-#' The seed, even
-#' if not explicitly specified, is stored with the output, so that the result will
-#' always be reproducible, if desired.
+#' If you want it reproducible, make sure to set an integer seed. Run sizes and run times
+#' can be very seed-dependent in some situations, and it can happen that encountering a small
+#' design is a rare lucky case. Therefore, one may sometimes want to walk over a vector of
+#' random seeds and pick the best resulting design (reproducible by keeping track of the seeds).
 #'
 #' The run size optimization can take a long time. It can be suppressed by setting
 #' \code{outerRetry} to zero, and this should be done for large settings.
 #' Per default, the optimization is switched on. Its progress is reported
-#' by interim messages. The functions react beneficial to user interrupts: They
-#' return the result from the previous successful \emph{outer} retry (make sure the outer
-#' retry has finished before escaping calculations!).
+#' by interim messages. The functions (try to) react beneficial to user interrupts:
+#' They return the result from the previous successful \emph{outer} retry
+#' (make sure the outer retry has finished before escaping calculations!).
 #'
 #' Function \code{N_upper_MCA} reports an upper bound on the run number for an MCA
 #' of the setting. That bound is obtained by using function \code{\link{bestN}} for
@@ -290,7 +290,6 @@ MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
 CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
                       outerRetry=10, innerRetry=1, seed=NULL, ...){
   Call <- sys.call()
-  if (is.null(seed)) seed <- sample(32000,1)
 
   # Input validation with meaningful error messages
   if (missing(D))
@@ -369,7 +368,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
     attr(latest_result, "rowOrder") <- NULL
     attrs <- attrs_stored
     attrs$Call <- c(attrs_stored$Call, Call)
-    attrs$seed <- c(attrs$seed, seed)
+    attrs$seed <- c(attrs$seed, ifelse(is.null(seed), NA, seed))
     attributes(latest_result) <- c(dim=list(dim(latest_result)),
                                    attrs[setdiff(names(attrs),"dim")])
     return(latest_result)
@@ -385,7 +384,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
   attr(aus, "rowOrder") <- NULL
   attrs <- attrs_stored
   attrs$Call <- c(attrs_stored$Call, Call)
-  attrs$seed <- c(attrs$seed, seed)
+  attrs$seed <- c(attrs$seed, ifelse(is.null(seed), NA, seed))
   attributes(aus) <- c(dim=list(dim(aus)), attrs[setdiff(names(attrs),"dim")])
   aus
 }
@@ -394,7 +393,6 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
 MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
                  seed=NULL, ...){
   Call <- sys.call()
-  if (is.null(seed)) seed <- sample(32000, 1)
 
   # Input validation with meaningful error messages
   if (missing(nlevels))

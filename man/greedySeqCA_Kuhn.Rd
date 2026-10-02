@@ -41,8 +41,8 @@ The function \code{greedySeqCA_Kuhn} implements the construction of Kuhn et al. 
 from t! random permutations of the the integers 1,...,k and adds a further random permutation,
 until all orders of all t-tuples are covered.\cr
 For \code{postopt=TRUE}, it then \emph{identifies the redundant elements and removes all rows that
-contain redundant elements only (would be easiest, but at present not done)} applies iterative run size reduction
-using function \code{reduce_rows_iterative_complete}.
+contain redundant elements only (would be easiest, but at present not done)} applies
+iterative run size reduction using function \code{reduce_rows_iterative_complete}.
 
 The function \code{iter_greedySeqCA_Kuhn} iteratively repeats the process and keeps the best
 outcome.

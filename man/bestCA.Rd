@@ -39,9 +39,8 @@ randomly assigns a fixed value to each flexible value.\cr
 Thus, a seed is needed for reproducibility.}
 
 \item{seed}{\code{NULL} or an integer seed for making the
-fixing of NA values reproducible; if \code{seed=NULL},
-a seed is randomly obtained and stored in the attribute
-\code{fixNA_seed} of the returned object.}
+fixing of NA values reproducible; a non-NULL seed is
+stored in the attribute \code{fixNA_seed} of the returned object.}
 
 \item{...}{handed to construction function, currently,
 only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}

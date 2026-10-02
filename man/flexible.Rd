@@ -39,7 +39,7 @@ postopNCK(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
 \item{innerMaxnochange}{integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements}
 
 \item{seed}{\code{NULL}, or an integer-valued seed for the random process;\cr
-the seed becomes an attribute of the output object}
+a non-NULL seed is stored in the \code{seed} attribute of the output object}
 }
 \value{
 Function \code{flexpos} returns a logical matrix with \code{TRUE} values indicating
@@ -78,7 +78,7 @@ as those cannot contribute to \code{t}-coverage. It implements a variant of the 
 If successful, it returns \code{D} after removal of as many as possible flexible
 rows, as created by \code{markflex}. If that immediate and cheap approach does not
 work, the function tries to iteratively improve the number of flexible values in the
-last row, until the row has flexible entries only. It that is not successful in a given
+last row, until the row has flexible entries only. If that is not successful in a given
 number of iterations (\code{innerMaxnochange}),
 an inner retry step switches to a different last row to make flexible
 (at most \code{innerRetry} attempts).\cr

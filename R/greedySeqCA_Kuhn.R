@@ -28,8 +28,8 @@
 #'   from t! random permutations of the the integers 1,...,k and adds a further random permutation,
 #'   until all orders of all t-tuples are covered.\cr
 #'   For \code{postopt=TRUE}, it then *identifies the redundant elements and removes all rows that
-#'   contain redundant elements only (would be easiest, but at present not done)* applies iterative run size reduction
-#'   using function \code{reduce_rows_iterative_complete}.
+#'   contain redundant elements only (would be easiest, but at present not done)* applies
+#'   iterative run size reduction using function \code{reduce_rows_iterative_complete}.
 #'
 #' The function \code{iter_greedySeqCA_Kuhn} iteratively repeats the process and keeps the best
 #' outcome.
@@ -84,9 +84,7 @@ greedySeqCA_Kuhn <- function(k, t, nsamp=10, postopt=TRUE, seed=NULL, ...){
   checkbits[initiallycovereds] <- 1
   # ts <- matrix(NA, 0, k)
   nuncovered <- sum(1-checkbits)
-  ## set a seed for sampling
-  ## and for picking a single run from a non-unique best set
-  if (is.null(seed)) seed <- sample(32000, 1)
+  ## set a seed for picking a single run from a non-unique best set
   set.seed(seed)
   zaehl <- 0
   while(nuncovered > 0){

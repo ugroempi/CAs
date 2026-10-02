@@ -27,7 +27,7 @@
 #' @param innerRetry integer-valued number of reshuffles for escaping local optimum, if \code{innerMaxnochange} iterations were not successful
 #' @param innerMaxnochange integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements
 #' @param seed \code{NULL}, or an integer-valued seed for the random process;\cr
-#'        the seed becomes an attribute of the output object
+#'        a non-NULL seed is stored in the \code{seed} attribute of the output object
 #' @param ... currently not used
 #'
 #' @section Details:
@@ -53,7 +53,7 @@
 #' If successful, it returns \code{D} after removal of as many as possible flexible
 #' rows, as created by \code{markflex}. If that immediate and cheap approach does not
 #' work, the function tries to iteratively improve the number of flexible values in the
-#' last row, until the row has flexible entries only. It that is not successful in a given
+#' last row, until the row has flexible entries only. If that is not successful in a given
 #' number of iterations (\code{innerMaxnochange}),
 #' an inner retry step switches to a different last row to make flexible
 #' (at most \code{innerRetry} attempts).\cr
@@ -386,7 +386,6 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
     return(D)
   }
   Di <- markflex(D, t, fixrows=fixrows, verbose=verbose, ...)
-  if (is.null(seed)) seed <- sample(32000,1)
   ncur <- nold <- nrow(D)
   count_unchanged <- 0
   set.seed(seed)

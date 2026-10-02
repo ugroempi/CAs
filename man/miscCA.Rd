@@ -19,9 +19,9 @@ randomly assigns a fixed value to each flexible value.\cr
 Thus, a seed is needed for reproducibility.}
 
 \item{seed}{\code{NULL} or an integer seed for making the
-fixing of NA values reproducible; if \code{seed=NULL},
-a seed is randomly obtained and stored in the attribute
-\code{fixNA_seed} of the returned object.}
+fixing of NA values reproducible; a non-NULL seed
+is stored in the attribute \code{fixNA_seed}
+of the returned object.}
 
 \item{maxconstant}{logical: should constant rows be maximized ?\cr
 ignored for internal arrays, applied for arrays loaded
@@ -51,7 +51,7 @@ description of the available CAs.
 }
 
 \examples{
-# a CA from DoE.base
+# a CA (without flexible values) from DoE.base
 miscCA(3, 5, 4)
 
 ## without making rows constant and without enforcing PCA
@@ -59,7 +59,8 @@ attributes(miscCA(3, 5, 4, maxconstant=FALSE))
 
 # a CA that is internally stored
 # it has a single flexible value, which is per default fixed
-attributes(D <- miscCA(2, 14, 4))
+# the seed makes the fixing reproducible
+attributes(D <- miscCA(2, 14, 4, seed=374))
 Ns(2,14,4)  ## best possible
 
 }
