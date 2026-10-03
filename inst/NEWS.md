@@ -1,6 +1,6 @@
 # NEWS
 
-October 4 2026, version 0.24-3
+October 3 2026, version 0.24-3
  - made the package description more informative
  - modified handling of NULL seeds: these are no longer 
    made reproducible
