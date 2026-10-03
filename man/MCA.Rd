@@ -148,17 +148,6 @@ D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
 dim(D)
 head(D); tail(D)
 
-\donttest{
-## different setting,
-## optimize run size within the call (using a good seed)
-D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
-coverage(D, 2)
-attributes(D)
-## reasonably quickly reduces to 11 runs on my Windows machine
-## lower bound is 9 runs (3*3)
-## CAgen yields 14 runs with IPOG-F
-}
-
 ## create a large design without trying a run size optimization
 D <- MCA2(c(rep(2,70), rep(3,80), rep(4,8), rep(6,2)),
          outerRetry=0)
@@ -166,25 +155,40 @@ dim(D)
 coverage(D, 2)
 ## alternative call for the same setting
 D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
-         outerRetry=0)
-\donttest{
-Doptimized <- postopNCK(D, 2)
-## This runs for a long while,
-## and it is not known whether it eventually improves
-## run size for the 168 columns to fewer than 46 runs
-## (never waited long enough).
+          outerRetry=0)
+\dontrun{
+  ## make a lucky run reproducible by using a random seed
+  myseed <- sample(32000, 1)
+  Doptimized <- postopNCK(D, 2, seed=myseed)
+  ## This runs for an excessive time without user interruption.
+  ## There have occasionally been cases (e.g. seed 75 on windows),
+  ## for which the run size was reduced to 45 runs early.
+  ## It is not known whether it eventually improves more
+  ##    (lower bound 24 runs is likely not achievable).
+  ## The run can be stopped by <ESC>, once patience runs out
+  ##    or enough improvement was achieved.
 }
 
 ## use the argument D for starting with a naive
 ##      CA of 45 runs for 30 5-level columns
 ## (default would start with CA(29, 2, 7, 5), which is the best for
 ##      seven 5-level columns and permits expansion as required);
-## run size optimization quickly reduces the 45 runs to 23 runs
-## (20 is the lower bound)
 D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
          outerRetry=0)
-\donttest{
-   Doptimized <- postopNCK(D, 2)
+\dontrun{
+   ## make a lucky run reproducible by using a random seed
+   myseed <- sample(32000, 1)
+   ## The code below uses the default number of steps
+   ## (which would run for excessive time),
+   ## but can be interrupted with <ESC> if run size improvement
+   ## has been sufficient or seems to stall
+   ## (make sure to wait until the outer retry has safely finished);
+   ## run size optimization quickly reduces the 45 (or 29) runs
+   ##      to 22 or 23 runs (20 is the lower bound);
+   ##      21 runs have also been observed.
+   ## Without user interrupt, the code will run
+   ##      for excessively long time.
+   Doptimized <- postopNCK(D, 2, seed=myseed)
 }
 
 ########################################################
@@ -193,15 +197,6 @@ D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
 ## create a strength 4 CA, initially unoptimized
 D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
 dim(D) ## much larger than the optimum run size
-\donttest{
-## with seed 888, the optimum is quickly reached
-Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
-dim(Doptimized)
-  ## optimum 4*4*3*2=96
-  ## many other seeds stop at 97 or 98 runs after longer iteration
-  ## could also use
-     D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=888)
-}
 
 ########################################################
 ### CA_to_MCA
@@ -240,6 +235,29 @@ dim(D)
 D <- projBoseMCA(c(rep(6,8),8))
 head(D)
 dim(D)
+
+\dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
+## NOTE: examples() skips the examples below (for MCA2 and MCAt),
+## unless the user specifies
+## options(run_heavy_examples = TRUE)
+
+## different setting,
+## optimize run size within the call (using a good seed)
+D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
+coverage(D, 2)
+attributes(D)
+## reasonably quickly reduces to 11 runs on my Windows machine
+## lower bound is 9 runs (3*3)
+## CAgen yields 14 runs with IPOG-F
+
+## with seed 888, the optimum is quickly reached on Windows
+Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
+dim(Doptimized)
+  ## optimum 4*4*3*2=96
+  ## many other seeds stop at 97 or 98 runs after longer iteration
+  ## could also use
+     D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=888)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Colbourn (2008), Groemping (2025), Moura et al. (2003), Nayeri et al. (2013),

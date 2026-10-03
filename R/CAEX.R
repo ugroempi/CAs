@@ -103,19 +103,21 @@
 #' attributes(D)
 #' is.PCA(D)
 #'
+#' @examplesIf getOption("run_heavy_examples", default = FALSE)
 #' ## from two CAs with flexible values
-#' ## not run because of slightly longish run time
-#' \donttest{
+#' ## (slightly longish run time)
 #' D <- CAEX(N=43)
 #' attributes(D)
-#' }
+#'
 #' ############################################################
 #'
 #' ##############################################################
 #' ## available constructions from function CAEX
 #' ##############################################################
-#' \donttest{
-#' # this would run too long for some arrays
+#' #      NOTE: examples() skips this construction example,
+#' #      unless the user specifies
+#' #      options(run_heavy_examples = TRUE)
+#  #      as it would run too long for some arrays
 #' # longest about 07 min for N=49 (using productCA, like two other cases)
 #' # about 13 s for N=50 (using productPCA, like most cases)
 #' allCAEX <- lapply(11:50, function(obj) CAEX(N=obj))
@@ -180,8 +182,6 @@
 #' # 49 49  90344 19640   CAxCA    60884  ## approx 7 min (productCA slower)
 #' # 50 50 112770 60078 PCAxPCA    76842  ## approx 13 seconds (productPCA)
 #'
-#' }
-
 #' @export
 CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
   call <- sys.call()

@@ -95,28 +95,33 @@ and the \code{probreshuffle} argument does not work yet for positive probabiliti
 }
 
 \examples{
-## a small SeqCA with originally 13 rows that is post-optimized quickly to 9
+## a small SeqCA with originally 13 rows
 A_TJ <- greedySeqCA_TJ(6,3, postopt = FALSE, seed=2323)
 dim(A_TJ)
 
+\donttest{
+## on Windows, the above A_TJ is quickly postoptimized to 9 runs
 A_TJ_reduced <- optimize_SeqCA(A_TJ, 3, target=9, verbose=TRUE)
 coverageSeqCA(A_TJ_reduced, 3)
-\donttest{
+
 ## one less row is possible, but requires a somewhat slow simulated
 ## annealing optimization
 A_TJ_reduced8 <- optimize_SeqCA(A_TJ, 3, target=8, verbose=TRUE)
-
-## without setting the target, one would have to wait until
-## the simulated annealing for reducing to 7 runs failed
-  optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)
 }
 
-\donttest{
-## much slower
+\dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
+# NOTE: examples() skips the following code,
+# unless the user specifies
+# options(run_heavy_examples = TRUE)
+
+## without setting the optimization target, one would have to wait until
+## the simulated annealing for reducing to 7 runs failed
+optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)
+
+## Here: Kuhn much slower than TJ
 nrow(A <- greedySeqCA_Kuhn(6, 4, seed=75))  ## 52 before, 41 after reduce
 aus <- optimize_SeqCA(A, 4, skipreduce=TRUE, verbose=TRUE)
-
-}
+\dontshow{\}) # examplesIf}
 }
 \references{
 Torres-Jimenez et al. (2022)

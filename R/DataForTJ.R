@@ -60,9 +60,6 @@ globalVariables(c("TJcat", "TJ2level_CAs"))
 #' fivenum(TJcat$N)
 #' xtabs(~ v + t, TJcat)
 #'
-#' ## the following is not tested because of run times
-#' ## in CRAN checks
-#' \donttest{
 #' fun <- function(t,k,v) eCAN(t,k,v)$CAN
 #' fun <- Vectorize(fun)
 #' diff <- TJcat[,"N"]-fun(TJcat[,"t"], TJcat[,"k"], TJcat[,"v"])
@@ -76,7 +73,6 @@ globalVariables(c("TJcat", "TJ2level_CAs"))
 #' ##    (i.e., colbournBigFrame would have to be updated)
 #' fun <- function(t,k,v) eCAN(t,k,v)$Source
 #' fun <- Vectorize(fun)
-#' }
 #'
 
 #'@rdname DataForTJ

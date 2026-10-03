@@ -41,11 +41,10 @@ A <- greedySeqCA_naive(6, 4, seed=17)
 dim(A)  ## 67 rows
 coverageSeqCA(A, 4) ## perfect coverage
 \donttest{
-  ## somewhat slow
+  ## somewhat slow (about 60s on my machine)
   Areduced <- reduce_rows_iterative_complete(A, 4)
   dim(Areduced)  ## 42 runs, i.e. reduced by about 1/3
   coverageSeqCA(Areduced,4)   ## still perfect coverage
 }
-
 
 }

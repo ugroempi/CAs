@@ -54,9 +54,6 @@ head(DPcat)
 tail(DPcat)
 boxplot(N ~ v, DPcat, las=1, horizontal=TRUE)
 
-## the following is not tested because of run times
-## in CRAN checks
-\donttest{
 fun <- function(k,v) eCAN(2,k,v)$CAN
 fun <- Vectorize(fun)
 diff <- PCAcat[,"N"]-fun(PCAcat[,"k"], PCAcat[,"v"])
@@ -70,7 +67,6 @@ fivenum(diff)
 ## 0    8   23  75  376
 quot <- DPcat[,"N"]/fun(DPcat[,"k"], DPcat[,"v"])
 fivenum(quot)
-}
 
 }
 \references{

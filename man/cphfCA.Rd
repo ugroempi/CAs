@@ -93,25 +93,25 @@ dim(D)
 }
 Ns(3,71,4)   ## size is current best but not eCAN
 
-## the CPHF for the 91st row has flexible entries
-CPHFcat[91,]
-rowSums(is.na(WCS_CPHFs[["4"]][["3"]][["3504"]]))
-## many flexible values in the last row,
-## eCAN claims one row less for this construction
-\donttest{
-  ## creation of this CA is slow because of the many columns
-  D <- cphfCA(4,3504,3)  ## about 3 minutes on author's machine
-  dim(D)
-}
-Ns(4,3504,3)   ## by far the best implemented
-
 # strength 6
 Ns(6, 10, 3)  ## by far best implemented,
               ## slightly better array from group who does not share their arrays
 dim(D <- bestCA(6,10,3))
 coverage(D, 6)
 
-
+## the CPHF for the 91st row has flexible entries
+CPHFcat[91,]
+rowSums(is.na(WCS_CPHFs[["4"]][["3"]][["3504"]]))
+## many flexible values in the last row,
+## eCAN claims one row less for this construction
+Ns(4,3504,3)   ## by far the best implemented
+\dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
+# NOTE: examples() skips this optimization, unless the user specifies
+# options(run_heavy_examples = TRUE)
+  ## creation of this CA is slow because of the many columns
+  D <- cphfCA(4,3504,3)  ## about 3 minutes on author's machine
+  dim(D)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Wagner, Colbourn and Simos (2022)

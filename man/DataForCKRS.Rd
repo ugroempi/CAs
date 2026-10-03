@@ -48,9 +48,6 @@ tail(CKRScat)
 fivenum(CKRScat$N)
 xtabs(~ v + t, CKRScat)
 
-## the following is not tested because of run times
-## in CRAN checks
-\donttest{
 fun <- function(t,k,v) eCAN(t,k,v)$CAN
 fun <- Vectorize(fun)
 diff <- CKRScat[,"N"]-fun(CKRScat[,"t"], CKRScat[,"k"], CKRScat[,"v"])
@@ -60,7 +57,6 @@ ratio <- CKRScat[,"N"]/fun(CKRScat[,"t"], CKRScat[,"k"], CKRScat[,"v"])
 fivenum(ratio)
 ## 1 1 1.0010 1.0349 1.25
 ## at least half of the arrays are pretty close to the best-known
-}
 
 }
 \references{

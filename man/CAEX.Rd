@@ -112,19 +112,20 @@ D <- CAEX(N=34)
 attributes(D)
 is.PCA(D)
 
+\dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
 ## from two CAs with flexible values
-## not run because of slightly longish run time
-\donttest{
+## (slightly longish run time)
 D <- CAEX(N=43)
 attributes(D)
-}
+
 ############################################################
 
 ##############################################################
 ## available constructions from function CAEX
 ##############################################################
-\donttest{
-# this would run too long for some arrays
+#      NOTE: examples() skips this construction example,
+#      unless the user specifies
+#      options(run_heavy_examples = TRUE)
 # longest about 07 min for N=49 (using productCA, like two other cases)
 # about 13 s for N=50 (using productPCA, like most cases)
 allCAEX <- lapply(11:50, function(obj) CAEX(N=obj))
@@ -188,8 +189,7 @@ k1Achieved <- sapply(allCAEX, function(obj) attr(obj, "PCAstatus")$k1)
 # 48 48  80789 41137 PCAxPCA    55151
 # 49 49  90344 19640   CAxCA    60884  ## approx 7 min (productCA slower)
 # 50 50 112770 60078 PCAxPCA    76842  ## approx 13 seconds (productPCA)
-
-}
+\dontshow{\}) # examplesIf}
 }
 \references{
 Torres-Jimenez, Acevedo-Juarez and Avila-George (2021)

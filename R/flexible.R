@@ -136,6 +136,7 @@
 #'
 #' ## postopNCK is fast on trivial problems like the above,
 #' ## but may take its time otherwise
+#' ## such examples can be found in the help for MCA2
 
 #' @export
 markflex <- function(D, t, fixrows=0, verbose=0, ...){

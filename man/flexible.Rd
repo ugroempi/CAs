@@ -152,6 +152,7 @@ coverage(plan_postopNCK, 2)
 
 ## postopNCK is fast on trivial problems like the above,
 ## but may take its time otherwise
+## such examples can be found in the help for MCA2
 }
 \references{
 Nayeri, Colbourn and Konjevod (2013)

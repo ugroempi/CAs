@@ -46,23 +46,24 @@
 #' ## t=6, k=7
 #' dim(SeqCA_Levenshtein(7))
 #'
-#' \donttest{
-#' ## runs about 26 seconds in R 4.3 on Windows 11
-#' ## with 32 GB RAM and Intel(R) Core(TM) i7-10610U CPU @ 1.80GHz (2.30 GHz)
+#' ## t=15, k=16
+#' try(SeqCA_Levenshtein(16))
+#'
+#' ## t=20, k=21
+#' try(dim(SeqCA_Levenshtein(21)))
+#'
+#' @examplesIf getOption("run_heavy_examples", default = FALSE)
+#' # NOTE: examples() skips the following code,
+#' # unless the user specifies
+#' # options(run_heavy_examples = TRUE)
+#' ## runs about 16 seconds in R 4.6.1 on Windows 11
+#' ## with 32 GB RAM and Intel(R) Core(TM) ultra 7 286 V CPU @ (2.2GHz)
 #'
 #' ## t=9, k=10
 #' system.time(print(dim(SeqCA_Levenshtein(10))))
 #'
 #' ## t=10, k=11 will take more than 11 times as long
-#' }
 #'
-#' ## t=15, k=16
-#' try(SeqCA_Levenshtein(16))
-#'
-#' ## t=20, k=21
-#' try(dim(SCA_Levenshtein(21)))
-#'
-
 #' @export
 SeqCA_Levenshtein <- function(k, t=k-1, a=0, ...){
   stopifnot(t==k-1)
