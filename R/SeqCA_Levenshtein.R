@@ -1,4 +1,4 @@
-#' Levensthein creation of an optimal strength t SCA for k = t + 1 columns
+#' Levenshtein creation of an optimal strength t SCA for k = t + 1 columns
 #'
 #' based on the very clear presentation in the master thesis by Na (2021)
 #'
@@ -27,7 +27,7 @@
 #' The function works fast for small k; as k! increases very fast (much faster than 2^k), k larger than 10 need
 #' a lot of storage space and are also slow to process (k=10 on my machine takes about 26 seconds).
 #'
-#' @references Levenstein (1991) and Na (2021)
+#' @references Levenshtein (1991) and Na (2021)
 #'
 #' @author Ulrike Groemping
 #'

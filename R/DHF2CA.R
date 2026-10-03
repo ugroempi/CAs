@@ -30,7 +30,7 @@
 #' @returns a CA(chi + (N-rho) * M, t, k, v) (matrix, not of class \code{ca}, as there are no
 #' guarantees regarding the strength, because guarding this is left to the user or to calling functions).
 #'
-#' @references Colbourn, Doughterty and Horsley (2019) and references therein, as well as Colbourn and Torres-Jimenez 2010.
+#' @references Colbourn, Dougherty and Horsley (2019) and references therein, as well as Colbourn and Torres-Jimenez 2010.
 #'
 #' @examples
 #' #########################################

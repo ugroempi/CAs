@@ -14,7 +14,8 @@ October 4 2026, version 0.24-3
    is set to TRUE (by @examplesIf)
  - changed the maximum number of parallel threads in examples to 2
  - removed some print commands, replaced others with message
- - made a few minor edits
+ - added a WORDLIST (for the DESCRIPTION authors) and 
+   made a few minor edits
 
 September 22 2026, version 0.24-2
  - added missing usage entries for some N_- and k_-functions

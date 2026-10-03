@@ -104,5 +104,5 @@ Ns(4, 19, 2)
 
 }
 \references{
-Colbourn, Doughterty and Horsley (2019) and references therein, as well as Colbourn and Torres-Jimenez 2010.
+Colbourn, Dougherty and Horsley (2019) and references therein, as well as Colbourn and Torres-Jimenez 2010.
 }

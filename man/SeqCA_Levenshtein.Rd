@@ -2,7 +2,7 @@
 % Please edit documentation in R/SeqCA_Levenshtein.R
 \name{SeqCA_Levenshtein}
 \alias{SeqCA_Levenshtein}
-\title{Levensthein creation of an optimal strength t SCA for k = t + 1 columns}
+\title{Levenshtein creation of an optimal strength t SCA for k = t + 1 columns}
 \usage{
 SeqCA_Levenshtein(k, t = k - 1, a=0, ...)
 }
@@ -70,7 +70,7 @@ system.time(print(dim(SeqCA_Levenshtein(10))))
 \dontshow{\}) # examplesIf}
 }
 \references{
-Levenstein (1991) and Na (2021)
+Levenshtein (1991) and Na (2021)
 }
 \author{
 Ulrike Groemping

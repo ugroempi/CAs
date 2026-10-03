@@ -132,7 +132,7 @@ Bose, R.C. (1938). On the application of the properties of Galois fields to the 
 
 Bush, K.A. (1952). Orthogonal Arrays of Index Unity. Annals of Mathematical Statistics 23, 426-434.
 
-Chateauneuf, M., Colbour.n, C. and Kreher, D.L. (1999). Covering Arrays of Strength Three. Des. Codes Cryptogr. 16, 235-242.
+Chateauneuf, M., Colbourn, C. and Kreher, D.L. (1999). Covering Arrays of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 
 Chateauneuf, M. and Kreher, D.L. (2002). On the state of strength‐three covering arrays. Journal of Combinatorial Designs, vol. 10, no. 4, pp. 217-238. doi: 10.1002/jcd.10002.
 

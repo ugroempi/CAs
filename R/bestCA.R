@@ -29,7 +29,7 @@
 #' @param maxN integer: the largest number of runs N for
 #'     which an array is desired; if the smallest possible N is larger,
 #'     an error is thrown; default: 1000000
-#'     (too large for being created in reaonable time on most computers)
+#'     (too large for being created in reasonable time on most computers)
 #' @param fixNA logical: should flexible values be fixed?\cr
 #'       If the ingoing CA has flexible values, \code{fixNA=TRUE}
 #'       randomly assigns a fixed value to each flexible value.\cr
