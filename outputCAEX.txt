@@ -1,0 +1,262 @@
+[1] "2026-10-04 13:20:19 CEST"
+
+CAEX> ## a stored CA
+CAEX> D <- CAEX(12) ## k=12 columns
+
+CAEX> eCAN(2,12,3)
+  CAN                Source
+1  15 tabu search (Nurmela)
+
+CAEX> coverage(D, 2)
+ total    ave    min simple 
+     1      1      1      1 
+
+CAEX> ############################################################
+CAEX> ## CAs obtained using function productCA as the workhorse
+CAEX> 
+CAEX> ## from two CAs without flexible values
+CAEX> D <- CAEX(N=34)
+
+CAEX> attributes(D)
+$dim
+[1]   34 2116
+
+$Call
+D <- CAEX(N=34)
+
+$PCAstatus
+$PCAstatus$type
+[1] "PCA"
+
+$PCAstatus$k1
+[1] 460
+
+$PCAstatus$k2
+[1] 1656
+
+
+$class
+[1] "ca"     "matrix" "array" 
+
+$t
+[1] 2
+
+$lineage
+$lineage$method
+[1] "CAxCA"
+
+$lineage$one
+[1] "ca18.2.3.46"
+
+$lineage$two
+[1] "ca18.2.3.46"
+
+$lineage$k1_paper
+[1] 1426
+
+
+
+CAEX> is.PCA(D)
+[1] TRUE
+attr(,"PCAstatus")
+attr(,"PCAstatus")$type
+[1] "PCA"
+
+attr(,"PCAstatus")$k1
+[1] 460
+
+attr(,"PCAstatus")$k2
+[1] 1656
+
+
+CAEX> ## Don't show: 
+CAEX> if (getOption("run_heavy_examples", default = FALSE)) withAutoprint({ # examplesIf
+CAEX+ ## End(Don't show)
+CAEX+ ## from two CAs with flexible values
+CAEX+ ## (slightly longish run time)
+CAEX+ ## NOTE: example() skips this example,
+CAEX+ ##      unless the user specifies
+CAEX+ ##      options(run_heavy_examples = TRUE)
+CAEX+ D <- CAEX(N=43)
+CAEX+ attributes(D)
+CAEX+ 
+CAEX+ ############################################################
+CAEX+ 
+CAEX+ ##############################################################
+CAEX+ ## available constructions from function CAEX
+CAEX+ ##############################################################
+CAEX+ #      NOTE: example() skips this construction example,
+CAEX+ #      unless the user specifies
+CAEX+ #      options(run_heavy_examples = TRUE)
+CAEX+ # longest about 07 min for N=49 (using productCA, like two other cases)
+CAEX+ # about 13 s for N=50 (using productPCA, like most cases)
+CAEX+ allCAEX <- lapply(11:50, function(obj) CAEX(N=obj))
+CAEX+ 
+CAEX+ dimsAchieved <- t(sapply(allCAEX, dim))
+CAEX+ colnames(dimsAchieved) <- c("N","k")
+CAEX+ k1Achieved <- sapply(allCAEX, function(obj) attr(obj, "PCAstatus")$k1)
+CAEX+ (CAEXinfos <- cbind(as.data.frame(cbind(dimsAchieved, k1=k1Achieved)),
+CAEX+      method=unlist(lapply(CAEX_lineages[[1]][[1]],
+CAEX+            function(obj) ifelse(is.character(obj), "stored", obj[1]))),
+CAEX+      k1_paper=c(4,4,6,7,14,15,22,31,34,45,69,76,99,144,138,185,294,295,414,
+CAEX+                 582,655,872,1327,1426,1938,2918,3210,4163,6262,6842,8838,
+CAEX+                 12216,13485,18894,27606,30271,39387,55151,60884,76842)
+CAEX+                 ))
+CAEX+ ## see optimality by comparing with
+CAEX+ ## TJcat[which(TJcat[,"t"]==2 & TJcat[,"v"]==3 & TJcat[,"N"]<=50)[-1],c("k","N")])
+CAEX+ 
+CAEX+ #     N      k    k1  method k1_paper
+CAEX+ # 11 11      5     4  stored        4
+CAEX+ # 12 12      7     4  stored        4
+CAEX+ # 13 13      9     6  stored        6
+CAEX+ # 14 14     10     7  stored        7
+CAEX+ # 15 15     20    14  stored       14
+CAEX+ # 16 16     21    15  stored       15
+CAEX+ # 17 17     29    22  stored       22
+CAEX+ # 18 18     46    31  stored       31
+CAEX+ # 19 19     49    34  stored       34
+CAEX+ # 20 20     63    45  stored       45
+CAEX+ # 21 21     93    69  stored       69
+CAEX+ # 22 22    107    76  stored       76
+CAEX+ # 23 23    138    99  stored       99
+CAEX+ # 24 24    199   144  stored      144
+CAEX+ # 25 25    216   138  stored      138
+CAEX+ # 26 26    288   185  stored      185
+CAEX+ # 27 27    435   294  stored      294
+CAEX+ # 28 28    449   295  stored      295
+CAEX+ # 29 29    610   414  stored      414
+CAEX+ # 30 30    878   582  stored      582
+CAEX+ # 31 31    964   655  stored      655
+CAEX+ # 32 32   1308   872  stored      872
+CAEX+ # 33 33   1964  1327  stored     1327
+CAEX+ # 34 34   2116   460   CAxCA     1426  ## < 1 second,
+CAEX+                                        ## or 95 seconds with maxk1=TRUE
+CAEX+ # 35 35   2700  1938  stored     1938
+CAEX+ # 36 36   3918  2139 PCAxPCA     2918  ## < 1 second,
+CAEX+                                        ## or > 8 minutes with maxk1=TRUE
+CAEX+ # 37 37   4457  2356 PCAxPCA     3210
+CAEX+ # 38 38   5763  3069 PCAxPCA     4163
+CAEX+ # 39 39   8329  4464 PCAxPCA     6262
+CAEX+ # 40 40   9207  5244 PCAxPCA     6842
+CAEX+ # 41 41  11898  6831 PCAxPCA     8838
+CAEX+ # 42 42  17895  9114 PCAxPCA    12216  ## approx 1.3 seconds (productPCA),
+CAEX+                                        ##   or approx. 10.5 min with maxk1=TRUE
+CAEX+ # 43 43  20010  4350   CAxCA    13485  ## approx 16 seconds (productCA slower),
+CAEX+                                        ##   or approx 11.5 min with maxk1=TRUE
+CAEX+ # 44 44  25317 14256 PCAxPCA    18894  ## approx 1.9 seconds (productPCA)
+CAEX+                                        ##   or more than 40 min with maxk1=TRUE
+CAEX+ # 45 45  37071 20286 PCAxPCA    27606
+CAEX+ # 46 46  42174 22344 PCAxPCA    30271
+CAEX+ # 47 47  54531 29106 PCAxPCA    39387
+CAEX+ # 48 48  80789 41137 PCAxPCA    55151
+CAEX+ # 49 49  90344 19640   CAxCA    60884  ## approx 7 min (productCA slower)
+CAEX+ # 50 50 112770 60078 PCAxPCA    76842  ## approx 13 seconds (productPCA)
+CAEX+ ## Don't show: 
+CAEX+ }) # examplesIf
+> D <- CAEX(N=43)
+> attributes(D)
+$dim
+[1]    43 20010
+
+$Call
+D <- CAEX(N=43)
+
+$PCAstatus
+$PCAstatus$type
+[1] "PCA"
+
+$PCAstatus$k1
+[1] 4350
+
+$PCAstatus$k2
+[1] 15660
+
+
+$class
+[1] "ca"     "matrix" "array" 
+
+$t
+[1] 2
+
+$lineage
+$lineage$method
+[1] "CAxCA"
+
+$lineage$one
+[1] "ca18.2.3.46"
+
+$lineage$two
+[1] "ca27.2.3.435"
+
+$lineage$k1_paper
+[1] 13485
+
+
+> ############################################################
+> 
+> ##############################################################
+> ## available constructions from function CAEX
+> ##############################################################
+> #      NOTE: example() skips this construction example,
+> #      unless the user specifies
+> #      options(run_heavy_examples = TRUE)
+> # longest about 07 min for N=49 (using productCA, like two other cases)
+> # about 13 s for N=50 (using productPCA, like most cases)
+> allCAEX <- lapply(11:50, function(obj) CAEX(N=obj))
+> dimsAchieved <- t(sapply(allCAEX, dim))
+> colnames(dimsAchieved) <- c("N","k")
+> k1Achieved <- sapply(allCAEX, function(obj) attr(obj, "PCAstatus")$k1)
+> (CAEXinfos <- cbind(as.data.frame(cbind(dimsAchieved, k1=k1Achieved)),
++      method=unlist(lapply(CAEX_lineages[[1]][[1]],
++            function(obj) ifelse(is.character(obj), "stored", obj[1]))),
++      k1_paper=c(4,4,6,7,14,15,22,31,34,45,69,76,99,144,138,185,294,295,414,
++                 582,655,872,1327,1426,1938,2918,3210,4163,6262,6842,8838,
++                 12216,13485,18894,27606,30271,39387,55151,60884,76842)
++                 ))
+    N      k    k1  method k1_paper
+11 11      5     4  stored        4
+12 12      7     4  stored        4
+13 13      9     6  stored        6
+14 14     10     7  stored        7
+15 15     20    14  stored       14
+16 16     21    15  stored       15
+17 17     29    22  stored       22
+18 18     46    31  stored       31
+19 19     49    34  stored       34
+20 20     63    45  stored       45
+21 21     93    69  stored       69
+22 22    107    76  stored       76
+23 23    138    99  stored       99
+24 24    199   144  stored      144
+25 25    216   138  stored      138
+26 26    288   185  stored      185
+27 27    435   294  stored      294
+28 28    449   295  stored      295
+29 29    610   414  stored      414
+30 30    878   582  stored      582
+31 31    964   655  stored      655
+32 32   1308   872  stored      872
+33 33   1964  1327  stored     1327
+34 34   2116   460   CAxCA     1426
+35 35   2700  1938  stored     1938
+36 36   3918  2139 PCAxPCA     2918
+37 37   4457  2356 PCAxPCA     3210
+38 38   5763  3069 PCAxPCA     4163
+39 39   8329  4464 PCAxPCA     6262
+40 40   9207  5244 PCAxPCA     6842
+41 41  11898  6831 PCAxPCA     8838
+42 42  17895  9114 PCAxPCA    12216
+43 43  20010  4350   CAxCA    13485
+44 44  25317 14256 PCAxPCA    18894
+45 45  37071 20286 PCAxPCA    27606
+46 46  42174 22344 PCAxPCA    30271
+47 47  54531 29106 PCAxPCA    39387
+48 48  80789 41137 PCAxPCA    55151
+49 49  90344 19640   CAxCA    60884
+50 50 112770 60078 PCAxPCA    76842
+
+CAEX> ## End(Don't show)
+CAEX> 
+CAEX> 
+CAEX> 
+[1] "2026-10-04 13:55:08 CEST"

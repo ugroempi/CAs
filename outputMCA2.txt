@@ -1,0 +1,281 @@
+[1] "2026-10-04 13:19:52 CEST"
+
+MCA2> ##################################################
+MCA2> ### MCA2
+MCA2> ##################################################
+MCA2> ## small example with fast optimization to global optimum
+MCA2> ## which is 2*8
+MCA2> ## 16 runs
+MCA2> D <- MCA2(c(rep(2,10), 8))
+
+MCA2> dim(D)
+[1] 16 11
+
+MCA2> coverage(D, 2)
+ total    ave    min simple 
+     1      1      1      1 
+
+MCA2> ## N_upper_MCA is very pessimistic
+MCA2> N_upper_MCA(c(rep(2,10), 8))
+CS_MS 
+   78 
+
+MCA2> ## another case for which N_upper_MCA seems to be tight
+MCA2> ## (postopNCK cannot achieve an improvement in reasonable time)
+MCA2> N_upper_MCA(c(rep(5,8), 3,3))
+CS_LCDST 
+      36 
+
+MCA2> D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
+
+MCA2> dim(D)
+[1] 36 10
+
+MCA2> head(D); tail(D)
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+[1,]    3    1    1    0    4    1    4    1    2    NA
+[2,]    3    3    1    1    0    4    1    4    1     2
+[3,]    2    3    3    1    1    0    4    1   NA     1
+[4,]    1    2    3    3    1    1    0    4    1    NA
+[5,]    4    1    2    3    3    1    1    0   NA     1
+[6,]    1    4    1    2    3    3    1    1    0    NA
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+[31,]    3    3    3    3    3    3    3    3   NA    NA
+[32,]    4    4    4    4    4    4    3    3   NA    NA
+[33,]    4    4    4    3    3    3    4    4   NA    NA
+[34,]    4    3    3    4    4    3    4    4   NA    NA
+[35,]    3    4    3    4    3    4    4    3   NA    NA
+[36,]    3    3    4    3    4    4    3    4   NA    NA
+
+MCA2> ## create a large design without trying a run size optimization
+MCA2> D <- MCA2(c(rep(2,70), rep(3,80), rep(4,8), rep(6,2)),
+MCA2+          outerRetry=0)
+
+MCA2> dim(D)
+[1]  46 160
+
+MCA2> coverage(D, 2)
+ total    ave    min simple 
+     1      1      1      1 
+
+MCA2> ## alternative call for the same setting
+MCA2> D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
+MCA2+           outerRetry=0)
+
+MCA2> ## Not run: 
+MCA2> ##D   ## make a lucky run reproducible by using a random seed
+MCA2> ##D   myseed <- sample(32000, 1)
+MCA2> ##D   Doptimized <- postopNCK(D, 2, seed=myseed)
+MCA2> ##D   ## This runs for an excessive time without user interruption.
+MCA2> ##D   ## There have occasionally been cases (e.g. seed 75 on windows),
+MCA2> ##D   ## for which the run size was reduced to 45 runs early.
+MCA2> ##D   ## It is not known whether it eventually improves more
+MCA2> ##D   ##    (lower bound 24 runs is likely not achievable).
+MCA2> ##D   ## The run can be stopped by <ESC>, once patience runs out
+MCA2> ##D   ##    or enough improvement was achieved.
+MCA2> ## End(Not run)
+MCA2> 
+MCA2> ## use the argument D for starting with a naive
+MCA2> ##      CA of 45 runs for 30 5-level columns
+MCA2> ## (default would start with CA(29, 2, 7, 5), which is the best for
+MCA2> ##      seven 5-level columns and permits expansion as required);
+MCA2> D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
+MCA2+          outerRetry=0)
+
+MCA2> ## Not run: 
+MCA2> ##D    ## make a lucky run reproducible by using a random seed
+MCA2> ##D    myseed <- sample(32000, 1)
+MCA2> ##D    ## The code below uses the default number of steps
+MCA2> ##D    ## (which would run for excessive time),
+MCA2> ##D    ## but can be interrupted with <ESC> if run size improvement
+MCA2> ##D    ## has been sufficient or seems to stall
+MCA2> ##D    ## (make sure to wait until the outer retry has safely finished);
+MCA2> ##D    ## run size optimization quickly reduces the 45 (or 29) runs
+MCA2> ##D    ##      to 22 or 23 runs (20 is the lower bound);
+MCA2> ##D    ##      21 runs have also been observed.
+MCA2> ##D    ## Without user interrupt, the code will run
+MCA2> ##D    ##      for excessively long time.
+MCA2> ##D    Doptimized <- postopNCK(D, 2, seed=myseed)
+MCA2> ## End(Not run)
+MCA2> 
+MCA2> ########################################################
+MCA2> ### MCAt
+MCA2> ########################################################
+MCA2> ## create a strength 4 CA, initially unoptimized
+MCA2> D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
+
+MCA2> dim(D) ## much larger than the optimum run size
+[1] 265   6
+
+MCA2> ########################################################
+MCA2> ### CA_to_MCA
+MCA2> ########################################################
+MCA2> # a small example
+MCA2> ## six 3-level columns in 33 runs
+MCA2> D <- bestCA(3,6,3)
+
+MCA2> ## to three 3-level and three 2-level columns in 27 runs
+MCA2> Dmixed <- CA_to_MCA(D, cs=4:6, tolev=rep(2, 3), t=3, outerRetry=0)
+
+MCA2> dim(Dmixed)
+[1] 33  6
+
+MCA2> ## (optimal)
+MCA2> coverage(Dmixed, 3)
+ total    ave    min simple 
+     1      1      1      1 
+
+MCA2> ## works
+MCA2> 
+MCA2> ## five 3-level columns in 33 runs
+MCA2> D <- bestCA(3,5,3)  ## CA(33,3,5,3)
+
+MCA2> ## to four 3-level columns and one 2-level column in 33 runs,
+MCA2> ## No test: 
+MCA2> Dmixed <- CA_to_MCA(D, cs=5, tolev=2, t=3) ## last column reduced to 2 levels
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+25  changes did not increase beyond  1  flexible values
+
+MCA2> ## a lengthy search cannot reduce the number of runs
+MCA2> ## End(No test)
+MCA2> ## D can be easily reduced to the optimal 27 runs,
+MCA2> ## if two columns are reduced to 2 levels each:
+MCA2> Dmixed <- CA_to_MCA(D, cs=4:5, tolev=c(2,2), t=3)
+
+MCA2> ######################################################
+MCA2> ####           projBoseMCA               #############
+MCA2> ######################################################
+MCA2> 
+MCA2> ## corollary 2.2 cases (a single number of levels is different,
+MCA2> ## and two larger than the others)
+MCA2> D <- projBoseMCA(c(rep(4,6),6))
+
+MCA2> head(D)
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7]
+[1,]    0    0    0    0    0    0    5
+[2,]    1    1    1    1    1    1    5
+[3,]    2    2    2    2    2    2    5
+[4,]    3    3    3    3    3    3    5
+[5,]    0    0    1    2    3    0    0
+[6,]    0    1    2    3    0    0    4
+
+MCA2> dim(D)
+[1] 24  7
+
+MCA2> D <- projBoseMCA(c(rep(6,8),8))
+
+MCA2> head(D)
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
+[1,]    0    0    0    0    0    0    0    0    7
+[2,]    1    1    1    1    1    1    1    1    7
+[3,]    2    2    2    2    2    2    2    2    7
+[4,]    3    3    3    3    3    3    3    3    7
+[5,]    4    4    4    4    4    4    4    4    7
+[6,]    5    5    5    5    5    5    5    5    7
+
+MCA2> dim(D)
+[1] 48  9
+
+MCA2> ## Don't show: 
+MCA2> if (getOption("run_heavy_examples", default = FALSE)) withAutoprint({ # examplesIf
+MCA2+ ## End(Don't show)
+MCA2+ ## NOTE: example() skips the examples below (for MCA2 and MCAt),
+MCA2+ ## unless the user specifies
+MCA2+ ## options(run_heavy_examples = TRUE)
+MCA2+ ## This is because they could be very slow depending on sample.kind.
+MCA2+ 
+MCA2+ ## different setting,
+MCA2+ ## optimize run size within the call (using a good seed)
+MCA2+ D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
+MCA2+ coverage(D, 2)
+MCA2+ attributes(D)
+MCA2+ ## reasonably quickly reduces to 11 runs on my Windows machine
+MCA2+ ## lower bound is 9 runs (3*3)
+MCA2+ ## CAgen yields 14 runs with IPOG-F
+MCA2+ 
+MCA2+ D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
+MCA2+ ## with seed 888, the optimum is quickly reached on Windows
+MCA2+ Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
+MCA2+ dim(Doptimized)
+MCA2+   ## optimum 4*4*3*2=96
+MCA2+   ## many other seeds stop at 97 or 98 runs after longer iteration
+MCA2+   ## could also use
+MCA2+      D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=888)
+MCA2+ ## Don't show: 
+MCA2+ }) # examplesIf
+> D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
+> coverage(D, 2)
+ total    ave    min simple 
+     1      1      1      1 
+> attributes(D)
+$dim
+[1] 11 32
+
+$class
+[1] "ca"     "matrix" "array" 
+
+$origin
+[1] "Torres-Jimenez et al. 2021, CA EXtender"
+
+$Call
+$Call[[1]]
+D <- MCA2(c(rep(2,30), rep(3,2)), seed=333, outerRetry=3)
+
+$Call[[2]]
+if (is.null(D))
+      D <- bestCA(2, hilf$k, hilf$v)
+
+$Call[[3]]
+CAEX(10)
+
+
+$t
+[1] 2
+
+$lineage
+[1] "ca14.2.3.10"
+
+$date
+[1] "2026-10-04"
+
+$`CAs-version`
+[1] ‘0.24.3’
+
+$flexible
+$flexible$value
+[1] NA
+
+$flexible$profile
+ [1] 0 0 1 2 1 1 1 2 1 2 1 1 2 1 1 1 2 2 1 0 0 1 0 1 0 2 0 0 0 1 1 2
+
+
+$seed
+[1] 333
+
+> ## reasonably quickly reduces to 11 runs on my Windows machine
+> ## lower bound is 9 runs (3*3)
+> ## CAgen yields 14 runs with IPOG-F
+> 
+> D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
+> ## with seed 888, the optimum is quickly reached on Windows
+> Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
+> dim(Doptimized)
+[1] 96  6
+>   ## optimum 4*4*3*2=96
+>   ## many other seeds stop at 97 or 98 runs after longer iteration
+>   ## could also use
+>      D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=888)
+
+MCA2> ## End(Don't show)
+MCA2> 
+MCA2> 
+MCA2> 
+[1] "2026-10-04 13:20:19 CEST"

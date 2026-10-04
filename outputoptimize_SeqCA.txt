@@ -1,0 +1,2070 @@
+[1] "2026-10-04 13:55:21 CEST"
+
+op_SCA> ## a small SeqCA with originally 13 rows
+op_SCA> A_TJ <- greedySeqCA_TJ(6,3, postopt = FALSE, seed=2323)
+
+op_SCA> dim(A_TJ)
+[1] 13  6
+
+op_SCA> ## No test: 
+op_SCA> ## on Windows, the above A_TJ is quickly postoptimized to 9 runs
+op_SCA> A_TJ_reduced <- optimize_SeqCA(A_TJ, 3, target=9, verbose=TRUE)
+=== Initial SeqCA ===
+Rows: 13 
+
+=== Initial greedy reduction without simulated annealing ===
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+  Achieved reduction to  12 rows from  13 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 14 subsequences
+  Achieved reduction to  11 rows from  12 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 16 subsequences
+  Achieved reduction to  10 rows from  11 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 9 subsequences
+  Achieved reduction to  9 rows from  10 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 18 subsequences
+Testing removal of row 5 
+  Need to relocate 13 subsequences
+Testing removal of row 6 
+  Need to relocate 10 subsequences
+Testing removal of row 7 
+  Need to relocate 16 subsequences
+Testing removal of row 8 
+  Need to relocate 5 subsequences
+Testing removal of row 9 
+  Need to relocate 5 subsequences
+
+No more rows can be removed
+
+=== Iteration 4 ===
+Removed row(s), now have 9 rows
+
+
+op_SCA> coverageSeqCA(A_TJ_reduced, 3)
+[1] 1
+
+op_SCA> ## one less row is possible, but requires a somewhat slow simulated
+op_SCA> ## annealing optimization
+op_SCA> A_TJ_reduced8 <- optimize_SeqCA(A_TJ, 3, target=8, verbose=TRUE)
+=== Initial SeqCA ===
+Rows: 13 
+
+=== Initial greedy reduction without simulated annealing ===
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+  Achieved reduction to  12 rows from  13 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 14 subsequences
+  Achieved reduction to  11 rows from  12 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 16 subsequences
+  Achieved reduction to  10 rows from  11 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 9 subsequences
+  Achieved reduction to  9 rows from  10 rows
+Testing removal of row 1 
+  Need to relocate 20 subsequences
+Testing removal of row 2 
+  Need to relocate 16 subsequences
+Testing removal of row 3 
+  Need to relocate 17 subsequences
+Testing removal of row 4 
+  Need to relocate 18 subsequences
+Testing removal of row 5 
+  Need to relocate 13 subsequences
+Testing removal of row 6 
+  Need to relocate 10 subsequences
+Testing removal of row 7 
+  Need to relocate 16 subsequences
+Testing removal of row 8 
+  Need to relocate 5 subsequences
+Testing removal of row 9 
+  Need to relocate 5 subsequences
+
+No more rows can be removed
+
+=== Iteration 4 ===
+Removed row(s), now have 9 rows
+
+=== Prepare simulated annealing ===
+
+=== Iteration 1 ===
+Current rows: 9 
+Running simulated annealing to fix missings...
+Initial missings: 3 
+=== Temperature: 100 , Attempting missing removal for:  8 runs ===
+  New best: missings = 1 (accepted = 1 , attempts = 1 )
+--- Temperature 100 , Attempt  10 ---
+Found solution with 0 missings
+  New best: missings = 0 (accepted = 11 , attempts = 11 )
+  End of temperature level: accepted = 11 , attempts = 11 , best missings = 0 
+
+
+=== Final Result ===
+Best missings: 0 
+Iterations: 1 
+Simulated annealing succeeded - deletion accepted
+target run size reached
+=== Final Optimized SeqCA ===
+Rows: 8 
+Reduction from 13 to 8 rows
+
+op_SCA> ## End(No test)
+op_SCA> 
+op_SCA> ## Don't show: 
+op_SCA> if (getOption("run_heavy_examples", default = FALSE)) withAutoprint({ # examplesIf
+op_SCA+ ## End(Don't show)
+op_SCA+ # NOTE: example() skips the following code,
+op_SCA+ # unless the user specifies
+op_SCA+ # options(run_heavy_examples = TRUE)
+op_SCA+ 
+op_SCA+ ## without setting the optimization target, one would have to wait until
+op_SCA+ ## the simulated annealing for reducing to 7 runs failed
+op_SCA+ optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)
+op_SCA+ 
+op_SCA+ ## Here: Kuhn much slower than TJ
+op_SCA+ nrow(A <- greedySeqCA_Kuhn(6, 4, seed=75))  ## 52 before, 41 after reduce
+op_SCA+ ## Not run: 
+op_SCA+ ##D ## this should only be run interactively, with a user prepared
+op_SCA+ ##D ## to interrupt it if it seems stuck
+op_SCA+ ##D aus <- optimize_SeqCA(A, 4, skipreduce=TRUE, verbose=TRUE)
+op_SCA+ ## End(Not run)
+op_SCA+ ## Don't show: 
+op_SCA+ }) # examplesIf
+> optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)
+=== Initial SeqCA ===
+Rows: 9 
+
+=== Prepare simulated annealing ===
+
+=== Iteration 1 ===
+Current rows: 9 
+Running simulated annealing to fix missings...
+Initial missings: 3 
+=== Temperature: 100 , Attempting missing removal for:  8 runs ===
+  New best: missings = 2 (accepted = 1 , attempts = 1 )
+Found solution with 0 missings
+  New best: missings = 0 (accepted = 2 , attempts = 2 )
+  End of temperature level: accepted = 2 , attempts = 2 , best missings = 0 
+
+
+=== Final Result ===
+Best missings: 0 
+Iterations: 1 
+Simulated annealing succeeded - deletion accepted
+
+=== Iteration 2 ===
+Current rows: 8 
+Running simulated annealing to fix missings...
+Initial missings: 7 
+=== Temperature: 100 , Attempting missing removal for:  7 runs ===
+  New best: missings = 6 (accepted = 2 , attempts = 2 )
+  New best: missings = 5 (accepted = 5 , attempts = 5 )
+--- Temperature 100 , Attempt  10 ---
+--- Temperature 100 , Attempt  20 ---
+--- Temperature 100 , Attempt  30 ---
+--- Temperature 100 , Attempt  40 ---
+--- Temperature 100 , Attempt  50 ---
+--- Temperature 100 , Attempt  60 ---
+--- Temperature 100 , Attempt  70 ---
+--- Temperature 100 , Attempt  80 ---
+--- Temperature 100 , Attempt  90 ---
+--- Temperature 100 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 5 
+
+=== Temperature: 95 , Attempting missing removal for:  7 runs ===
+--- Temperature 95 , Attempt  10 ---
+--- Temperature 95 , Attempt  20 ---
+--- Temperature 95 , Attempt  30 ---
+--- Temperature 95 , Attempt  40 ---
+--- Temperature 95 , Attempt  50 ---
+--- Temperature 95 , Attempt  60 ---
+--- Temperature 95 , Attempt  70 ---
+--- Temperature 95 , Attempt  80 ---
+--- Temperature 95 , Attempt  90 ---
+--- Temperature 95 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 5 
+
+=== Temperature: 90.25 , Attempting missing removal for:  7 runs ===
+--- Temperature 90.25 , Attempt  10 ---
+--- Temperature 90.25 , Attempt  20 ---
+--- Temperature 90.25 , Attempt  30 ---
+--- Temperature 90.25 , Attempt  40 ---
+--- Temperature 90.25 , Attempt  50 ---
+--- Temperature 90.25 , Attempt  60 ---
+--- Temperature 90.25 , Attempt  70 ---
+--- Temperature 90.25 , Attempt  80 ---
+--- Temperature 90.25 , Attempt  90 ---
+--- Temperature 90.25 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 5 
+
+=== Temperature: 85.738 , Attempting missing removal for:  7 runs ===
+--- Temperature 85.738 , Attempt  10 ---
+--- Temperature 85.738 , Attempt  20 ---
+--- Temperature 85.738 , Attempt  30 ---
+--- Temperature 85.738 , Attempt  40 ---
+--- Temperature 85.738 , Attempt  50 ---
+--- Temperature 85.738 , Attempt  60 ---
+--- Temperature 85.738 , Attempt  70 ---
+--- Temperature 85.738 , Attempt  80 ---
+--- Temperature 85.738 , Attempt  90 ---
+--- Temperature 85.738 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 5 
+
+=== Temperature: 81.451 , Attempting missing removal for:  7 runs ===
+--- Temperature 81.451 , Attempt  10 ---
+--- Temperature 81.451 , Attempt  20 ---
+--- Temperature 81.451 , Attempt  30 ---
+--- Temperature 81.451 , Attempt  40 ---
+--- Temperature 81.451 , Attempt  50 ---
+--- Temperature 81.451 , Attempt  60 ---
+--- Temperature 81.451 , Attempt  70 ---
+--- Temperature 81.451 , Attempt  80 ---
+--- Temperature 81.451 , Attempt  90 ---
+--- Temperature 81.451 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 5 
+
+=== Temperature: 77.378 , Attempting missing removal for:  7 runs ===
+--- Temperature 77.378 , Attempt  10 ---
+--- Temperature 77.378 , Attempt  20 ---
+--- Temperature 77.378 , Attempt  30 ---
+--- Temperature 77.378 , Attempt  40 ---
+--- Temperature 77.378 , Attempt  50 ---
+--- Temperature 77.378 , Attempt  60 ---
+--- Temperature 77.378 , Attempt  70 ---
+--- Temperature 77.378 , Attempt  80 ---
+  New best: missings = 4 (accepted = 81 , attempts = 81 )
+--- Temperature 77.378 , Attempt  90 ---
+--- Temperature 77.378 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 73.509 , Attempting missing removal for:  7 runs ===
+--- Temperature 73.509 , Attempt  10 ---
+--- Temperature 73.509 , Attempt  20 ---
+--- Temperature 73.509 , Attempt  30 ---
+--- Temperature 73.509 , Attempt  40 ---
+--- Temperature 73.509 , Attempt  50 ---
+--- Temperature 73.509 , Attempt  60 ---
+--- Temperature 73.509 , Attempt  70 ---
+--- Temperature 73.509 , Attempt  80 ---
+--- Temperature 73.509 , Attempt  90 ---
+--- Temperature 73.509 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 69.834 , Attempting missing removal for:  7 runs ===
+--- Temperature 69.834 , Attempt  10 ---
+--- Temperature 69.834 , Attempt  20 ---
+--- Temperature 69.834 , Attempt  30 ---
+--- Temperature 69.834 , Attempt  40 ---
+--- Temperature 69.834 , Attempt  50 ---
+--- Temperature 69.834 , Attempt  60 ---
+--- Temperature 69.834 , Attempt  70 ---
+--- Temperature 69.834 , Attempt  80 ---
+--- Temperature 69.834 , Attempt  90 ---
+--- Temperature 69.834 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 66.342 , Attempting missing removal for:  7 runs ===
+--- Temperature 66.342 , Attempt  10 ---
+--- Temperature 66.342 , Attempt  20 ---
+--- Temperature 66.342 , Attempt  30 ---
+--- Temperature 66.342 , Attempt  40 ---
+--- Temperature 66.342 , Attempt  50 ---
+--- Temperature 66.342 , Attempt  60 ---
+--- Temperature 66.342 , Attempt  70 ---
+--- Temperature 66.342 , Attempt  80 ---
+--- Temperature 66.342 , Attempt  90 ---
+--- Temperature 66.342 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 63.025 , Attempting missing removal for:  7 runs ===
+--- Temperature 63.025 , Attempt  10 ---
+--- Temperature 63.025 , Attempt  20 ---
+--- Temperature 63.025 , Attempt  30 ---
+--- Temperature 63.025 , Attempt  40 ---
+--- Temperature 63.025 , Attempt  50 ---
+--- Temperature 63.025 , Attempt  60 ---
+--- Temperature 63.025 , Attempt  70 ---
+--- Temperature 63.025 , Attempt  80 ---
+--- Temperature 63.025 , Attempt  90 ---
+--- Temperature 63.025 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 59.874 , Attempting missing removal for:  7 runs ===
+--- Temperature 59.874 , Attempt  10 ---
+--- Temperature 59.874 , Attempt  20 ---
+--- Temperature 59.874 , Attempt  30 ---
+--- Temperature 59.874 , Attempt  40 ---
+--- Temperature 59.874 , Attempt  50 ---
+--- Temperature 59.874 , Attempt  60 ---
+--- Temperature 59.874 , Attempt  70 ---
+--- Temperature 59.874 , Attempt  80 ---
+--- Temperature 59.874 , Attempt  90 ---
+--- Temperature 59.874 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 56.88 , Attempting missing removal for:  7 runs ===
+--- Temperature 56.88 , Attempt  10 ---
+--- Temperature 56.88 , Attempt  20 ---
+--- Temperature 56.88 , Attempt  30 ---
+--- Temperature 56.88 , Attempt  40 ---
+--- Temperature 56.88 , Attempt  50 ---
+--- Temperature 56.88 , Attempt  60 ---
+--- Temperature 56.88 , Attempt  70 ---
+--- Temperature 56.88 , Attempt  80 ---
+--- Temperature 56.88 , Attempt  90 ---
+--- Temperature 56.88 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 54.036 , Attempting missing removal for:  7 runs ===
+--- Temperature 54.036 , Attempt  10 ---
+--- Temperature 54.036 , Attempt  20 ---
+--- Temperature 54.036 , Attempt  30 ---
+--- Temperature 54.036 , Attempt  40 ---
+--- Temperature 54.036 , Attempt  50 ---
+--- Temperature 54.036 , Attempt  60 ---
+--- Temperature 54.036 , Attempt  70 ---
+--- Temperature 54.036 , Attempt  80 ---
+--- Temperature 54.036 , Attempt  90 ---
+--- Temperature 54.036 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 51.334 , Attempting missing removal for:  7 runs ===
+--- Temperature 51.334 , Attempt  10 ---
+--- Temperature 51.334 , Attempt  20 ---
+--- Temperature 51.334 , Attempt  30 ---
+--- Temperature 51.334 , Attempt  40 ---
+--- Temperature 51.334 , Attempt  50 ---
+--- Temperature 51.334 , Attempt  60 ---
+--- Temperature 51.334 , Attempt  70 ---
+--- Temperature 51.334 , Attempt  80 ---
+--- Temperature 51.334 , Attempt  90 ---
+--- Temperature 51.334 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 48.767 , Attempting missing removal for:  7 runs ===
+--- Temperature 48.767 , Attempt  10 ---
+--- Temperature 48.767 , Attempt  20 ---
+--- Temperature 48.767 , Attempt  30 ---
+--- Temperature 48.767 , Attempt  40 ---
+--- Temperature 48.767 , Attempt  50 ---
+--- Temperature 48.767 , Attempt  60 ---
+--- Temperature 48.767 , Attempt  70 ---
+--- Temperature 48.767 , Attempt  80 ---
+--- Temperature 48.767 , Attempt  90 ---
+--- Temperature 48.767 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 46.329 , Attempting missing removal for:  7 runs ===
+--- Temperature 46.329 , Attempt  10 ---
+--- Temperature 46.329 , Attempt  20 ---
+--- Temperature 46.329 , Attempt  30 ---
+--- Temperature 46.329 , Attempt  40 ---
+--- Temperature 46.329 , Attempt  50 ---
+--- Temperature 46.329 , Attempt  60 ---
+--- Temperature 46.329 , Attempt  70 ---
+--- Temperature 46.329 , Attempt  80 ---
+--- Temperature 46.329 , Attempt  90 ---
+--- Temperature 46.329 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 44.013 , Attempting missing removal for:  7 runs ===
+--- Temperature 44.013 , Attempt  10 ---
+--- Temperature 44.013 , Attempt  20 ---
+--- Temperature 44.013 , Attempt  30 ---
+--- Temperature 44.013 , Attempt  40 ---
+--- Temperature 44.013 , Attempt  50 ---
+--- Temperature 44.013 , Attempt  60 ---
+--- Temperature 44.013 , Attempt  70 ---
+--- Temperature 44.013 , Attempt  80 ---
+--- Temperature 44.013 , Attempt  90 ---
+--- Temperature 44.013 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 41.812 , Attempting missing removal for:  7 runs ===
+--- Temperature 41.812 , Attempt  10 ---
+--- Temperature 41.812 , Attempt  20 ---
+--- Temperature 41.812 , Attempt  30 ---
+--- Temperature 41.812 , Attempt  40 ---
+--- Temperature 41.812 , Attempt  50 ---
+--- Temperature 41.812 , Attempt  60 ---
+--- Temperature 41.812 , Attempt  70 ---
+--- Temperature 41.812 , Attempt  80 ---
+--- Temperature 41.812 , Attempt  90 ---
+--- Temperature 41.812 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 39.721 , Attempting missing removal for:  7 runs ===
+--- Temperature 39.721 , Attempt  10 ---
+--- Temperature 39.721 , Attempt  20 ---
+--- Temperature 39.721 , Attempt  30 ---
+--- Temperature 39.721 , Attempt  40 ---
+--- Temperature 39.721 , Attempt  50 ---
+--- Temperature 39.721 , Attempt  60 ---
+--- Temperature 39.721 , Attempt  70 ---
+--- Temperature 39.721 , Attempt  80 ---
+--- Temperature 39.721 , Attempt  90 ---
+--- Temperature 39.721 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 37.735 , Attempting missing removal for:  7 runs ===
+--- Temperature 37.735 , Attempt  10 ---
+--- Temperature 37.735 , Attempt  20 ---
+--- Temperature 37.735 , Attempt  30 ---
+--- Temperature 37.735 , Attempt  40 ---
+--- Temperature 37.735 , Attempt  50 ---
+--- Temperature 37.735 , Attempt  60 ---
+--- Temperature 37.735 , Attempt  70 ---
+--- Temperature 37.735 , Attempt  80 ---
+--- Temperature 37.735 , Attempt  90 ---
+--- Temperature 37.735 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 35.849 , Attempting missing removal for:  7 runs ===
+--- Temperature 35.849 , Attempt  10 ---
+--- Temperature 35.849 , Attempt  20 ---
+--- Temperature 35.849 , Attempt  30 ---
+--- Temperature 35.849 , Attempt  40 ---
+--- Temperature 35.849 , Attempt  50 ---
+--- Temperature 35.849 , Attempt  60 ---
+--- Temperature 35.849 , Attempt  70 ---
+--- Temperature 35.849 , Attempt  80 ---
+--- Temperature 35.849 , Attempt  90 ---
+--- Temperature 35.849 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 34.056 , Attempting missing removal for:  7 runs ===
+--- Temperature 34.056 , Attempt  10 ---
+--- Temperature 34.056 , Attempt  20 ---
+--- Temperature 34.056 , Attempt  30 ---
+--- Temperature 34.056 , Attempt  40 ---
+--- Temperature 34.056 , Attempt  50 ---
+--- Temperature 34.056 , Attempt  60 ---
+--- Temperature 34.056 , Attempt  70 ---
+--- Temperature 34.056 , Attempt  80 ---
+--- Temperature 34.056 , Attempt  90 ---
+--- Temperature 34.056 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 32.353 , Attempting missing removal for:  7 runs ===
+--- Temperature 32.353 , Attempt  10 ---
+--- Temperature 32.353 , Attempt  20 ---
+--- Temperature 32.353 , Attempt  30 ---
+--- Temperature 32.353 , Attempt  40 ---
+--- Temperature 32.353 , Attempt  50 ---
+--- Temperature 32.353 , Attempt  60 ---
+--- Temperature 32.353 , Attempt  70 ---
+--- Temperature 32.353 , Attempt  80 ---
+--- Temperature 32.353 , Attempt  90 ---
+--- Temperature 32.353 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 30.736 , Attempting missing removal for:  7 runs ===
+--- Temperature 30.736 , Attempt  10 ---
+--- Temperature 30.736 , Attempt  20 ---
+--- Temperature 30.736 , Attempt  30 ---
+--- Temperature 30.736 , Attempt  40 ---
+--- Temperature 30.736 , Attempt  50 ---
+--- Temperature 30.736 , Attempt  60 ---
+--- Temperature 30.736 , Attempt  70 ---
+--- Temperature 30.736 , Attempt  80 ---
+--- Temperature 30.736 , Attempt  90 ---
+--- Temperature 30.736 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 29.199 , Attempting missing removal for:  7 runs ===
+--- Temperature 29.199 , Attempt  10 ---
+--- Temperature 29.199 , Attempt  20 ---
+--- Temperature 29.199 , Attempt  30 ---
+--- Temperature 29.199 , Attempt  40 ---
+--- Temperature 29.199 , Attempt  50 ---
+--- Temperature 29.199 , Attempt  60 ---
+--- Temperature 29.199 , Attempt  70 ---
+--- Temperature 29.199 , Attempt  80 ---
+--- Temperature 29.199 , Attempt  90 ---
+--- Temperature 29.199 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 27.739 , Attempting missing removal for:  7 runs ===
+--- Temperature 27.739 , Attempt  10 ---
+--- Temperature 27.739 , Attempt  20 ---
+--- Temperature 27.739 , Attempt  30 ---
+--- Temperature 27.739 , Attempt  40 ---
+--- Temperature 27.739 , Attempt  50 ---
+--- Temperature 27.739 , Attempt  60 ---
+--- Temperature 27.739 , Attempt  70 ---
+--- Temperature 27.739 , Attempt  80 ---
+--- Temperature 27.739 , Attempt  90 ---
+--- Temperature 27.739 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 26.352 , Attempting missing removal for:  7 runs ===
+--- Temperature 26.352 , Attempt  10 ---
+--- Temperature 26.352 , Attempt  20 ---
+--- Temperature 26.352 , Attempt  30 ---
+--- Temperature 26.352 , Attempt  40 ---
+--- Temperature 26.352 , Attempt  50 ---
+--- Temperature 26.352 , Attempt  60 ---
+--- Temperature 26.352 , Attempt  70 ---
+--- Temperature 26.352 , Attempt  80 ---
+--- Temperature 26.352 , Attempt  90 ---
+--- Temperature 26.352 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 25.034 , Attempting missing removal for:  7 runs ===
+--- Temperature 25.034 , Attempt  10 ---
+--- Temperature 25.034 , Attempt  20 ---
+--- Temperature 25.034 , Attempt  30 ---
+--- Temperature 25.034 , Attempt  40 ---
+--- Temperature 25.034 , Attempt  50 ---
+--- Temperature 25.034 , Attempt  60 ---
+--- Temperature 25.034 , Attempt  70 ---
+--- Temperature 25.034 , Attempt  80 ---
+--- Temperature 25.034 , Attempt  90 ---
+--- Temperature 25.034 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 23.783 , Attempting missing removal for:  7 runs ===
+--- Temperature 23.783 , Attempt  10 ---
+--- Temperature 23.783 , Attempt  20 ---
+--- Temperature 23.783 , Attempt  30 ---
+--- Temperature 23.783 , Attempt  40 ---
+--- Temperature 23.783 , Attempt  50 ---
+--- Temperature 23.783 , Attempt  60 ---
+--- Temperature 23.783 , Attempt  70 ---
+--- Temperature 23.783 , Attempt  80 ---
+--- Temperature 23.783 , Attempt  90 ---
+--- Temperature 23.783 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 22.594 , Attempting missing removal for:  7 runs ===
+--- Temperature 22.594 , Attempt  10 ---
+--- Temperature 22.594 , Attempt  20 ---
+--- Temperature 22.594 , Attempt  30 ---
+--- Temperature 22.594 , Attempt  40 ---
+--- Temperature 22.594 , Attempt  50 ---
+--- Temperature 22.594 , Attempt  60 ---
+--- Temperature 22.594 , Attempt  70 ---
+--- Temperature 22.594 , Attempt  80 ---
+--- Temperature 22.594 , Attempt  90 ---
+--- Temperature 22.594 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 21.464 , Attempting missing removal for:  7 runs ===
+--- Temperature 21.464 , Attempt  10 ---
+--- Temperature 21.464 , Attempt  20 ---
+--- Temperature 21.464 , Attempt  30 ---
+--- Temperature 21.464 , Attempt  40 ---
+--- Temperature 21.464 , Attempt  50 ---
+--- Temperature 21.464 , Attempt  60 ---
+--- Temperature 21.464 , Attempt  70 ---
+--- Temperature 21.464 , Attempt  80 ---
+--- Temperature 21.464 , Attempt  90 ---
+--- Temperature 21.464 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 20.391 , Attempting missing removal for:  7 runs ===
+--- Temperature 20.391 , Attempt  10 ---
+--- Temperature 20.391 , Attempt  20 ---
+--- Temperature 20.391 , Attempt  30 ---
+--- Temperature 20.391 , Attempt  40 ---
+--- Temperature 20.391 , Attempt  50 ---
+--- Temperature 20.391 , Attempt  60 ---
+--- Temperature 20.391 , Attempt  70 ---
+--- Temperature 20.391 , Attempt  80 ---
+--- Temperature 20.391 , Attempt  90 ---
+--- Temperature 20.391 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 19.371 , Attempting missing removal for:  7 runs ===
+--- Temperature 19.371 , Attempt  10 ---
+--- Temperature 19.371 , Attempt  20 ---
+--- Temperature 19.371 , Attempt  30 ---
+--- Temperature 19.371 , Attempt  40 ---
+--- Temperature 19.371 , Attempt  50 ---
+--- Temperature 19.371 , Attempt  60 ---
+--- Temperature 19.371 , Attempt  70 ---
+--- Temperature 19.371 , Attempt  80 ---
+--- Temperature 19.371 , Attempt  90 ---
+--- Temperature 19.371 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 18.403 , Attempting missing removal for:  7 runs ===
+--- Temperature 18.403 , Attempt  10 ---
+--- Temperature 18.403 , Attempt  20 ---
+--- Temperature 18.403 , Attempt  30 ---
+--- Temperature 18.403 , Attempt  40 ---
+--- Temperature 18.403 , Attempt  50 ---
+--- Temperature 18.403 , Attempt  60 ---
+--- Temperature 18.403 , Attempt  70 ---
+--- Temperature 18.403 , Attempt  80 ---
+--- Temperature 18.403 , Attempt  90 ---
+--- Temperature 18.403 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 17.482 , Attempting missing removal for:  7 runs ===
+--- Temperature 17.482 , Attempt  10 ---
+--- Temperature 17.482 , Attempt  20 ---
+--- Temperature 17.482 , Attempt  30 ---
+--- Temperature 17.482 , Attempt  40 ---
+--- Temperature 17.482 , Attempt  50 ---
+--- Temperature 17.482 , Attempt  60 ---
+--- Temperature 17.482 , Attempt  70 ---
+--- Temperature 17.482 , Attempt  80 ---
+--- Temperature 17.482 , Attempt  90 ---
+--- Temperature 17.482 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 16.608 , Attempting missing removal for:  7 runs ===
+--- Temperature 16.608 , Attempt  10 ---
+--- Temperature 16.608 , Attempt  20 ---
+--- Temperature 16.608 , Attempt  30 ---
+--- Temperature 16.608 , Attempt  40 ---
+--- Temperature 16.608 , Attempt  50 ---
+--- Temperature 16.608 , Attempt  60 ---
+--- Temperature 16.608 , Attempt  70 ---
+--- Temperature 16.608 , Attempt  80 ---
+--- Temperature 16.608 , Attempt  90 ---
+--- Temperature 16.608 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 15.778 , Attempting missing removal for:  7 runs ===
+--- Temperature 15.778 , Attempt  10 ---
+--- Temperature 15.778 , Attempt  20 ---
+--- Temperature 15.778 , Attempt  30 ---
+--- Temperature 15.778 , Attempt  40 ---
+--- Temperature 15.778 , Attempt  50 ---
+--- Temperature 15.778 , Attempt  60 ---
+--- Temperature 15.778 , Attempt  70 ---
+--- Temperature 15.778 , Attempt  80 ---
+--- Temperature 15.778 , Attempt  90 ---
+--- Temperature 15.778 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 14.989 , Attempting missing removal for:  7 runs ===
+--- Temperature 14.989 , Attempt  10 ---
+--- Temperature 14.989 , Attempt  20 ---
+--- Temperature 14.989 , Attempt  30 ---
+--- Temperature 14.989 , Attempt  40 ---
+--- Temperature 14.989 , Attempt  50 ---
+--- Temperature 14.989 , Attempt  60 ---
+--- Temperature 14.989 , Attempt  70 ---
+--- Temperature 14.989 , Attempt  80 ---
+--- Temperature 14.989 , Attempt  90 ---
+--- Temperature 14.989 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 14.24 , Attempting missing removal for:  7 runs ===
+--- Temperature 14.24 , Attempt  10 ---
+--- Temperature 14.24 , Attempt  20 ---
+--- Temperature 14.24 , Attempt  30 ---
+--- Temperature 14.24 , Attempt  40 ---
+--- Temperature 14.24 , Attempt  50 ---
+--- Temperature 14.24 , Attempt  60 ---
+--- Temperature 14.24 , Attempt  70 ---
+--- Temperature 14.24 , Attempt  80 ---
+--- Temperature 14.24 , Attempt  90 ---
+--- Temperature 14.24 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 13.528 , Attempting missing removal for:  7 runs ===
+--- Temperature 13.528 , Attempt  10 ---
+--- Temperature 13.528 , Attempt  20 ---
+--- Temperature 13.528 , Attempt  30 ---
+--- Temperature 13.528 , Attempt  40 ---
+--- Temperature 13.528 , Attempt  50 ---
+--- Temperature 13.528 , Attempt  60 ---
+--- Temperature 13.528 , Attempt  70 ---
+--- Temperature 13.528 , Attempt  80 ---
+--- Temperature 13.528 , Attempt  90 ---
+--- Temperature 13.528 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 12.851 , Attempting missing removal for:  7 runs ===
+--- Temperature 12.851 , Attempt  10 ---
+--- Temperature 12.851 , Attempt  20 ---
+--- Temperature 12.851 , Attempt  30 ---
+--- Temperature 12.851 , Attempt  40 ---
+--- Temperature 12.851 , Attempt  50 ---
+--- Temperature 12.851 , Attempt  60 ---
+--- Temperature 12.851 , Attempt  70 ---
+--- Temperature 12.851 , Attempt  80 ---
+--- Temperature 12.851 , Attempt  90 ---
+--- Temperature 12.851 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 12.209 , Attempting missing removal for:  7 runs ===
+--- Temperature 12.209 , Attempt  10 ---
+--- Temperature 12.209 , Attempt  20 ---
+--- Temperature 12.209 , Attempt  30 ---
+--- Temperature 12.209 , Attempt  40 ---
+--- Temperature 12.209 , Attempt  50 ---
+--- Temperature 12.209 , Attempt  60 ---
+--- Temperature 12.209 , Attempt  70 ---
+--- Temperature 12.209 , Attempt  80 ---
+--- Temperature 12.209 , Attempt  90 ---
+--- Temperature 12.209 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 11.598 , Attempting missing removal for:  7 runs ===
+--- Temperature 11.598 , Attempt  10 ---
+--- Temperature 11.598 , Attempt  20 ---
+--- Temperature 11.598 , Attempt  30 ---
+--- Temperature 11.598 , Attempt  40 ---
+--- Temperature 11.598 , Attempt  50 ---
+--- Temperature 11.598 , Attempt  60 ---
+--- Temperature 11.598 , Attempt  70 ---
+--- Temperature 11.598 , Attempt  80 ---
+--- Temperature 11.598 , Attempt  90 ---
+--- Temperature 11.598 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 11.018 , Attempting missing removal for:  7 runs ===
+--- Temperature 11.018 , Attempt  10 ---
+--- Temperature 11.018 , Attempt  20 ---
+--- Temperature 11.018 , Attempt  30 ---
+--- Temperature 11.018 , Attempt  40 ---
+--- Temperature 11.018 , Attempt  50 ---
+--- Temperature 11.018 , Attempt  60 ---
+--- Temperature 11.018 , Attempt  70 ---
+--- Temperature 11.018 , Attempt  80 ---
+--- Temperature 11.018 , Attempt  90 ---
+--- Temperature 11.018 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 10.467 , Attempting missing removal for:  7 runs ===
+--- Temperature 10.467 , Attempt  10 ---
+--- Temperature 10.467 , Attempt  20 ---
+--- Temperature 10.467 , Attempt  30 ---
+--- Temperature 10.467 , Attempt  40 ---
+--- Temperature 10.467 , Attempt  50 ---
+--- Temperature 10.467 , Attempt  60 ---
+--- Temperature 10.467 , Attempt  70 ---
+--- Temperature 10.467 , Attempt  80 ---
+--- Temperature 10.467 , Attempt  90 ---
+--- Temperature 10.467 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 9.944 , Attempting missing removal for:  7 runs ===
+--- Temperature 9.944 , Attempt  10 ---
+--- Temperature 9.944 , Attempt  20 ---
+--- Temperature 9.944 , Attempt  30 ---
+--- Temperature 9.944 , Attempt  40 ---
+--- Temperature 9.944 , Attempt  50 ---
+--- Temperature 9.944 , Attempt  60 ---
+--- Temperature 9.944 , Attempt  70 ---
+--- Temperature 9.944 , Attempt  80 ---
+--- Temperature 9.944 , Attempt  90 ---
+--- Temperature 9.944 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 9.447 , Attempting missing removal for:  7 runs ===
+--- Temperature 9.447 , Attempt  10 ---
+--- Temperature 9.447 , Attempt  20 ---
+--- Temperature 9.447 , Attempt  30 ---
+--- Temperature 9.447 , Attempt  40 ---
+--- Temperature 9.447 , Attempt  50 ---
+--- Temperature 9.447 , Attempt  60 ---
+--- Temperature 9.447 , Attempt  70 ---
+--- Temperature 9.447 , Attempt  80 ---
+--- Temperature 9.447 , Attempt  90 ---
+--- Temperature 9.447 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 8.974 , Attempting missing removal for:  7 runs ===
+--- Temperature 8.974 , Attempt  10 ---
+--- Temperature 8.974 , Attempt  20 ---
+--- Temperature 8.974 , Attempt  30 ---
+--- Temperature 8.974 , Attempt  40 ---
+--- Temperature 8.974 , Attempt  50 ---
+--- Temperature 8.974 , Attempt  60 ---
+--- Temperature 8.974 , Attempt  70 ---
+--- Temperature 8.974 , Attempt  80 ---
+--- Temperature 8.974 , Attempt  90 ---
+--- Temperature 8.974 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 8.526 , Attempting missing removal for:  7 runs ===
+--- Temperature 8.526 , Attempt  10 ---
+--- Temperature 8.526 , Attempt  20 ---
+--- Temperature 8.526 , Attempt  30 ---
+--- Temperature 8.526 , Attempt  40 ---
+--- Temperature 8.526 , Attempt  50 ---
+--- Temperature 8.526 , Attempt  60 ---
+--- Temperature 8.526 , Attempt  70 ---
+--- Temperature 8.526 , Attempt  80 ---
+--- Temperature 8.526 , Attempt  90 ---
+--- Temperature 8.526 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 8.099 , Attempting missing removal for:  7 runs ===
+--- Temperature 8.099 , Attempt  10 ---
+--- Temperature 8.099 , Attempt  20 ---
+--- Temperature 8.099 , Attempt  30 ---
+--- Temperature 8.099 , Attempt  40 ---
+--- Temperature 8.099 , Attempt  50 ---
+--- Temperature 8.099 , Attempt  60 ---
+--- Temperature 8.099 , Attempt  70 ---
+--- Temperature 8.099 , Attempt  80 ---
+--- Temperature 8.099 , Attempt  90 ---
+--- Temperature 8.099 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 7.694 , Attempting missing removal for:  7 runs ===
+--- Temperature 7.694 , Attempt  10 ---
+--- Temperature 7.694 , Attempt  20 ---
+--- Temperature 7.694 , Attempt  30 ---
+--- Temperature 7.694 , Attempt  40 ---
+--- Temperature 7.694 , Attempt  50 ---
+--- Temperature 7.694 , Attempt  60 ---
+--- Temperature 7.694 , Attempt  70 ---
+--- Temperature 7.694 , Attempt  80 ---
+--- Temperature 7.694 , Attempt  90 ---
+--- Temperature 7.694 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 7.31 , Attempting missing removal for:  7 runs ===
+--- Temperature 7.31 , Attempt  10 ---
+--- Temperature 7.31 , Attempt  20 ---
+--- Temperature 7.31 , Attempt  30 ---
+--- Temperature 7.31 , Attempt  40 ---
+--- Temperature 7.31 , Attempt  50 ---
+--- Temperature 7.31 , Attempt  60 ---
+--- Temperature 7.31 , Attempt  70 ---
+--- Temperature 7.31 , Attempt  80 ---
+--- Temperature 7.31 , Attempt  90 ---
+--- Temperature 7.31 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 6.944 , Attempting missing removal for:  7 runs ===
+--- Temperature 6.944 , Attempt  10 ---
+--- Temperature 6.944 , Attempt  20 ---
+--- Temperature 6.944 , Attempt  30 ---
+--- Temperature 6.944 , Attempt  40 ---
+--- Temperature 6.944 , Attempt  50 ---
+--- Temperature 6.944 , Attempt  60 ---
+--- Temperature 6.944 , Attempt  70 ---
+--- Temperature 6.944 , Attempt  80 ---
+--- Temperature 6.944 , Attempt  90 ---
+--- Temperature 6.944 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 6.597 , Attempting missing removal for:  7 runs ===
+--- Temperature 6.597 , Attempt  10 ---
+--- Temperature 6.597 , Attempt  20 ---
+--- Temperature 6.597 , Attempt  30 ---
+--- Temperature 6.597 , Attempt  40 ---
+--- Temperature 6.597 , Attempt  50 ---
+--- Temperature 6.597 , Attempt  60 ---
+--- Temperature 6.597 , Attempt  70 ---
+--- Temperature 6.597 , Attempt  80 ---
+--- Temperature 6.597 , Attempt  90 ---
+--- Temperature 6.597 , Attempt  100 ---
+--- Temperature 6.597 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 110 , best missings = 4 
+
+=== Temperature: 6.267 , Attempting missing removal for:  7 runs ===
+--- Temperature 6.267 , Attempt  10 ---
+--- Temperature 6.267 , Attempt  20 ---
+--- Temperature 6.267 , Attempt  30 ---
+--- Temperature 6.267 , Attempt  40 ---
+--- Temperature 6.267 , Attempt  50 ---
+--- Temperature 6.267 , Attempt  60 ---
+--- Temperature 6.267 , Attempt  70 ---
+--- Temperature 6.267 , Attempt  80 ---
+--- Temperature 6.267 , Attempt  90 ---
+--- Temperature 6.267 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 5.954 , Attempting missing removal for:  7 runs ===
+--- Temperature 5.954 , Attempt  10 ---
+--- Temperature 5.954 , Attempt  20 ---
+--- Temperature 5.954 , Attempt  30 ---
+--- Temperature 5.954 , Attempt  40 ---
+--- Temperature 5.954 , Attempt  50 ---
+--- Temperature 5.954 , Attempt  60 ---
+--- Temperature 5.954 , Attempt  70 ---
+--- Temperature 5.954 , Attempt  80 ---
+--- Temperature 5.954 , Attempt  90 ---
+--- Temperature 5.954 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 5.656 , Attempting missing removal for:  7 runs ===
+--- Temperature 5.656 , Attempt  10 ---
+--- Temperature 5.656 , Attempt  20 ---
+--- Temperature 5.656 , Attempt  30 ---
+--- Temperature 5.656 , Attempt  40 ---
+--- Temperature 5.656 , Attempt  50 ---
+--- Temperature 5.656 , Attempt  60 ---
+--- Temperature 5.656 , Attempt  70 ---
+--- Temperature 5.656 , Attempt  80 ---
+--- Temperature 5.656 , Attempt  90 ---
+--- Temperature 5.656 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 5.373 , Attempting missing removal for:  7 runs ===
+--- Temperature 5.373 , Attempt  10 ---
+--- Temperature 5.373 , Attempt  20 ---
+--- Temperature 5.373 , Attempt  30 ---
+--- Temperature 5.373 , Attempt  40 ---
+--- Temperature 5.373 , Attempt  50 ---
+--- Temperature 5.373 , Attempt  60 ---
+--- Temperature 5.373 , Attempt  70 ---
+--- Temperature 5.373 , Attempt  80 ---
+--- Temperature 5.373 , Attempt  90 ---
+--- Temperature 5.373 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 102 , best missings = 4 
+
+=== Temperature: 5.105 , Attempting missing removal for:  7 runs ===
+--- Temperature 5.105 , Attempt  10 ---
+--- Temperature 5.105 , Attempt  20 ---
+--- Temperature 5.105 , Attempt  30 ---
+--- Temperature 5.105 , Attempt  40 ---
+--- Temperature 5.105 , Attempt  50 ---
+--- Temperature 5.105 , Attempt  60 ---
+--- Temperature 5.105 , Attempt  70 ---
+--- Temperature 5.105 , Attempt  80 ---
+--- Temperature 5.105 , Attempt  90 ---
+--- Temperature 5.105 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 4.849 , Attempting missing removal for:  7 runs ===
+--- Temperature 4.849 , Attempt  10 ---
+--- Temperature 4.849 , Attempt  20 ---
+--- Temperature 4.849 , Attempt  30 ---
+--- Temperature 4.849 , Attempt  40 ---
+--- Temperature 4.849 , Attempt  50 ---
+--- Temperature 4.849 , Attempt  60 ---
+--- Temperature 4.849 , Attempt  70 ---
+--- Temperature 4.849 , Attempt  80 ---
+--- Temperature 4.849 , Attempt  90 ---
+--- Temperature 4.849 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 4.607 , Attempting missing removal for:  7 runs ===
+--- Temperature 4.607 , Attempt  10 ---
+--- Temperature 4.607 , Attempt  20 ---
+--- Temperature 4.607 , Attempt  30 ---
+--- Temperature 4.607 , Attempt  40 ---
+--- Temperature 4.607 , Attempt  50 ---
+--- Temperature 4.607 , Attempt  60 ---
+--- Temperature 4.607 , Attempt  70 ---
+--- Temperature 4.607 , Attempt  80 ---
+--- Temperature 4.607 , Attempt  90 ---
+--- Temperature 4.607 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 4.377 , Attempting missing removal for:  7 runs ===
+--- Temperature 4.377 , Attempt  10 ---
+--- Temperature 4.377 , Attempt  20 ---
+--- Temperature 4.377 , Attempt  30 ---
+--- Temperature 4.377 , Attempt  40 ---
+--- Temperature 4.377 , Attempt  50 ---
+--- Temperature 4.377 , Attempt  60 ---
+--- Temperature 4.377 , Attempt  70 ---
+--- Temperature 4.377 , Attempt  80 ---
+--- Temperature 4.377 , Attempt  90 ---
+--- Temperature 4.377 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 107 , best missings = 4 
+
+=== Temperature: 4.158 , Attempting missing removal for:  7 runs ===
+--- Temperature 4.158 , Attempt  10 ---
+--- Temperature 4.158 , Attempt  20 ---
+--- Temperature 4.158 , Attempt  30 ---
+--- Temperature 4.158 , Attempt  40 ---
+--- Temperature 4.158 , Attempt  50 ---
+--- Temperature 4.158 , Attempt  60 ---
+--- Temperature 4.158 , Attempt  70 ---
+--- Temperature 4.158 , Attempt  80 ---
+--- Temperature 4.158 , Attempt  90 ---
+--- Temperature 4.158 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 3.95 , Attempting missing removal for:  7 runs ===
+--- Temperature 3.95 , Attempt  10 ---
+--- Temperature 3.95 , Attempt  20 ---
+--- Temperature 3.95 , Attempt  30 ---
+--- Temperature 3.95 , Attempt  40 ---
+--- Temperature 3.95 , Attempt  50 ---
+--- Temperature 3.95 , Attempt  60 ---
+--- Temperature 3.95 , Attempt  70 ---
+--- Temperature 3.95 , Attempt  80 ---
+--- Temperature 3.95 , Attempt  90 ---
+--- Temperature 3.95 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 3.752 , Attempting missing removal for:  7 runs ===
+--- Temperature 3.752 , Attempt  10 ---
+--- Temperature 3.752 , Attempt  20 ---
+--- Temperature 3.752 , Attempt  30 ---
+--- Temperature 3.752 , Attempt  40 ---
+--- Temperature 3.752 , Attempt  50 ---
+--- Temperature 3.752 , Attempt  60 ---
+--- Temperature 3.752 , Attempt  70 ---
+--- Temperature 3.752 , Attempt  80 ---
+--- Temperature 3.752 , Attempt  90 ---
+--- Temperature 3.752 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 101 , best missings = 4 
+
+=== Temperature: 3.565 , Attempting missing removal for:  7 runs ===
+--- Temperature 3.565 , Attempt  10 ---
+--- Temperature 3.565 , Attempt  20 ---
+--- Temperature 3.565 , Attempt  30 ---
+--- Temperature 3.565 , Attempt  40 ---
+--- Temperature 3.565 , Attempt  50 ---
+--- Temperature 3.565 , Attempt  60 ---
+--- Temperature 3.565 , Attempt  70 ---
+--- Temperature 3.565 , Attempt  80 ---
+--- Temperature 3.565 , Attempt  90 ---
+--- Temperature 3.565 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 3.387 , Attempting missing removal for:  7 runs ===
+--- Temperature 3.387 , Attempt  10 ---
+--- Temperature 3.387 , Attempt  20 ---
+--- Temperature 3.387 , Attempt  30 ---
+--- Temperature 3.387 , Attempt  40 ---
+--- Temperature 3.387 , Attempt  50 ---
+--- Temperature 3.387 , Attempt  60 ---
+--- Temperature 3.387 , Attempt  70 ---
+--- Temperature 3.387 , Attempt  80 ---
+--- Temperature 3.387 , Attempt  90 ---
+--- Temperature 3.387 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 3.217 , Attempting missing removal for:  7 runs ===
+--- Temperature 3.217 , Attempt  10 ---
+--- Temperature 3.217 , Attempt  20 ---
+--- Temperature 3.217 , Attempt  30 ---
+--- Temperature 3.217 , Attempt  40 ---
+--- Temperature 3.217 , Attempt  50 ---
+--- Temperature 3.217 , Attempt  60 ---
+--- Temperature 3.217 , Attempt  70 ---
+--- Temperature 3.217 , Attempt  80 ---
+--- Temperature 3.217 , Attempt  90 ---
+--- Temperature 3.217 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 108 , best missings = 4 
+
+=== Temperature: 3.056 , Attempting missing removal for:  7 runs ===
+--- Temperature 3.056 , Attempt  10 ---
+--- Temperature 3.056 , Attempt  20 ---
+--- Temperature 3.056 , Attempt  30 ---
+--- Temperature 3.056 , Attempt  40 ---
+--- Temperature 3.056 , Attempt  50 ---
+--- Temperature 3.056 , Attempt  60 ---
+--- Temperature 3.056 , Attempt  70 ---
+--- Temperature 3.056 , Attempt  80 ---
+--- Temperature 3.056 , Attempt  90 ---
+--- Temperature 3.056 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 2.904 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.904 , Attempt  10 ---
+--- Temperature 2.904 , Attempt  20 ---
+--- Temperature 2.904 , Attempt  30 ---
+--- Temperature 2.904 , Attempt  40 ---
+--- Temperature 2.904 , Attempt  50 ---
+--- Temperature 2.904 , Attempt  60 ---
+--- Temperature 2.904 , Attempt  70 ---
+--- Temperature 2.904 , Attempt  80 ---
+--- Temperature 2.904 , Attempt  90 ---
+--- Temperature 2.904 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 2.758 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.758 , Attempt  10 ---
+--- Temperature 2.758 , Attempt  20 ---
+--- Temperature 2.758 , Attempt  30 ---
+--- Temperature 2.758 , Attempt  40 ---
+--- Temperature 2.758 , Attempt  50 ---
+--- Temperature 2.758 , Attempt  60 ---
+--- Temperature 2.758 , Attempt  70 ---
+--- Temperature 2.758 , Attempt  80 ---
+--- Temperature 2.758 , Attempt  90 ---
+--- Temperature 2.758 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 103 , best missings = 4 
+
+=== Temperature: 2.62 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.62 , Attempt  10 ---
+--- Temperature 2.62 , Attempt  20 ---
+--- Temperature 2.62 , Attempt  30 ---
+--- Temperature 2.62 , Attempt  40 ---
+--- Temperature 2.62 , Attempt  50 ---
+--- Temperature 2.62 , Attempt  60 ---
+--- Temperature 2.62 , Attempt  70 ---
+--- Temperature 2.62 , Attempt  80 ---
+--- Temperature 2.62 , Attempt  90 ---
+--- Temperature 2.62 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 2.489 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.489 , Attempt  10 ---
+--- Temperature 2.489 , Attempt  20 ---
+--- Temperature 2.489 , Attempt  30 ---
+--- Temperature 2.489 , Attempt  40 ---
+--- Temperature 2.489 , Attempt  50 ---
+--- Temperature 2.489 , Attempt  60 ---
+--- Temperature 2.489 , Attempt  70 ---
+--- Temperature 2.489 , Attempt  80 ---
+--- Temperature 2.489 , Attempt  90 ---
+--- Temperature 2.489 , Attempt  100 ---
+--- Temperature 2.489 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 2.365 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.365 , Attempt  10 ---
+--- Temperature 2.365 , Attempt  20 ---
+--- Temperature 2.365 , Attempt  30 ---
+--- Temperature 2.365 , Attempt  40 ---
+--- Temperature 2.365 , Attempt  50 ---
+--- Temperature 2.365 , Attempt  60 ---
+--- Temperature 2.365 , Attempt  70 ---
+--- Temperature 2.365 , Attempt  80 ---
+--- Temperature 2.365 , Attempt  90 ---
+--- Temperature 2.365 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 2.247 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.247 , Attempt  10 ---
+--- Temperature 2.247 , Attempt  20 ---
+--- Temperature 2.247 , Attempt  30 ---
+--- Temperature 2.247 , Attempt  40 ---
+--- Temperature 2.247 , Attempt  50 ---
+--- Temperature 2.247 , Attempt  60 ---
+--- Temperature 2.247 , Attempt  70 ---
+--- Temperature 2.247 , Attempt  80 ---
+--- Temperature 2.247 , Attempt  90 ---
+--- Temperature 2.247 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 108 , best missings = 4 
+
+=== Temperature: 2.134 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.134 , Attempt  10 ---
+--- Temperature 2.134 , Attempt  20 ---
+--- Temperature 2.134 , Attempt  30 ---
+--- Temperature 2.134 , Attempt  40 ---
+--- Temperature 2.134 , Attempt  50 ---
+--- Temperature 2.134 , Attempt  60 ---
+--- Temperature 2.134 , Attempt  70 ---
+--- Temperature 2.134 , Attempt  80 ---
+--- Temperature 2.134 , Attempt  90 ---
+--- Temperature 2.134 , Attempt  100 ---
+--- Temperature 2.134 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 112 , best missings = 4 
+
+=== Temperature: 2.028 , Attempting missing removal for:  7 runs ===
+--- Temperature 2.028 , Attempt  10 ---
+--- Temperature 2.028 , Attempt  20 ---
+--- Temperature 2.028 , Attempt  30 ---
+--- Temperature 2.028 , Attempt  40 ---
+--- Temperature 2.028 , Attempt  50 ---
+--- Temperature 2.028 , Attempt  60 ---
+--- Temperature 2.028 , Attempt  70 ---
+--- Temperature 2.028 , Attempt  80 ---
+--- Temperature 2.028 , Attempt  90 ---
+--- Temperature 2.028 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 109 , best missings = 4 
+
+=== Temperature: 1.926 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.926 , Attempt  10 ---
+--- Temperature 1.926 , Attempt  20 ---
+--- Temperature 1.926 , Attempt  30 ---
+--- Temperature 1.926 , Attempt  40 ---
+--- Temperature 1.926 , Attempt  50 ---
+--- Temperature 1.926 , Attempt  60 ---
+--- Temperature 1.926 , Attempt  70 ---
+--- Temperature 1.926 , Attempt  80 ---
+--- Temperature 1.926 , Attempt  90 ---
+--- Temperature 1.926 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 108 , best missings = 4 
+
+=== Temperature: 1.83 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.83 , Attempt  10 ---
+--- Temperature 1.83 , Attempt  20 ---
+--- Temperature 1.83 , Attempt  30 ---
+--- Temperature 1.83 , Attempt  40 ---
+--- Temperature 1.83 , Attempt  50 ---
+--- Temperature 1.83 , Attempt  60 ---
+--- Temperature 1.83 , Attempt  70 ---
+--- Temperature 1.83 , Attempt  80 ---
+--- Temperature 1.83 , Attempt  90 ---
+--- Temperature 1.83 , Attempt  100 ---
+--- Temperature 1.83 , Attempt  110 ---
+--- Temperature 1.83 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 122 , best missings = 4 
+
+=== Temperature: 1.738 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.738 , Attempt  10 ---
+--- Temperature 1.738 , Attempt  20 ---
+--- Temperature 1.738 , Attempt  30 ---
+--- Temperature 1.738 , Attempt  40 ---
+--- Temperature 1.738 , Attempt  50 ---
+--- Temperature 1.738 , Attempt  60 ---
+--- Temperature 1.738 , Attempt  70 ---
+--- Temperature 1.738 , Attempt  80 ---
+--- Temperature 1.738 , Attempt  90 ---
+--- Temperature 1.738 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 108 , best missings = 4 
+
+=== Temperature: 1.652 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.652 , Attempt  10 ---
+--- Temperature 1.652 , Attempt  20 ---
+--- Temperature 1.652 , Attempt  30 ---
+--- Temperature 1.652 , Attempt  40 ---
+--- Temperature 1.652 , Attempt  50 ---
+--- Temperature 1.652 , Attempt  60 ---
+--- Temperature 1.652 , Attempt  70 ---
+--- Temperature 1.652 , Attempt  80 ---
+--- Temperature 1.652 , Attempt  90 ---
+--- Temperature 1.652 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 107 , best missings = 4 
+
+=== Temperature: 1.569 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.569 , Attempt  10 ---
+--- Temperature 1.569 , Attempt  20 ---
+--- Temperature 1.569 , Attempt  30 ---
+--- Temperature 1.569 , Attempt  40 ---
+--- Temperature 1.569 , Attempt  50 ---
+--- Temperature 1.569 , Attempt  60 ---
+--- Temperature 1.569 , Attempt  70 ---
+--- Temperature 1.569 , Attempt  80 ---
+--- Temperature 1.569 , Attempt  90 ---
+--- Temperature 1.569 , Attempt  100 ---
+--- Temperature 1.569 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 1.491 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.491 , Attempt  10 ---
+--- Temperature 1.491 , Attempt  20 ---
+--- Temperature 1.491 , Attempt  30 ---
+--- Temperature 1.491 , Attempt  40 ---
+--- Temperature 1.491 , Attempt  50 ---
+--- Temperature 1.491 , Attempt  60 ---
+--- Temperature 1.491 , Attempt  70 ---
+--- Temperature 1.491 , Attempt  80 ---
+--- Temperature 1.491 , Attempt  90 ---
+--- Temperature 1.491 , Attempt  100 ---
+--- Temperature 1.491 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 116 , best missings = 4 
+
+=== Temperature: 1.416 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.416 , Attempt  10 ---
+--- Temperature 1.416 , Attempt  20 ---
+--- Temperature 1.416 , Attempt  30 ---
+--- Temperature 1.416 , Attempt  40 ---
+--- Temperature 1.416 , Attempt  50 ---
+--- Temperature 1.416 , Attempt  60 ---
+--- Temperature 1.416 , Attempt  70 ---
+--- Temperature 1.416 , Attempt  80 ---
+--- Temperature 1.416 , Attempt  90 ---
+--- Temperature 1.416 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 1.345 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.345 , Attempt  10 ---
+--- Temperature 1.345 , Attempt  20 ---
+--- Temperature 1.345 , Attempt  30 ---
+--- Temperature 1.345 , Attempt  40 ---
+--- Temperature 1.345 , Attempt  50 ---
+--- Temperature 1.345 , Attempt  60 ---
+--- Temperature 1.345 , Attempt  70 ---
+--- Temperature 1.345 , Attempt  80 ---
+--- Temperature 1.345 , Attempt  90 ---
+--- Temperature 1.345 , Attempt  100 ---
+--- Temperature 1.345 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 111 , best missings = 4 
+
+=== Temperature: 1.278 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.278 , Attempt  10 ---
+--- Temperature 1.278 , Attempt  20 ---
+--- Temperature 1.278 , Attempt  30 ---
+--- Temperature 1.278 , Attempt  40 ---
+--- Temperature 1.278 , Attempt  50 ---
+--- Temperature 1.278 , Attempt  60 ---
+--- Temperature 1.278 , Attempt  70 ---
+--- Temperature 1.278 , Attempt  80 ---
+--- Temperature 1.278 , Attempt  90 ---
+--- Temperature 1.278 , Attempt  100 ---
+--- Temperature 1.278 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 112 , best missings = 4 
+
+=== Temperature: 1.214 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.214 , Attempt  10 ---
+--- Temperature 1.214 , Attempt  20 ---
+--- Temperature 1.214 , Attempt  30 ---
+--- Temperature 1.214 , Attempt  40 ---
+--- Temperature 1.214 , Attempt  50 ---
+--- Temperature 1.214 , Attempt  60 ---
+--- Temperature 1.214 , Attempt  70 ---
+--- Temperature 1.214 , Attempt  80 ---
+--- Temperature 1.214 , Attempt  90 ---
+--- Temperature 1.214 , Attempt  100 ---
+--- Temperature 1.214 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 1.153 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.153 , Attempt  10 ---
+--- Temperature 1.153 , Attempt  20 ---
+--- Temperature 1.153 , Attempt  30 ---
+--- Temperature 1.153 , Attempt  40 ---
+--- Temperature 1.153 , Attempt  50 ---
+--- Temperature 1.153 , Attempt  60 ---
+--- Temperature 1.153 , Attempt  70 ---
+--- Temperature 1.153 , Attempt  80 ---
+--- Temperature 1.153 , Attempt  90 ---
+--- Temperature 1.153 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 108 , best missings = 4 
+
+=== Temperature: 1.096 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.096 , Attempt  10 ---
+--- Temperature 1.096 , Attempt  20 ---
+--- Temperature 1.096 , Attempt  30 ---
+--- Temperature 1.096 , Attempt  40 ---
+--- Temperature 1.096 , Attempt  50 ---
+--- Temperature 1.096 , Attempt  60 ---
+--- Temperature 1.096 , Attempt  70 ---
+--- Temperature 1.096 , Attempt  80 ---
+--- Temperature 1.096 , Attempt  90 ---
+--- Temperature 1.096 , Attempt  100 ---
+--- Temperature 1.096 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 111 , best missings = 4 
+
+=== Temperature: 1.041 , Attempting missing removal for:  7 runs ===
+--- Temperature 1.041 , Attempt  10 ---
+--- Temperature 1.041 , Attempt  20 ---
+--- Temperature 1.041 , Attempt  30 ---
+--- Temperature 1.041 , Attempt  40 ---
+--- Temperature 1.041 , Attempt  50 ---
+--- Temperature 1.041 , Attempt  60 ---
+--- Temperature 1.041 , Attempt  70 ---
+--- Temperature 1.041 , Attempt  80 ---
+--- Temperature 1.041 , Attempt  90 ---
+--- Temperature 1.041 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 105 , best missings = 4 
+
+=== Temperature: 0.989 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.989 , Attempt  10 ---
+--- Temperature 0.989 , Attempt  20 ---
+--- Temperature 0.989 , Attempt  30 ---
+--- Temperature 0.989 , Attempt  40 ---
+--- Temperature 0.989 , Attempt  50 ---
+--- Temperature 0.989 , Attempt  60 ---
+--- Temperature 0.989 , Attempt  70 ---
+--- Temperature 0.989 , Attempt  80 ---
+--- Temperature 0.989 , Attempt  90 ---
+--- Temperature 0.989 , Attempt  100 ---
+--- Temperature 0.989 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 110 , best missings = 4 
+
+=== Temperature: 0.939 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.939 , Attempt  10 ---
+--- Temperature 0.939 , Attempt  20 ---
+--- Temperature 0.939 , Attempt  30 ---
+--- Temperature 0.939 , Attempt  40 ---
+--- Temperature 0.939 , Attempt  50 ---
+--- Temperature 0.939 , Attempt  60 ---
+--- Temperature 0.939 , Attempt  70 ---
+--- Temperature 0.939 , Attempt  80 ---
+--- Temperature 0.939 , Attempt  90 ---
+--- Temperature 0.939 , Attempt  100 ---
+--- Temperature 0.939 , Attempt  110 ---
+--- Temperature 0.939 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 126 , best missings = 4 
+
+=== Temperature: 0.892 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.892 , Attempt  10 ---
+--- Temperature 0.892 , Attempt  20 ---
+--- Temperature 0.892 , Attempt  30 ---
+--- Temperature 0.892 , Attempt  40 ---
+--- Temperature 0.892 , Attempt  50 ---
+--- Temperature 0.892 , Attempt  60 ---
+--- Temperature 0.892 , Attempt  70 ---
+--- Temperature 0.892 , Attempt  80 ---
+--- Temperature 0.892 , Attempt  90 ---
+--- Temperature 0.892 , Attempt  100 ---
+--- Temperature 0.892 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 110 , best missings = 4 
+
+=== Temperature: 0.848 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.848 , Attempt  10 ---
+--- Temperature 0.848 , Attempt  20 ---
+--- Temperature 0.848 , Attempt  30 ---
+--- Temperature 0.848 , Attempt  40 ---
+--- Temperature 0.848 , Attempt  50 ---
+--- Temperature 0.848 , Attempt  60 ---
+--- Temperature 0.848 , Attempt  70 ---
+--- Temperature 0.848 , Attempt  80 ---
+--- Temperature 0.848 , Attempt  90 ---
+--- Temperature 0.848 , Attempt  100 ---
+--- Temperature 0.848 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 0.805 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.805 , Attempt  10 ---
+--- Temperature 0.805 , Attempt  20 ---
+--- Temperature 0.805 , Attempt  30 ---
+--- Temperature 0.805 , Attempt  40 ---
+--- Temperature 0.805 , Attempt  50 ---
+--- Temperature 0.805 , Attempt  60 ---
+--- Temperature 0.805 , Attempt  70 ---
+--- Temperature 0.805 , Attempt  80 ---
+--- Temperature 0.805 , Attempt  90 ---
+--- Temperature 0.805 , Attempt  100 ---
+--- Temperature 0.805 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 119 , best missings = 4 
+
+=== Temperature: 0.765 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.765 , Attempt  10 ---
+--- Temperature 0.765 , Attempt  20 ---
+--- Temperature 0.765 , Attempt  30 ---
+--- Temperature 0.765 , Attempt  40 ---
+--- Temperature 0.765 , Attempt  50 ---
+--- Temperature 0.765 , Attempt  60 ---
+--- Temperature 0.765 , Attempt  70 ---
+--- Temperature 0.765 , Attempt  80 ---
+--- Temperature 0.765 , Attempt  90 ---
+--- Temperature 0.765 , Attempt  100 ---
+--- Temperature 0.765 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 0.727 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.727 , Attempt  10 ---
+--- Temperature 0.727 , Attempt  20 ---
+--- Temperature 0.727 , Attempt  30 ---
+--- Temperature 0.727 , Attempt  40 ---
+--- Temperature 0.727 , Attempt  50 ---
+--- Temperature 0.727 , Attempt  60 ---
+--- Temperature 0.727 , Attempt  70 ---
+--- Temperature 0.727 , Attempt  80 ---
+--- Temperature 0.727 , Attempt  90 ---
+--- Temperature 0.727 , Attempt  100 ---
+--- Temperature 0.727 , Attempt  110 ---
+--- Temperature 0.727 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 121 , best missings = 4 
+
+=== Temperature: 0.691 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.691 , Attempt  10 ---
+--- Temperature 0.691 , Attempt  20 ---
+--- Temperature 0.691 , Attempt  30 ---
+--- Temperature 0.691 , Attempt  40 ---
+--- Temperature 0.691 , Attempt  50 ---
+--- Temperature 0.691 , Attempt  60 ---
+--- Temperature 0.691 , Attempt  70 ---
+--- Temperature 0.691 , Attempt  80 ---
+--- Temperature 0.691 , Attempt  90 ---
+--- Temperature 0.691 , Attempt  100 ---
+--- Temperature 0.691 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 117 , best missings = 4 
+
+=== Temperature: 0.656 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.656 , Attempt  10 ---
+--- Temperature 0.656 , Attempt  20 ---
+--- Temperature 0.656 , Attempt  30 ---
+--- Temperature 0.656 , Attempt  40 ---
+--- Temperature 0.656 , Attempt  50 ---
+--- Temperature 0.656 , Attempt  60 ---
+--- Temperature 0.656 , Attempt  70 ---
+--- Temperature 0.656 , Attempt  80 ---
+--- Temperature 0.656 , Attempt  90 ---
+--- Temperature 0.656 , Attempt  100 ---
+--- Temperature 0.656 , Attempt  110 ---
+--- Temperature 0.656 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 124 , best missings = 4 
+
+=== Temperature: 0.623 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.623 , Attempt  10 ---
+--- Temperature 0.623 , Attempt  20 ---
+--- Temperature 0.623 , Attempt  30 ---
+--- Temperature 0.623 , Attempt  40 ---
+--- Temperature 0.623 , Attempt  50 ---
+--- Temperature 0.623 , Attempt  60 ---
+--- Temperature 0.623 , Attempt  70 ---
+--- Temperature 0.623 , Attempt  80 ---
+--- Temperature 0.623 , Attempt  90 ---
+--- Temperature 0.623 , Attempt  100 ---
+--- Temperature 0.623 , Attempt  110 ---
+--- Temperature 0.623 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 123 , best missings = 4 
+
+=== Temperature: 0.592 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.592 , Attempt  10 ---
+--- Temperature 0.592 , Attempt  20 ---
+--- Temperature 0.592 , Attempt  30 ---
+--- Temperature 0.592 , Attempt  40 ---
+--- Temperature 0.592 , Attempt  50 ---
+--- Temperature 0.592 , Attempt  60 ---
+--- Temperature 0.592 , Attempt  70 ---
+--- Temperature 0.592 , Attempt  80 ---
+--- Temperature 0.592 , Attempt  90 ---
+--- Temperature 0.592 , Attempt  100 ---
+--- Temperature 0.592 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 116 , best missings = 4 
+
+=== Temperature: 0.562 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.562 , Attempt  10 ---
+--- Temperature 0.562 , Attempt  20 ---
+--- Temperature 0.562 , Attempt  30 ---
+--- Temperature 0.562 , Attempt  40 ---
+--- Temperature 0.562 , Attempt  50 ---
+--- Temperature 0.562 , Attempt  60 ---
+--- Temperature 0.562 , Attempt  70 ---
+--- Temperature 0.562 , Attempt  80 ---
+--- Temperature 0.562 , Attempt  90 ---
+--- Temperature 0.562 , Attempt  100 ---
+--- Temperature 0.562 , Attempt  110 ---
+--- Temperature 0.562 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 128 , best missings = 4 
+
+=== Temperature: 0.534 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.534 , Attempt  10 ---
+--- Temperature 0.534 , Attempt  20 ---
+--- Temperature 0.534 , Attempt  30 ---
+--- Temperature 0.534 , Attempt  40 ---
+--- Temperature 0.534 , Attempt  50 ---
+--- Temperature 0.534 , Attempt  60 ---
+--- Temperature 0.534 , Attempt  70 ---
+--- Temperature 0.534 , Attempt  80 ---
+--- Temperature 0.534 , Attempt  90 ---
+--- Temperature 0.534 , Attempt  100 ---
+--- Temperature 0.534 , Attempt  110 ---
+--- Temperature 0.534 , Attempt  120 ---
+--- Temperature 0.534 , Attempt  130 ---
+  End of temperature level: accepted = 101 , attempts = 131 , best missings = 4 
+
+=== Temperature: 0.508 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.508 , Attempt  10 ---
+--- Temperature 0.508 , Attempt  20 ---
+--- Temperature 0.508 , Attempt  30 ---
+--- Temperature 0.508 , Attempt  40 ---
+--- Temperature 0.508 , Attempt  50 ---
+--- Temperature 0.508 , Attempt  60 ---
+--- Temperature 0.508 , Attempt  70 ---
+--- Temperature 0.508 , Attempt  80 ---
+--- Temperature 0.508 , Attempt  90 ---
+--- Temperature 0.508 , Attempt  100 ---
+--- Temperature 0.508 , Attempt  110 ---
+--- Temperature 0.508 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 123 , best missings = 4 
+
+=== Temperature: 0.482 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.482 , Attempt  10 ---
+--- Temperature 0.482 , Attempt  20 ---
+--- Temperature 0.482 , Attempt  30 ---
+--- Temperature 0.482 , Attempt  40 ---
+--- Temperature 0.482 , Attempt  50 ---
+--- Temperature 0.482 , Attempt  60 ---
+--- Temperature 0.482 , Attempt  70 ---
+--- Temperature 0.482 , Attempt  80 ---
+--- Temperature 0.482 , Attempt  90 ---
+--- Temperature 0.482 , Attempt  100 ---
+--- Temperature 0.482 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 0.458 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.458 , Attempt  10 ---
+--- Temperature 0.458 , Attempt  20 ---
+--- Temperature 0.458 , Attempt  30 ---
+--- Temperature 0.458 , Attempt  40 ---
+--- Temperature 0.458 , Attempt  50 ---
+--- Temperature 0.458 , Attempt  60 ---
+--- Temperature 0.458 , Attempt  70 ---
+--- Temperature 0.458 , Attempt  80 ---
+--- Temperature 0.458 , Attempt  90 ---
+--- Temperature 0.458 , Attempt  100 ---
+--- Temperature 0.458 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 119 , best missings = 4 
+
+=== Temperature: 0.435 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.435 , Attempt  10 ---
+--- Temperature 0.435 , Attempt  20 ---
+--- Temperature 0.435 , Attempt  30 ---
+--- Temperature 0.435 , Attempt  40 ---
+--- Temperature 0.435 , Attempt  50 ---
+--- Temperature 0.435 , Attempt  60 ---
+--- Temperature 0.435 , Attempt  70 ---
+--- Temperature 0.435 , Attempt  80 ---
+--- Temperature 0.435 , Attempt  90 ---
+--- Temperature 0.435 , Attempt  100 ---
+--- Temperature 0.435 , Attempt  110 ---
+--- Temperature 0.435 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 122 , best missings = 4 
+
+=== Temperature: 0.413 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.413 , Attempt  10 ---
+--- Temperature 0.413 , Attempt  20 ---
+--- Temperature 0.413 , Attempt  30 ---
+--- Temperature 0.413 , Attempt  40 ---
+--- Temperature 0.413 , Attempt  50 ---
+--- Temperature 0.413 , Attempt  60 ---
+--- Temperature 0.413 , Attempt  70 ---
+--- Temperature 0.413 , Attempt  80 ---
+--- Temperature 0.413 , Attempt  90 ---
+--- Temperature 0.413 , Attempt  100 ---
+--- Temperature 0.413 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 113 , best missings = 4 
+
+=== Temperature: 0.393 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.393 , Attempt  10 ---
+--- Temperature 0.393 , Attempt  20 ---
+--- Temperature 0.393 , Attempt  30 ---
+--- Temperature 0.393 , Attempt  40 ---
+--- Temperature 0.393 , Attempt  50 ---
+--- Temperature 0.393 , Attempt  60 ---
+--- Temperature 0.393 , Attempt  70 ---
+--- Temperature 0.393 , Attempt  80 ---
+--- Temperature 0.393 , Attempt  90 ---
+--- Temperature 0.393 , Attempt  100 ---
+--- Temperature 0.393 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 112 , best missings = 4 
+
+=== Temperature: 0.373 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.373 , Attempt  10 ---
+--- Temperature 0.373 , Attempt  20 ---
+--- Temperature 0.373 , Attempt  30 ---
+--- Temperature 0.373 , Attempt  40 ---
+--- Temperature 0.373 , Attempt  50 ---
+--- Temperature 0.373 , Attempt  60 ---
+--- Temperature 0.373 , Attempt  70 ---
+--- Temperature 0.373 , Attempt  80 ---
+--- Temperature 0.373 , Attempt  90 ---
+--- Temperature 0.373 , Attempt  100 ---
+--- Temperature 0.373 , Attempt  110 ---
+--- Temperature 0.373 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 123 , best missings = 4 
+
+=== Temperature: 0.354 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.354 , Attempt  10 ---
+--- Temperature 0.354 , Attempt  20 ---
+--- Temperature 0.354 , Attempt  30 ---
+--- Temperature 0.354 , Attempt  40 ---
+--- Temperature 0.354 , Attempt  50 ---
+--- Temperature 0.354 , Attempt  60 ---
+--- Temperature 0.354 , Attempt  70 ---
+--- Temperature 0.354 , Attempt  80 ---
+--- Temperature 0.354 , Attempt  90 ---
+--- Temperature 0.354 , Attempt  100 ---
+--- Temperature 0.354 , Attempt  110 ---
+--- Temperature 0.354 , Attempt  120 ---
+--- Temperature 0.354 , Attempt  130 ---
+--- Temperature 0.354 , Attempt  140 ---
+  End of temperature level: accepted = 101 , attempts = 144 , best missings = 4 
+
+=== Temperature: 0.337 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.337 , Attempt  10 ---
+--- Temperature 0.337 , Attempt  20 ---
+--- Temperature 0.337 , Attempt  30 ---
+--- Temperature 0.337 , Attempt  40 ---
+--- Temperature 0.337 , Attempt  50 ---
+--- Temperature 0.337 , Attempt  60 ---
+--- Temperature 0.337 , Attempt  70 ---
+--- Temperature 0.337 , Attempt  80 ---
+--- Temperature 0.337 , Attempt  90 ---
+--- Temperature 0.337 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 0.32 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.32 , Attempt  10 ---
+--- Temperature 0.32 , Attempt  20 ---
+--- Temperature 0.32 , Attempt  30 ---
+--- Temperature 0.32 , Attempt  40 ---
+--- Temperature 0.32 , Attempt  50 ---
+--- Temperature 0.32 , Attempt  60 ---
+--- Temperature 0.32 , Attempt  70 ---
+--- Temperature 0.32 , Attempt  80 ---
+--- Temperature 0.32 , Attempt  90 ---
+--- Temperature 0.32 , Attempt  100 ---
+--- Temperature 0.32 , Attempt  110 ---
+--- Temperature 0.32 , Attempt  120 ---
+--- Temperature 0.32 , Attempt  130 ---
+  End of temperature level: accepted = 101 , attempts = 130 , best missings = 4 
+
+=== Temperature: 0.304 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.304 , Attempt  10 ---
+--- Temperature 0.304 , Attempt  20 ---
+--- Temperature 0.304 , Attempt  30 ---
+--- Temperature 0.304 , Attempt  40 ---
+--- Temperature 0.304 , Attempt  50 ---
+--- Temperature 0.304 , Attempt  60 ---
+--- Temperature 0.304 , Attempt  70 ---
+--- Temperature 0.304 , Attempt  80 ---
+--- Temperature 0.304 , Attempt  90 ---
+--- Temperature 0.304 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 104 , best missings = 4 
+
+=== Temperature: 0.289 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.289 , Attempt  10 ---
+--- Temperature 0.289 , Attempt  20 ---
+--- Temperature 0.289 , Attempt  30 ---
+--- Temperature 0.289 , Attempt  40 ---
+--- Temperature 0.289 , Attempt  50 ---
+--- Temperature 0.289 , Attempt  60 ---
+--- Temperature 0.289 , Attempt  70 ---
+--- Temperature 0.289 , Attempt  80 ---
+--- Temperature 0.289 , Attempt  90 ---
+--- Temperature 0.289 , Attempt  100 ---
+--- Temperature 0.289 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 112 , best missings = 4 
+
+=== Temperature: 0.274 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.274 , Attempt  10 ---
+--- Temperature 0.274 , Attempt  20 ---
+--- Temperature 0.274 , Attempt  30 ---
+--- Temperature 0.274 , Attempt  40 ---
+--- Temperature 0.274 , Attempt  50 ---
+--- Temperature 0.274 , Attempt  60 ---
+--- Temperature 0.274 , Attempt  70 ---
+--- Temperature 0.274 , Attempt  80 ---
+--- Temperature 0.274 , Attempt  90 ---
+--- Temperature 0.274 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 0.261 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.261 , Attempt  10 ---
+--- Temperature 0.261 , Attempt  20 ---
+--- Temperature 0.261 , Attempt  30 ---
+--- Temperature 0.261 , Attempt  40 ---
+--- Temperature 0.261 , Attempt  50 ---
+--- Temperature 0.261 , Attempt  60 ---
+--- Temperature 0.261 , Attempt  70 ---
+--- Temperature 0.261 , Attempt  80 ---
+--- Temperature 0.261 , Attempt  90 ---
+--- Temperature 0.261 , Attempt  100 ---
+--- Temperature 0.261 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 115 , best missings = 4 
+
+=== Temperature: 0.248 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.248 , Attempt  10 ---
+--- Temperature 0.248 , Attempt  20 ---
+--- Temperature 0.248 , Attempt  30 ---
+--- Temperature 0.248 , Attempt  40 ---
+--- Temperature 0.248 , Attempt  50 ---
+--- Temperature 0.248 , Attempt  60 ---
+--- Temperature 0.248 , Attempt  70 ---
+--- Temperature 0.248 , Attempt  80 ---
+--- Temperature 0.248 , Attempt  90 ---
+--- Temperature 0.248 , Attempt  100 ---
+--- Temperature 0.248 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 119 , best missings = 4 
+
+=== Temperature: 0.235 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.235 , Attempt  10 ---
+--- Temperature 0.235 , Attempt  20 ---
+--- Temperature 0.235 , Attempt  30 ---
+--- Temperature 0.235 , Attempt  40 ---
+--- Temperature 0.235 , Attempt  50 ---
+--- Temperature 0.235 , Attempt  60 ---
+--- Temperature 0.235 , Attempt  70 ---
+--- Temperature 0.235 , Attempt  80 ---
+--- Temperature 0.235 , Attempt  90 ---
+--- Temperature 0.235 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 107 , best missings = 4 
+
+=== Temperature: 0.223 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.223 , Attempt  10 ---
+--- Temperature 0.223 , Attempt  20 ---
+--- Temperature 0.223 , Attempt  30 ---
+--- Temperature 0.223 , Attempt  40 ---
+--- Temperature 0.223 , Attempt  50 ---
+--- Temperature 0.223 , Attempt  60 ---
+--- Temperature 0.223 , Attempt  70 ---
+--- Temperature 0.223 , Attempt  80 ---
+--- Temperature 0.223 , Attempt  90 ---
+--- Temperature 0.223 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 107 , best missings = 4 
+
+=== Temperature: 0.212 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.212 , Attempt  10 ---
+--- Temperature 0.212 , Attempt  20 ---
+--- Temperature 0.212 , Attempt  30 ---
+--- Temperature 0.212 , Attempt  40 ---
+--- Temperature 0.212 , Attempt  50 ---
+--- Temperature 0.212 , Attempt  60 ---
+--- Temperature 0.212 , Attempt  70 ---
+--- Temperature 0.212 , Attempt  80 ---
+--- Temperature 0.212 , Attempt  90 ---
+--- Temperature 0.212 , Attempt  100 ---
+--- Temperature 0.212 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 112 , best missings = 4 
+
+=== Temperature: 0.202 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.202 , Attempt  10 ---
+--- Temperature 0.202 , Attempt  20 ---
+--- Temperature 0.202 , Attempt  30 ---
+--- Temperature 0.202 , Attempt  40 ---
+--- Temperature 0.202 , Attempt  50 ---
+--- Temperature 0.202 , Attempt  60 ---
+--- Temperature 0.202 , Attempt  70 ---
+--- Temperature 0.202 , Attempt  80 ---
+--- Temperature 0.202 , Attempt  90 ---
+--- Temperature 0.202 , Attempt  100 ---
+--- Temperature 0.202 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 118 , best missings = 4 
+
+=== Temperature: 0.192 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.192 , Attempt  10 ---
+--- Temperature 0.192 , Attempt  20 ---
+--- Temperature 0.192 , Attempt  30 ---
+--- Temperature 0.192 , Attempt  40 ---
+--- Temperature 0.192 , Attempt  50 ---
+--- Temperature 0.192 , Attempt  60 ---
+--- Temperature 0.192 , Attempt  70 ---
+--- Temperature 0.192 , Attempt  80 ---
+--- Temperature 0.192 , Attempt  90 ---
+--- Temperature 0.192 , Attempt  100 ---
+--- Temperature 0.192 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 119 , best missings = 4 
+
+=== Temperature: 0.182 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.182 , Attempt  10 ---
+--- Temperature 0.182 , Attempt  20 ---
+--- Temperature 0.182 , Attempt  30 ---
+--- Temperature 0.182 , Attempt  40 ---
+--- Temperature 0.182 , Attempt  50 ---
+--- Temperature 0.182 , Attempt  60 ---
+--- Temperature 0.182 , Attempt  70 ---
+--- Temperature 0.182 , Attempt  80 ---
+--- Temperature 0.182 , Attempt  90 ---
+--- Temperature 0.182 , Attempt  100 ---
+--- Temperature 0.182 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 111 , best missings = 4 
+
+=== Temperature: 0.173 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.173 , Attempt  10 ---
+--- Temperature 0.173 , Attempt  20 ---
+--- Temperature 0.173 , Attempt  30 ---
+--- Temperature 0.173 , Attempt  40 ---
+--- Temperature 0.173 , Attempt  50 ---
+--- Temperature 0.173 , Attempt  60 ---
+--- Temperature 0.173 , Attempt  70 ---
+--- Temperature 0.173 , Attempt  80 ---
+--- Temperature 0.173 , Attempt  90 ---
+--- Temperature 0.173 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 0.164 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.164 , Attempt  10 ---
+--- Temperature 0.164 , Attempt  20 ---
+--- Temperature 0.164 , Attempt  30 ---
+--- Temperature 0.164 , Attempt  40 ---
+--- Temperature 0.164 , Attempt  50 ---
+--- Temperature 0.164 , Attempt  60 ---
+--- Temperature 0.164 , Attempt  70 ---
+--- Temperature 0.164 , Attempt  80 ---
+--- Temperature 0.164 , Attempt  90 ---
+--- Temperature 0.164 , Attempt  100 ---
+--- Temperature 0.164 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 113 , best missings = 4 
+
+=== Temperature: 0.156 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.156 , Attempt  10 ---
+--- Temperature 0.156 , Attempt  20 ---
+--- Temperature 0.156 , Attempt  30 ---
+--- Temperature 0.156 , Attempt  40 ---
+--- Temperature 0.156 , Attempt  50 ---
+--- Temperature 0.156 , Attempt  60 ---
+--- Temperature 0.156 , Attempt  70 ---
+--- Temperature 0.156 , Attempt  80 ---
+--- Temperature 0.156 , Attempt  90 ---
+--- Temperature 0.156 , Attempt  100 ---
+--- Temperature 0.156 , Attempt  110 ---
+  End of temperature level: accepted = 101 , attempts = 113 , best missings = 4 
+
+=== Temperature: 0.148 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.148 , Attempt  10 ---
+--- Temperature 0.148 , Attempt  20 ---
+--- Temperature 0.148 , Attempt  30 ---
+--- Temperature 0.148 , Attempt  40 ---
+--- Temperature 0.148 , Attempt  50 ---
+--- Temperature 0.148 , Attempt  60 ---
+--- Temperature 0.148 , Attempt  70 ---
+--- Temperature 0.148 , Attempt  80 ---
+--- Temperature 0.148 , Attempt  90 ---
+--- Temperature 0.148 , Attempt  100 ---
+  End of temperature level: accepted = 101 , attempts = 106 , best missings = 4 
+
+=== Temperature: 0.141 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.141 , Attempt  10 ---
+--- Temperature 0.141 , Attempt  20 ---
+--- Temperature 0.141 , Attempt  30 ---
+--- Temperature 0.141 , Attempt  40 ---
+--- Temperature 0.141 , Attempt  50 ---
+--- Temperature 0.141 , Attempt  60 ---
+--- Temperature 0.141 , Attempt  70 ---
+--- Temperature 0.141 , Attempt  80 ---
+--- Temperature 0.141 , Attempt  90 ---
+--- Temperature 0.141 , Attempt  100 ---
+--- Temperature 0.141 , Attempt  110 ---
+--- Temperature 0.141 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 121 , best missings = 4 
+
+=== Temperature: 0.134 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.134 , Attempt  10 ---
+--- Temperature 0.134 , Attempt  20 ---
+--- Temperature 0.134 , Attempt  30 ---
+--- Temperature 0.134 , Attempt  40 ---
+--- Temperature 0.134 , Attempt  50 ---
+--- Temperature 0.134 , Attempt  60 ---
+--- Temperature 0.134 , Attempt  70 ---
+--- Temperature 0.134 , Attempt  80 ---
+--- Temperature 0.134 , Attempt  90 ---
+--- Temperature 0.134 , Attempt  100 ---
+--- Temperature 0.134 , Attempt  110 ---
+--- Temperature 0.134 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 126 , best missings = 4 
+
+=== Temperature: 0.127 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.127 , Attempt  10 ---
+--- Temperature 0.127 , Attempt  20 ---
+--- Temperature 0.127 , Attempt  30 ---
+--- Temperature 0.127 , Attempt  40 ---
+--- Temperature 0.127 , Attempt  50 ---
+--- Temperature 0.127 , Attempt  60 ---
+--- Temperature 0.127 , Attempt  70 ---
+--- Temperature 0.127 , Attempt  80 ---
+--- Temperature 0.127 , Attempt  90 ---
+--- Temperature 0.127 , Attempt  100 ---
+--- Temperature 0.127 , Attempt  110 ---
+--- Temperature 0.127 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 124 , best missings = 4 
+
+=== Temperature: 0.121 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.121 , Attempt  10 ---
+--- Temperature 0.121 , Attempt  20 ---
+--- Temperature 0.121 , Attempt  30 ---
+--- Temperature 0.121 , Attempt  40 ---
+--- Temperature 0.121 , Attempt  50 ---
+--- Temperature 0.121 , Attempt  60 ---
+--- Temperature 0.121 , Attempt  70 ---
+--- Temperature 0.121 , Attempt  80 ---
+--- Temperature 0.121 , Attempt  90 ---
+--- Temperature 0.121 , Attempt  100 ---
+--- Temperature 0.121 , Attempt  110 ---
+--- Temperature 0.121 , Attempt  120 ---
+  End of temperature level: accepted = 101 , attempts = 124 , best missings = 4 
+
+=== Temperature: 0.115 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.115 , Attempt  10 ---
+--- Temperature 0.115 , Attempt  20 ---
+--- Temperature 0.115 , Attempt  30 ---
+--- Temperature 0.115 , Attempt  40 ---
+--- Temperature 0.115 , Attempt  50 ---
+--- Temperature 0.115 , Attempt  60 ---
+--- Temperature 0.115 , Attempt  70 ---
+--- Temperature 0.115 , Attempt  80 ---
+--- Temperature 0.115 , Attempt  90 ---
+--- Temperature 0.115 , Attempt  100 ---
+--- Temperature 0.115 , Attempt  110 ---
+--- Temperature 0.115 , Attempt  120 ---
+--- Temperature 0.115 , Attempt  130 ---
+  End of temperature level: accepted = 101 , attempts = 139 , best missings = 4 
+
+=== Temperature: 0.109 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.109 , Attempt  10 ---
+--- Temperature 0.109 , Attempt  20 ---
+--- Temperature 0.109 , Attempt  30 ---
+--- Temperature 0.109 , Attempt  40 ---
+--- Temperature 0.109 , Attempt  50 ---
+--- Temperature 0.109 , Attempt  60 ---
+--- Temperature 0.109 , Attempt  70 ---
+--- Temperature 0.109 , Attempt  80 ---
+--- Temperature 0.109 , Attempt  90 ---
+--- Temperature 0.109 , Attempt  100 ---
+--- Temperature 0.109 , Attempt  110 ---
+--- Temperature 0.109 , Attempt  120 ---
+--- Temperature 0.109 , Attempt  130 ---
+--- Temperature 0.109 , Attempt  140 ---
+--- Temperature 0.109 , Attempt  150 ---
+--- Temperature 0.109 , Attempt  160 ---
+  End of temperature level: accepted = 101 , attempts = 167 , best missings = 4 
+
+=== Temperature: 0.104 , Attempting missing removal for:  7 runs ===
+--- Temperature 0.104 , Attempt  10 ---
+--- Temperature 0.104 , Attempt  20 ---
+--- Temperature 0.104 , Attempt  30 ---
+--- Temperature 0.104 , Attempt  40 ---
+--- Temperature 0.104 , Attempt  50 ---
+--- Temperature 0.104 , Attempt  60 ---
+--- Temperature 0.104 , Attempt  70 ---
+--- Temperature 0.104 , Attempt  80 ---
+--- Temperature 0.104 , Attempt  90 ---
+--- Temperature 0.104 , Attempt  100 ---
+--- Temperature 0.104 , Attempt  110 ---
+--- Temperature 0.104 , Attempt  120 ---
+--- Temperature 0.104 , Attempt  130 ---
+  End of temperature level: accepted = 101 , attempts = 130 , best missings = 4 
+
+
+=== Final Result ===
+Best missings: 4 
+Iterations: 135 
+Simulated annealing failed - 4 missings remain
+Cannot reduce further - stopping
+
+=== Final Optimized SeqCA ===
+Rows: 8 
+Reduction from 9 to 8 rows
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]    6    5    4    3    2    1
+[2,]    2    6    4    5    1    3
+[3,]    2    3    5    6    1    4
+[4,]    4    5    1    2    3    6
+[5,]    1    5    6    2    3    4
+[6,]    3    2    1    5    4    6
+[7,]    3    4    6    1    2    5
+[8,]    1    4    6    3    5    2
+attr(,"class")
+[1] "sca"    "matrix" "array" 
+> ## Here: Kuhn much slower than TJ
+> nrow(A <- greedySeqCA_Kuhn(6, 4, seed=75))  ## 52 before, 41 after reduce
+[1] 41
+
+op_SCA> ## End(Don't show)
+op_SCA> 
+op_SCA> 
+op_SCA> 
+[1] "2026-10-04 14:26:22 CEST"

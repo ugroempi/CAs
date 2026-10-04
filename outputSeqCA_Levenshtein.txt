@@ -1,0 +1,58 @@
+[1] "2026-10-04 13:55:08 CEST"
+
+SqCA_L> # example code
+SqCA_L> 
+SqCA_L> ## t=3, k=4
+SqCA_L> A0 <- SeqCA_Levenshtein(4, a=0)
+
+SqCA_L> A1 <- SeqCA_Levenshtein(4, a=1)
+
+SqCA_L> dim(A0); dim(A1)
+[1] 6 4
+[1] 6 4
+
+SqCA_L> coverageSeqCA(A0, 3)
+[1] 1
+
+SqCA_L> coverageSeqCA(A1, 3)
+[1] 1
+
+SqCA_L> ## together, these cover half of the 4-sequences
+SqCA_L> coverageSeqCA(rbind(A0, A1), 4)
+[1] 0.5
+
+SqCA_L> ## t=6, k=7
+SqCA_L> dim(SeqCA_Levenshtein(7))
+[1] 720   7
+
+SqCA_L> ## t=15, k=16
+SqCA_L> try(SeqCA_Levenshtein(16))
+
+SqCA_L> ## t=20, k=21
+SqCA_L> try(dim(SeqCA_Levenshtein(21)))
+
+SqCA_L> ## Don't show: 
+SqCA_L> if (getOption("run_heavy_examples", default = FALSE)) withAutoprint({ # examplesIf
+SqCA_L+ ## End(Don't show)
+SqCA_L+ # NOTE: example() skips the following code,
+SqCA_L+ # unless the user specifies
+SqCA_L+ # options(run_heavy_examples = TRUE)
+SqCA_L+ ## runs about 16 seconds in R 4.6.1 on Windows 11
+SqCA_L+ ## with 32 GB RAM and Intel(R) Core(TM) ultra 7 286 V CPU @ (2.2GHz)
+SqCA_L+ 
+SqCA_L+ ## t=9, k=10
+SqCA_L+ system.time(print(dim(SeqCA_Levenshtein(10))))
+SqCA_L+ 
+SqCA_L+ ## t=10, k=11 will take more than 11 times as long
+SqCA_L+ ## Don't show: 
+SqCA_L+ }) # examplesIf
+> system.time(print(dim(SeqCA_Levenshtein(10))))
+[1] 362880     10
+       User      System verstrichen 
+      12.06        0.37       12.66 
+
+SqCA_L> ## End(Don't show)
+SqCA_L> 
+SqCA_L> 
+SqCA_L> 
+[1] "2026-10-04 13:55:21 CEST"

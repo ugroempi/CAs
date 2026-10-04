@@ -10,3 +10,8 @@
 ^\.github$
 ^README_files$
 ^inst/extdata
+^outputCAEX.txt$
+^outputMCA2.txt$
+^outputoptimize_SeqCA.txt$
+^outputSeqCA_Levenshtein.txt$
+^runLongExamples.R$
