@@ -26,17 +26,21 @@ creation of sequence covering arrays.
 
 ## Warning
 
-This is a very preliminary version of R package **CAs**. Changes that
-break backwards compatibility can and will occur without warning.
-Important changes/bug fixes are stated in the
-[NEWS](https://github.com/ugroempi/CAs/blob/main/inst/NEWS.md) file, but
-no guarantees!
+This is an early version of R package **CAs**. Some functionality is
+more mature than others. Especially the functionality on sequence
+covering arrays is still experimental, and changes that break backwards
+compatibility are not unlikely to occur. Important changes/bug fixes are
+stated in the
+[NEWS](https://github.com/ugroempi/CAs/blob/main/inst/NEWS.md) file. As
+stated in the [GPL-3
+license](https://www.gnu.org/licenses/gpl-3.0.en.html), the package
+comes without any warranty.
 
 ## Installation
 
 **CAs** is not yet on [CRAN](https://CRAN.R-project.org). If you want to
-work with this very preliminary version (see above warning), you can
-install the latest status of the package from this repository with:
+work with this GitHub version, you can install the latest status of the
+package from this repository with:
 
 ``` r
 if (!require(devtools)) install.packages("devtools")
@@ -464,7 +468,7 @@ Mathematical Statistics 23, 426-434.
 
 <p>
 
-Chateauneuf, M., Colbour.n, C. and Kreher, D.L. (1999). Covering Arrays
+Chateauneuf, M., Colbourn, C. and Kreher, D.L. (1999). Covering Arrays
 of Strength Three. Des. Codes Cryptogr. 16, 235-242.
 </p>
 
