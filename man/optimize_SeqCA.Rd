@@ -78,7 +78,8 @@ but for these, the run time will often be prohibitive.
 
 If \code{optimize_SeqCA} is stuck in simulated annealing iterations,
 having achieved some progress but neither improving nor finishing, the process can
-be interrupted by pressing the \code{<ESC>}-key, in which case it will return the last successful outcome.
+be interrupted by pressing the \code{<ESC>}-key, in which case it will return
+the last successful outcome.
 }
 
 \section{Use of AI}{
@@ -110,7 +111,7 @@ A_TJ_reduced8 <- optimize_SeqCA(A_TJ, 3, target=8, verbose=TRUE)
 }
 
 \dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
-# NOTE: examples() skips the following code,
+# NOTE: example() skips the following code,
 # unless the user specifies
 # options(run_heavy_examples = TRUE)
 
@@ -120,7 +121,11 @@ optimize_SeqCA(A_TJ_reduced, 3, verbose=TRUE, skipreduce=TRUE)
 
 ## Here: Kuhn much slower than TJ
 nrow(A <- greedySeqCA_Kuhn(6, 4, seed=75))  ## 52 before, 41 after reduce
+\dontrun{
+## this should only be run interactively, with a user prepared
+## to interrupt it if it seems stuck
 aus <- optimize_SeqCA(A, 4, skipreduce=TRUE, verbose=TRUE)
+}
 \dontshow{\}) # examplesIf}
 }
 \references{

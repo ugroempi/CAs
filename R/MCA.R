@@ -225,9 +225,10 @@
 #' dim(D)
 #'
 #' @examplesIf getOption("run_heavy_examples", default = FALSE)
-#' ## NOTE: examples() skips the examples below (for MCA2 and MCAt),
+#' ## NOTE: example() skips the examples below (for MCA2 and MCAt),
 #' ## unless the user specifies
 #' ## options(run_heavy_examples = TRUE)
+#' ## This is because they could be very slow depending on sample.kind.
 #'
 #' ## different setting,
 #' ## optimize run size within the call (using a good seed)
@@ -238,6 +239,7 @@
 #' ## lower bound is 9 runs (3*3)
 #' ## CAgen yields 14 runs with IPOG-F
 #'
+#' D <- MCAt(c(4,4,3,2,2,2), 4, outerRetry=0)
 #' ## with seed 888, the optimum is quickly reached on Windows
 #' Doptimized <- postopNCK(D, 4, innerRetry = 3, seed=888)
 #' dim(Doptimized)

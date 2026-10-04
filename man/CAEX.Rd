@@ -115,6 +115,9 @@ is.PCA(D)
 \dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
 ## from two CAs with flexible values
 ## (slightly longish run time)
+## NOTE: example() skips this example,
+##      unless the user specifies
+##      options(run_heavy_examples = TRUE)
 D <- CAEX(N=43)
 attributes(D)
 
@@ -123,7 +126,7 @@ attributes(D)
 ##############################################################
 ## available constructions from function CAEX
 ##############################################################
-#      NOTE: examples() skips this construction example,
+#      NOTE: example() skips this construction example,
 #      unless the user specifies
 #      options(run_heavy_examples = TRUE)
 # longest about 07 min for N=49 (using productCA, like two other cases)

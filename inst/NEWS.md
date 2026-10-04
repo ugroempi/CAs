@@ -1,13 +1,13 @@
 # NEWS
 
-October 3 2026, version 0.24-3
+October 4 2026, version 0.24-3
  - made the package description more informative
  - modified handling of NULL seeds: these are no longer 
    made reproducible
  - added missing \value sections (@returns)
  - handled \dontrun in examples: removed a few unneeded ones, 
    changed slow but not extremely slow ones to \donttest,
-   kept two in place for extremely slow code that should only 
+   kept three in place for extremely slow code that should only 
    be intentionally run by a user in an interactive session, 
    and restricted automatically runnable very slow examples to 
    being conditionally run if an option "run_heavy_examples"

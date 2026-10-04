@@ -92,12 +92,13 @@
 #' ## many flexible values in the last row,
 #' ## eCAN claims one row less for this construction
 #' Ns(4,3504,3)   ## by far the best implemented
-#' @examplesIf getOption("run_heavy_examples", default = FALSE)
-#' # NOTE: examples() skips this optimization, unless the user specifies
-#' # options(run_heavy_examples = TRUE)
+#' \donttest{
 #'   ## creation of this CA is slow because of the many columns
-#'   D <- cphfCA(4,3504,3)  ## about 3 minutes on author's machine
+#'   ## it can therefore be suppressed by the run.donttest argument
+#'   ##       to function example()
+#'   D <- cphfCA(4,3504,3)  ## about 1 minute on author's machine
 #'   dim(D)
+#' }
 #'
 #' @importFrom sfsmisc digitsBase
 #'

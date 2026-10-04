@@ -57,9 +57,10 @@ try(SeqCA_Levenshtein(16))
 try(dim(SeqCA_Levenshtein(21)))
 
 \dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
-# NOTE: examples() skips the following code,
+# NOTE: example() skips the following code,
 # unless the user specifies
 # options(run_heavy_examples = TRUE)
+# This is because it could be very slow depending on sample.kind.
 ## runs about 16 seconds in R 4.6.1 on Windows 11
 ## with 32 GB RAM and Intel(R) Core(TM) ultra 7 286 V CPU @ (2.2GHz)
 

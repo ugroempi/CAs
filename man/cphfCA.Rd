@@ -105,13 +105,14 @@ rowSums(is.na(WCS_CPHFs[["4"]][["3"]][["3504"]]))
 ## many flexible values in the last row,
 ## eCAN claims one row less for this construction
 Ns(4,3504,3)   ## by far the best implemented
-\dontshow{if (getOption("run_heavy_examples", default = FALSE)) withAutoprint(\{ # examplesIf}
-# NOTE: examples() skips this optimization, unless the user specifies
-# options(run_heavy_examples = TRUE)
+\donttest{
   ## creation of this CA is slow because of the many columns
-  D <- cphfCA(4,3504,3)  ## about 3 minutes on author's machine
+  ## it can therefore be suppressed by the run.donttest argument
+  ##       to function example()
+  D <- cphfCA(4,3504,3)  ## about 1 minute on author's machine
   dim(D)
-\dontshow{\}) # examplesIf}
+}
+
 }
 \references{
 Wagner, Colbourn and Simos (2022)
