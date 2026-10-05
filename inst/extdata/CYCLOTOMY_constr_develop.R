@@ -98,7 +98,7 @@ pick <- which(cyclo$q==2161)
 cyclo[pick,]$N <- cyclo[pick,]$N + cyclo[pick,]$v
 cyclo[pick,]$type <- "4a"
 
-pick <- which(CYCLOTOMYcat$q==2311)
+pick <- which(cyclo$q==2311)
 cyclo[pick,]$N <- cyclo[pick,]$N + cyclo[pick,]$v
 cyclo[pick,]$type <- "4a"
 
