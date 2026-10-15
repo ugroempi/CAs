@@ -12,7 +12,7 @@ Implements covering arrays, as proposed in Groemping (2025) \doi{10.1109/ICSTW64
 \section{Details}{
 
 This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
-The focus is on mathematical constructions. Initially, the package only offers arrays for which all columns have the same number of levels.
+The focus is on mathematical constructions.
 
 The goal is to implement as many constructions as possible that yield arrays with small numbers of runs, as evidenced by the
 Colbourn covering array tables, which do not provide the CAs themselves but pointers to which CA constructions yield the smallest known array
