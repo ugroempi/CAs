@@ -3,6 +3,7 @@
 Changes since latest release,
 version 0.24-4
  - deleted a outdated sentence from CAs-package.R
+ - updated text on a special case for the Paley construction in DataForMathematical
 
 October 4 2026, version 0.24-3
  - made the package description more informative
