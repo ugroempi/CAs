@@ -85,12 +85,10 @@ fun <- Vectorize(fun)
 diff <- PALEYcat[,"N"]-fun(PALEYcat[,"t"], PALEYcat[,"k"], PALEYcat[,"v"])
 fivenum(diff)
 ## -102.0    2.0   35.5  168.0  438.0
+
 ## one entry is much better than the current Colbourn table entry
-## this entry (t=6, k=380) has been checked for strength 6
-##     using 100 samples of 20 columns each, as choose(380,6)
-##     was considered too large for a complete brute force check.
-## no non-coverage was found, which is of course not proof
-##     for full strength 6 coverage.
+## coverage of this entry (t=6, k=380) has been proven
+## by Hriday Rungta (see https://github.com/ugroempi/CAs/issues/62).
 ##
 }
 
