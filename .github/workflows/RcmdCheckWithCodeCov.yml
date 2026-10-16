@@ -54,7 +54,9 @@ jobs:
         # run tests and produce a coverage.xml suitable for Codecov
         run: |
           # compute package coverage and write cobertura XML
-          Rscript -e '
+          # xvfb-run simulates a screen for the server
+          # for examples that create plots or printouts (these were otherwise skipped)
+          xvfb-run Rscript -e '
             cov <- covr::package_coverage(type="all", relative_path = TRUE, quiet=FALSE, clean=FALSE); 
             covr::to_cobertura(cov, file = "coverage.xml")
           '
