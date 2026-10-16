@@ -22,7 +22,7 @@ creation of sequence covering arrays.
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Version**: 0.24-3
+- **Version**: 0.24-4
 
 ## Warning
 
@@ -62,8 +62,7 @@ array implementation relative to the empirical covering array numbers
 
 This package constructs covering arrays, i.e., arrays that cover all
 $t$-ary combinations of a set of factors at least once. The focus is on
-mathematical constructions. Initially, the package only offers arrays
-for which all columns have the same number of levels.
+mathematical constructions.
 
 The goal is to implement as many constructions as possible that yield
 arrays with small numbers of runs, as evidenced by the Colbourn covering
