@@ -64,6 +64,8 @@ jobs:
           R_REMAKE_DB: "true"
         # run tests and produce a coverage.xml suitable for Codecov
         run: |
+          # move to relevant directory
+          cd "$GITHUB_WORKSPACE"
           # compute package coverage and write cobertura XML
           # xvfb-run simulates a screen for the server
           # for examples that create plots or printouts (these were otherwise skipped)
