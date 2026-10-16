@@ -158,6 +158,13 @@ eCAN(2,26,23)
 Ns(3,6,12)
 ## the optimum Ji and Yin OA is in the package as oa1728.12.6
 
+\donttest{
+## this code needs an internet connection
+## and is therefore wrapped in \donttest
+## and in try
+   try(dim(nistCA(3,5,4)))
+}
+
 }
 \seealso{
 \code{\link[=Ns]{Ns()}}

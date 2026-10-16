@@ -85,6 +85,7 @@ unchanged for a long time.
   N_upper_MTVTRouxtypeCA(5, 10, 4) ## 48 duplicates were removed
   caverify::ca_verify(D5, 5)
   Ns(t=5, k=10, v=4)  ## run size of D5 is far from optimal
+  dim(D6 <- MTVTRouxtypeCA(5, 10, 4, method="large"))
 
 }
 \references{

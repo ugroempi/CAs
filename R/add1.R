@@ -109,6 +109,7 @@ N_add1CA <- function(t, k, v){
 }
 #'
 
+# nocov start
 ## unfinished and very experimental
 add2 <- function(D, t, v, ...){
   Call <- sys.call()
@@ -154,4 +155,5 @@ add2 <- function(D, t, v, ...){
   attrs$dim[2] <- attrs$dim[2]+2
   return(aus)
 }
+# nocov end
 

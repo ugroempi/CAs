@@ -8,6 +8,11 @@ version 0.24-4
    its dupcheck argument works as expected, and an unnecessary warning for 
    NA-only comparisons is suppressed, and all inputs are checked
  - added test cases for maxconstant
+ - added example in MTVTRouxtype.R
+ - moved funmakefromstrings to readCA, and added examples for 
+   both (readCA via nistCA)
+ - added # nocov blocks and .covrignore file for removing spurious 
+   non-coverages
 
 October 4 2026, version 0.24-3
  - made the package description more informative

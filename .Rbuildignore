@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.gitignore$
+^\.covrignore$
 ^\.Rhistory$
 ^\CITATION\.cff$
 ^.*\.yml$

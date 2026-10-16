@@ -131,11 +131,10 @@ find_mix_construction_separate <- function(nlevels, ...){
                             assign=assigncols)))
 }
 
-
-
 ## find_mix_construction_separate(data.frame(levels=c(8,4,3,2), frequency=c(1,5,7,12)))
 ## find_mix_construction_separate(data.frame(levels=c(6,4,3,2), frequency=c(2,8,30,70)))
 
+# nocov start
 find_mix_construction <- function(nlevels, ...){
   ## nlevels is a data.frame with a column levels and a column frequency
   ## strength 2 only
@@ -266,6 +265,7 @@ find_mix_construction <- function(nlevels, ...){
        k = sum(ndonor_cols), N=N, v=vmax,
        expand=list(ingoing_needed=ndonor_cols, assign=assigncols))
 }
+# nocov end
 
 outerseparate <- function(D, nlevels, ...){
   ## nlevels a data.frame with columns levels and frequency

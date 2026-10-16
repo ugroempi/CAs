@@ -74,6 +74,7 @@
 #'   N_upper_MTVTRouxtypeCA(5, 10, 4) ## 48 duplicates were removed
 #'   caverify::ca_verify(D5, 5)
 #'   Ns(t=5, k=10, v=4)  ## run size of D5 is far from optimal
+#'   dim(D6 <- MTVTRouxtypeCA(5, 10, 4, method="large"))
 #'
 
 #' @export
@@ -103,6 +104,7 @@ MTVTRouxtypeCA <- function(t, k, v, method=NULL, ...){
       gc()
       aus <- MTVTRouxtype5_Thm413(A,B,C,D)
     }else{
+      ## method is specified
       D <- bestCA(2, v, v)
       aus <- MTVTRouxtype5_Thm411(A,B,C,D)
     }
@@ -222,36 +224,36 @@ MTVTRouxtype4_Thm413 <- function(A, B, C, start0=TRUE, ...){
   aus
 }
 
-MTVTRouxtypet <- function(..., start0=TRUE){
-  ### one needs a flexible list of matrices as arguments,
-  ### At,...,A2
-  ### no high priority - do different things first
-  ## not (yet?) implemented
-
-  if (start0){
-    A5 <- A5+1
-    A4 <- A4+1
-    A3 <- A3+1
-    A2 <- A2+1
-  }
-  v <- max(A5)
-  k <- ncol(A5)
-  stopifnot(max(A4)==v, max(A3)==v, max(A2)==v)
-  stopifnot(ncol(A4)==k, ncol(A3)==k, ncol(A2)==v)
-  ## FD is the family of functions f1 ... fi ... fND that picks the
-  ##     ith element from the column specified by the function's argument
-  ## check which As
-  E1 <- cbind(A5,A5)
-  E2 <- cbind(do.call(rbind, lapply(1:(v-1), function(obj) A4)),
-              do.call(rbind, lapply(1:(v-1), function(obj) (A4-1+obj)%%v + 1)))
-  E3 <- cbind(do.call(rbind, lapply(1:nrow(A4), function(obj) A3)),
-              do.call(rbind, lapply(1:nrow(A4), function(obj)
-                matrix(A4[obj,][A3], nrow=nrow(A3)))))
-  E4 <- cbind(E3[,(k+1):(2*k)],E3[,1:k])
-  aus <- rbind(E1,E2,E3,E4)
-  if (start0) aus <- aus-1
-  aus
-}
+# MTVTRouxtypet <- function(..., start0=TRUE){
+#   ### one needs a flexible list of matrices as arguments,
+#   ### At,...,A2
+#   ### no high priority - do different things first
+#   ## not (yet?) implemented
+#
+#   if (start0){
+#     A5 <- A5+1
+#     A4 <- A4+1
+#     A3 <- A3+1
+#     A2 <- A2+1
+#   }
+#   v <- max(A5)
+#   k <- ncol(A5)
+#   stopifnot(max(A4)==v, max(A3)==v, max(A2)==v)
+#   stopifnot(ncol(A4)==k, ncol(A3)==k, ncol(A2)==v)
+#   ## FD is the family of functions f1 ... fi ... fND that picks the
+#   ##     ith element from the column specified by the function's argument
+#   ## check which As
+#   E1 <- cbind(A5,A5)
+#   E2 <- cbind(do.call(rbind, lapply(1:(v-1), function(obj) A4)),
+#               do.call(rbind, lapply(1:(v-1), function(obj) (A4-1+obj)%%v + 1)))
+#   E3 <- cbind(do.call(rbind, lapply(1:nrow(A4), function(obj) A3)),
+#               do.call(rbind, lapply(1:nrow(A4), function(obj)
+#                 matrix(A4[obj,][A3], nrow=nrow(A3)))))
+#   E4 <- cbind(E3[,(k+1):(2*k)],E3[,1:k])
+#   aus <- rbind(E1,E2,E3,E4)
+#   if (start0) aus <- aus-1
+#   aus
+# }
 
 MTVTRouxtype4_Thm43 <- function(A, B, C, start0=TRUE, ...){
   ## theorem 4.3
@@ -269,10 +271,12 @@ MTVTRouxtype4_Thm43 <- function(A, B, C, start0=TRUE, ...){
   stopifnot(ncol(B)==k, ncol(C)==k)
 
   D <- bestCA(2, v, v) + 1   ## strength 2 CA
+  # nocov start
   ## proposition 4.5
     ## proposition 4.5 claims that C does not need its constant rows
     ## however, coverage is destroyed if they are removed
     #C <- maxconstant(C, t=2, remove=TRUE)
+  # nocov end
     ## for k < 4, A=B is sufficient
     if (k< 4) A <- B
     ## for 2 levels, D can be 2x2

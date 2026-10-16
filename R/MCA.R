@@ -480,6 +480,7 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
       Dnow <- aus
     },
     interrupt=function(e){
+    # nocov start
       attrnow <- attributes(latest_result)
       namesvorher <- names(attrs)
       namesnow <- names(attrnow)
@@ -492,7 +493,8 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
       attr(latest_result, "PCAstatus") <- NULL
       attr(latest_result, "rowOrder") <- NULL  ## no longer relevant
       return(latest_result)
-  })
+      # nocov end
+    })
   }
   attrnow <- attributes(aus)
   namesvorher <- names(attrs)

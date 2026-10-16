@@ -5,9 +5,12 @@
 #' @rdname readCA
 #'
 #' @aliases readCA
+#' @aliases funmakefromstrings
 #'
 #' @usage readCA(path, flexible.symbols=c("*","-","."), comment.symbol="C",
 #' ninstruct=1, skiplines=0, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
+#'
+#' @usage funmakefromstrings(stringvec)
 #'
 #' @param path a character string that specifies the path, including the file name; see Section Details for requirements the file must satisfy.
 #' @param flexible.symbols characters to be treated as flexible values (will be set to NA)
@@ -21,8 +24,14 @@
 #' if \code{NULL}, the path and filename information is used
 #' @param ... further arguments for function \code{\link{read.table}},
 #' which is used separately for each line (after reading them with \code{\link{readLines}})
+#' @param stringvec vector of n character strings of equal lengths (k, say). The character strings should consist of digits
+#' and small letters. Digits will remain unchanged, and the letters
+#' \code{a} to \code{z} will be replaced by numbers \code{10} to \code{35}.
 #'
-#' @returns The output object is a matrix of class \code{ca}.
+#' @returns The output object of \code{readCA} is a matrix
+#' of class \code{ca}. The output object of \code{funmakefromstrings}
+#' is an n x k matrix of numeric values. \code{funmakefromstrings} is
+#' used by \code{readCA}, but can also be used on its own.
 #'
 #' @section Details:
 #' The file \code{fn} may start with comment lines that begin with a comment symbol, and an instruction line.\cr
@@ -33,7 +42,14 @@
 #' reading process. \code{ninstruct=0} indicates that there is no instruction line.\cr
 #' All columns of the array must have the same starting value, i.e., start all with 0 or all with 1.
 #'
-
+#' @examples
+#' ## values start with 0
+#' funmakefromstrings(c("0123456789abc", "1032547698cba"))
+#' ## values start with 1
+#' funmakefromstrings(c("123456789abc", "132547698cba"))
+#' ## values start with 4 (would usually not make sense)
+#' funmakefromstrings(c("456789abc", "547698cba"))
+#'
 #' @importFrom utils read.table
 #' @export
 readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
@@ -111,3 +127,25 @@ readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
   zeilen
 }
 
+#' @export
+funmakefromstrings <- function(stringvec){
+  # function for reading and arranging
+  # copy-pasted strings
+  hilf <- strsplit(stringvec, "", fixed=TRUE)
+  if (length(table(lengths(hilf))) > 1)
+    stop("all strings must have the same length")
+  symbs <- unique(unlist(hilf))
+  if ("a" %in% symbs){
+    ## take care of lowercase letters as replacements for two digit numbers
+    tobereplaced <- intersect(letters, symbs)
+    replacements <- 10:(9+length(tobereplaced))
+    for (i in 1:length(tobereplaced)){
+      hilf <- lapply(hilf, function(obj){
+        obj[which(obj==tobereplaced[i])] <- replacements[i]
+        obj
+      })
+    }
+  }
+  ## now, all elements of hilf can be made numeric
+  do.call(rbind, lapply(hilf, as.numeric))
+}

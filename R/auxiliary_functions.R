@@ -32,6 +32,7 @@
 #' is.DA: checks for detecting array properties (not ready)
 #' Double: doubles a 0/1 matrix M by stacking M with 1-M and adding first column of 0/1
 #'
+#'
 #' @importFrom utils tail
 
 ## Function definition
@@ -181,25 +182,6 @@ circular <- function(vec){
 }
 
 
-## function for reading and arranging copy-pasted strings
-funmakefromstrings <- function(stringvec){
-  hilf <- strsplit(stringvec, "", fixed=TRUE)
-  symbs <- unique(unlist(hilf))
-  if ("a" %in% symbs){
-    ## take care of lowercase letters as replacements for two digit numbers
-    tobereplaced <- intersect(letters, symbs)
-    replacements <- 10:(9+length(tobereplaced))
-    for (i in 1:length(tobereplaced)){
-      hilf <- lapply(hilf, function(obj){
-        obj[which(obj==tobereplaced[i])] <- replacements[i]
-        obj
-      })
-    }
-  }
-  ## now, all elements of hilf can be made numeric
-  do.call(rbind, lapply(hilf, as.numeric))
-}
-
 #' @exportS3Method NULL
 #'
 levels.no.NA <- function (x){
@@ -215,6 +197,7 @@ levels.no.NA <- function (x){
   aus
 }
 
+# nocov start
 iacheck <- function(ia, t=NULL, lno=NULL, upto=FALSE, start0=TRUE){
   ## two column matrix with first index a factor,
   ## second index its value
@@ -254,6 +237,7 @@ subia <- function(ia1, ia2){
   ia2compare <- ia2[ord(ia2compare),]
   all(ia1==ia2compare)
 }
+# nocov end
 
 #' @exportS3Method NULL
 #'

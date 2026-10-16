@@ -1,3 +1,4 @@
+# nocov start
 ## Alternative version that returns the redundant elements directly
 identify_redundant_elements <- function(A, t) {
   useful <- identify_needed(A, t)
@@ -531,3 +532,4 @@ reduce_rows_iterative <- function(A, t, verbose = FALSE) {
 # # Or just simulated annealing on a partial SeqCA
 # partial <- A[1:10, ]  # Take first 10 rows (will have missings)
 # result <- simulated_annealing_sca(partial, k=5, t=3, verbose=TRUE)
+# nocov end

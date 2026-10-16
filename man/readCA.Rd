@@ -2,10 +2,13 @@
 % Please edit documentation in R/readCA.R
 \name{readCA}
 \alias{readCA}
+\alias{funmakefromstrings}
 \title{Function for reading a covering array from a text file}
 \usage{
 readCA(path, flexible.symbols=c("*","-","."), comment.symbol="C",
 ninstruct=1, skiplines=0, ignore.chars=NULL, nosep=FALSE, origin=NULL, ...)
+
+funmakefromstrings(stringvec)
 }
 \arguments{
 \item{path}{a character string that specifies the path, including the file name; see Section Details for requirements the file must satisfy.}
@@ -28,9 +31,16 @@ if \code{NULL}, the path and filename information is used}
 
 \item{...}{further arguments for function \code{\link{read.table}},
 which is used separately for each line (after reading them with \code{\link{readLines}})}
+
+\item{stringvec}{vector of n character strings of equal lengths (k, say). The character strings should consist of digits
+and small letters. Digits will remain unchanged, and the letters
+\code{a} to \code{z} will be replaced by numbers \code{10} to \code{35}.}
 }
 \value{
-The output object is a matrix of class \code{ca}.
+The output object of \code{readCA} is a matrix
+of class \code{ca}. The output object of \code{funmakefromstrings}
+is an n x k matrix of numeric values. \code{funmakefromstrings} is
+used by \code{readCA}, but can also be used on its own.
 }
 \description{
 reads a text file into a matrix of class ca (for covering array)
@@ -46,3 +56,12 @@ reading process. \code{ninstruct=0} indicates that there is no instruction line.
 All columns of the array must have the same starting value, i.e., start all with 0 or all with 1.
 }
 
+\examples{
+## values start with 0
+funmakefromstrings(c("0123456789abc", "1032547698cba"))
+## values start with 1
+funmakefromstrings(c("123456789abc", "132547698cba"))
+## values start with 4 (would usually not make sense)
+funmakefromstrings(c("456789abc", "547698cba"))
+
+}
