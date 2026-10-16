@@ -109,8 +109,11 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
   stopifnot(verbose %in% c(0,1,2,12))
   stopifnot(is.matrix(D))
   stopifnot(is.numeric(D))
+  stopifnot(is.logical(dupcheck))
+  stopifnot(is.logical(one_is_enough))
+  stopifnot(is.logical(remove))
   if (dupcheck){
-    D <- D[!dupcheck(D),, drop=FALSE]
+    D <- D[!duplicated(D),, drop=FALSE]
   }
   N <- nrow(D); k <- ncol(D)
   lev <- levels.no.NA(D)
@@ -170,9 +173,13 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
     ## rows of D are vertices
     ## adjacent, if they differ in all columns
     edges <- numeric(0)
+    ## warnings arise where a comparison
+    ## has NAs only, and the min becomes Inf;
+    ## that case is OK,
+    ## because its rows can be separated;
     for (i in 1:ncol(paare))
-      if (min(abs(D[paare[1,i],]-D[paare[2,i],]), na.rm = TRUE) > 0)
-        edges <- c(edges, paare[,i])
+      suppressWarnings(if (min(abs(D[paare[1,i],]-D[paare[2,i],]), na.rm = TRUE) > 0)
+        edges <- c(edges, paare[,i]))
     G <- igraph::add_edges(G, edges=edges)
 
     ## determine all largest cliques
@@ -231,6 +238,19 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
     else{
       ## rearrange rows
       D <- D[c(maxclique, setdiff(1:N, maxclique)),]
+      ## fix NAs in first nmaxconst rows, if any
+      hilf <- D[1:nmaxconst,]
+      if (any(is.na(hilf))){
+        for (i in 1:ncol(hilf))
+          if (any(is.na(hilf[,i]))){
+            ## populate each column with distinct non-missing values
+            whichcurhilf <- which(is.na(hilf[,i]))
+            ncurhilf <- length(whichcurhilf)
+            ## nonrandom replacement of missings in top rows
+            hilf[whichcurhilf,i] <- setdiff(0:(v-1), hilf[,i])[1:ncurhilf]
+          }
+        D[1:nmaxconst,] <- hilf
+      }
       ## bring first few levels to ascending order
       ## levs is always complete, i.e. nlev==v
       if (nmaxconst == nlev){

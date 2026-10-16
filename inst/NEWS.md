@@ -4,6 +4,10 @@ Changes since latest release,
 version 0.24-4
  - deleted a outdated sentence from CAs-package.R
  - updated text on a special case for the Paley construction in DataForMathematical
+ - bug fix: maxconstant now also works with missings in the clique rows,
+   its dupcheck argument works as expected, and an unnecessary warning for 
+   NA-only comparisons is suppressed, and all inputs are checked
+ - added test cases for maxconstant
 
 October 4 2026, version 0.24-3
  - made the package description more informative
