@@ -54,7 +54,7 @@ jobs:
           Rscript -e 'print(installed.packages()[c("covr","xml2","remotes"), c("Package","Version")])'
       - name: List Rd example files
         run: |
-          Rscript -e 'print(list.files("man", pattern = "\\\\.Rd$", full.names = TRUE))'
+          Rscript -e 'print(list.files("man", pattern = "[.]Rd$", full.names = TRUE))'
       - name: Run tests and generate coverage (Cobertura XML)
         env:
           NOT_CRAN: "true"
@@ -72,6 +72,9 @@ jobs:
           xvfb-run Rscript -e '
             cov <- covr::package_coverage(type="all", 
                  relative_path = TRUE, quiet=FALSE, clean=FALSE); 
+            print(list.files("man", pattern = "[.]Rd$"))
+            z <- covr::zero_coverage(cov)
+            print(sort(table(z$filename), decreasing = TRUE))
             covr::to_cobertura(cov, file = "coverage.xml")
           '
         shell: bash
