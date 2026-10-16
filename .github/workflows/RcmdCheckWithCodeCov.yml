@@ -49,6 +49,9 @@ jobs:
           Rscript -e 'install.packages(c("covr", "xml2"), repos = "https://cloud.r-project.org")'
       - name: Run tests and generate coverage (Cobertura XML)
         env:
+          NOT_CRAN: "true"
+          MC_CORES: "1"
+          OMP_NUM_THREADS: "1"
           R_KEEP_PKG_SOURCE: "yes"
           R_REMAKE_DB: "true"
         # run tests and produce a coverage.xml suitable for Codecov
