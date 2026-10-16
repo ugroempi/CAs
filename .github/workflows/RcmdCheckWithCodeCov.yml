@@ -47,28 +47,16 @@ jobs:
       - name: Install testing + coverage tools
         run: |
           Rscript -e 'install.packages(c("covr", "xml2"), repos = "https://cloud.r-project.org")'
-      - name: Run tests and generate coverage (Codecov JSON)
-        run: |
-          # Generiert die vollständigen Testdaten und schreibt sie direkt als JSON
-          Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_codecov(cov, file = "coverage.json")'
-        shell: bash
-      # - name: Run tests and generate coverage (Cobertura XML)
+      - name: Run tests and generate coverage (Cobertura XML)
         # run tests and produce a coverage.xml suitable for Codecov
-        # run: |
+        run: |
           # compute package coverage and write cobertura XML
-          #  Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_cobertura(cov, file = "coverage.xml")'
-        # shell: bash
-      #- name: Run and Upload Coverage to Codecov
-      #  run: |
-      #    covr::codecov(
-      #      type = "all", 
-      #      token = "${{ secrets.CODECOV_TOKEN }}",
-      #      quiet = FALSE
-      #    )
+          Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_cobertura(cov, file = "coverage.xml")'
+        shell: bash
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ./coverage.json
+          files: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}  # optional if app not installed
           # uses: codecov/codecov-action@v5
           # with:
