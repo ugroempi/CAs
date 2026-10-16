@@ -63,6 +63,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml
+          disable_search: true  ## to prevent other file names with coverage from being found
           token: ${{ secrets.CODECOV_TOKEN }}  # optional if app not installed
           # uses: codecov/codecov-action@v5
           # with:
