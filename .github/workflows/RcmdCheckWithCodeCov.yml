@@ -58,7 +58,7 @@ jobs:
           # for examples that create plots or printouts (these were otherwise skipped)
           xvfb-run Rscript -e '
             if (dir.exists("data")) {
-              ## force loading of the package's internal data sources (instead of lazy)
+              ## force loading of the internal package data sources (instead of lazy)
               sys.source("R/sysdata.rda", envir = .GlobalEnv) # falls vorhanden
               data(list = list.files("data"), envir = .GlobalEnv)
             }
