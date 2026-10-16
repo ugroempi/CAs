@@ -57,6 +57,11 @@ jobs:
           # xvfb-run simulates a screen for the server
           # for examples that create plots or printouts (these were otherwise skipped)
           xvfb-run Rscript -e '
+            if (dir.exists("data")) {
+              ## force loading of the package's internal data sources (instead of lazy)
+              sys.source("R/sysdata.rda", envir = .GlobalEnv) # falls vorhanden
+              data(list = list.files("data"), envir = .GlobalEnv)
+            }
             cov <- covr::package_coverage(type="all", relative_path = TRUE, quiet=FALSE, clean=FALSE); 
             covr::to_cobertura(cov, file = "coverage.xml")
           '
