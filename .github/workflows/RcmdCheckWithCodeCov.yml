@@ -52,20 +52,19 @@ jobs:
         run: |
           # compute package coverage and write cobertura XML
           Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_cobertura(cov, file = "coverage.xml")'
-      - name: Run and Upload Coverage to Codecov
-        run: |
-          covr::codecov(
-            type = "all", 
-            token = "${{ secrets.CODECOV_TOKEN }}",
-            quiet = FALSE
-          )
-        shell: Rscript {0}
-        #- name: Upload coverage reports to Codecov
-        #uses: codecov/codecov-action@v4
-        #with:
-        #  files: ./coverage.xml
-        #  flags: unittests
-        #  token: ${{ secrets.CODECOV_TOKEN }}  # optional if app not installed
+        shell: bash
+      #- name: Run and Upload Coverage to Codecov
+      #  run: |
+      #    covr::codecov(
+      #      type = "all", 
+      #      token = "${{ secrets.CODECOV_TOKEN }}",
+      #      quiet = FALSE
+      #    )
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}  # optional if app not installed
           # uses: codecov/codecov-action@v5
           # with:
           #  token: ${{ secrets.CODECOV_TOKEN }}
