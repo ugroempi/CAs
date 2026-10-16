@@ -49,20 +49,16 @@ jobs:
           Rscript -e 'install.packages(c("covr", "xml2"), repos = "https://cloud.r-project.org")'
       - name: Run tests and generate coverage (Cobertura XML)
         env:
-          R_KEEP_PKG_SOURCE: yes
-          _R_CHECK_RD_CONTENTS_: FALSE
+          R_KEEP_PKG_SOURCE: "yes"
+          R_REMAKE_DB: "true"
         # run tests and produce a coverage.xml suitable for Codecov
         run: |
           # compute package coverage and write cobertura XML
           # xvfb-run simulates a screen for the server
           # for examples that create plots or printouts (these were otherwise skipped)
           xvfb-run Rscript -e '
-            if (dir.exists("data")) {
-              ## force loading of the internal package data sources (instead of lazy)
-              sys.source("R/sysdata.rda", envir = .GlobalEnv) # falls vorhanden
-              data(list = list.files("data"), envir = .GlobalEnv)
-            }
-            cov <- covr::package_coverage(type="all", relative_path = TRUE, quiet=FALSE, clean=FALSE); 
+            cov <- covr::package_coverage(type="all", 
+                 relative_path = TRUE, quiet=FALSE, clean=FALSE); 
             covr::to_cobertura(cov, file = "coverage.xml")
           '
         shell: bash
