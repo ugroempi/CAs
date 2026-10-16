@@ -72,10 +72,9 @@ jobs:
           xvfb-run Rscript -e '
             cov <- covr::package_coverage(type="all", 
                  relative_path = TRUE, quiet=FALSE, clean=FALSE); 
-            print(list.files("man", pattern = "[.]Rd$"))
+            covr::to_cobertura(cov, file = "coverage.xml")
             z <- covr::zero_coverage(cov)
             print(sort(table(z$filename), decreasing = TRUE))
-            covr::to_cobertura(cov, file = "coverage.xml")
           '
         shell: bash
       - name: Upload coverage reports to Codecov
