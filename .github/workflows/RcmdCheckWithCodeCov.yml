@@ -48,10 +48,16 @@ jobs:
         run: |
           Rscript -e 'install.packages(c("covr", "xml2"), repos = "https://cloud.r-project.org")'
       - name: Run tests and generate coverage (Cobertura XML)
+        env:
+          R_KEEP_PKG_SOURCE: yes
+          _R_CHECK_RD_CONTENTS_: FALSE
         # run tests and produce a coverage.xml suitable for Codecov
         run: |
           # compute package coverage and write cobertura XML
-          Rscript -e 'cov <- covr::package_coverage(type="all"); covr::to_cobertura(cov, file = "coverage.xml")'
+          Rscript -e '
+            cov <- covr::package_coverage(type="all", quite=FALSE, clean=FALSE); 
+            covr::to_cobertura(cov, file = "coverage.xml")
+          '
         shell: bash
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
