@@ -12,5 +12,6 @@ coverage:
         target: auto
         threshold: 1%
         informational: true
-fixes:
-  - "/home/runner/work/CAs/CAs/::" # Löscht den absoluten GitHub-Pfad aus dem Report
+flag_management:
+  default_rules:
+    carryforward: true  # Nimmt ältere Flag-Daten automatisch mit, falls ein Typ im aktuellen Build nicht separat benannt wird
