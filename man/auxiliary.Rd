@@ -10,7 +10,6 @@ and currently also previous drafts that may be deleted
 \details{
 matcheck: checks a matrix for suitability
 gf_minus: Galois field subtraction
-funmakefromstrings: read example designs from copy-pasted strings
 iacheck: check a two-column matrix for correct interaction structure
 subia: checks whether ia1 is subset of ia2
 levels.no from DoE.base

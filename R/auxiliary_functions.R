@@ -11,7 +11,6 @@
 #'
 #' matcheck: checks a matrix for suitability
 #' gf_minus: Galois field subtraction
-#' funmakefromstrings: read example designs from copy-pasted strings
 #' iacheck: check a two-column matrix for correct interaction structure
 #' subia: checks whether ia1 is subset of ia2
 #' levels.no from DoE.base
@@ -291,6 +290,7 @@ nchoosek <- function (n, k){
     return(res)
   }
 
+# nocov start
 ## check for rows with the interaction in design D
 rho <- function(D, ia, start0=TRUE){
   ## D the design
@@ -723,6 +723,7 @@ proportions_slower <- function(D, t, verbose=0){
   ## remaining cases (anything but 1 and 2)
   return(list(total=total, ave=ave, min=min, simple=simple))
 }
+# nocov end
 
 fasttab <- function(mat,
                     dnn=colnames(mat)){
@@ -754,6 +755,7 @@ fasttab <- function(mat,
   aus
 }
 
+# nocov start
 LS_to_D3cols <- function(LS, start0=TRUE){
   ## LS a square v x v matrix with entries from 0 to (v-1) or from 1 to v
   ## start0 governs the output: which coding should D3cols have?
@@ -796,6 +798,7 @@ D3cols_to_LS <- function(D, start0=NULL){
   dimnames(LS) <- list(rows=1:v-start0, columns=1:v-start0)
   LS
 }
+# nocov end
 
 Double <- function(M) rbind(cbind(0,M), 1-(cbind(0,M)))
 ## a different type of doubling than CK doubling
