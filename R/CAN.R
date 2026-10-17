@@ -610,8 +610,8 @@ k_TJcat <- function(t,N,v){
 
 #' @export
 k_CAEX <- function(t=2,N,v=3){
-  if (t>2 || !v==3) return(NA)
-  k_TJcat(t,N,v)
+  if (!(t==2) || !v==3) return(NA)
+  k_detail_CAEX(N=N)$k
 }
 
 ## special fuse for Bose arrays

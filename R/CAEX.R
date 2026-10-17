@@ -79,11 +79,13 @@
 #' The splits k=k1+k2 are worse than the splits reported in Torres-Jimenez et al. (2021)
 #' for the product constructions (see also listing in the Examples section),
 #' unless \code{maxk1=TRUE} is chosen, at the expense of much longer run time.\cr
-#' Function \code{k_CAEX} returns a data frame with columns \code{N},
-#' \code{k} and \code{method},
+#' Function \code{k_detail_CAEX} returns a data frame with columns \code{N},
+#' \code{k} and \code{method}, and sometimes also \code{one} and \code{two},
 #' where \code{k} holds the maximum number of columns for run sizes up to \code{N},
-#' and \code{method} indicates, whether the design is the \code{Bose} array (\code{N=9}),
-#' a stored array, or is obtained from stored arrays via a \code{CAxCA} or a \code{PCAxPCA}
+#' and \code{method} indicates, whether the design is
+#' the \code{Bose} array (\code{N=9}),
+#' a stored array, or is obtained from stored arrays \code{one} and \code{two}
+#' via a \code{CAxCA} or a \code{PCAxPCA}
 #' construction. For \code{N=NULL}, a \code{data.frame}
 #' of all CAEX constructions is returned.
 #'
@@ -94,6 +96,12 @@
 #' D <- CAEX(12) ## k=12 columns
 #' eCAN(2,12,3)
 #' coverage(D, 2)
+#' k_detail_CAEX(N=9)
+#' k_detail_CAEX(N=10)
+#' k_detail_CAEX(N=11)
+#' k_detail_CAEX(N=34)
+#' k_detail_CAEX(N=50)
+#' k_detail_CAEX(N=55)
 #'
 #' ############################################################
 #' ## CAs obtained using function productCA as the workhorse
@@ -320,7 +328,10 @@ CAEX <- function(k=NULL, N=NULL, t=2, v=3, maxk1=FALSE, ...){
 
 #' @export
 k_detail_CAEX <- function(t=2, N=NULL, v=3){
-  if (t>2 || !v==3) return(NA)
+  if ((!t==2) || !v==3) return(data.frame(
+    k=numeric(0), N=numeric(0), stored=character(0)))
+  if (N %in% c(9,10)) return(data.frame(
+    k=4, N=9, method="SCABose(3)"))
   ## prepare
   states <- cbind(k=c(4,5,7,9,10,20,21,29,46,49,63,93,107,138,199,216,288,435,449,610,878,964,1308,1964,2116,2700,
                       3918,4457,5763,8329,9207,11898,17895,20010,25317,37071,42174,54531,80789,90344,112770),
