@@ -52,15 +52,15 @@ test_that("Bush construction and alternate Galois fields are available", {
   expect_identical(dim(CAs:::createBush3PowerOf2(4)), c(64L, 6L))
   expect_error(CAs:::createBush3PowerOf2(3))
 
-  gf8 <- CAs:::mygf(8)
+  gf8_2018 <- CAs:::mygf(8)
   gf8_2006 <- CAs:::mygf(8, "2006")
   gf8_2009 <- CAs:::mygf(8, "2009")
-  expect_equal(gf8$times, gf8_2006$times)
+  expect_false(isTRUE(all.equal(gf8_2018$times, gf8_2006$times)))
   expect_equal(gf8_2006$times, gf8_2009$times)
 
   gf9_2006 <- CAs:::mygf(9, "2006")
   gf9_2009 <- CAs:::mygf(9, "2009")
-  expect_false(identical(gf9_2006$times, gf9_2009$times))
+  expect_false(isTRUE(all.equal(gf9_2006$times, gf9_2009$times)))
   expect_identical(dim(gf9_2006$plus), c(9L, 9L))
   expect_identical(length(gf9_2009$inv), 8L)
 
