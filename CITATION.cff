@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-message: "If you use this software, please include at least the information given below and the date and version."
+message: "If you use this software, please include at least the information given below and the date and version. If you use the CRAN version, you could use the DOI. Please also cite R itself."
 authors:
   - family-names: Groemping
     given-names: Ulrike
-title: "CAs: R package for Covering Arrays"
+title: "CAs: Creating Covering Arrays"
 url: https://github.com/ugroempi/CAs
