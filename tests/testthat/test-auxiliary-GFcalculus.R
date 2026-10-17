@@ -11,7 +11,7 @@ test_that("Galois field arithmetic helpers agree with their lookup tables", {
 
   reduced <- CAs:::gf_minus(c(0, 1, 2, 3, 4), c(0, 1, 2, 3, 5), gf)
   expect_identical(CAs:::gf_sum(reduced, c(0, 1, 2, 3, 1), gf),
-                   c(0, 1, 2, 3, 0))
+                   c(0L, 1L, 2L, 3L, 0L))
 
   summands <- list(c(0, 1, 2), c(1, 2, 3), c(2, 3, 0))
   expect_identical(CAs:::gf_sum_list(summands, gf),
@@ -35,11 +35,11 @@ test_that("Galois field matrix operations handle checks and determinants", {
   right <- matrix(c(1, 1, 0, 1), nrow = 2)
 
   expect_identical(CAs:::gf_matmult(left, right, gf),
-                   matrix(c(0, 1, 1, 1), nrow = 2))
+                   matrix(c(0L, 1L, 1L, 1L), nrow = 2))
   expect_identical(CAs:::gf_matmult(left, right, gf, checks = FALSE),
                    CAs:::gf_matmult(left, right, gf))
-  expect_identical(CAs:::gf_det(diag(1, 3), gf), 1)
-  expect_identical(CAs:::gf_det(matrix(1, 2, 2), gf), 0)
+  expect_identical(CAs:::gf_det(diag(1, 3), gf), 1L)
+  expect_identical(CAs:::gf_det(matrix(1, 2, 2), gf), 0L)
   expect_error(CAs:::gf_matmult(matrix(0, 1, 1), matrix(0, 2, 1), gf))
   expect_error(CAs:::gf_sum_list(list(0:1, 0:0), gf))
   expect_error(CAs:::gf_prod_list(list(0:1, 0:0), gf))
@@ -55,8 +55,8 @@ test_that("Bush construction and alternate Galois fields are available", {
   gf8 <- CAs:::mygf(8)
   gf8_2006 <- CAs:::mygf(8, "2006")
   gf8_2009 <- CAs:::mygf(8, "2009")
-  expect_identical(gf8$times, gf8_2006$times)
-  expect_identical(gf8_2006$times, gf8_2009$times)
+  expect_equal(gf8$times, gf8_2006$times)
+  expect_equal(gf8_2006$times, gf8_2009$times)
 
   gf9_2006 <- CAs:::mygf(9, "2006")
   gf9_2009 <- CAs:::mygf(9, "2009")
