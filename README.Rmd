@@ -8,6 +8,9 @@ knitr::opts_chunk$set(echo = FALSE)
 rd <- tools::parse_Rd(file.path("man", "CAs-package.Rd"))
 license <- packageDescription("CAs", fields="License")
 version <- packageDescription("CAs", fields="Version")
+## get latest CRAN version
+hilf <- available.packages(repos = findCRANmirror("web"))
+latestCRAN <- hilf[which(hilf[,"Package"]=="CAs"),"Version"]
 rd_html <- capture.output(tools::Rd2HTML(rd))
 library(CAs)
 require(prepplot)
@@ -57,12 +60,23 @@ my_Rd_expr_doi <- function (x)
 ```
 
 
+<!--- workflow badges -->
 [![R](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml/badge.svg)](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml) 
 [![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://app.codecov.io/github/ugroempi/CAs)
 
 <!--- DO NOT EDIT:  AUTOMATICALLY GENERATED from README.Rmd -->
 
 # The R package CAs
+
+```{r authors_license_version, results = "asis"}
+x <- rd_get_metadata(rd, "author")
+x <- gsub("Author", "- **Author**", x)
+y <- paste0("- **License**: ", license)
+z <- paste0("- **Current GitHub Version**: ", version)
+
+z2 <- paste0('- **Latest [CRAN Version](https://CRAN.R-project.org/package=CAs)**: ', latestCRAN)
+cat(x,"\n",y,"\n",z,"\n", z2)
+```
 
 ```{r description, results = "asis"}
 hilf <- rd_get_metadata(rd, "description")
@@ -80,13 +94,6 @@ hilf <- gsub('\")', "", hilf, fixed=TRUE)
 cat(hilf)
 ```
 
-```{r authors_license_version, results = "asis"}
-x <- rd_get_metadata(rd, "author")
-x <- gsub("Author", "- **Author**", x)
-y <- paste0("- **License**: ", license)
-z <- paste0("- **Version**: ", version)
-cat(x,"\n",y,"\n",z)
-```
 
 ## Warning
 This is an early version of R package **CAs**. Some functionality is more mature than others. Especially the functionality on sequence covering arrays is still experimental, and changes that break backwards compatibility are not unlikely to occur.\cr

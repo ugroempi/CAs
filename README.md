@@ -1,10 +1,18 @@
 
+<!--- workflow badges -->
+
 [![R](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml/badge.svg)](https://github.com/ugroempi/CAs/actions/workflows/RcmdCheck.yml)
 [![codecov](https://codecov.io/github/ugroempi/CAs/graph/badge.svg?token=XFJRCJWCM1)](https://app.codecov.io/github/ugroempi/CAs)
 
 <!--- DO NOT EDIT:  AUTOMATICALLY GENERATED from README.Rmd -->
 
 # The R package CAs
+
+- **Author**: Ulrike Groemping, BHT Berlin.
+- **License**: GPL-3
+- **Current GitHub Version**: 0.24-4
+- **Latest [CRAN Version](https://CRAN.R-project.org/package=CAs)**:
+  0.24-3
 
 Implements covering arrays, as proposed in Groemping (2025)
 [doi:10.1109/ICSTW64639.2025.10962463](https://doi.org/10.1109/ICSTW64639.2025.10962463).
@@ -19,10 +27,6 @@ Colbourn, and Konjevod (2013)
 [doi:10.1016/j.ejc.2012.07.017](https://doi.org/10.1016/j.ejc.2012.07.017)
 is also provided. In addition, there are preliminary tools for the
 creation of sequence covering arrays.
-
-- **Author**: Ulrike Groemping, BHT Berlin.
-- **License**: GPL-3
-- **Version**: 0.24-4
 
 ## Warning
 
