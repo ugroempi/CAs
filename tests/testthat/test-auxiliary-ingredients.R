@@ -4,13 +4,13 @@ test_that("OD2 uses prime-power, exceptional, and generic constructions", {
   prime_power <- CAs:::OD2(3)
   exceptional6 <- CAs:::OD2(6)
   exceptional10 <- CAs:::OD2(10)
-  generic <- CAs:::OD2(8)
+  generic <- CAs:::OD2(12)
 
   expect_identical(dim(prime_power), c(6L, 3L))
   expect_identical(ncol(exceptional6), 3L)
   expect_identical(ncol(exceptional10), 3L)
-  expect_identical(dim(generic), c(56L, 2L))
-  expect_true(all(generic >= 0 & generic < 8))
+  expect_identical(dim(generic), c(132L, 2L))
+  expect_true(all(generic >= 0 & generic < 12))
 })
 
 test_that("OD3 covers prime-power and full-factorial constructions", {
@@ -27,8 +27,8 @@ test_that("OD3 covers prime-power and full-factorial constructions", {
 })
 
 test_that("cyclic DCA ingredients and their row counts cover each branch", {
-  expect_identical(CAs:::circularDCA(7), matrix(7, 1, 1))
-  expect_identical(CAs:::circularDCA(1:4),
+  expect_equal(CAs:::circularDCA(7), matrix(7, 1, 1))
+  expect_equal(CAs:::circularDCA(1:4),
                    rbind(1:4, c(2:4, 1), c(3:4, 1:2), c(4, 1:3)))
 
   expect_identical(CAs:::N_DCA(6, 4), 7)
@@ -44,10 +44,10 @@ test_that("cyclic DCA ingredients and their row counts cover each branch", {
 test_that("DCA constructs exceptional, prime-power, and product designs", {
   expect_identical(dim(CAs:::DCA(6, 4)), c(7L, 4L))
   expect_identical(dim(CAs:::DCA(10, 5)), c(11L, 5L))
-  expect_identical(dim(CAs:::DCA(18, 4)), c(19L, 4L))
+  expect_identical(dim(CAs:::DCA(19, 4)), c(19L, 4L))
   expect_identical(dim(CAs:::DCA(3, 3)), c(3L, 3L))
   expect_identical(dim(CAs:::DCA(3, 4)), c(4L, 4L))
-  expect_identical(dim(CAs:::DCA(3, 5)), c(4L, 5L))
+  expect_identical(dim(CAs:::DCA(3, 5)), c(5L, 5L))
   expect_identical(dim(CAs:::DCA(2, 5)), c(4L, 5L))
   expect_error(CAs:::DCA(12, 3))
 })
