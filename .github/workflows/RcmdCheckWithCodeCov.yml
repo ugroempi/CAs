@@ -47,14 +47,6 @@ jobs:
       - name: Install testing + coverage tools
         run: |
           Rscript -e 'install.packages(c("covr", "xml2", "rstudioapi"), repos = "https://cloud.r-project.org")'
-      - name: Debug environment
-        run: |
-          Rscript -e 'print(R.version.string)'
-          Rscript -e 'print(Sys.getenv(c("CI","NOT_CRAN","R_KEEP_PKG_SOURCE","R_REMAKE_DB","MC_CORES","OMP_NUM_THREADS")))'
-          Rscript -e 'print(installed.packages()[c("covr","xml2","remotes"), c("Package","Version")])'
-      - name: List Rd example files
-        run: |
-          Rscript -e 'print(list.files("man", pattern = "[.]Rd$", full.names = TRUE))'
       - name: Run tests and generate coverage (Cobertura XML)
         env:
           NOT_CRAN: "true"
@@ -62,6 +54,7 @@ jobs:
           OMP_NUM_THREADS: "1"
           R_KEEP_PKG_SOURCE: "yes"
           R_REMAKE_DB: "true"
+          _R_CHECK_DONTTEST_EXAMPLES_: "true"
         # run tests and produce a coverage.xml suitable for Codecov
         run: |
           # move to relevant directory
