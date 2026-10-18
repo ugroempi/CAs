@@ -7,6 +7,7 @@
 ^.*\.yml$
 ^README\.md$
 ^README\.Rmd$
+^LICENSE$
 ^ColbournTables\.md$
 ^\.github$
 ^README_files$
