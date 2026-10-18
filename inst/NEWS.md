@@ -2,6 +2,7 @@
 
 Changes since latest release,
 version 0.24-4
+
  - deleted a outdated sentence from CAs-package.R
  - updated text on a special case for the Paley construction in DataForMathematical
  - bug fix: maxconstant now also works with missings in the clique rows,
@@ -13,8 +14,10 @@ version 0.24-4
    both (readCA via nistCA)
  - added # nocov blocks and .covrignore file for removing spurious 
    non-coverages
+ - bug fix for optimize_SeqCA (interrupt did not work as expected)
 
 October 4 2026, version 0.24-3
+
  - made the package description more informative
  - modified handling of NULL seeds: these are no longer 
    made reproducible
@@ -31,15 +34,18 @@ October 4 2026, version 0.24-3
  - made a few minor edits
 
 September 22 2026, version 0.24-2
+
  - added missing usage entries for some N_- and k_-functions
  - shortened example times for powerCA and MTVTRouxtype
 
 September 21 2026, version 0.24-1
+
  - added version requirement for package caverify (because of logic applied 
    for flexible values and applicability for mixed level CAs)
  - updated version number
 
 September 05 2026, still version 0.24
+
  - bug fix to function DHHF2CA (corrected the handling of constant rows, especially 
    where a constant row needs to be added; this fixes a bug in powerCA, where the
    result of powerCA(3,1584,2) did not cover all 1,1,1 triples; 
@@ -54,6 +60,7 @@ September 05 2026, still version 0.24
    cyclotomyCA
 
 August 2026, version 0.24
+
  - moved external data to .Rbuildignore so that the R package is small enough
  - reduced example run time
  - imported package caverify in order to make use of the fast coverage checks 
@@ -61,27 +68,32 @@ August 2026, version 0.24
  - made a few formal fixes for CRAN, like authors@R
    
 February 24 2026, still version 0.23
+
  - changed the acronym for "sequential covering array" to SeqCA instead of SCA 
    in order to avoid confusion with the special structure CA that is abbreviated as SCA
  - added function SeqCA_Levenshtein for optimal strength t SeqCAs with t+1 columns
  - improved the perturbation in simulated annealing for the optimize_SCA function
 
 February 21 2026, version 0.23
+
  - added functionality for SCAs
 
 November 21 2025, version 0.22
+
  - added arrays from Walker and Colbourn 2009 for scphfCA
  - added classical (poor) augmentation constructions 
    (CK_constrD and CKRS_augment), not included in function Ns
  - added the L81.3.5 to miscCAcat
    
 October 11 2025, version 0.21
+
  - improved the implementation of fusion in bestN, so that the speed of bestN 
    is again in its prior range
  - added function add1
  - added a reference for crossCAs
    
 September 27 2025, version 0.20
+
  - improved N_CS_LCDST to return the minimum and not the first entry, because 
    a later entry is occasionally better
  - improved MCA2 so that the cheap reduction of run size is always included, even 
@@ -93,10 +105,12 @@ September 27 2025, version 0.20
    accordingly
 
 September 23 2025, still version 0.19
+
  - improved N_powerCT by restricting the search to strengths t and t+1
  - added a maxN argument to bestCA
 
 September 22 2025, version 0.19
+
  - automated CA_to_MCA in new function MCAt
  - implemented CPHFs of Wagner, Colbourn and Simos (2022)
  - reduced powerCTcat to constructions with at most 1000000 runs
@@ -106,6 +120,7 @@ September 22 2025, version 0.19
  - improved postopNCK: it now uses a good optimality bound for t>2 as well as for t=2
 
 September 05 2025, version 0.18
+
  - function pcaCA based on the data frame PCAcat:
    implemented productPCA constructions with promising PCA ingredients (large k1)
    from Bose (not combining only Bose, because these are in recursiveBose), all cover starter 
@@ -138,6 +153,7 @@ September 05 2025, version 0.18
  - bug fix: CA_to_PCA removed the attributes from D for the cheap variant without tryhard=TRUE
 
 August 30 2025, version 0.17
+
  - updated the data frame powerCTcat with 179 additional constructions, based 
    on new implementations in the recent past; also, one bug with a claim of
    a too small design was fixed; several runs are needed, as now some ingredients 
@@ -148,6 +164,7 @@ August 30 2025, version 0.17
  - bug fix: CS_CK did not yield class ca with attributes
 
 August 27 2025, version 0.16
+
  - renamed smcCA to scphfCA, and made its workhorse function internal; adapted
    everything to that change
  - modified the workhorse function SMC to avoid the creation of unnecessarily
@@ -161,6 +178,7 @@ August 27 2025, version 0.16
  - fixed sloppy writing in the documentation of MTVTRouxtypeCA
    
 August 21 2025, version 0.15
+
  - implemented one more column for strength 3 with v=2^s in SCA_Busht, 
    with consequences also for fuse_BushtCA, and fixed the manual for 
    SCA_Busht and SCA_Bose
@@ -237,12 +255,14 @@ August 11, 2025, version 0.13
  - bug fix for dwyerCA: did not work for k less than maximum possible number of columns
    
 04 Aug 2025, version 0.11
+
  - implemented an iterative version of function coverage
    that also allows to abort at the first non-perfect coverage
  - fixed a bug that was introduced on 31 July that made coverage fail
    for mixed level CAs
 
 31 July 2025, still version 0.10
+
  - documented clearly that nlevels order does not determine the output 
    column order in MCA2
  - hand over objects from the function environment to the parallel cluster
@@ -251,6 +271,7 @@ August 11, 2025, version 0.13
    with v-1
 
 23 July 2025, version 0.10
+
  - modified postopNCK to include an outer loop 
    (new arguments outerRetrymax and outermaxnochange, and seed),
    and deferred the previous inner workings to an internal function
@@ -271,6 +292,7 @@ August 11, 2025, version 0.13
  - bugfix: CA_to_MCA was not reproducible for a given seed; now it is
 
 13 July 2025, version 0.9
+
  - added function CA_to_MCA for creating mixed level CAs
  - changed the output of function postopNCK in case the
    number of rows cannot be reduced
@@ -278,6 +300,7 @@ August 11, 2025, version 0.13
    the requested strength in some cases
 
 10 July 2025, version 0.8
+
  - implemented data file powerCTcat in support of power
    construction according to Colbourn and Torres-Jimenez (2010)
  - implemented functions powerCA (with type="CT"), N_powerCT and 
@@ -297,6 +320,7 @@ August 11, 2025, version 0.13
    instead of the requested k
 
 05 July 2025, version 0.7
+
  - implemented a data file miscCAcat, a function miscCA 
    with N_ and k_ functions,
    and modified Ns and ks to refer to these
