@@ -22,7 +22,7 @@ Description: Implements covering arrays, as proposed in
     creation of sequence covering arrays.
 Depends: R (>= 3.5.0)
 Imports: lhs, DoE.base, caverify (>= 0.2.0), sets, prepplot, primes, igraph, permutations, dplyr, curl, gmp, conf.design, sfsmisc, combinat
-Suggests: parallel, FrF2, testthat (>= 3.0.0)
+Suggests: parallel, FrF2, testthat (>= 3.3.2)
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
