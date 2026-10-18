@@ -369,7 +369,9 @@ optimize_SeqCA <- function(A, t,
   ## Start with initial SeqCA
   k <- ncol(A)
   current <- A
+  last_result <- current
 
+  tryCatch({
   if (verbose) {
     cat("=== Initial SeqCA ===\n")
     cat("Rows:", nrow(current), "\n\n")
@@ -379,6 +381,7 @@ optimize_SeqCA <- function(A, t,
   if (verbose)
     cat("=== Initial greedy reduction without simulated annealing ===\n")
   current <- reduce_rows_iterative_complete(current, t, verbose=verbose)
+  last_result <- current
   if (nrow(current) <= target || skipsa){
     if (nrow(current) <= target && !skipsa)
       message("Initial reduction yielded target run size without simulated annealing")
@@ -411,10 +414,6 @@ optimize_SeqCA <- function(A, t,
 
 
   ## Iteratively remove rows and anneal to completeness
-  last_result <- current
-
-  tryCatch({
-
   repeat {
     iteration <- iteration + 1
 
@@ -522,11 +521,11 @@ optimize_SeqCA <- function(A, t,
   }
   class(current) <- c("sca", class(current))
   return(current)
+  } ## end of if (!skipsa)
   }, interrupt = function(e) {
     message("Interrupted by user. Returning last completed result.")
     if (!"sca" %in% class(last_result))
       class(last_result) <- c("sca", class(last_result))
     return(last_result)
   })
-}
 }
