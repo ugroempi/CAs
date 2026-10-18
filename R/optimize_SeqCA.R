@@ -387,11 +387,11 @@ optimize_SeqCA <- function(A, t,
   }
   }
 
-  if (verbose)
-    cat("=== Prepare simulated annealing ===\n")
-
   if (!skipsa){
-  ## Set default SA parameters
+    if (verbose)
+      cat("=== Prepare simulated annealing ===\n")
+
+    ## Set default SA parameters
   sa_defaults <- list(
     maxAccepted = 100,
     maxAttempts = 500,
@@ -469,7 +469,7 @@ optimize_SeqCA <- function(A, t,
         best_deletion_sca <- test_sca
       }
       if (missings==0) break
-    }
+    } # end of loop over rows
 
   #   if (is.null(best_deletion)) {
   #     if (verbose) cat("No row can be deleted\n")
@@ -486,7 +486,7 @@ optimize_SeqCA <- function(A, t,
 
     ## If no missings, accept deletion and continue
     if (missings == 0) {
-      current <- best_deletion_sca
+      last_result <- current <- best_deletion_sca
       if (verbose) cat("Deletion creates no missings - accepted\n")
       next ## of repeat loop
     }
@@ -500,7 +500,7 @@ optimize_SeqCA <- function(A, t,
 
     ## Only accept if annealing succeeded (no missings)
     if (sa_result$success) {
-      current <- sa_result$sca
+      last_result <- current <- sa_result$sca
       if (verbose) cat("Simulated annealing succeeded - deletion accepted\n")
       if (nrow(current)<=target) {
         if (verbose) cat("target run size reached")
@@ -513,14 +513,7 @@ optimize_SeqCA <- function(A, t,
       }
       break
     }
-  }
-  }, interrupt = function(e) {
-    message("Interrupted by user. Returning last completed result.")
-    if (!"sca" %in% class(last_result))
-      class(last_result) <- c("sca", class(last_result))
-    return(last_result)
-  })
-  }
+  } # end of repeat loop
 
   if (verbose) {
     cat("\n=== Final Optimized SeqCA ===\n")
@@ -528,5 +521,12 @@ optimize_SeqCA <- function(A, t,
     cat("Reduction from", nrow(A), "to", nrow(current), "rows\n")
   }
   class(current) <- c("sca", class(current))
-  current
+  return(current)
+  }, interrupt = function(e) {
+    message("Interrupted by user. Returning last completed result.")
+    if (!"sca" %in% class(last_result))
+      class(last_result) <- c("sca", class(last_result))
+    return(last_result)
+  })
+}
 }
