@@ -15,6 +15,9 @@ version 0.24-4
  - added # nocov blocks and .covrignore file for removing spurious 
    non-coverages
  - bug fix for optimize_SeqCA (interrupt did not work as expected)
+ - removed the check for q%%v==1 from cyclotomy condition checking,
+   and allowed to drop the condition in auxiliary function cycvec,
+   following a suggestion by Hriday Rungta
 
 October 4 2026, version 0.24-3
 
