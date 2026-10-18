@@ -124,26 +124,31 @@ for (i in 1:nrow(CYCLOTOMYcat)){
 ## checking coverage is prohibitive for larger arrays
 ## here, trust in the Colbourn tables is needed
 
-## problem: for v=3 and t=5, the three Torres-Jimenez
-##     constructions violate q%%v == 1
-##  Is that relevant ???
-## for now, deactivated the check for this condition in cyc
-## small sample checks on strength 5 coverage did
-##     not show up violations
+## no problem: for v=3 and t=5, the three Torres-Jimenez
+##     constructions violate q%%v == 1 from the Colbourn paper
+##  According to the convincing argument by Hriday Rungta
+##     (issue 66: https://github.com/ugroempi/CAs/issues/66),
+##     this condition can generally be dropped, as the
+##     conditions check coverage regardless of q%%v
+## as Torres-Jimenez was apparently aware of this, it
+##     is dropping the condition is not likely to bring up
+##     practically relevant additional arrays
+##     (the smallest likely q=1049 for type 1 with t=4 and v=3
+##      was checked and failed)
 
-CYCLOTOMYcat[174:176,]
-## checking by sampling for q=6983, 7013, 10007,
-## all with strength 5, v=3, type 1
-for (q in c(6983, 7013, 10007)){
-  print(q)
-  aus <- cyc(q, 3, type='1')
-  for (i in 1:20){
-    print(i);
-    if(!all(coverage(aus[,sample(1:q, 20)], 5)==1)){
-      cat("coverage violated\n")
-      break}
-  }
-}
+# CYCLOTOMYcat[174:176,]
+# ## checking by sampling for q=6983, 7013, 10007,
+# ## all with strength 5, v=3, type 1
+# for (q in c(6983, 7013, 10007)){
+#   print(q)
+#   aus <- cyc(q, 3, type='1')
+#   for (i in 1:20){
+#     print(i);
+#     if(!all(coverage(aus[,sample(1:q, 20)], 5)==1)){
+#       cat("coverage violated\n")
+#       break}
+#   }
+# }
 
 
 

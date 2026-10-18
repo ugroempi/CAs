@@ -8,18 +8,17 @@ non-visible functions to be used in other functions,
 and currently also previous drafts that may be deleted
 }
 \details{
+gen.next.cbn
 matcheck: checks a matrix for suitability
-gf_minus: Galois field subtraction
+cycvec: creates a cyclic start vector
+circular: creates matrix from cyclic start vector
+levels.no.NA: extracts the levels including NA
 iacheck: check a two-column matrix for correct interaction structure
 subia: checks whether ia1 is subset of ia2
 levels.no from DoE.base
-fasttab: table replacement without using factors
-LS_to_D3cols: function for making a latin square into a three column design
-D3cols_to_LS: function for bringing a three column design to latin square format
-metrics: a function for calculation metrics, likely obsolete
-proportions_slower: earlier version of coverage, likely obsolete
 ord from DoE.base
-rho: extracts run numbers of D that hold the interaction ia
+nchoosek: matrix of all subsets
+rho: check for rows with a given interaction in a design D
 allints: function that extracts all interactions for (up to) t factors from a run
 failcands: fail candidates from a test suite with a single failed run
 failcands2: (failed) attempt to speed up failcands
@@ -28,5 +27,12 @@ is.CA: checks for covering array properties,
 can return distribution of covering frequencies or actual row sets
 is.LA: checks for locating array properties
 is.DA: checks for detecting array properties (not ready)
+metrics: a function for calculation metrics, likely obsolete
+proportions_slower: earlier version of coverage, likely obsolete
+fasttab: table replacement without using factors
+LS_to_D3cols: function for making a latin square into a three column design
+D3cols_to_LS: function for bringing a three column design to latin square format
+rho: extracts run numbers of D that hold the interaction ia
 Double: doubles a 0/1 matrix M by stacking M with 1-M and adding first column of 0/1
+AGL2: from Chateauneuf and Kreher 2002
 }

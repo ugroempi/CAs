@@ -59,12 +59,14 @@
 
 #' @export
 checkcond1 <- function(t,v,q,iter=FALSE, progress=FALSE){
-  if (!q %% v==1) stop("q mod v = 1 is violated")
+  # if (!q %% v==1) stop("q mod v = 1 is violated")
+  # according to a convincing argument by Hriday Rungta,
+  # the above condition from the Colbourn paper can be dropped
 
   ## the implementation with nchoosek does not work
   ## for large values of q and t (e.g., 10007 and 5)
   gf <- lhs::create_galois_field(q)
-xstart <- cycvec(v,q,gf=gf)
+xstart <- cycvec(v,q,gf=gf, dropmod1check = TRUE)
 
 ## every t-subset of GF(q) (sets in columns)
 if (!iter)
@@ -114,11 +116,13 @@ return(TRUE)
 
 #' @export
 checkcond2 <- function(t,v,q, iter=FALSE, progress=FALSE){
-  if (!q %% v==1) stop("q mod v = 1 is violated")
+  # if (!q %% v==1) stop("q mod v = 1 is violated")
+  # according to a convincing argument by Hriday Rungta,
+  # the above condition from the Colbourn paper can be dropped
 
   ## same as checkcond1, only without the constant non-zero rows of vsets
   gf <- lhs::create_galois_field(q)
-  xstart <- cycvec(v,q,gf=gf)
+  xstart <- cycvec(v,q,gf=gf, dropmod1check = TRUE)
   ## every t-subset of GF(q) (sets in columns)
   if (!iter)
     tsets <- nchoosek(q, t) ## these start with 1
@@ -169,11 +173,15 @@ checkcond2 <- function(t,v,q, iter=FALSE, progress=FALSE){
 
 #' @export
 checkcond3 <- function(t,v,q,iter=FALSE, progress=FALSE){
-  if (!q %% v==1) stop("q mod v = 1 is violated")
   ## 3a cases must pass this check
   ## i.e., checkcond3(4,2,23) must yield TRUE
+
+  # if (!q %% v==1) stop("q mod v = 1 is violated")
+  # according to a convincing argument by Hriday Rungta,
+  # the above condition from the Colbourn paper can be dropped
+
   gf <- lhs::create_galois_field(q)
-  xstart <- cycvec(v,q,gf=gf)
+  xstart <- cycvec(v,q,gf=gf, dropmod1check = TRUE)
   ## every t-subset of GF(q) (sets in columns)
   if (!iter)
     tsets <- nchoosek(q, t) ## these start with 1
@@ -262,7 +270,9 @@ checkcond3b <- function(t,v,q,iter=FALSE, progress=FALSE, type3=TRUE){
 ## needs to become iterative by argument, like checkcond1
 #' @export
 checkcond4 <- function(t,v,q,iter=FALSE, progress=FALSE){
-  if (!q %% v==1) stop("q mod v = 1 is violated")
+  # if (!q %% v==1) stop("q mod v = 1 is violated")
+  # according to a convincing argument by Hriday Rungta,
+  # the above condition from the Colbourn paper can be dropped
 
   ## that is 3, but without the constant rows in vsets
   ##              (regardless of zero or non-zero)
@@ -271,7 +281,7 @@ checkcond4 <- function(t,v,q,iter=FALSE, progress=FALSE){
   ##  checkcond4(4,2,19) should yield TRUE
   ##
   gf <- lhs::create_galois_field(q)
-  xstart <- cycvec(v,q,gf=gf)
+  xstart <- cycvec(v,q,gf=gf, dropmod1check = TRUE)
   ## every t-subset of GF(q) (sets in columns)
   if (!iter)
     tsets <- nchoosek(q, t) ## these start with 1
