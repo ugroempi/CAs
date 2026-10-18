@@ -23,7 +23,15 @@ See the [Table of Contents](#table-of-contents) for different ways to help. Plea
 ### General Rules
 Contributions must be R only, as the package **CAs** will not switch to including other languages. If you have useful contributions e.g. in C++, you could always provide a package of your own that can be used from within R (as, e.g., the package **caverify** by [@chrispbsmolen](https://github.com/chrispbsmolen)).
 
-Contributors must identify themselves as a living person and must make transparent inhowfar AI was involved in creating the contribution. Contributors are personally (as opposed to legally) responsible for the correctness of the contribution. That responsibility cannot be deferred to an AI.
+**R programming style** of the package: 
+
+* The package uses **roxygen2** for documentation, i.e., functions should be documented within the `R` file, and `man` files should not be manually edited. 
+* The package uses **testthat** for testing. A good contribution also provides one or more test cases in a suitable test file in the `tests/` directory. 
+* Code for a bug fix ideally includes an added test for the new code in a suitable test case file in the `tests/` directory.
+* The package does not use pipes.
+* Contributed code for constructions should provide a `N_` and a `k_` functions in the style of the other such functions of the package (see `CAN.R`) but should not modify the `Ns` function (I would eventually do that, of course).
+
+**Contributors** must identify themselves as a living person and must make transparent inhowfar AI was involved in creating the contribution. Contributors are personally (as opposed to legally) responsible for the correctness of the contribution. That responsibility cannot be deferred to an AI.
 
 It is perfectly acceptable to reach out via my university email if that feels more comfortable than opening an issue on GitHub. Exception: Bugs should always be reported on GitHub so that others can see that they have been noted.
 
