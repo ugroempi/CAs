@@ -8,7 +8,7 @@ Authors@R: c(person(given = "Ulrike",
                     email = "ulrike.groemping@bht-berlin.de"),
              person(given = "Mickael",
                     family = "Bergeron", 
-                    role = "ctb")
+                    role = "ctb"))
 Description: Implements covering arrays, as proposed in 
     Groemping (2025) <doi:10.1109/ICSTW64639.2025.10962463>. 
     Uniform and mixed-level covering arrays are created and 
