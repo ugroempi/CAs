@@ -3,11 +3,17 @@
 ## this removes the need for iterative updating, because there are no powerCT
 ##      construction ingredients any more
 
-## remove N-CT and "Arc" and "S"
+## remove N-CT and "Arc"
+## N-CT might refer to the Matroshka type (nested) in the CT paper
+##    it looks complicated
+##    there are 90 cases with fewer than 1000000 runs,
+##    but all with more than 200000 runs, thus low priority
+## Arc is a concept in projective geometry that I am not familiar with
+##    there are two CA(5,k,2) settings and four CA(6,k,3) settings
+##    with N < 1000000
 whichCTnormal <- setdiff(grep("CT", colbournBigFrame$Source),
                          c(grep("N-CT", colbournBigFrame$Source),
                            grep("Arc", colbournBigFrame$Source)))
-                         #,grep("S", colbournBigFrame$Source)))
 powerCTcat <- colbournBigFrame[whichCTnormal,]
 powerCTcat <- powerCTcat[which(powerCTcat$N<=1000000),]
 N <- powerCTcat$N
@@ -83,52 +89,117 @@ hilf <- substr(powerCTcat$Source, 9, 99)
 hilf <- gsub("c", "", hilf, fixed=TRUE)
 ## now, if present, "S" is the last component
 hilf <- strsplit(hilf, "S", fixed=TRUE)
+S <- as.numeric(sapply(hilf, function(obj) obj[2]))
 hilf <- sapply(hilf, function(obj) obj[1])
 ## split at the "T", which indicates numbers of levels to remove
 hilf <- strsplit(hilf, "T", fixed=TRUE)
+## append the ones implied by an S entry to the reduction requests
+hilf <- mapply(function(liste1, liste2) c(liste1, rep(1, ifelse(is.na(liste2), 0, liste2))), hilf, S)
 
-## every array has at least one DHF row in Pbase levels
+## every array with as many reduction entries as M is large
+## has S==M
+## For the S=M cases, M can to be reduced by 1,
+## and u1 <- Pbase - 1, and w1=the new M
+##      This needs to be figured out for S
+##      as there are now more reductions
+##      and it can happen that no row has q entries
 ## treat first DHF row for all cases
-powerCTcat$w1 <- powerCTcat$Pbase
-powerCTcat$u1 <- powerCTcat$M - (lengths(hilf) - 1)  ## remove number of DHF rows with fewer entries
+powerCTcat$w1 <- powerCTcat$Pbase ## later corrected for some S cases
+## treat S==M or S+further reductions equal M:
+##        there is no row with Pbase elements,
+##        i.e., w1 = Pbase - 1,
+##        with entry min(S, M)
+## for S==M, u1==m
+## for S<M, u1 < M
+pickSplusTequalM <- which(lengths(hilf)==powerCTcat$M+1)
+pickSequalM <- which(S==powerCTcat$M) ## subset of pickSplusTequalM
+## no row with Pbase elements, w1 = Pbase - 1
+powerCTcat$w1[pickSplusTequalM] <-
+  powerCTcat$Pbase[pickSplusTequalM] - 1
+## S == M: all rows in first block
+powerCTcat$u1[pickSequalM] <- powerCTcat$M[pickSequalM]
+## S < M, but SplusTequalM: S rows in first block
+powerCTcat$u1[setdiff(pickSplusTequalM, pickSequalM)] <-
+  S[setdiff(pickSplusTequalM, pickSequalM)]
+## now process further blocks for SplusTequalM
+##    there are always M-1 reductions by 1 and one reduction
+##                                             by more than 1
+powerCTcat$w2[setdiff(pickSplusTequalM, pickSequalM)] <-
+  powerCTcat$Pbase[setdiff(pickSplusTequalM, pickSequalM)] -
+  as.numeric(sapply(hilf[setdiff(pickSplusTequalM, pickSequalM)],
+                    function(obj) obj[2]))
+powerCTcat$u2[setdiff(pickSplusTequalM, pickSequalM)] <- 1
+
+## no further processing of the SplusT==M rows,
+## suppress by subsetting
+remaining <- setdiff(1:nrow(powerCTcat), pickSplusTequalM)
+powerCTcat$w1[remaining] <- powerCTcat$Pbase[remaining]
+powerCTcat$u1[remaining] <- powerCTcat$M[remaining] -
+                                (lengths(hilf[remaining]) - 1)
+      ## removes number of DHF rows with fewer entries from u1
+      ## for the remaining rows, there is one entry in hilf
+      ##       for each row with a removal
 
 ## treat arrays with *at least* one reduced row
-one <- which(lengths(hilf) >= 2)
-powerCTcat$w2[one] <- powerCTcat$w1[one] - as.numeric(sapply(hilf[one],
-                                                         function(obj) obj[2]))
-powerCTcat$u2[one] <- 1 # temporary, increase, if more of the same are found
+one <- setdiff(which(lengths(hilf) >= 2), pickSplusTequalM)
+tabs <- lapply(one, function(obj) rev(table(hilf[[obj]][-1])))
+powerCTcat$w2[one] <- sapply(1:length(one), function(obj)
+                  powerCTcat$Pbase[one[obj]] -
+                    as.numeric(names(tabs[[obj]])[1]))
+powerCTcat$u2[one] <- sapply(tabs[1:length(one)],
+                             function(obj) obj[1])
 
-## at least two reduced rows
-## two T
-two <- which(lengths(hilf) >= 3)
-## same reduction as first case
-equal <- two[which(sapply(hilf[two], function(obj) obj[2]==obj[3]))]
-## new reduction
-other <- setdiff(two, equal)
-powerCTcat$w3[other] <- powerCTcat$w1[other] - as.numeric(sapply(hilf[other],
-                                                             function(obj) obj[3]))
-powerCTcat$u3[other] <- 1 # temporary, increase, if more of the same are found
-powerCTcat$u2[equal] <- 2 # w3 and k3 still NA
+## treat arrays with *at least* two different T/S values
+two <- one[which(lengths(tabs) > 1)]
+tabs <- tabs[which(lengths(tabs) > 1)]
+powerCTcat$w3[two] <- sapply(1:length(two), function(obj)
+  powerCTcat$Pbase[two[obj]] -
+    as.numeric(names(tabs[[obj]])[2]))
+powerCTcat$u3[two] <- sapply(tabs[1:length(two)],
+                             function(obj) obj[2])
 
-## at least three  reduced rows (T; more does not occur)
-three <- which(lengths(hilf) >= 4)
-## same reduction as first row
-equal1 <- three[which(sapply(hilf[three], function(obj) obj[2]==obj[4]))]
-## not same as first, but same as second
-equal2 <- setdiff(three[which(sapply(hilf[three],
-                                     function(obj) obj[3]==obj[4]))], equal1)
-## new reduction
-otherthree <- setdiff(three, c(equal1, equal2, equal))
-othertwo <- setdiff(three, c(equal1, equal2, otherthree))
+## treat arrays with *at least* two different T/S values
+three <- two[which(lengths(tabs) > 2)]
+tabs <- tabs[which(lengths(tabs) > 2)]
+powerCTcat$w4[three] <- sapply(1:length(three), function(obj)
+  powerCTcat$Pbase[three[obj]] -
+    as.numeric(names(tabs[[obj]])[3]))
+powerCTcat$u4[three] <- sapply(tabs[1:length(three)],
+                               function(obj) obj[3])
 
-powerCTcat$w4[otherthree] <- powerCTcat$w1[otherthree] -
-         as.numeric(sapply(hilf[otherthree], function(obj) obj[4]))
-powerCTcat$u4[otherthree] <- 1
-powerCTcat$w3[othertwo] <- powerCTcat$w1[othertwo] -
-         as.numeric(sapply(hilf[othertwo], function(obj) obj[4]))
-powerCTcat$u3[othertwo] <- 1
-powerCTcat$u2[equal1] <- 3
-powerCTcat$u3[equal2] <- 2   ## not equal to first, but equal to second
+#
+# ## at least two reduced rows
+# ## two T
+# two <- intersect(which(lengths(hilf) >= 3), pickSplusTunequalM)
+# ## same reduction as first case
+# equal <- two[which(sapply(hilf[two], function(obj) obj[2]==obj[3]))]
+# ## new reduction
+# other <- setdiff(two, equal)
+# powerCTcat$w3[other] <- powerCTcat$w1[other] - as.numeric(sapply(hilf[other],
+#                                                              function(obj) obj[3]))
+# powerCTcat$u3[other] <- 1 # temporary, increase, if more of the same are found
+# powerCTcat$u2[equal] <- 2 # w3 and k3 still NA
+#
+# ## this does not work with S
+# ## at least three  reduced rows (T; more does not occur)
+# three <- intersect(which(lengths(hilf) >= 4), pickSplusTunequalM)
+# ## same reduction as first row
+# equal1 <- three[which(sapply(hilf[three], function(obj) obj[2]==obj[4]))]
+# ## not same as first, but same as second
+# equal2 <- setdiff(three[which(sapply(hilf[three],
+#                                      function(obj) obj[3]==obj[4]))], equal1)
+# ## new reduction
+# otherthree <- setdiff(three, c(equal1, equal2, equal))
+# othertwo <- setdiff(three, c(equal1, equal2, otherthree))
+#
+# powerCTcat$w4[otherthree] <- powerCTcat$w1[otherthree] -
+#          as.numeric(sapply(hilf[otherthree], function(obj) obj[4]))
+# powerCTcat$u4[otherthree] <- 1
+# powerCTcat$w3[othertwo] <- powerCTcat$w1[othertwo] -
+#          as.numeric(sapply(hilf[othertwo], function(obj) obj[4]))
+# powerCTcat$u3[othertwo] <- 1
+# powerCTcat$u2[equal1] <- 3
+# powerCTcat$u3[equal2] <- 2   ## not equal to first, but equal to second
 
 ## to automate the designs: bestCA(t, wj, v)
 ## BE ALERT WHETHER THE c in the source has an impact somehow
@@ -291,13 +362,20 @@ powerCTcat$N <- powerCTcat$chi + (powerCTcat$N1-powerCTcat$c1)*powerCTcat$u1 +
   ifelse(is.na((powerCTcat$N3-powerCTcat$c3)*powerCTcat$u3), 0, (powerCTcat$N3-powerCTcat$c3)*powerCTcat$u3) +
   ifelse(is.na((powerCTcat$N4-powerCTcat$c4)*powerCTcat$u4), 0, (powerCTcat$N4-powerCTcat$c4)*powerCTcat$u4)
 ## also provide real k
+powerCTcat$k <- NA
 homog <- which(is.na(powerCTcat$w2))
-powerCTcat$k[homog] <- powerCTcat$Pbase[homog]^powerCTcat$expon[homog]
-
-table(homog=(1:nrow(powerCTcat)) %in% homog, plus=(1:nrow(powerCTcat)) %in% grep("+", powerCTcat$Source, fixed=TRUE))
-## all nonhomogeneous real k equal claimed k
-powerCTcat$k[setdiff(1:nrow(powerCTcat), homog)] <- powerCTcat$claimedk[setdiff(1:nrow(powerCTcat), homog)]
+powerCTcat$k[intersect(homog, pickSequalM)] <- ## by hand
+  c(10000, 7224) ## first one: remove any row except first and last
+                 ## second one: remove last row of DHF
+powerCTcat$k[setdiff(homog, pickSequalM)] <-
+  powerCTcat$Pbase[setdiff(homog, pickSequalM)]^powerCTcat$expon[setdiff(homog, pickSequalM)]
+table(homog=(1:nrow(powerCTcat)) %in% homog,
+      plus=(1:nrow(powerCTcat)) %in% grep("+", powerCTcat$Source, fixed=TRUE))
+## all nonhomogeneous real k equal claimed k, therefore assigned here
+powerCTcat$k[setdiff(1:nrow(powerCTcat), homog)] <-
+  powerCTcat$claimedk[setdiff(1:nrow(powerCTcat), homog)]
 table(powerCTcat$k - powerCTcat$claimedk)
+powerCTcat[which(powerCTcat$k < powerCTcat$claimedk),]
 ## +2167 because of the 10000 cap in the tables
 ## no longer relevant because of 1000000 cap on claimedN
 ## - x because of powerCTcat[(1:nrow(powerCTcat)) %in% grep("+", powerCTcat$Source, fixed=TRUE),]
@@ -320,13 +398,16 @@ which(mapply(N_powerCT, powerCTcat$t, powerCTcat$w4, powerCTcat$v)<powerCTcat$N4
 fivenum(powerCTcat$N)
 
 ## save
-save(powerCTcat, file="D:/rtests/CAs/data/powerCTcat.rda",
+save(powerCTcat, file="C:/rtests/CAs/data/powerCTcat_v025.rda",
      compress="xz")
+# save(v243, file="C:/rtests/CAs/data/powerCTcat_v024.rda",
+#      compress="xz") ## holds v243
 
-load("D:/rtests/CAsbak/powerCTcat_v0.21.rda") ## has powerCT_alt
+load("C:/rtests/CAsbak/powerCTcat_v0.21.rda") ## has powerCT_alt
 #load("D:/rtests/CAsbak/powerCTcat_v0.18.rda") ## has v18CT
 ## the cap on claimedN can be omitted in the future
-merged <- merge(v18CT[which(v18CT$claimedN<=1000000),], powerCTcat, by=c("t","k","v","Source"))
+merged <- merge(powerCTcat_alt, v243, by=c("t","k","v","Source"))
+##merged <- merge(v18CT[which(v18CT$claimedN<=1000000),], powerCTcat, by=c("t","k","v","Source"))
 merged[merged$N.x<merged$N.y,]
 dim(merged[merged$N.x>merged$N.y,])
 table(merged[merged$N.x>merged$N.y,]$constr1.x)
