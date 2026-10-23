@@ -1,7 +1,7 @@
-Colbourn tables
-================
-Ulrike Grömping
-July 25, 2025
+Frozen version of the Colbourn tables
+=====================================
+provided by Ulrike Grömping (July 25, 2025). 
+**See also**: [@cpbsmolen's collection of best-known covering arrays](https://chrispbsmolen.github.io/ca-tools/) to which newly-found arrays can be submitted. It keeps track of progress and propagates improvements to other constructions; it may not (yet) always track *all* consequences of improved arrays the way Charles Colbourn did.
 
 # Purpose
 

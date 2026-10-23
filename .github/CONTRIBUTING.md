@@ -46,7 +46,7 @@ I use GitHub issues to track bugs, errors or other wishes and suggestions. In an
 - Please provide as much context as possible and describe the *reproduction steps* that someone else can follow to recreate the issue on their own. This usually includes your code. For good bug reports you should isolate the problem and create a reduced test case.
 
 ### Improvements on Covering Array Numbers
-I provide a frozen status of Charles Colbourn's covering array tables at [https://github.com/ugroempi/CAs/blob/main/ColbournTables.md](https://github.com/ugroempi/CAs/blob/main/ColbournTables.md). I do not update or maintain them. If you (believe to) have found a smaller covering array than listed in these tables, this will only be of interest for me in exceptional cases and for very small arrays. You can report such arrays to [@chrispbsmolen](https://github.com/chrispbsmolen) for his repository `ca-tools`.
+I provide a frozen status of Charles Colbourn's covering array tables at [https://github.com/ugroempi/CAs/blob/main/ColbournTables.md](https://github.com/ugroempi/CAs/blob/main/ColbournTables.md). I do not update or maintain them. If you (believe to) have found a smaller covering array than listed in these tables, this will only be of interest for me in exceptional cases and for very small arrays. You can report such arrays to [the repository maintained by @chrispbsmolen](https://chrispbsmolen.github.io/ca-tools/), where you also find instructions on how to submit.
 
 ### Pull Requests
 If you think that you have a contribution to make, one way of doing so may be a pull request (PR). Typically, a pull request should be initiated via an issue. The discussion following that issue may then lead to in invitation to submit a PR.
