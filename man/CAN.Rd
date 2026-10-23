@@ -43,9 +43,9 @@
 \alias{k_recBoseCA}
 \title{Functions for N and k from Colbourn tables, other libraries, and implemented constructions}
 \usage{
-eCAN(t, k, v)
+eCAN(t, k, v, frozen=TRUE)
 
-eCAK(t, N, v)
+eCAK(t, N, v, frozen=TRUE)
 
 Ns(t, k, v, exclude=NULL)
 
@@ -142,6 +142,8 @@ which need to calculate sizes of best ingredients}
 
 \item{cmax}{integer number: maximum \code{c} to consider for projection (\code{N_projBoseCA} returns \code{NA},
 if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)}
+
+\item{frozen}{logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available}
 }
 \value{
 \code{eCAN} returns a data frame with the smallest known run size
@@ -167,8 +169,10 @@ table or library, the returned results are missing values.
 }
 \description{
 The functions extract the number of runs needed for a specified setting
-according to the Colbourn tables, according to the NIST library of CAs
-and the Torres-Jimenez library of CAs, as well as according to implemented constructions
+according to the Colbourn tables or the more current Smolen tables,
+according to the NIST library of CAs
+and the Torres-Jimenez library of CAs,
+as well as according to implemented constructions
 and available catalogues. Or they extract the number of columns
 achievable for a specified number of runs.
 }

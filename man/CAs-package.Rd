@@ -43,6 +43,8 @@ So far, the following constructions for uniform CAs have been implemented:
 \item Chateauneuf and Kreher (2002) doubling in function \code{\link{CK_doublingCA}} (workhorse function \code{\link{CK_doubling}})
 \item strength 3 CAs for v=3,4,5 with up to 2v columns in 33, 88 or 185 runs (\code{\link{miscCA}})
 \item strength 3 CAs for v=q+1 with q a prime power, and k<=v, based on augmenting an ordered design with further runs (Cohen, Colbourn and Ling 2003 and 2008)
+\item strength 3 CAs for v a prime power, based on projective geometry (Raaphorst, Moura and Stevens 2014) in function \code{\link{RMScopiesCA}} (with \code{m=0})
+\item strength 3 CAs for v a prime power, based on designs from the previous bullet by a method for extending columns (Mickael Bergeron with the help of Claude, October 2026) in function \code{\link{RMScopiesCA}} (with \code{m>0})
 \item the Colbourn and Torres-Jimenez (2010) power construction in function \code{\link{powerCA}}
 \item the Sherwood, Martirosyan and Colbourn (2006) construction based on SCPHFs and permutation vectors, including not only the SCPHFs from the Sherwood et al. paper but also those provided by Walker and Colbourn (2009) and by Lanus (based on Colbourn and Lanus 2018 and Colbourn, Lanus and Sarkar 2018) in function \code{\link{scphfCA}}
 \item the construction based on CPHFs using CPHFs from Wagner, Colbourn and Simos (2022) in function \code{\link{cphfCA}}
@@ -205,6 +207,8 @@ Na, J. (2021). Perfect Sequence Covering Arrays. Master's thesis at Simon Fraser
 Nayeri, P., Colbourn, C.J., Konjevod, G., (2013). Randomized post-optimization of covering arrays. European Journal of Combinatorics 34, 91-103. https://doi.org/10.1016/j.ejc.2012.07.017
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025). \url{https://math.nist.gov/coveringarrays/}.
+
+Raaphorst, S., Moura, L. and Stevens, B. (2014). A construction for strength-3 covering arrays from linear feedback shift register sequences. Designs, Codes and Cryptography 73, 949-968. https://doi.org/10.1007/s10623-013-9835-2
 
 Sherwood, G.B., Martirosyan, S.S., Colbourn, C.J. (2006). Covering arrays of higher strength from permutation vectors. J. of Combinatorial Designs 14, 202-213. https://doi.org/10.1002/jcd.20067
 

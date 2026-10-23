@@ -1,8 +1,10 @@
 #' Functions for N and k from Colbourn tables, other libraries, and implemented constructions
 #'
 #' The functions extract the number of runs needed for a specified setting
-#' according to the Colbourn tables, according to the NIST library of CAs
-#' and the Torres-Jimenez library of CAs, as well as according to implemented constructions
+#' according to the Colbourn tables or the more current Smolen tables,
+#' according to the NIST library of CAs
+#' and the Torres-Jimenez library of CAs,
+#' as well as according to implemented constructions
 #' and available catalogues. Or they extract the number of columns
 #' achievable for a specified number of runs.
 #'
@@ -52,8 +54,8 @@
 #' @aliases k_fuseBushtCA
 #' @aliases k_recBoseCA
 #'
-#' @usage eCAN(t, k, v)
-#' @usage eCAK(t, N, v)
+#' @usage eCAN(t, k, v, frozen=TRUE)
+#' @usage eCAK(t, N, v, frozen=TRUE)
 #' @usage Ns(t, k, v, exclude=NULL)
 #' @usage Ns_derive(t, k, v, exclude=NULL)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
@@ -104,6 +106,7 @@
 #' @param type character string: \code{"PCA"} or \code{"CA"}
 #' @param cmax integer number: maximum \code{c} to consider for projection (\code{N_projBoseCA} returns \code{NA},
 #' if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)
+#' @param frozen logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available
 #'
 #' @details
 #' Functions \code{eCAN} and \code{eCAK} provide the current best \code{N} for a given \code{k}
@@ -229,7 +232,8 @@ Ns <- function(t, k, v, exclude=NULL){
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
   if (!all(exclude %in% c("KSK","PALEY", "CAEX", "CYCLOTOMY",
-                          "CKRS", "SCA_Busht", "fuseBoseCA", "fuseBushtCA",
+                          "CKRS", "RMScopiesCA",
+                          "SCA_Busht", "fuseBoseCA", "fuseBushtCA",
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK", "pcaCA", "dpCA",
@@ -248,6 +252,7 @@ Ns <- function(t, k, v, exclude=NULL){
     CAEX=ifelse("CAEX" %in% exclude, NA,N_CAEX(t,k,v)),
     CYCLOTOMY=ifelse("CYCLOTOMY" %in% exclude, NA, N_CYCLOTOMYcat(t,k,v)),
     CKRS=ifelse("CKRS" %in% exclude, NA,N_CKRScat(t,k,v)),
+    RMScopiesCA=ifelse("RMScopiesCA" %in% exclude, NA,N_RMScopiesCA(t,k,v)),
  #   SCA_Busht=ifelse("SCA_Busht" %in% exclude, NA,N_SCA_Busht(t,k,v)),
     miscCA=ifelse("miscCA" %in% exclude, NA,N_miscCAcat(t,k,v)),
     compositCA=ifelse("compositCA" %in% exclude, NA, N_compositCA(t,k,v)),
@@ -408,30 +413,44 @@ Ns_productCA <- function(t=2, k, v){
 
 ## obtain known smallest CA sizes from Colbourn catalogue
 #' @export
-eCAN <- function(t,k,v){
-  hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
+eCAN <- function(t,k,v, frozen=TRUE){
+  if (!is.null(smolenBigFrame) && !frozen){
+    hilf <- smolenBigFrame[which(smolenBigFrame$t==t & smolenBigFrame$v==v),]
+    sourceCol <- "construction"
+  }
+  else{
+    hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
+    sourceCol <- "Source"
+  }
   #  genau <- which(hilf$k==k)
   #  if (length(genau)==1)
   #    return(hilf$N[genau]) else
   hilf <- hilf[which(hilf$k>=k),]
   if (nrow(hilf)==0) return(data.frame(CAN=NA, Source=""))
   zeile <- which.min(hilf$N)
-  hilf <- hilf[zeile,c("N","Source")]
+  hilf <- hilf[zeile,c("N", sourceCol)]
   colnames(hilf) <- c("CAN", "Source")
   rownames(hilf) <- NULL
   hilf
 }
 
 #' @export
-eCAK <- function(t,N,v){
-  hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
+eCAK <- function(t,N,v, frozen=TRUE ){
+  if (!is.null(smolenBigFrame) && !frozen){
+    hilf <- smolenBigFrame[which(smolenBigFrame$t==t & smolenBigFrame$v==v),]
+    sourceCol <- "construction"
+  }
+  else{
+    hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
+    sourceCol <- "Source"
+  }
   #  genau <- which(hilf$k==k)
   #  if (length(genau)==1)
   #    return(hilf$N[genau]) else
   hilf <- hilf[which(hilf$N<=N),]
   if (nrow(hilf)==0) return(data.frame(CAK=NA, Source=""))
   zeile <- which.max(hilf$k)
-  hilf <- hilf[zeile,c("k","Source")]
+  hilf <- hilf[zeile,c("k", sourceCol)]
   colnames(hilf) <- c("CAK", "Source")
   rownames(hilf) <- NULL
   hilf
@@ -558,6 +577,7 @@ ks <- function(t, N, v){
     CK_NRB=k_CK_NRB(t,N,v),
     CYCLOTOMY=k_CYCLOTOMYcat(t,N,v),
     CKRS=k_CKRScat(t,N,v),
+    RMScopiesCA=k_RMScopiesCA(t,N,v),
     miscCA=k_miscCAcat(t,N,v),
     fuseBoseCA=k_fuseBoseCA(t,N,v),
   #  SCA_Busht=k_SCA_Busht(t,N,v),

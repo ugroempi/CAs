@@ -5,7 +5,6 @@
 \alias{RMScopiesCA}
 \alias{N_RMScopiesCA}
 \alias{k_RMScopiesCA}
-\alias{RMScopies_tested}
 \title{Strength 3 CAs from the Raaphorst-Moura-Stevens construction, extended by shifted column copies}
 \usage{
 RMScopiesCA(k, v, ...)
@@ -15,10 +14,6 @@ RMScopies(q, m=0, tested_only=TRUE)
 N_RMScopiesCA(t=3, k, v, tested_only=TRUE, ...)
 
 k_RMScopiesCA(t=3, N, v, tested_only=TRUE, ...)
-
-RMScopies_tested
-
-RMScopies_tested
 }
 \arguments{
 \item{q}{integer: a prime or prime power}
@@ -27,7 +22,7 @@ RMScopies_tested
 \code{0 <= m <= q^2+q+1} (\code{m=0} for \code{q=2})}
 
 \item{tested_only}{logical: if \code{TRUE} (default), only the combinations
-\code{(q, m)} listed in \code{RMScopies_tested} are allowed.
+\code{(q, m)} listed in \code{\link{rmsCOPIEScat}} are allowed.
 \code{RMScopies(q, m, tested_only=FALSE)} builds other combinations
 for exploration (e.g. as examples or counterexamples for the proof);
 such arrays should be checked with \code{caverify::ca_verify}.}
@@ -43,8 +38,7 @@ such arrays should be checked with \code{caverify::ca_verify}.}
 \item{...}{currently not used}
 }
 \value{
-\code{RMScopies_tested} is a data frame with columns \code{q},
-\code{m}, \code{k} (= q^2+q+1+m), \code{N} (run size) and \code{verifier}.\cr
+\code{N} (run size) and \code{verifier}.\cr
 Function \code{RMScopiesCA} returns a matrix of class \code{ca}
 with attributes, which is a strength 3 covering array.\cr
 Function \code{RMScopies} returns a matrix without class and attributes,\cr
@@ -60,83 +54,35 @@ each of which is a shifted copy of an existing column, plus a few layers of
 additional runs.
 }
 \details{
-\bold{Tested parameters}: the data frame \code{RMScopies_tested} lists all
-combinations \code{(q, m)} for which the array produced by this R code was
-verified exhaustively (all triples of columns, all value combinations).
-\code{RMScopiesCA(k, v)} and \code{N_RMScopiesCA} only use these combinations:
-for k columns they take the smallest tested number of copies that is at least
-\code{k - (v^2+v+1)}, and keep
-the first k columns (dropping columns of a CA yields a CA). Extend the data
-frame after verifying further cases.
-The proof that the construction is valid for all (q, m) has not yet been
-checked independently; until it is, only the tested combinations are used
-by default.
-
-All arithmetic is in the Galois field GF(q), as provided by
-\code{\link[lhs]{create_galois_field}} (elements coded as 0, ..., q-1;
-for prime q, this is arithmetic modulo q).
-
-\bold{Base array} (\code{m=0}, Raaphorst, Moura and Stevens 2014):
-the k0 = q^2+q+1 columns correspond to the points \eqn{p_j}{p_j} of the
-projective plane PG(2,q), ordered as the powers of a root of a primitive
-cubic polynomial over GF(q) (Singer cycle).
-The array consists of a row of zeroes, a block B1 with entries
-\eqn{x \cdot p_j}{x.p_j} for all non-zero x in GF(q)^3, and a block B2
-constructed in the same way with the column order reversed.
-Three columns that are collinear in B1 are not collinear in B2, so that
-all triples of columns are covered.
-
-\bold{Shifted copies} (\code{m>=1}): new column \eqn{n_i}{n_i} is a copy of
-column \eqn{c_i = i}{c_i = i} in the zero row and in B1, and equals
-\eqn{c_i + 1}{c_i + 1} (in GF(q)) in B2. The only uncovered 3-tuples are then
-found in column triples \eqn{\{c_i, n_i, w\}}{{c_i, n_i, w}}, for differences
-\eqn{n_i - c_i}{n_i - c_i} different from 0 and 1 (field elements coded 2, ..., q-1).
-
-\bold{Layers} (\code{m>=2}): each layer consists of q^2 runs indexed by
-y in GF(q)^2. The q+1 directions of PG(1,q) yield q+1 mutually orthogonal
-linear functions \eqn{y \cdot P}{y.P}. In a layer, up to q copies are active:
-active copy i receives its own direction (\eqn{c_i = y \cdot P_s}{c_i = y.P_s},
-\eqn{n_i = y \cdot P_s + e}{n_i = y.P_s + e}),
-all other columns receive direction \eqn{P_0}{P_0}. Each copy is active in
-q-2 layers, with e running through the field elements coded 2, ..., q-1. A final run (0 for the original columns,
-1 for the new columns) covers the image of x=0 in B2.
-The number of layers is \eqn{L = \max(q-2, \lceil m(q-2)/q \rceil)}{L = max(q-2, ceiling(m(q-2)/q))}.
-
-For \code{m=1}, the q(q-2) layers' worth of runs are replaced by q^2(q-2) simple runs
-(column \eqn{c_1=a}{c_1=a}, column \eqn{n_1 = a+e}{n_1 = a+e}, all other columns equal to s),
-and no final run is needed.
-
-Run sizes: \eqn{2q^3-1}{2q^3-1} for \code{m=0},
-\eqn{2q^3-1+q^2(q-2)}{2q^3-1+q^2(q-2)} for \code{m=1},
-\eqn{2q^3+q^2 L}{2q^3+q^2 L} for \code{m>=2}.
-
-Compared to the Colbourn tables (status November 2024), this improves
-78 entries: v=5 (k=32,...,37), v=7 (k=58,...,65), v=8 (k=74,...,81),
-v=9 (k=92,...,101), v=11 (k=134,...,145), v=13 (k=184,...,197),
-v=19 (k=382,...,401); for example CA(324; 3, 32, 5) instead of 349 runs,
-CA(350; 3, 37, 5) instead of 365 runs, and CA(2025; 3, 100, 9) instead of 2169 runs.
+For \code{m=0}, the construction was proven by Raaphorst, Moura and Stevens (2014).
+The extension for \code{m>0} was developed and implemented
+in 2026 by Mickael Bergeron with Claude. As the mathematical proof
+of validity for all pairs \code{(q, m)} with \code{m>0}
+has not yet been checked independently by a human, the verified parameter
+sets stored in \code{\link{rmsCOPIEScat}} are the basis of function
+\code{RMScopiesCA}, while function \code{RMScopies} can also apply the
+construction for non-verified pairs on request. Mathematical detail can be found
+in the documentation for \code{\link{rmsCOPIEScat}}.
 }
 \examples{
 D <- RMScopies(5)        ## the RMS array CA(249; 3, 31, 5)
 dim(D)
+eCAN(3,31,5) ## best according to the Colbourn tables
 E <- RMScopiesCA(32, 5)  ## CA(324; 3, 32, 5)
 dim(E)
+eCAN(3,32,5) ## E is 25 runs smaller
 N_RMScopiesCA(3, 36, 5)  ## 325
 N_RMScopiesCA(3, 37, 5)  ## 350
 k_RMScopiesCA(3, 325, 5)  ## 36
-head(RMScopies_tested)
+head(rmsCOPIEScat)
 ## an untested combination is refused unless explicitly requested
 try(RMScopies(11, 50))
 dim(RMScopies(11, 50, tested_only=FALSE))
 F <- RMScopiesCA(22, 4)  ## prime power: CA(159; 3, 22, 4)
 dim(F)
-\dontrun{
-caverify::ca_verify(E, 3)$covered
-}
+Ns(3,22,4) ## not best but among the smaller ones
 
 }
 \references{
-Raaphorst, S., Moura, L. and Stevens, B. (2014). A construction for
-strength-3 covering arrays from linear feedback shift register sequences.
-Designs, Codes and Cryptography 73, 949-968.
+Raaphorst, Moura and Stevens (2014)
 }

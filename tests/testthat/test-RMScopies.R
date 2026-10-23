@@ -77,12 +77,12 @@ test_that("RMScopies works", {
   }
 
   ## tested parameters
-  expect_s3_class(RMScopies_tested, "data.frame")
-  expect_true(all(c("q", "m", "k", "N", "verifier") %in% names(RMScopies_tested)))
-  expect_false(any(duplicated(RMScopies_tested[, c("q", "m")])))
-  for (r in which(RMScopies_tested$q <= 5 & RMScopies_tested$m %in% c(0, 1, 2, 5)))
-    expect_equal(nrow(RMScopies(RMScopies_tested$q[r], RMScopies_tested$m[r])),
-                 RMScopies_tested$N[r])
+  expect_s3_class(rmsCOPIEScat, "data.frame")
+  expect_true(all(c("q", "m", "k", "N", "verifier") %in% names(rmsCOPIEScat)))
+  expect_false(any(duplicated(rmsCOPIEScat[, c("q", "m")])))
+  for (r in which(rmsCOPIEScat$q <= 5 & rmsCOPIEScat$m %in% c(0, 1, 2, 5)))
+    expect_equal(nrow(RMScopies(rmsCOPIEScat$q[r], rmsCOPIEScat$m[r])),
+                 rmsCOPIEScat$N[r])
   ## untested combinations: refused unless explicitly requested
   expect_error(RMScopies(11, 50))
   expect_true(is.na(N_RMScopiesCA(3, 183, 11)))

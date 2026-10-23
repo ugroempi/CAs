@@ -266,7 +266,8 @@ labelToCode <- function(label, t, k, v, ...){
   }
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("KSK","PALEY",
-  "CAEX", "CYCLOTOMY", "CKRS", "miscCA", "recBoseCA_PCA", "SCA_Busht",
+  "CAEX", "CYCLOTOMY", "CKRS", "RMScopiesCA",
+  "miscCA", "recBoseCA_PCA", "SCA_Busht",
   "fuseBoseCA", "fuseBushtCA",
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
@@ -320,6 +321,10 @@ labelToCode <- function(label, t, k, v, ...){
     ## as of June 2025, the 2-level CAs of TJ
     if (!v==2) stop('"TJ" requires v=2')
     aus <- paste0("tjCA(", t, ", ", k, ", ", v, ")")
+  }
+  if (label =="RMScopiesCA"){
+    if (!t==3) stop('"RMScopiesCA" requires t=3')
+    aus <- paste0("RMScopiesCA(", k, ", ", v, ")")
   }
   if (label =="CK_doublingCA"){
     if (!t==3) stop('"CK_doublingCA" requires t=3')
