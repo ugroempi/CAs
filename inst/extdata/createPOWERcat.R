@@ -6,8 +6,8 @@
 ## remove N-CT and "Arc" and "S"
 whichCTnormal <- setdiff(grep("CT", colbournBigFrame$Source),
                          c(grep("N-CT", colbournBigFrame$Source),
-                           grep("Arc", colbournBigFrame$Source),
-                           grep("S", colbournBigFrame$Source)))
+                           grep("Arc", colbournBigFrame$Source)))
+                         #,grep("S", colbournBigFrame$Source)))
 powerCTcat <- colbournBigFrame[whichCTnormal,]
 powerCTcat <- powerCTcat[which(powerCTcat$N<=1000000),]
 N <- powerCTcat$N
@@ -18,21 +18,36 @@ plus <- as.numeric(gsub("c","",plus))
 Pbase <- as.numeric(substr(sapply(strsplit(powerCTcat$Source, "^", fixed=TRUE),
                                   function(obj) obj[1]), 9, 99))
 exponent <- as.numeric(sapply(strsplit(
+  sapply(strsplit(
               sapply(strsplit(
                 sapply(strsplit(
                   sapply(strsplit(
                     powerCTcat$Source, "^", fixed=TRUE), function(obj) obj[2]),
                       "T", fixed=TRUE), function(obj) obj[1]),
-                      ",", fixed=TRUE), function(obj) obj[1]),
+                "S", fixed=TRUE), function(obj) obj[1]),
+              ",", fixed=TRUE), function(obj) obj[1]),
                       "+", fixed=TRUE), function(obj) obj[1]))
 powerCTcat[!k <= Pbase^exponent,] ## only homogeneous DHFs with "+ something"
 
 powerCTcat <- cbind(powerCTcat, Pbase=Pbase, expon=exponent)
 powerCTcat$OAforDHF <- ""
+powerCTcat[which(!powerCTcat$Pbase %in% primedat$q),]$OAforDHF <- "to be found"
+## handle non-prime cases that can be handled
 powerCTcat[which(!powerCTcat$Pbase %in% primedat$q),]
 powerCTcat[which(powerCTcat$Pbase==12 & powerCTcat$expon==3),]$OAforDHF <- "miscCA(3,6,12)"
 powerCTcat[which(powerCTcat$Pbase==12 & powerCTcat$expon==2),]$OAforDHF <- "miscCA(2,7,12)"
-powerCTcat[which(powerCTcat$Pbase>=68 & !powerCTcat$Pbase %in% primedat$q),]$OAforDHF <- "to be found"
+## 68  72  80  84  90  98 100 can be attempted with cross product
+## but this only works for a few special cases, as 7 DHF rows are needed for strength 5
+## the number of columns is the minimum number of columns of arrays involved
+## which is a limiting factor
+# powerCTcat[which(powerCTcat$Pbase==68 & powerCTcat$expon==2),]$OAforDHF <- "crossCAs(SCA_Bose(4), SCA_Bose(17)[,1:5])"
+powerCTcat[which(powerCTcat$Pbase==72 & powerCTcat$expon==2),]$OAforDHF <- "crossCAs(SCA_Bose(8), SCA_Bose(9)[,1:9])"
+# powerCTcat[which(powerCTcat$Pbase==80 & powerCTcat$expon==2),]$OAforDHF <- "crossCAs(SCA_Bose(5), SCA_Bose(16[,1:6]))"
+# powerCTcat[which(powerCTcat$Pbase==84 & powerCTcat$expon==2),]$OAforDHF <- "crossCAs(SCA_Bose(4)[,1:4], crossCAs(SCA_Bose(3), SCA_Bose(7)[,1:4]))"
+# powerCTcat[which(powerCTcat$Pbase==90 & powerCTcat$expon==2),]$OAforDHF <- "crossCAs(DoE.base::L4.2.3-1, crossCAs(SCA_Bose(5)[,1:3], SCA_Bose(9)[,1:3]))"
+# powerCTcat[which(powerCTcat$Pbase==98 & powerCTcat$expon==2),]$OAforDHF <- "crossCAs(DoE.base::L4.2.3-1, SCA_Bose(49)[,1:3])"
+powerCTcat[which(powerCTcat$Pbase==100 & powerCTcat$expon==2 & powerCTcat$t==3),]$OAforDHF <- "crossCAs(SCA_Bose(4), SCA_Bose(25)[,1:5])"
+
 powerCTcat[powerCTcat$Pbase %in% primedat$q,]$OAforDHF <- paste0("SCA_Busht(",
       powerCTcat[powerCTcat$Pbase %in% primedat$q,]$Pbase,
       ",",powerCTcat[powerCTcat$Pbase %in% primedat$q,]$expon,")")
@@ -45,8 +60,10 @@ powerCTcat$M <- sapply(1:nrow(powerCTcat), function(i){
   toa <- powerCTcat$expon[i]
   tdhf <- powerCTcat$t[i]
   vdhf <- powerCTcat$v[i]
+  try({
   OA <- eval(parse(text=oatext))
   nrow(createDHF(OA, toa, tdhf, vdhf))
+  })
 })
 
 ## check plausibility
@@ -62,8 +79,11 @@ powerCTcat$w4 <- NA; powerCTcat$u4 <- 0
 
 ## remove first eight characters (Power CT) from Source entry
 hilf <- substr(powerCTcat$Source, 9, 99)
-## remove the "c" (whose meaning has not yet been found)
+## remove the "c" (which stands for using constant row property of ingredient(s))
 hilf <- gsub("c", "", hilf, fixed=TRUE)
+## now, if present, "S" is the last component
+hilf <- strsplit(hilf, "S", fixed=TRUE)
+hilf <- sapply(hilf, function(obj) obj[1])
 ## split at the "T", which indicates numbers of levels to remove
 hilf <- strsplit(hilf, "T", fixed=TRUE)
 

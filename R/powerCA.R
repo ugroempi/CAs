@@ -97,12 +97,23 @@ powerCA <- function(t, k, v, type="CT", ...){
   w1 <- hilf$w1[r]
   DHF <- createDHF(oaDHF, toa, t, v)
   M <- nrow(DHF)
+  ## is this still adequate for S constructions?
   stopifnot(M==hilf$M[r])
+  ## for some S constructions, DHF has more than w1 levels
+  nlevDHF <- length(unique(DHF[1,]))
+  if (nlevDHF > w1){
+    stopifnot(nlevDHF - w1==1)
+    ## reduce all rows by one element, so that
+    ## as little as possible code has to change
+    DHF <- Tred(DHF, 1:M, 1)
+  }
 
   ## first OA
   N1 <- hilf$N1[r]
   D1 <- eval(parse(text=labelToCode(hilf$constr1[r], t, w1, v)))[,1:w1]
-  if (N1 > 250) D1 <- maxconstant(D1, one_is_enough = TRUE) else D1 <- maxconstant(D1)
+## modify to use fast version, once this becomes available
+  if (N1 > 250) D1 <- maxconstant(D1, one_is_enough = TRUE) else
+    D1 <- maxconstant(D1)
 
   CAlist <- list(D1)
 
@@ -139,7 +150,7 @@ powerCA <- function(t, k, v, type="CT", ...){
     red <- w1-w2
     DHF <- Tred(DHF, rs, red)
   }
-  aus <- DHHF2CA(DHF, CAlist, v=v, one_is_enough=TRUE)[, 1:k]
+  aus <- DHHF2CA(DHF, CAlist, v=v, one_is_enough=TRUE)# [, 1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "Call") <- Call
   attr(aus, "t") <- t
