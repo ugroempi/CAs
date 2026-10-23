@@ -4,11 +4,23 @@ Changes since latest release,
 version 0.25
 
  - added function RMScopies (with RMScopiesCA, N_RMScopiesCA, k_RMScopiesCA
-   and the data frame RMScopies_tested) for strength 3 CAs from the Raaphorst-Moura-Stevens
+   and the data frame rmsCOPIEScat) for strength 3 CAs from the Raaphorst-Moura-Stevens
    construction, extended by shifted column copies (contributed by Mickael
-   Bergeron); restricted to exhaustively verified parameters for now
+   Bergeron); per default, restricted to exhaustively verified parameters for now
+ - integrated the RMScopies set of functions into the package 
+   infrastructure (Ns, bestCA, bestN)
+ - added the data frame smolenBigFrame (loaded on package load, 
+   if a working internet connection is available), 
+   which can be activated
+   instead of colbournBigFrame as the basis for functions 
+   eCAN and eCAK. As this is still expected to develop with 
+   potential breaking changes, it is not made the default yet.
+ - added power constructions with "S" in them to powerCTcat;
+   more changes are expected from the new RMScopies designs 
+   as ingredients, as some ingredients in powerCTcat are 
+   as yet quite poor
 
-version 0.24-4
+October 23 2026, version 0.24-4
 
  - deleted a outdated sentence from CAs-package.R
  - updated text on a special case for the Paley construction in DataForMathematical
