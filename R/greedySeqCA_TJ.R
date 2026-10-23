@@ -60,12 +60,10 @@
 #' ## differences become smaller (still relevant esp. for larger cases)
 #' ## formerly relatively unlucky
 #' nrow(A <- greedySeqCA_TJ(5, 3, seed=222))
-#' coverageSeqCA(A, 3)
 #'
 #' ## iteration, with good seed
 #' nrow(Aiter <- iter_greedySeqCA_TJ(8, 5, 3, seed_init=9055))
 #'   ## brings the run size down to 7
-#' coverageSeqCA(Aiter, 3)
 
 #' @export
 greedySeqCA_TJ <- function(k, t, postopt=TRUE, seed=NULL, ...){
