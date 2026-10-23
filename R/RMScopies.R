@@ -10,11 +10,13 @@
 #' @aliases RMScopiesCA
 #' @aliases RMScopies
 #' @aliases N_RMScopiesCA
+#' @aliases k_RMScopiesCA
 #' @aliases RMScopies_tested
 #'
 #' @usage RMScopiesCA(k, v, ...)
 #' @usage RMScopies(q, m=0, tested_only=TRUE)
 #' @usage N_RMScopiesCA(t=3, k, v, tested_only=TRUE, ...)
+#' @usage k_RMScopiesCA(t=3, N, v, tested_only=TRUE, ...)
 #' @usage RMScopies_tested
 #'
 #' @param k integer: the target number of columns
@@ -23,6 +25,7 @@
 #' @param m integer: the number of added columns (shifted copies),
 #'          \code{0 <= m <= q^2+q+1} (\code{m=0} for \code{q=2})
 #' @param t integer: the target strength (always 3)
+#' @param N integer: the available number of runs
 #' @param tested_only logical: if \code{TRUE} (default), only the combinations
 #'          \code{(q, m)} listed in \code{RMScopies_tested} are allowed.
 #'          \code{RMScopies(q, m, tested_only=FALSE)} builds other combinations
@@ -93,7 +96,9 @@
 #' with attributes, which is a strength 3 covering array.\cr
 #' Function \code{RMScopies} returns a matrix without class and attributes,\cr
 #' function \code{N_RMScopiesCA} returns the run size of the CA
-#' (\code{NA} if the construction is not applicable).
+#' (\code{NA} if the construction is not applicable),
+#' function \code{k_RMScopiesCA} returns the largest number of columns
+#' achievable with at most N runs (\code{NA} if none).
 #'
 #' @references Raaphorst, S., Moura, L. and Stevens, B. (2014). A construction for
 #' strength-3 covering arrays from linear feedback shift register sequences.
@@ -106,6 +111,7 @@
 #' dim(E)
 #' N_RMScopiesCA(3, 36, 5)  ## 325
 #' N_RMScopiesCA(3, 37, 5)  ## 350
+#' k_RMScopiesCA(3, 325, 5)  ## 36
 #' head(RMScopies_tested)
 #' ## an untested combination is refused unless explicitly requested
 #' try(RMScopies(11, 50))
@@ -119,7 +125,7 @@
 #' @export
 RMScopies <- function(q, m=0, tested_only=TRUE){
   stopifnot(length(q) == 1, q == round(q), q >= 2)
-  if (!.RMS_isprimepower(q)) stop("q must be a prime or prime power")
+  if (!q %in% primedat$q) stop("q must be a prime or prime power")
   k0 <- q^2 + q + 1
   stopifnot(m == round(m), m >= 0, m <= k0)
   if (q == 2 && m > 0) stop("for q=2, only m=0 is supported")
@@ -173,7 +179,7 @@ RMScopies <- function(q, m=0, tested_only=TRUE){
 RMScopiesCA <- function(k, v, ...){
   ## t=3 always holds
   Call <- sys.call()
-  if (!.RMS_isprimepower(v)) stop("v must be a prime or prime power")
+  if (!v %in% primedat$q) stop("v must be a prime or prime power")
   k0 <- v^2 + v + 1
   m <- max(0, k - k0)
   if (m > k0) stop("k must not exceed 2*(v^2+v+1)")
@@ -193,7 +199,7 @@ RMScopiesCA <- function(k, v, ...){
 #' @export
 N_RMScopiesCA <- function(t=3, k, v, tested_only=TRUE, ...){
   if (!t == 3) return(NA)
-  if (!.RMS_isprimepower(v)) return(NA)
+  if (!v %in% primedat$q) return(NA)
   q <- v; k0 <- q^2 + q + 1
   m <- max(0, k - k0)
   if (m > k0) return(NA)
@@ -203,6 +209,18 @@ N_RMScopiesCA <- function(t=3, k, v, tested_only=TRUE, ...){
     if (is.na(m)) return(NA)
   }
   .RMS_N(q, m)
+}
+
+#' @export
+k_RMScopiesCA <- function(t=3, N, v, tested_only=TRUE, ...){
+  if (!t == 3) return(NA)
+  if (!v %in% primedat$q) return(NA)
+  q <- v; k0 <- q^2 + q + 1
+  ms <- if (q == 2) 0 else 0:k0
+  if (tested_only) ms <- intersect(ms, RMScopies_tested$m[RMScopies_tested$q == q])
+  ms <- ms[sapply(ms, function(m) .RMS_N(q, m)) <= N]
+  if (length(ms) == 0) return(NA)
+  k0 + max(ms)
 }
 
 ## internal helpers
@@ -222,15 +240,9 @@ N_RMScopiesCA <- function(t=3, k, v, tested_only=TRUE, ...){
   if (length(cand) == 0) NA else min(cand)
 }
 
-.RMS_isprimepower <- function(n){
-  if (length(n) != 1 || !is.numeric(n) || n != round(n) || n < 2) return(FALSE)
-  p <- 2
-  while (n %% p != 0) p <- p + 1     ## smallest prime factor
-  while (n %% p == 0) n <- n / p
-  n == 1
-}
-
-## element-wise sum / product in GF(q), keeping the shape of x
+## element-wise sum / product in GF(q), keeping the shape of x;
+## vectorised versions of gf_sum / gf_prod (auxiliary_GFcalculus.R),
+## which loop over elements and would be slow for the large arrays (q = 19)
 .RMS_gf_plus <- function(x, y, gf){
   aus <- x
   aus[] <- gf$plus[cbind(as.vector(x) + 1, as.vector(y) + 1)]

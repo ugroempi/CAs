@@ -59,6 +59,23 @@ test_that("RMScopies works", {
   expect_equal(N_RMScopiesCA(3, 100, 9), 2025)
   expect_true(is.na(N_RMScopiesCA(3, 120, 10)))
 
+  ## number of columns for a given run size
+  expect_true(is.na(k_RMScopiesCA(3, 248, 5)))
+  expect_equal(k_RMScopiesCA(3, 249, 5), 31)
+  expect_equal(k_RMScopiesCA(3, 324, 5), 32)
+  expect_equal(k_RMScopiesCA(3, 349, 5), 36)
+  expect_equal(k_RMScopiesCA(3, 350, 5), 37)
+  expect_equal(k_RMScopiesCA(3, 3751, 11), 144)
+  expect_true(is.na(k_RMScopiesCA(4, 350, 5)))
+  expect_true(is.na(k_RMScopiesCA(3, 350, 6)))
+  ## k_ and N_ agree
+  for (v in c(7, 8, 9)) for (N in c(930, 1407, 1408, 2025, 3000)){
+    k <- k_RMScopiesCA(3, N, v)
+    if (is.na(k)) next
+    expect_lte(N_RMScopiesCA(3, k, v), N)
+    if (k < 2*(v^2 + v + 1)) expect_gt(N_RMScopiesCA(3, k + 1, v), N)
+  }
+
   ## tested parameters
   expect_s3_class(RMScopies_tested, "data.frame")
   expect_true(all(c("q", "m", "k", "N", "verifier") %in% names(RMScopies_tested)))
