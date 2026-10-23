@@ -5,7 +5,7 @@
 \alias{PALEYcat}
 \alias{CYCLOTOMYcat}
 \alias{rmsCOPIEScat}
-\title{Data for function mathematical constructions}
+\title{Data for mathematical constructions}
 \format{
 \code{CYCLOTOMYcat} is a data.frame in 213 rows
 with columns \code{t} (strength),

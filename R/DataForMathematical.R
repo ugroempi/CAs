@@ -1,6 +1,6 @@
 globalVariables(c("CYCLOTOMYcat", "PALEYcat", "rmsCOPIEScat"))
 
-#' Data for function mathematical constructions
+#' Data for mathematical constructions
 #'
 #' The data.frames CYCLOTOMYcat and PALEYcat support the identification of valid
 #' scenarii for use of the respective constructions, and the actual implementation.
