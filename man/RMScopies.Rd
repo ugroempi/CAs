@@ -65,6 +65,9 @@ for k columns they take the smallest tested number of copies that is at least
 \code{k - (v^2+v+1)}, and keep
 the first k columns (dropping columns of a CA yields a CA). Extend the data
 frame after verifying further cases.
+The proof that the construction is valid for all (q, m) has not yet been
+checked independently; until it is, only the tested combinations are used
+by default.
 
 All arithmetic is in the Galois field GF(q), as provided by
 \code{\link[lhs]{create_galois_field}} (elements coded as 0, ..., q-1;
