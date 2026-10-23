@@ -148,6 +148,21 @@ augmenting an ordered design with further runs (Cohen, Colbourn and Ling
 
 <li>
 
+strength 3 CAs for v a prime power, based on projective geometry
+(Raaphorst, Moura and Stevens 2014) in function <code>RMScopiesCA</code>
+(with <code>m=0</code>)
+</li>
+
+<li>
+
+strength 3 CAs for v a prime power, based on designs from the previous
+bullet by a method for extending columns (Mickael Bergeron with the help
+of Claude, October 2026) in function <code>RMScopiesCA</code> (with
+<code>m\>0</code>)
+</li>
+
+<li>
+
 the Colbourn and Torres-Jimenez (2010) power construction in function
 <code>powerCA</code>
 </li>
@@ -733,6 +748,14 @@ post-optimization of covering arrays. European Journal of Combinatorics
 
 NIST Covering Array Tables (last modified 2008, accessed 12 Jan 2025).
 <a href="https://math.nist.gov/coveringarrays/">https://math.nist.gov/coveringarrays/</a>.
+</p>
+
+<p>
+
+Raaphorst, S., Moura, L. and Stevens, B. (2014). A construction for
+strength-3 covering arrays from linear feedback shift register
+sequences. Designs, Codes and Cryptography 73, 949-968.
+<https://doi.org/10.1007/s10623-013-9835-2>
 </p>
 
 <p>
