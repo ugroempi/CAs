@@ -1,11 +1,14 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.24-4
-Authors@R: person(given = "Ulrike",
+Version: 0.25
+Authors@R: c(person(given = "Ulrike",
                     family = "Groemping",
                     role = c("aut", "cre"),
-                    email = "ulrike.groemping@bht-berlin.de")
+                    email = "ulrike.groemping@bht-berlin.de"),
+             person(given = "Mickael",
+                    family = "Bergeron", 
+                    role = "ctb")
 Description: Implements covering arrays, as proposed in 
     Groemping (2025) <doi:10.1109/ICSTW64639.2025.10962463>. 
     Uniform and mixed-level covering arrays are created and 

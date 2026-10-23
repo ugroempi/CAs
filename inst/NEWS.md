@@ -1,12 +1,15 @@
 # NEWS
 
 Changes since latest release,
-version 0.24-4
+version 0.25
 
  - added function RMScopies (with RMScopiesCA, N_RMScopiesCA, k_RMScopiesCA
    and the data frame RMScopies_tested) for strength 3 CAs from the Raaphorst-Moura-Stevens
    construction, extended by shifted column copies (contributed by Mickael
    Bergeron); restricted to exhaustively verified parameters for now
+
+version 0.24-4
+
  - deleted a outdated sentence from CAs-package.R
  - updated text on a special case for the Paley construction in DataForMathematical
  - bug fix: maxconstant now also works with missings in the clique rows,
