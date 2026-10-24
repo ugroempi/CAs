@@ -234,6 +234,10 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
   aus <- min(hilf)
   names(aus) <- names(hilf)[which.min(hilf)]
   if (!v %in% primedat$q){
+    ## this should not be restricted to nonprimes, some of the best
+    ##     designs are from fusing prime power level designs
+    ##     to smaller prime power levels
+    ##     e.g. 9 to 8
     minq <- min(primedat$q[which(primedat$q>v)])
     N_fuse <- bestN(t,k,minq)-2
     # delta <- min(primedat$q[which(primedat$q>v)]) - v
@@ -246,7 +250,7 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
     # }
     if (!is.na(N_fuse)){
        if (N_fuse < aus){
-         aus <- N_fuse - 2
+         aus <- N_fuse  ## bug fix 24 Oct 2026: had (again) "-2" before
          names(aus) <- paste0("fuse", minq-v, ":", names(N_fuse))
        }
     }
