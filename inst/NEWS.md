@@ -9,6 +9,10 @@ version 0.25
    Bergeron); per default, restricted to exhaustively verified parameters for now
  - integrated the RMScopies set of functions into the package 
    infrastructure (Ns, bestCA, bestN)
+ - modified the RMScopies functions to work for all primes with m=0, i.e., 
+   tested_only is relevant for m>0 only; added testcases for k_ and N_ for this 
+   (array construction for larger primes is somewhat slow and has not been 
+   included as a test case)
  - added the data frame smolenBigFrame (loaded on package load, 
    if a working internet connection is available), 
    which can be activated

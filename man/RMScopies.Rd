@@ -21,11 +21,13 @@ k_RMScopiesCA(t=3, N, v, tested_only=TRUE, ...)
 \item{m}{integer: the number of added columns (shifted copies),
 \code{0 <= m <= q^2+q+1} (\code{m=0} for \code{q=2})}
 
-\item{tested_only}{logical: if \code{TRUE} (default), only the combinations
+\item{tested_only}{logical: if \code{TRUE} (default), only
+constructions with \code{m=0} and the combinations
 \code{(q, m)} listed in \code{\link{rmsCOPIEScat}} are allowed.
-\code{RMScopies(q, m, tested_only=FALSE)} builds other combinations
+\code{RMScopies(q, m, tested_only=FALSE)} also builds other combinations
 for exploration (e.g. as examples or counterexamples for the proof);
-such arrays should be checked with \code{caverify::ca_verify}.}
+such arrays should be checked (or at least screened)
+with \code{caverify::ca_verify}.}
 
 \item{k}{integer: the target number of columns}
 

@@ -68,6 +68,10 @@ test_that("RMScopies works", {
   expect_equal(k_RMScopiesCA(3, 3751, 11), 144)
   expect_true(is.na(k_RMScopiesCA(4, 350, 5)))
   expect_true(is.na(k_RMScopiesCA(3, 350, 6)))
+  ## k_ and N_ work with m=0 outside of data.frame
+  ##      and tested_only=TRUE
+  expect_equal(k_RMScopiesCA(3, 24333, 23), 553)
+  expect_equal(N_RMScopiesCA(3, 400, 23), 24333)
   ## k_ and N_ agree
   for (v in c(7, 8, 9)) for (N in c(930, 1407, 1408, 2025, 3000)){
     k <- k_RMScopiesCA(3, N, v)

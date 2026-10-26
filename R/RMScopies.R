@@ -24,11 +24,13 @@
 #'          \code{0 <= m <= q^2+q+1} (\code{m=0} for \code{q=2})
 #' @param t integer: the target strength (always 3)
 #' @param N integer: the available number of runs
-#' @param tested_only logical: if \code{TRUE} (default), only the combinations
+#' @param tested_only logical: if \code{TRUE} (default), only
+#'          constructions with \code{m=0} and the combinations
 #'          \code{(q, m)} listed in \code{\link{rmsCOPIEScat}} are allowed.
-#'          \code{RMScopies(q, m, tested_only=FALSE)} builds other combinations
+#'          \code{RMScopies(q, m, tested_only=FALSE)} also builds other combinations
 #'          for exploration (e.g. as examples or counterexamples for the proof);
-#'          such arrays should be checked with \code{caverify::ca_verify}.
+#'          such arrays should be checked (or at least screened)
+#'          with \code{caverify::ca_verify}.
 #' @param ... currently not used
 #'
 #' @details
@@ -78,7 +80,7 @@ RMScopies <- function(q, m=0, tested_only=TRUE){
   k0 <- q^2 + q + 1
   stopifnot(m == round(m), m >= 0, m <= k0)
   if (q == 2 && m > 0) stop("for q=2, only m=0 is supported")
-  if (tested_only && !.RMS_tested(q, m))
+  if (tested_only && !.RMS_tested(q, m) && !m==0)
     stop("(q, m) = (", q, ", ", m, ") is not in rmsCOPIEScat; ",
          "use tested_only=FALSE to build it anyway, and verify the result")
   gf <- lhs::create_galois_field(q)
@@ -132,6 +134,7 @@ RMScopiesCA <- function(k, v, ...){
   k0 <- v^2 + v + 1
   m <- max(0, k - k0)
   if (m > k0) stop("k must not exceed 2*(v^2+v+1)")
+  if (m > 0)
   m <- .RMS_tested_m(v, m)   ## smallest tested m' >= m (columns are then dropped)
   if (is.na(m))
     stop("no tested RMScopies array for k = ", k, ", v = ", v,
@@ -153,7 +156,7 @@ N_RMScopiesCA <- function(t=3, k, v, tested_only=TRUE, ...){
   m <- max(0, k - k0)
   if (m > k0) return(NA)
   if (q == 2 && m > 0) return(NA)
-  if (tested_only){
+  if (tested_only && m > 0){
     m <- .RMS_tested_m(q, m)
     if (is.na(m)) return(NA)
   }
@@ -166,7 +169,10 @@ k_RMScopiesCA <- function(t=3, N, v, tested_only=TRUE, ...){
   if (!v %in% primedat$q) return(NA)
   q <- v; k0 <- q^2 + q + 1
   ms <- if (q == 2) 0 else 0:k0
-  if (tested_only) ms <- intersect(ms, rmsCOPIEScat$m[rmsCOPIEScat$q == q])
+  if (tested_only)
+    ms <- intersect(ms, rmsCOPIEScat$m[rmsCOPIEScat$q == q])
+  if (length(ms)==0 && N_RMScopiesCA(3, k0, v) <= N)
+    ms <- 0     ## not in tested cases, but m=0 can do it
   ms <- ms[sapply(ms, function(m) .RMS_N(q, m)) <= N]
   if (length(ms) == 0) return(NA)
   k0 + max(ms)
