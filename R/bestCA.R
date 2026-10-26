@@ -252,7 +252,7 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
     if (!is.na(N_fuse)){
        if (N_fuse < aus){
          aus <- N_fuse  ## bug fix 24 Oct 2026: had (again) "-2" before
-         names(aus) <- paste0("fuse", minq-v, ":", names(N_fuse))
+         names(aus) <- paste0("fuse", minq-v, ":", names(N_fuse),":", minq)
        }
     }
   }
