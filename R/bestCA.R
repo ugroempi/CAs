@@ -239,7 +239,8 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
     ##     to smaller prime power levels
     ##     e.g. 9 to 8
     minq <- min(primedat$q[which(primedat$q>v)])
-    N_fuse <- bestN(t,k,minq)-2
+      # minq is vprior
+    N_fuse <- bestN(t,k,minq)-2*(minq - v)
     # delta <- min(primedat$q[which(primedat$q>v)]) - v
     # hilf <- Ns_fuse(t,k,v,maxfuse=delta)
     # hilf <- hilf[,-which(colnames(hilf)=="eCAN"), drop=FALSE]
