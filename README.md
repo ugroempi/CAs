@@ -781,10 +781,10 @@ of Transversal Covers Using Group Divisible Designs. Ars Combinatoria
 
 <p>
 
-Torres-Jimenez, J. (without year, accessed 10 Feb 2025). Covering
-arrays. Formerly available at <code>www . tamps . cinvestav . mx / ~oc
-/</code> (blanks must be removed, but no longer functional, no
-alternative location known).
+Torres-Jimenez, J. (without year, last accessed 10 Feb 2025, arrays
+downloaded 6 Feb 2025). Covering arrays. Formerly available at <code>www
+. tamps . cinvestav . mx / ~oc /</code> (blanks must be removed, but no
+longer functional, no alternative location known).
 </p>
 
 <p>
