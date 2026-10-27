@@ -1,13 +1,15 @@
-## code for reading the 2-level files available in the extdata folder
+## code for reading the 2-level files available
+## from Jose Torres-Jimenez homepage in Feb 2025
+# original location of the files in Feb 2025
+# https://www.tamps.cinvestav.mx/~oc/CA/v2/t3/N54k968v2%5E968t3.ca
+
+## code for reading the files
 ## and storing them in TJ2level_CAs
 
 ## Author: Ulrike Groemping
 
-# original location of the files in Feb 2025
-# https://www.tamps.cinvestav.mx/~oc/CA/v2/t3/N54k968v2%5E968t3.ca
-# source of the files: Jose Torres-Jimenez homepage
-
-pfad_extdata <- system.file("extdata", package="CAs")
+############### prepare the list of arrays ########################################
+## pfad_extdata assigned outside of this file (a local path)
 fileloc <- paste(pfad_extdata, "TJ2level", sep="/")
 toberead <- list.files(fileloc)
 fns <- rownames(TJcat)[which(TJcat[,"v"]==2 & !TJcat$nameInTJ2level_CAs=="")]
@@ -25,10 +27,14 @@ for (i in 1:length(fns)){
 names(TJ2level_CAs) <- TJcat[fns,]$nameInTJ2level_CAs
 
 # save(TJ2level_CAs, file="D:/rtests/CAs/data/TJ2level_CAs.rda", compress="xz")
+########################################################################################
 
-## check that it works
+## check that function tjCA works as expected
 tjCA(3,21,2)  ## construction from the package
 tjCA(6,18,2)  ## stored array
+
+## initial state
+table(array=!TJcat$nameInTJ2level_CAs=="", replacement=!TJcat$replaceable=="")
 
 ### code that was used for removing arrays for reduced package size
 ### to be re-run sporadically for identifying new opportunities
@@ -38,33 +44,52 @@ tjCA(6,18,2)  ## stored array
 
 ## handle rows without stored arrays
 settings <- TJcat[which(TJcat$nameInTJ2level_CAs=="" & TJcat$replaceable=="" & TJcat$v==2),]
+dim(settings)   ## 27 Okt 2026: 53 rows, for which there are non-stored TJ arrays run sizes
+                ##              that the package can not reach or improve on
 for (i in 1:nrow(settings)){
-  hilf <- names(bestN(settings$t[i], settings$k[i], 2))
+  ## no stored array
+  print(i)
+  hilf <- bestN(settings$t[i], min(settings$k[i],10000), 2)
+  if (!is.na(hilf))
+  if (hilf <= settings$N[i]) hilf <- names(hilf) else next
+  else next
   if (!hilf=="TJ") settings$replaceable[i] <- hilf
 }
 settings <- settings[which(!settings$replaceable==""),] ## August 15 2025: 33 rows
                                                         ## CS_CK, CYCLOTOMY, PALEY, powerCT
+                                                       ## Oct 27 2026: 5 additional rows
+                                                            ## DWYER, powerCT
 TJcat[rownames(settings),]$replaceable <- settings$replaceable
+length(which(TJcat$nameInTJ2level_CAs=="" & !TJcat$replaceable=="" & TJcat$v==2))
 
 ## handle rows with stored arrays
 settings <- TJcat[which(!TJcat$nameInTJ2level_CAs==""),]
-settings$replaceable <- ""
+## settings$replaceable <- "" ## was initialized to ""
 for (i in 1:nrow(settings)){
   hilf <- names(bestN(settings$t[i], settings$k[i], 2))
-  if (!hilf=="TJ") settings$replaceable[i] <- hilf
+  if (!is.null(hilf))
+    if (!hilf=="TJ") settings$replaceable[i] <- hilf
 }
 
 table(settings$replaceable)
 ## do not remove arrays that are only on the Internet
+## but keep the code if the array is not available as TJ array
 settings$replaceable[which(settings$replaceable=="DWYER")] <- ""
 table(settings$replaceable) ## seven additional arrays removable July 10 2025
                             ## three additional arrays removable August 15 2025
+                            ## no additional arrays removable Oct 27 2026
 
 ## the following statement was only needed at the first round
 # TJcat$replaceable <- ""
+
 ## August 15 2025
 ## modified replaceable for CA(12, 3, 11, 2) to miscCA, as this has two constant rows
-TJcat["ca.3.2^11.txt",]$replaceable <- "miscCA"
+## TJcat["ca.3.2^11.txt",]$replaceable <- "miscCA" ## reverted October 27 2026,
+##     as it is nonsense; the 8 column one has two constant rows, there is no 11 column
+##     miscCA
+# TJcat["ca.3.2^11.txt",]$replaceable <- "PALEY"
+# TJcat["ca.3.2^11.txt",]$code <- "paleyCA(3, 11, 2)"
+
 
 TJcat[rownames(settings),]$replaceable <- settings$replaceable
 ## the following statement was only needed at the first round
@@ -73,11 +98,12 @@ TJcat[rownames(settings),]$code <- ""
 ## the following statement was only needed at the first round
 # TJcat$code[TJcat$v==3 & TJcat$t==2] <- paste0("CAEX(", TJcat$k[TJcat$v==3 & TJcat$t==2], ")")
 
-## powerCT CK_doublingCA CKRS CS_CK PALEY WKS
+## powerCT CK_doublingCA CKRS CS_CK PALEY WKS DWYER
+## settings <- TJcat[which(!TJcat$replaceable=="" & TJcat$code==""),] ## not needed, can also overwrite all
 TJcat$code[TJcat$replaceable=="powerCT"] <- paste0("powerCA(",
                                                    TJcat$t[TJcat$replaceable=="powerCT"],
                                                    ", ",
-                                                   TJcat$k[TJcat$replaceable=="powerCT"],
+                                                   pmin(10000, TJcat$k[TJcat$replaceable=="powerCT"]),
                                                    ", ",
                                                    TJcat$v[TJcat$replaceable=="powerCT"],
                                                          ")")
@@ -123,6 +149,13 @@ TJcat$code[TJcat$replaceable=="PALEY"] <- paste0("paleyCA(",
                                                  TJcat$k[TJcat$replaceable=="PALEY"],
                                                  ")")
 TJcat$code[TJcat$replaceable=="WKS"] <- paste0('WKS_CAs[["', TJcat$k[TJcat$replaceable=="WKS"], '"]]')
+TJcat$code[TJcat$replaceable=="DWYER"] <- paste0("dwyerCA(",
+                                                 TJcat$t[TJcat$replaceable=="DWYER"],
+                                                 ", ",
+                                                 TJcat$k[TJcat$replaceable=="DWYER"],
+                                                 ", ",
+                                                 TJcat$v[TJcat$replaceable=="DWYER"],
+                                                 ")")
 
 TJcat$code[TJcat$replaceable=="" & TJcat$code=="" & !TJcat$nameInTJ2level_CAs==""] <-
   paste0("TJ2level_CAs[['", TJcat$nameInTJ2level_CAs[TJcat$replaceable=="" &
@@ -141,6 +174,7 @@ pos <- 0
 for (i in 1:nrow(TJcat)){
   if (TJcat$v[i]==3) next
   if (TJcat$nameInTJ2level_CAs[i]=="" & TJcat$code[i]=="") next
+  if (TJcat$k[i]>10000) next
   pos <- pos + 1
   print(pos)
   print(rownames(TJcat)[i])
@@ -148,7 +182,7 @@ for (i in 1:nrow(TJcat)){
 }
 
 ## removed files from TJ2level_CAs (August 15 2025)
-## some files were still there though they names were NA
+## some files were still there though their names were NA
 TJ2level_CAs[which(is.na(names(TJ2level_CAs)))] <- NULL
 # file.remove(paste0("D:/rtests/CAs/inst/extdata/TJ2level/", fns_toberemoved))
 save(TJcat, file="D:/rtests/CAs/data/TJcat.rda", compress="xz")
@@ -158,9 +192,24 @@ save(TJ2level_CAs, file="D:/rtests/CAs/data/TJ2level_CAs.rda", compress="xz")
 settings <- TJcat[which(!TJcat$replaceable==""),]
 settings$replaceable2 <- ""
 for (i in 1:nrow(settings)){
-  hilf <- bestN(settings$t[i], settings$k[i], 2)
+  hilf <- bestN(settings$t[i], min(10000, settings$k[i]), 2)
   if (hilf<=settings$N[i]) settings$replaceable2[i] <- names(hilf)
 }
 table(settings$replaceable, settings$replaceable2)
 ## CS_CK and PALEY exchangeable, rest perfectly aligned
 ## perfectly aligned!
+
+## check whether everything runs with expected outcome
+## tracking also whether the run size of replacements
+##        is better or the same
+TJcat2 <- TJcat[which(TJcat$v==2),]
+for (i in 1:nrow(TJcat2)){
+  print(i)
+  Nfile <- TJcat2$N[i]
+  Nreplace <- try(nrow(tjCA(TJcat2$t[i], min(10000, TJcat2$k[i]), TJcat2$v[i])))
+  if (!"try-error" %in% class(Nreplace)){
+    if (Nfile < Nreplace) print(list(Status="Too large!", Nfile=Nfile, Nreplace=Nreplace))
+    if (Nfile == Nreplace) print="equal"
+    if (Nfile > Nreplace) print((list(Status="Better!", Nfile=Nfile, Nreplace=Nreplace)))
+  }
+}

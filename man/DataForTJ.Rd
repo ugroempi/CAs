@@ -27,13 +27,12 @@ An object of class \code{list} of length 141.
 }
 \source{
 The source is the no longer functional website \code{https://www.tamps.cinvestav.mx/~oc/} by
-Torres-Jimenez (without year). Web archive versions of that site are useless, because they
+Torres-Jimenez (without year), from which the arrays were downloaded on Feb 6th 2025.
+Web archive versions of that site are useless, because they
 do not include the arrays.\cr
 The creation of the objects is documented by R files in the \code{extdata}
 folder for this package, which can be located in the directory \code{inst/extdata}
-of the GitHub repo; the actual raw arrays
-can be found there as well (omitting large ones that can be constructed
-at least approximately by a recursive construction).
+of the GitHub repo.
 }
 \usage{
 TJcat
@@ -42,7 +41,7 @@ TJ2level_CAs
 }
 \description{
 The data.frame TJcat supports the identification of CAs from the
-list TJ2level_CAs
+list TJ2level_CAs or the creation of alternative arrays
 }
 \section{Details}{
 
@@ -52,15 +51,20 @@ covered by function \code{\link{CAEX}} of this package,\cr
 and on 2-level CAs of strengths 3 to 6.
 The list \code{TJ2level_CAs} holds actual arrays for the latter case.
 These have been selected by size, i.e., too large ones have been omitted.
-The unavailable 2-level arrays
-(empty string in column \code{TJ2level_CAs}) can \emph{in principle} be constructed
-by the construction of Colbourn and Torres-Jimenez (2010).
-In various cases, post-processing steps by Torres-Jimenez, not implemented in the package,
-reduced the run size of the pure construction or added a column to the pure construction.
-Furthermore, as not all ingredients are available in this package (yet),
-some sizes can not be achieved by the package. The size of the arrays
-has nevertheless precluded the inclusion of the larger arrays into the package, in the interest
-interest of limiting package size.
+Where the unavailable 2-level arrays
+(empty string in column \code{TJ2level_CAs}) can be replaced by other
+constructions from the package, these are named in the \code{replaceable} column
+(often the power construction with \code{powerCA} will yield such an array);
+a \code{code} column provides the code for the replacement construction.
+Some sizes can not (yet) be achieved by the package. The size of the arrays
+has nevertheless precluded the inclusion of the larger arrays into the package,
+in the interest
+interest of limiting package size.\cr
+Note that a few replacement constructions also yield slightly smaller arrays
+than those from the Torres-Jimenez repository.
+Generally, users can simply use the \code{\link{Ns}} function or the \code{\link{bestN}} function to find
+the best \bold{implemented} run size of this package; there is no need to work directly with
+\code{TJcat} or \code{TJ2level_CAs}.
 }
 
 \examples{
@@ -82,9 +86,15 @@ fivenum(ratio)
 ##    (i.e., colbournBigFrame would have to be updated)
 fun <- function(t,k,v) eCAN(t,k,v)$Source
 fun <- Vectorize(fun)
-
+## constructions behind non-stored 2-level arrays
+nonstored2level <- TJcat[TJcat$v==2 & TJcat$nameInTJ2level_CAs=="" & TJcat$replaceable=="", ]
+table(substr(fun(nonstored2level[,"t"], nonstored2level[,"k"], nonstored2level[,"v"]), 1, 8))
+## the remaining not-yet-replaceable arrays are mostly doable from Derive and Power CZ
+## constructions, which have not systematically (Derive) or not at all (Power CZ) been implemented
+## in this package so far.
 }
 \references{
-Colbourn and Torres-Jimenez (2010), Torres-Jimenez (without year), Torres-Jimenez (2021)
+Colbourn and Torres-Jimenez (2010), Torres-Jimenez (without year, download of arrays
+on Feb 6 2025), Torres-Jimenez (2021)
 }
 \keyword{datasets}
