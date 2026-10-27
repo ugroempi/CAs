@@ -1,7 +1,11 @@
-#' Function to obtain the best uniform CA for a combination of t, k and v
+#' Functions in support of obtaining the best uniform CA
+#' for a combination of t, k and v
 #'
-#' The function uses function Ns to find the best currently implemented
-#' CA for the requested scenario.
+#' Function bestCA uses function Ns to find the best currently implemented
+#' CA for the requested scenario. Function bestN just retrieves the best
+#' achievable run size. The other exported functions retrieve
+#' actual arrays from stored collections of arrays, either within
+#' the package or on the internet.
 #'
 #' @rdname bestCA
 #'
@@ -480,6 +484,10 @@ nistCA <- function(t, k, v, ...){
 #'@export
 tjCA <- function(t, k, v=2, ...){
   Call <- sys.call()
+  ## the function also implements replaceable constructions from
+  ##    TJcat; this may change in the future
+  ## the function should only be used if no other construction
+  ##    yields an equally good (or better) size.
   if (!v==2) stop("For v=3, use CAEX. v>3 was not yet implemented.")
   hilf <- TJcat[TJcat$t>=t & TJcat$v==v & TJcat$k>=k,]
   if (nrow(hilf)==0) stop("there is no suitable array in TJ2level_CAs")
@@ -499,7 +507,11 @@ tjCA <- function(t, k, v=2, ...){
   code <- hilf$code
   if (code=="") stop("this setting is not implemented in tjCA, \nuse function Ns for finding alternatives")
   aus <- eval(parse(text=code))
-  attr(aus, "comment") <- "called via tjCA"
+  attrs <- attributes(aus)
+  aus <- aus[,1:k]
+  attrs$dim[2] <- k
+  attributes(aus) <- attrs
+  attr(aus, "comment") <- c(attr(aus, "comment"), "called via tjCA")
   aus
 }
 

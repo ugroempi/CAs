@@ -7,7 +7,8 @@
 \alias{dwyerCA}
 \alias{nistCA}
 \alias{tjCA}
-\title{Function to obtain the best uniform CA for a combination of t, k and v}
+\title{Functions in support of obtaining the best uniform CA
+for a combination of t, k and v}
 \usage{
 bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...)
 
@@ -60,8 +61,11 @@ which is a uniform covering array of strength at least \code{t} with
 \code{k} columns at \code{v} levels.
 }
 \description{
-The function uses function Ns to find the best currently implemented
-CA for the requested scenario.
+Function bestCA uses function Ns to find the best currently implemented
+CA for the requested scenario. Function bestN just retrieves the best
+achievable run size. The other exported functions retrieve
+actual arrays from stored collections of arrays, either within
+the package or on the internet.
 }
 \section{Details}{
 
