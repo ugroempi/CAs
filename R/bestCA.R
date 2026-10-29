@@ -427,6 +427,23 @@ ckrsCA <- function(t, k, v, ...){
 }
 
 #' @export
+wksCA <- function(t, k, v, ...){
+  Call <- sys.call()
+  stopifnot(t==6)
+  stopifnot(v==2)
+  hilf <- WKScat[WKScat$k>=k,]
+  if (nrow(hilf)==0) stop("there is no suitable array in WKS_CAs")
+  N <- min(hilf$N)
+  hilf <- hilf[which.min(hilf$N),,drop=FALSE]
+  N <- hilf$N
+  fn <- as.character(hilf$k)
+  aus <- WKS_CAs[[fn]]
+  attr(aus, "t") <- 6
+  attr(aus, "Call") <- Call
+  aus[,1:k]
+}
+
+#' @export
 dwyerCA <- function(t, k, v, ...){
   Call <- sys.call()
   hilf <- DWYERcat[DWYERcat$t>=t & DWYERcat$v==v & DWYERcat$k>=k,]
