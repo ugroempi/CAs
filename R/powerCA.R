@@ -150,7 +150,7 @@ powerCA <- function(t, k, v, type="CT", ...){
     red <- w1-w2
     DHF <- Tred(DHF, rs, red)
   }
-  aus <- DHHF2CA(DHF, CAlist, v=v, one_is_enough=TRUE)# [, 1:k]
+  aus <- DHHF2CA(DHF, CAlist, v=v, one_is_enough=TRUE)[, 1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "Call") <- Call
   attr(aus, "t") <- t
