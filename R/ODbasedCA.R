@@ -56,9 +56,9 @@
 #' The upper limit for \code{k} is always \code{v}, so that this is less interesting than
 #' for other constructions.
 #'
-#' @returns Function \code{powerCA}
-#' returns a strength \code{t} CA in \code{N_powerCA(t, k, v)} runs
-#' and \code{k} columns. \code{k_powerCA(t, N, v)} returns the maximum number of columns
+#' @returns Function \code{ODbasedCA}
+#' returns a strength \code{t} CA in \code{N_ODbasedCA(t, k, v)} runs
+#' and \code{k} columns. \code{k_ODbasedCA(t, N, v)} returns the maximum number of columns
 #' that can be achieved with \code{N} runs when requesting strength \code{t} at \code{v} levels.
 #'
 #' @references Cohen, Colbourn and Ling (2003, 2008)

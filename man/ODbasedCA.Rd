@@ -26,9 +26,9 @@ k_ODbasedCA(t, N, v, ...)
 \item{nconstant}{\code{NULL} for the default; otherwise 1 or 2, for the number of constant rows in the ingredient CA (default matches the available ingredients)}
 }
 \value{
-Function \code{powerCA}
-returns a strength \code{t} CA in \code{N_powerCA(t, k, v)} runs
-and \code{k} columns. \code{k_powerCA(t, N, v)} returns the maximum number of columns
+Function \code{ODbasedCA}
+returns a strength \code{t} CA in \code{N_ODbasedCA(t, k, v)} runs
+and \code{k} columns. \code{k_ODbasedCA(t, N, v)} returns the maximum number of columns
 that can be achieved with \code{N} runs when requesting strength \code{t} at \code{v} levels.
 }
 \description{
