@@ -308,14 +308,15 @@ Ns_derive <- function(t, k, v, exclude=NULL){
   if (length(fromNs)>0)
     Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
   else return(NA)
-  Ns <- as.data.frame(rbind('t-from'=t+1, 'k-from'=k+1, 'N-from'=fromNs, t=t, 'N'=Ns, k=k))
+  Ns <- as.data.frame(rbind('t-from'=t+1, 'k-from'=k+1, 'N-from'=fromNs,
+                            t=t, 'N'=Ns, k=k))
   aus <- dplyr::bind_rows(Nswoderive, Ns, .id="label")
   aus <- as.data.frame(aus)
 
   rownames(aus) <- c("N_direct", "t-from", "k-from", "N-from","t", "N-derived", "k")
   aus <- aus[c(1,6,5,7,2,3,4),]
 
-  if (any(aus[1,] > aus[2,], na.rm=TRUE)) return(aus) else {
+  if (any(aus[1,] > aus[2,], na.rm=TRUE) || any(is.na(aus[1,]))) return(aus) else {
     message("no derived design was better than direct constructions")
     return(Nswoderive)
   }
