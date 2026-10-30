@@ -133,13 +133,10 @@ SMC <- function(cphf, q, t, type="2006", ...){
   ## lspace provides the h tuples for the CA columns
   ## separately per cphf row
   lspace <- lapply(1:nrow(cphf), function(obj)
-    rbind(1,
-          sfsmisc::digitsBase(cphf[obj,], q, ndigits=t-1)[(t-1):1,]))
+    rbind(1L, digitsMat(cphf[obj,], q, t-1)[(t-1):1,,drop=FALSE]))
   ## betaspace contains the beta coefficients
-  betaspace <- t(sfsmisc::digitsBase(0:(q^t-1), q, ndigits=t)[t:1,])
-  unique(do.call("rbind",
-   lapply(lspace, function(obj)
-     gf_matmult(betaspace, obj, gf))))
+  betaspace <- t(digitsMat(0:(q^t-1), q, t)[t:1,,drop=FALSE])
+  unique(gf_matmult_blocks(betaspace, lspace, gf))
 }
 
 #' @export
