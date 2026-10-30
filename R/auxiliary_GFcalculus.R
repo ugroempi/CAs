@@ -21,8 +21,7 @@ gf_prod <- function(x, y, gf){
   #q <- gf$q
   #stopifnot(all(c(x,y) %in% 0:(q-1)))
   #stopifnot(length(x)==length(y))
-  sapply(seq_along(x), function(obj)
-    gf$times[x[obj]+1, y[obj]+1])
+  gf$times[cbind(x+1, y+1)]
 }
 
 gf_matmult <- function (M1, M2, gf, checks = TRUE)
@@ -37,10 +36,14 @@ gf_matmult <- function (M1, M2, gf, checks = TRUE)
   }
   nc1 <- ncol(M1)
   nr1 <- nrow(M1)
-  summanden <- vector(mode="list")
-  for (i in 1:nc1)
-    summanden[[i]] <- outer(M1[,i], M2[i,], gf_prod, gf)
-  aus <- gf_sum_list(summanden, gf, checks=FALSE)
+  nc2 <- ncol(M2)
+  ## one vectorised table lookup per summand
+  ## (equivalent to the outer product of column i of M1 with row i of M2)
+  aus <- NULL
+  for (i in 1:nc1){
+    term <- gf$times[cbind(rep(M1[,i]+1, times=nc2), rep(M2[i,]+1, each=nr1))]
+    aus <- if (is.null(aus)) term else gf$plus[cbind(aus+1, term+1)]
+  }
   matrix(aus, nrow=nr1)
 }
 
@@ -49,8 +52,7 @@ gf_sum <- function(x, y, gf){
   #q <- gf$q
   #stopifnot(all(c(x,y) %in% 0:(q-1)))
   #stopifnot(length(x)==length(y))
-  sapply(seq_along(x), function(obj)
-    gf$plus[x[obj]+1, y[obj]+1])
+  gf$plus[cbind(x+1, y+1)]
 }
 
 gf_minus <- function(x,y, gf){
@@ -312,4 +314,29 @@ mygf <- function(q, type="2018"){
     }
   }
   mygf
+}
+
+## digits of the non-negative integers x in base q,
+## as a matrix with ndigits rows (most significant digit in the first row)
+## and one column per element of x
+digitsMat <- function(x, q, ndigits){
+  x <- as.integer(x)
+  aus <- matrix(0L, nrow=ndigits, ncol=length(x))
+  for (i in ndigits:1){
+    aus[i,] <- x %% q
+    x <- x %/% q
+  }
+  aus
+}
+
+## apply gf_matmult(beta, H) for all (s)CPHF rows at once;
+## H is a list of t x k matrices (one per cphf row), result stacks the
+## q^t x k blocks below each other
+gf_matmult_blocks <- function(beta, Hlist, gf){
+  nb <- nrow(beta); k <- ncol(Hlist[[1]]); R <- length(Hlist)
+  big <- gf_matmult(beta, do.call(cbind, Hlist), gf, checks=FALSE)
+  dim(big) <- c(nb, k, R)
+  aus <- aperm(big, c(1,3,2))
+  dim(aus) <- c(nb*R, k)
+  aus
 }

@@ -73,3 +73,25 @@ test_that("Bush construction and alternate Galois fields are available", {
   expect_error(CAs:::mygf(7))
   expect_error(CAs:::mygf(16, "2009"))
 })
+
+test_that("vectorised gf_matmult agrees with a naive product and blocks stack", {
+  for (q in c(3, 4, 8, 9)){
+    gf <- lhs::create_galois_field(q)
+    set.seed(q)
+    M1 <- matrix(sample(0:(q-1), 5*3, replace=TRUE), 5, 3)
+    M2 <- matrix(sample(0:(q-1), 3*4, replace=TRUE), 3, 4)
+    naive <- matrix(0, 5, 4)
+    for (i in 1:5) for (j in 1:4){
+      s <- 0
+      for (l in 1:3) s <- gf$plus[s+1, gf$times[M1[i,l]+1, M2[l,j]+1]+1]
+      naive[i,j] <- s
+    }
+    expect_equal(CAs:::gf_matmult(M1, M2, gf), naive)
+    H <- list(M2, M2[, 4:1])
+    blocks <- CAs:::gf_matmult_blocks(M1, H, gf)
+    expect_equal(blocks, rbind(CAs:::gf_matmult(M1, H[[1]], gf),
+                               CAs:::gf_matmult(M1, H[[2]], gf)))
+  }
+  expect_equal(CAs:::digitsMat(0:5, 3, 2),
+               rbind(c(0,0,0,1,1,1), c(0,1,2,0,1,2)), ignore_attr=TRUE)
+})
