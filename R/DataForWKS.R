@@ -1,4 +1,4 @@
-globalVariables(c("WKScat", "WCS_CAs"))
+globalVariables(c("WKScat", "WKS_CAs"))
 
 #' Data for function wksCA
 #'
