@@ -13,7 +13,7 @@
 #' @param t positive integer: requested strength
 #' @param k positive integer: requested number of columns
 #' @param v positive integer, non-prime: requested number of levels for each column
-#' @param ... currently not used
+#' @param ... can be used for excluding ingredient types with \code{exclude}, see \code{\link{Ns}}
 #'
 #' @section Details:
 #' Function \code{compositCA} factorizes \code{v} into all variants of two factors,
@@ -51,6 +51,8 @@
 #' @export
 compositCA <- function(t, k, v, ...){
   Call <- sys.call()
+  dots <- match.call(expand.dots = FALSE)$`...`
+  exclude <- eval(dots$exclude)
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   hilf <- conf.design::factorize(v)
   ## primes are not treated by composition
@@ -64,19 +66,23 @@ compositCA <- function(t, k, v, ...){
 
   ## identify best pair
   ## ingredients without derive and fuse, consistent with N_compositCA
-  N_erg <- sapply(divisors, function(obj) bestN(t, k, obj, noderive=TRUE, nofuse=TRUE)*
-                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE))
+  N_erg <- sapply(divisors, function(obj)
+                bestN(t, k, obj, noderive=TRUE, nofuse=TRUE, exclude=exclude)*
+                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE, exclude=exclude))
   factor1 <- divisors[which.min(N_erg)]
 
-  aus <- crossCAs(bestCA(t, k, factor1, noderive=TRUE, nofuse=TRUE),
-                  bestCA(t, k, v%/%factor1, noderive=TRUE, nofuse=TRUE))
+  D1 <- bestCA(t, k, factor1, noderive=TRUE, nofuse=TRUE, exclude=exclude)
+  D2 <- bestCA(t, k, v%/%factor1, noderive=TRUE, nofuse=TRUE, exclude=exclude)
+  aus <- crossCAs(D1, D2)
   attr(aus, "t") <- t
+  attr(aus, "ingredients") <- list(attr(D1, "Call"), attr(D2, "Call"))
   attr(aus, "Call") <- Call
    aus
 }
 
 #' @export
 N_compositCA <- function(t, k, v, ...){
+  dots <- match.call(expand.dots = FALSE)$`...`
   hilf <- conf.design::factorize(v)
   ## primes and prime powers are not treated by composition
   if (length(hilf)==1) return(NA)
@@ -85,7 +91,7 @@ N_compositCA <- function(t, k, v, ...){
   for (i in 2:sqrt(v)){
     if (v%%i==0L) divisors <- c(divisors, i)
   }
-  N_erg <- sapply(divisors, function(obj) bestN(t, k, obj, noderive=TRUE, nofuse=TRUE)*
-                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE))
+  N_erg <- sapply(divisors, function(obj) bestN(t, k, obj, noderive=TRUE, nofuse=TRUE, exclude=dots$exclude)*
+                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE, exclude=dots$exclude))
   return(unname(min(N_erg)))
 }

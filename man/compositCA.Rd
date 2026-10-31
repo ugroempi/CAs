@@ -16,7 +16,7 @@ N_compositCA(t, k, v, ...)
 
 \item{v}{positive integer, non-prime: requested number of levels for each column}
 
-\item{...}{currently not used}
+\item{...}{can be used for excluding ingredient types with \code{exclude}, see \code{\link{Ns}}}
 }
 \value{
 Function \code{compositCA} yields a matrix of class \code{ca}), with levels from 0 to \code{v-1}.
