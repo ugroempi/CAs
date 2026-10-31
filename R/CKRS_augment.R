@@ -72,6 +72,7 @@ CKRS_augmentCA <- function(t, k, v, ...){
   aus <- CKRS_augment(D)
   class(aus) <- c("ca", class(aus))
   attr(aus, "origin") <- "augmentation according to Eqn (5), CKRS"
+  attr(aus, "ingredients") <- list(D=ingredientCA(D, t, k, v-1))
   attr(aus, "Call") <- Call
   attr(aus, "t") <- t
   aus

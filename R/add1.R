@@ -79,6 +79,7 @@ add1Column <- function(D, t, v, ...){
    stopifnot(t%%1==0)
    stopifnot(t>=2)
    k <- ncol(D)
+   ingredients <- list()
    aus <- cbind(D, D[,k])
    if (t==2)
      aus <- rbind(aus,
@@ -90,11 +91,17 @@ add1Column <- function(D, t, v, ...){
          kronecker(OD2(v)[,1:2],matrix(1,nrow=v,ncol=1))))
    }
    if (t>3){
+     D2 <- bestCA(t-2,k-1,v, noderive=TRUE, nofuse=TRUE)
+     if (!is.null(attr(D2, "constr")))
+       ingredients$D2 <- ingredientCA(D2, t-2, k-1, v)
      aus <- rbind(aus,
          cbind(kronecker(matrix(1,nrow=v*(v-1),ncol=1),
-                   bestCA(t-2,k-1,v, noderive=TRUE, nofuse=TRUE)),
+                   D2),
          kronecker(OD2(v)[,1:2],matrix(1,bestN(t-2,k-1,v, noderive=TRUE, nofuse=TRUE),ncol=1))))
    }
+   if (!is.null(attr(D, "constr")))
+     ingredients <- c(list(D=ingredientCA(D, t, k-1, v)), ingredients)
+   if (length(ingredients)>0) attr(aus, "ingredients") <- ingredients
    attrs <- attributes(D)
    return(aus)
 }
@@ -157,4 +164,3 @@ add2 <- function(D, t, v, ...){
   return(aus)
 }
 # nocov end
-

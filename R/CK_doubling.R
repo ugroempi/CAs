@@ -144,8 +144,9 @@ CK_doublingCA <- function(k, v, exclude=NULL, ...){
   aus <- CK_doubling(D3, D2)[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "origin") <- "CK doubling, Chateauneuf and Kreher 2002"
-  attr(aus, "ingredients") <- c(D3=attr(D3, "origin"),
-                                D2=attr(D2, "origin"))
+  attr(aus, "ingredients") <- list(
+    D3=ingredientCA(D3, 3, k3, v),
+    D2=ingredientCA(D2, 2, k3, v))
   attr(aus, "Call") <- Call
   attr(aus, "t") <- 3
   aus

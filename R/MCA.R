@@ -357,6 +357,9 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
          "problem in column(s): ", paste(bad_cols, collapse=", "))
   }
   attrs_stored <- attributes(D)
+  if (!is.null(attr(D, "constr")))
+    attrs_stored$ingredients <- list(
+      D=ingredientCA(D, t, ncol(D), max(levels.no(D))))
   levs[cs] <- tolevs
   optN <- lower_bound_CA(t, k, levs)
   for (j in 1:length(cs)){
@@ -460,6 +463,8 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
   if (is.null(D))
       D <- bestCA(2, hilf$k, hilf$v)
   attrs <- attributes(D)
+  if (!is.null(attr(D, "constr")))
+    attrs$ingredients <- list(D=ingredientCA(D, 2, hilf$k, hilf$v))
   ## apply the construction
   ## outerseparate re-sorts the levels of D in the order of increasing frequency
   ## in order to allow as many columns as possible for the expansion

@@ -112,6 +112,16 @@ MTVTRouxtypeCA <- function(t, k, v, method=NULL, ...){
   aus <- aus[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "t") <- t
+  attr(aus, "ingredients") <- list(
+    A=ingredientCA(A, tA, kwork, v),
+    B=ingredientCA(B, tB, kwork, v),
+    C=ingredientCA(C, tC, kwork, v))
+  if (t==5){
+    ingredients <- attr(aus, "ingredients")
+    ingredients$D <- ingredientCA(
+      D, 2, if (is.null(method)) kwork else v, v)
+    attr(aus, "ingredients") <- ingredients
+  }
 
   attr(aus, "Call") <- Call
   attr(aus, "origin") <- paste0("Martirosyan and van Trung (2004) Roux type, ",

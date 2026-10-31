@@ -18,8 +18,11 @@
 #' but indicates which attributes are available.
 #'
 #' The S3 class \code{ca} is for a matrix with attributes.
-#' Common attributes are \code{origin}, \code{t}, \code{Call},
-#' \code{eCAN}, \code{date}, \code{CAs-version}, \code{flexible} or \code{PCAstatus}.
+#' Common attributes are \code{origin}, \code{constr}, \code{t}, \code{Call},
+#' \code{eCAN}, \code{date}, \code{CAs-version}, \code{flexible}, \code{PCAstatus},
+#' or \code{ingredients}. The \code{ingredients} attribute is a list of ingredient
+#' constructions, each described by its \code{constr}, \code{t}, \code{k}, and \code{v}.
+#' The \code{constr} attribute identifies the selected construction by its \code{Ns} label.
 #' Not all attributes are present for all \code{ca} objects.
 #'
 #' The matrix elements are consecutive non-negative integers starting with 0 or 1,
@@ -44,4 +47,3 @@ print.ca <- function(x, ...){
     }
     invisible(x)
  }
-

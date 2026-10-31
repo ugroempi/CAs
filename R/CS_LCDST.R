@@ -126,12 +126,15 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
 
   ## create array
   G <- createG_LCDST(v, f)
-  aus <- createCS_LCDST(starter, v, G)[,1:k]
+  ausall <- createCS_LCDST(starter, v, G)
+  ingredients <- attr(ausall, "ingredients")
+  aus <- ausall[,1:k]
   if (!start0) aus <- aus + 1
   attr(aus, "origin") <- "CS_LCDST"
   attr(aus, "t") <- 2
   attr(aus, "f") <- f
   attr(aus, "Call") <- Call
+  if (!is.null(ingredients)) attr(aus, "ingredients") <- ingredients
   if (f>1)
   hilf <- Ns(2,k,f, noderive=TRUE, nofuse=TRUE)
   if (f>3){
@@ -220,7 +223,11 @@ createCS_LCDST <- function(starter, v, G, ...){
   if (f==1) mat <- rbind(mat, v-1)
   if (f==2) mat <- rbind(mat, KSK(k=k) + v - f)
   if (f==3) mat <- rbind(mat, CAEX(k=k) + v - f)
-  if (f>3) mat <- rbind(mat, bestCA(2,k,f, noderive=TRUE, nofuse=TRUE) + v - f)
+  if (f>3){
+    D <- bestCA(2,k,f, noderive=TRUE, nofuse=TRUE)
+    mat <- rbind(mat, D + v - f)
+    attr(mat, "ingredients") <- list(D=ingredientCA(D, 2, k, f))
+  }
 
   fixed <- which(mat>100)
   mat[fixed] <- mat[fixed]-100  ## fix fixed values

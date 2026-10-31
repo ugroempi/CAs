@@ -106,6 +106,9 @@ CK_constrDCA <- function(k, v, ...){
   aus <- CK_constrD(D3, D2)
   class(aus) <- c("ca", class(aus))
   attr(aus, "origin") <- "Construction D, Chateauneuf and Kreher 2002"
+  attr(aus, "ingredients") <- list(
+    D3=ingredientCA(D3, 3, k3, v-1),
+    D2=ingredientCA(D2, 2, k3-1, v-1))
   attr(aus, "Call") <- Call
   attr(aus, "t") <- 3
   aus
