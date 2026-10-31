@@ -95,10 +95,14 @@ readCA <- function(path, flexible.symbols=c("*","-","."), comment.symbol="C",
     colnames(zeilen) <- paste0("V", 1:ncol(zeilen))
   }
   else{
-    zeilen <- t(sapply(zeilen,
-                     function(obj) as.matrix(read.table(text=obj,
-                                    na.strings=flexible.symbols, ...))))
-    rownames(zeilen) <- NULL
+    rows <- lapply(zeilen, function(obj) as.matrix(read.table(text=obj,
+                                                              na.strings=flexible.symbols, ...)))
+    widths <- vapply(rows, ncol, integer(1))
+    if (any(vapply(rows, nrow, integer(1))!=1) ||
+        any(widths==0) || length(unique(widths))!=1)
+      stop("data rows must all have the same number of entries")
+    zeilen <- do.call(rbind, rows)
+    dimnames(zeilen) <- list(NULL, NULL)
   }
   class(zeilen) <- c("ca", class(zeilen))
   if (is.null(origin)) attr(zeilen, "origin") <- path else
