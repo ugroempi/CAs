@@ -66,7 +66,7 @@
 add1CA <- function(t, k, v, ...){
    N <- N_add1CA(t, k, v)
    if (!is.na(N))
-   add1Column(bestCA(t,k-1,v),t,v)
+   add1Column(bestCA(t,k-1,v, noderive=TRUE, nofuse=TRUE),t,v)
 }
 
 #' @export
@@ -91,8 +91,9 @@ add1Column <- function(D, t, v, ...){
    }
    if (t>3){
      aus <- rbind(aus,
-         cbind(kronecker(matrix(1,nrow=v*(v-1),ncol=1),bestCA(t-2,k-1,v)),
-         kronecker(OD2(v)[,1:2],matrix(1,bestN(t-2,k-1,v),ncol=1))))
+         cbind(kronecker(matrix(1,nrow=v*(v-1),ncol=1),
+                   bestCA(t-2,k-1,v, noderive=TRUE, nofuse=TRUE)),
+         kronecker(OD2(v)[,1:2],matrix(1,bestN(t-2,k-1,v, noderive=TRUE, nofuse=TRUE),ncol=1))))
    }
    attrs <- attributes(D)
    return(aus)
@@ -100,12 +101,12 @@ add1Column <- function(D, t, v, ...){
 
 #' @export
 N_add1CA <- function(t, k, v){
-   hilf <- bestN(t, k-1, v)
+   hilf <- bestN(t, k-1, v, noderive=TRUE, nofuse=TRUE)
    #if (bestN(t,k,v, exclude="add1CA") <= hilf) return(NA)
    if (t==2) return(hilf + v*(v-1))
    if (t==3) return(hilf + v^2*(v-1))
    ## now t>3
-   hilf + unname(bestN(t-2, k-1, v))*v*(v-1)
+   hilf + unname(bestN(t-2, k-1, v, noderive=TRUE, nofuse=TRUE))*v*(v-1)
 }
 #'
 

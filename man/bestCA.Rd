@@ -10,9 +10,11 @@
 \title{Functions in support of obtaining the best uniform CA
 for a combination of t, k and v}
 \usage{
-bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...)
+bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
+  noderive=FALSE, nofuse=FALSE, fusemax=NULL, ...)
 
-bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
+bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
+  nofuse=FALSE, fusemax=NULL, ...)
 
 ckrsCA(t, k, v, ...)
 
@@ -46,6 +48,13 @@ stored in the attribute \code{fixNA_seed} of the returned object.}
 \item{exclude}{\code{NULL} or a character vector of method(s) to exclude,
 in support of size calculations for recursive constructions
 which need to calculate sizes of best ingredients}
+
+\item{noderive}{logical; if \code{TRUE}, derived designs are not considered}
+
+\item{nofuse}{logical; if \code{TRUE}, fused designs are not considered}
+
+\item{fusemax}{maximum number of fuse steps considered; \code{NULL} (default)
+uses 1, or the distance to the next prime power for non-prime-power \code{v}}
 
 \item{...}{handed to construction function, currently,
 only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}

@@ -6,11 +6,11 @@
 \alias{N_CK_doublingCA}
 \title{Function to create a strength 3 CA with Chateauneuf-Kreher doubling}
 \usage{
-CK_doublingCA(k, v, ...)
+CK_doublingCA(k, v, exclude=NULL, ...)
 
 CK_doubling(D3, D2=NULL, check=FALSE, start0=TRUE, ...)
 
-N_CK_doublingCA(t=3, k, v, ...)
+N_CK_doublingCA(t=3, k, v, exclude=NULL, ...)
 }
 \arguments{
 \item{D3}{a strength 3 CA with j columns in v levels, coded as integers
@@ -36,6 +36,8 @@ or \code{\link{bestN}} (function \code{N_CK_doublingCA})}
 \item{v}{integer: the number of levels}
 
 \item{t}{integer: the target strength (always 3)}
+
+\item{exclude}{\code{NULL} or a character vector of method(s) to exclude when determining ingredient designs or sizes}
 }
 \value{
 Function \code{CK_doublingCA} returns a matrix of class \code{ca}

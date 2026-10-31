@@ -11,9 +11,9 @@
 #' @aliases CK_doubling
 #' @aliases N_CK_doublingCA
 #'
-#' @usage CK_doublingCA(k, v, ...)
+#' @usage CK_doublingCA(k, v, exclude=NULL, ...)
 #' @usage CK_doubling(D3, D2=NULL, check=FALSE, start0=TRUE, ...)
-#' @usage N_CK_doublingCA(t=3, k, v, ...)
+#' @usage N_CK_doublingCA(t=3, k, v, exclude=NULL, ...)
 #'
 #' @param k integer: the target number of columns
 #' @param v integer: the number of levels
@@ -29,6 +29,7 @@
 #' (may take very long for large arrays, therefore defaults to FALSE)
 #' @param start0 logical: Do integer values start with 0 ?  (\code{D3} and \code{D2}
 #'           must be compatible)
+#' @param exclude \code{NULL} or a character vector of method(s) to exclude when determining ingredient designs or sizes
 #' @param ... further arguments to function \code{\link{coverage}} (\code{CK_doubling})
 #'       or \code{\link{bestN}} (function \code{N_CK_doublingCA})
 #'
@@ -133,12 +134,13 @@ CK_doubling <- function(D3, D2=NULL, check=FALSE, start0=TRUE, ...){
 }
 
 #' @export
-CK_doublingCA <- function(k, v, ...){
+CK_doublingCA <- function(k, v, exclude=NULL, ...){
   ## t=3 always holds
   Call <- sys.call()
   k3 <- ceiling(k/2)
-  D3 <- bestCA(3, k3, v, ...)
-  D2 <- bestCA(2, k3, v, ...)  ## strength 2
+  ## ingredients without derive and fuse, consistent with N_CK_doublingCA
+  D3 <- bestCA(3, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE)
+  D2 <- bestCA(2, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE)  ## strength 2
   aus <- CK_doubling(D3, D2)[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "origin") <- "CK doubling, Chateauneuf and Kreher 2002"
@@ -154,8 +156,8 @@ N_CK_doublingCA <- function(t=3, k, v, exclude=NULL, ...){
   if (!t==3) return(NA)
   k3 <- ceiling(k/2)
   ## N + M*(v-1) runs
-  unname(bestN(3, k3, v, exclude=exclude, ...) +
-    bestN(2, k3, v, exclude=exclude, ...)*(v - 1))
+  unname(bestN(3, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE) +
+    bestN(2, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE)*(v - 1))
 }
 
 # #' @export

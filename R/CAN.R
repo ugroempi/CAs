@@ -56,8 +56,8 @@
 #'
 #' @usage eCAN(t, k, v, frozen=TRUE)
 #' @usage eCAK(t, N, v, frozen=TRUE)
-#' @usage Ns(t, k, v, exclude=NULL)
-#' @usage Ns_derive(t, k, v, exclude=NULL)
+#' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1)
+#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1, Ndirect=NULL)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
 #' @usage N_fuseBoseCA(t,k,v)
 #' @usage N_fuseBushtCA(t,k,v)
@@ -100,7 +100,14 @@
 #' @param v number of levels for each column
 #' @param exclude \code{NULL} or a character vector of method(s) to exclude,
 #'   in support of size calculations for recursive constructions
-#'   which need to calculate sizes of best ingredients
+#'   which need to calculate sizes of best ingredients.
+#'   Besides construction labels, \code{"derive"} and \code{"fuse"} exclude
+#'   the derived and fused entries of \code{Ns}.
+#' @param noderive logical; if \code{TRUE}, \code{Ns} does not add a derived entry
+#'   (needed for calls from within constructions and for \code{Ns_derive}, to avoid recursion)
+#' @param nofuse logical; if \code{TRUE}, \code{Ns} does not add a fused entry
+#' @param fusemax integer; maximum number of fuse steps considered for the fused entry of \code{Ns}
+#' @param Ndirect \code{NULL} or the result of \code{Ns(t, k, v, noderive=TRUE)}, if already available
 #' @param maxfuse integer number of levels to fuse (i.e., difference between number of levels before and after fusing)
 #' @param N number of runs
 #' @param type character string: \code{"PCA"} or \code{"CA"}
@@ -117,6 +124,12 @@
 #' catalogues and constructions, for which sizes can be easily provided; their
 #' scope will grow with time, and \code{Ns} is prioritized over \code{ks}, as it is considered
 #' more important for applications.\cr
+#' \code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
+#' once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
+#' nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
+#' for each fuse step, fusing from up to \code{fusemax} more levels; fuse ingredients are not derived).
+#' Entry \code{eCAN} is always last. Constructions that need ingredient sizes
+#' call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE}.\cr
 #' Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling},
 #' \code{Ns_productCA}
 #' provide run sizes from deriving, fusing, doubling or taking the product with
@@ -238,7 +251,8 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1){
                           "CK_doublingCA", "CK_NRB", "WKS",
                           "CS_MS", "CS_LCDST", "CS_CK", "pcaCA", "dpCA",
                           "DWYER", "NIST","TJ", "powerCT", "miscCA",
-                          "compositCA", "ODbasedCA", "scphfCA", "cphfCA", "add1CA"
+                          "compositCA", "ODbasedCA", "scphfCA", "cphfCA", "add1CA",
+                          "derive", "fuse"
                           ))) message("exclude contains invalid element(s)")
 
   suppressMessages(
@@ -280,42 +294,67 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1){
     eCAN=eCAN(t,k,v)[[1]])
     )
   aus <- aus[!is.na(aus)]
-  # if (t==2 && v==2) aus <- c(KSK=N_KSK(k), aus)
-  if (t<6 && !noderive){
-     suppressMessages(
-       Nderive <- Ns_derive(t, k, v, exclude=exclude)
-     )
-     if (is.data.frame(Nderive)){
-     Nderive <- Nderive[,setdiff(colnames(Nderive),
-                                 c("label", "eCAN")), drop=FALSE]
-     mincol <- which.min(Nderive[2,])
-     derivemethod <- colnames(Nderive)[mincol]
-     Nderive <- Nderive[2,mincol]
-     aus <- c(aus[1:(length(aus)-1)], Nderive, aus[length(aus)])
-     names(aus)[length(aus)-1] <- paste0(derivemethod,":derive")
-     }
+  ## eCAN is a theoretical size and always stays the last entry
+  eCANentry <- aus[names(aus) == "eCAN"]
+  aus <- aus[names(aus) != "eCAN"]
+  if (!nofuse && !"fuse" %in% exclude && k > t){
+    Nfuse <- N_fusebest(t, k, v, exclude=exclude, fusemax=fusemax)
+    if (!is.null(Nfuse)) aus <- c(aus, Nfuse)
   }
-  #   if (!is.na(Nderive)){
-  #     message("no solution found, but deriving yields a solution:")
-  #     aus <- Nderive["N",]
-  #     attr(aus, "detail") <- Nderive
-  #     return(aus)
-  #   }
-  #   message("no solution found")
-  #   return(numeric(0))
-  # }
-  aus
+  if (!noderive && !"derive" %in% exclude && t < 6 && k > t){
+    ## deriving is applied only once, i.e., sources do not derive
+    ## the direct sizes are handed over, to avoid computing them twice
+    Nderive <- suppressMessages(
+      Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, fusemax=fusemax,
+                Ndirect=c(aus, eCANentry)))
+    if (is.data.frame(Nderive)){
+      ## eCAN is not a construction
+      Nderive <- unlist(Nderive["N-derived",
+                         setdiff(colnames(Nderive), c("label", "eCAN"))])
+      Nderive <- Nderive[!is.na(Nderive)]
+      if (length(Nderive) > 0){
+        best <- which.min(Nderive)
+        aus <- c(aus, stats::setNames(unname(Nderive[best]),
+                               paste0(names(Nderive)[best], ":derive")))
+      }
+    }
+  }
+  c(aus, eCANentry)
+}
+
+## best fuse entry for Ns: sources have v+d levels (d=1,...,fusemax),
+## each fuse step removes 2 runs; sources are neither derived nor fused
+## label: construction name with ":fuse" appended once per fuse step
+N_fusebest <- function(t, k, v, exclude=NULL, fusemax=1){
+  best <- NULL
+  for (d in seq_len(fusemax)){
+    src <- Ns(t, k, v+d, exclude=exclude, noderive=TRUE, nofuse=TRUE)
+    src <- src[names(src) != "eCAN"]
+    if (length(src)==0) next
+    cand <- min(src) - 2*d
+    if (cand < 1) next
+    if (is.null(best) || cand < best) {
+      best <- stats::setNames(cand, paste0(names(src)[which.min(src)],
+                                    strrep(":fuse", d)))
+    }
+  }
+  best
 }
 
 ## obtain possibilities for derivation sources
 #' @export
-Ns_derive <- function(t, k, v, exclude=NULL){
-  Nswoderive <- Ns(t, k, v, exclude=exclude, noderive = TRUE)
+Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1,
+                      Ndirect=NULL){
+  ## Ndirect: sizes of Ns(t, k, v, noderive=TRUE), if already available
+  Nswoderive <- if (is.null(Ndirect))
+    Ns(t, k, v, exclude=exclude, noderive=TRUE, nofuse=nofuse, fusemax=fusemax)
+    else Ndirect
   if (t>=6){
     message("derive could not be used for strength 6")
     return(Nswoderive)
   }
-  fromNs <- Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE)
+  fromNs <- Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE,
+               nofuse=nofuse, fusemax=fusemax)
 
   if (length(fromNs)>0)
     Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
@@ -339,11 +378,11 @@ Ns_derive <- function(t, k, v, exclude=NULL){
 Ns_fuse <- function(t, k, v, maxfuse=1){
   hilf <- lapply(1:maxfuse,
                  function(obj){
-                   hilf <- Ns(t, k, v+obj)
+                   hilf <- Ns(t, k, v+obj, noderive=TRUE, nofuse=TRUE)
                    hilf - 2*obj
                  })
   aus <- as.data.frame(do.call(dplyr::bind_rows,
-    c(list(direct=Ns(t,k,v)),hilf)))
+    c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE)),hilf)))
   rownames(aus) <- c("direct", paste0("fuse", rep(1:maxfuse)))
   aus
 }
@@ -381,11 +420,11 @@ Ns_CK_doubling <- function(t=3, k, v){
   if (!v %in% c(2,3)) return(NA)
   if(!t==3) return(NA)
   khilf <- ceiling(k/2)
-  hilf <- Ns(3, khilf, v)
+  hilf <- Ns(3, khilf, v, noderive=TRUE, nofuse=TRUE)
   if (v==3) plus <- suppressMessages(N_CAEX(k=khilf)) else
     plus <- N_KSK(khilf)
   doubled <- as.data.frame(rbind(hilf + (v-1)*plus))
-  direct <- as.data.frame(rbind(Ns(t, k, v)))
+  direct <- as.data.frame(rbind(Ns(t, k, v, noderive=TRUE, nofuse=TRUE)))
   dplyr::bind_rows(direct=direct, doubled=doubled, .id="way")
 }
 
@@ -418,9 +457,9 @@ Ns_productCA <- function(t=2, k, v){
   else
     l <- 3 ## latin square
   khilf <- ceiling(k/l)
-  hilf <- Ns(2, khilf, v)
+  hilf <- Ns(2, khilf, v, noderive=TRUE, nofuse=TRUE)
   productCA <- as.data.frame(rbind(hilf + M - 2))
-  suppressMessages(direct <- as.data.frame(rbind(Ns(t, k, v))))
+  suppressMessages(direct <- as.data.frame(rbind(Ns(t, k, v, noderive=TRUE, nofuse=TRUE))))
   dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
 }
 
