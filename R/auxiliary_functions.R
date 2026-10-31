@@ -42,6 +42,10 @@
 
 ## Function definition
 ## from https://stackoverflow.com/questions/17683370/how-to-produce-combinations-iteratively-in-r
+ingredientCA <- function(D, t, k, v){
+  list(constr=attr(D, "constr"), t=t, k=k, v=v)
+}
+
 gen.next.cbn <- function(cbn, n){
   ## Generates the combination that follows the one provided as input
   cbn.bin      <- rep(0, n)

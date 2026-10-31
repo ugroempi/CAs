@@ -75,7 +75,9 @@ compositCA <- function(t, k, v, ...){
   D2 <- bestCA(t, k, v%/%factor1, noderive=TRUE, nofuse=TRUE, exclude=exclude)
   aus <- crossCAs(D1, D2)
   attr(aus, "t") <- t
-  attr(aus, "ingredients") <- list(attr(D1, "Call"), attr(D2, "Call"))
+  attr(aus, "ingredients") <- list(
+    D1=ingredientCA(D1, t, k, factor1),
+    D2=ingredientCA(D2, t, k, v%/%factor1))
   attr(aus, "Call") <- Call
    aus
 }

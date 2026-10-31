@@ -168,8 +168,16 @@
 bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
                    noderive=FALSE, nofuse=FALSE, fusemax=NULL, ...){
   Call <- sys.call()
-  if (t==1) return(matrix(0:(v-1),v,k))
-  if (k <= t) return(ffCA(k , v))
+  if (t==1){
+    aus <- matrix(0:(v-1),v,k)
+    attr(aus, "constr") <- "FullFactorial"
+    return(aus)
+  }
+  if (k <= t){
+    aus <- ffCA(k , v)
+    attr(aus, "constr") <- "FullFactorial"
+    return(aus)
+  }
   ## return a matrix with v constant rows in case k <= t
   ## there will be an error otherwise
   internet <- curl::has_internet()
@@ -226,6 +234,17 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
   dimnames(aus) <- NULL
   if (is.null(attr(aus, "origin"))) attr(aus, "origin") <- constr
   if (is.null(attr(aus, "t"))) attr(aus, "t") <- t
+  attr(aus, "constr") <- constr
+  parts <- strsplit(constr, ":", fixed=TRUE)[[1]]
+  if (tail(parts, 1)=="derive"){
+    attr(aus, "ingredients") <- list(source=list(
+      constr=paste(parts[-length(parts)], collapse=":"),
+      t=t+1, k=k+1, v=v))
+  }else if (length(parts)>1 && any(parts[-1]=="fuse")){
+    nfuse <- sum(parts[-1]=="fuse")
+    attr(aus, "ingredients") <- list(source=list(
+      constr=parts[1], t=t, k=k, v=v+nfuse))
+  }
   ## prepend the Call attribute
   attr(aus, "Call") <- c(Call, attr(aus, "Call"))
   attr(aus, "eCAN") <- eCAN(t,k,v)
