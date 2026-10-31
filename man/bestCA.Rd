@@ -4,6 +4,7 @@
 \alias{bestCA}
 \alias{bestN}
 \alias{ckrsCA}
+\alias{wksCA}
 \alias{dwyerCA}
 \alias{nistCA}
 \alias{tjCA}
@@ -17,6 +18,8 @@ bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
   nofuse=FALSE, fusemax=NULL, ...)
 
 ckrsCA(t, k, v, ...)
+
+wksCA(t, k, v, ...)
 
 dwyerCA(t, k, v, ...)
 

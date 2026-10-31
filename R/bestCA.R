@@ -16,6 +16,7 @@
 #' @aliases bestCA
 #' @aliases bestN
 #' @aliases ckrsCA
+#' @aliases wksCA
 #' @aliases dwyerCA
 #' @aliases nistCA
 #' @aliases tjCA
@@ -25,6 +26,7 @@
 #' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
 #'   nofuse=FALSE, fusemax=NULL, ...)
 #' @usage ckrsCA(t, k, v, ...)
+#' @usage wksCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
 #' @usage nistCA(t, k, v, ...)
 #' @usage tjCA(t, k, v, ...)
