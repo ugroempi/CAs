@@ -20,8 +20,10 @@
 #' @aliases nistCA
 #' @aliases tjCA
 #'
-#' @usage bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...)
-#' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, ...)
+#' @usage bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
+#'   noderive=FALSE, nofuse=FALSE, fusemax=NULL, ...)
+#' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
+#'   nofuse=FALSE, fusemax=NULL, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
 #' @usage nistCA(t, k, v, ...)
@@ -46,6 +48,10 @@
 #' @param exclude \code{NULL} or a character vector of method(s) to exclude,
 #'   in support of size calculations for recursive constructions
 #'   which need to calculate sizes of best ingredients
+#' @param noderive logical; if \code{TRUE}, derived designs are not considered
+#' @param nofuse logical; if \code{TRUE}, fused designs are not considered
+#' @param fusemax maximum number of fuse steps considered; \code{NULL} (default)
+#'   uses 1, or the distance to the next prime power for non-prime-power \code{v}
 #' @param ... handed to construction function, currently,
 #'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
 #' @returns \code{bestN} returns a named integer: the first method that yields the
@@ -157,7 +163,8 @@
 #'
 
 #' @export
-bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
+bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
+                   noderive=FALSE, nofuse=FALSE, fusemax=NULL, ...){
   Call <- sys.call()
   if (t==1) return(matrix(0:(v-1),v,k))
   if (k <= t) return(ffCA(k , v))
@@ -171,9 +178,11 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
      # forbidden <- which(names(hilf) %in% c("DWYER","NIST"))
      # if (length(forbidden) > 0)
      #    hilf <- hilf[-forbidden]
-     hilf <- bestN(t,k,v, internet=FALSE)
+     hilf <- bestN(t,k,v, internet=FALSE, exclude=exclude, noderive=noderive,
+                   nofuse=nofuse, fusemax=fusemax)
   }else
-     hilf <- bestN(t,k,v)# Ns(t,k,v, ...)
+     hilf <- bestN(t,k,v, exclude=exclude, noderive=noderive,
+                   nofuse=nofuse, fusemax=fusemax)# Ns(t,k,v, ...)
   if (is.na(hilf))
     stop("no construction for this setting has been implemented yet")
   if (hilf > maxN)
@@ -225,53 +234,43 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
 }
 
 #' @export
-bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
+bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
+                  nofuse=FALSE, fusemax=NULL, ...){
   ## yields the size of the smallest implemented design,
   ## with or without internet
+  ## fusemax=NULL: fusing from the next prime power level (if v is not
+  ##     a prime power), otherwise fusing from level v+1
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   stopifnot(t%%1==0, k%%1==0, v%%1==0)
   if (k <= t) return(c(FullFactorial=v^k))
-  hilf <- Ns(t,k,v, exclude=exclude)
-  if (internet) hilf <- hilf[setdiff(names(hilf), "eCAN")] else
-    hilf <- hilf[setdiff(names(hilf), c("eCAN", "DWYER", "NIST"))]
+  if (is.null(fusemax))
+    fusemax <- if (v %in% primedat$q) 1 else
+      min(primedat$q[which(primedat$q>v)]) - v
+  if (!internet) exclude <- union(exclude, c("DWYER", "NIST"))
+  hilf <- Ns(t,k,v, exclude=exclude, noderive=noderive, nofuse=nofuse,
+             fusemax=fusemax)
+  hilf <- hilf[setdiff(names(hilf), "eCAN")]
   if (length(hilf)==0) return(NA)
   aus <- min(hilf)
   names(aus) <- names(hilf)[which.min(hilf)]
-  if (!v %in% primedat$q){
-    ## this should not be restricted to nonprimes, some of the best
-    ##     designs are from fusing prime power level designs
-    ##     to smaller prime power levels
-    ##     e.g. 9 to 8
-    minq <- min(primedat$q[which(primedat$q>v)])
-      # minq is vprior
-    N_fuse <- bestN(t,k,minq)-2*(minq - v)
-    # delta <- min(primedat$q[which(primedat$q>v)]) - v
-    # hilf <- Ns_fuse(t,k,v,maxfuse=delta)
-    # hilf <- hilf[,-which(colnames(hilf)=="eCAN"), drop=FALSE]
-    # if (min(hilf, na.rm=TRUE) < aus){
-    #   locate <- which(hilf==min(hilf, na.rm=TRUE), arr.ind=TRUE)
-    #   aus <- min(hilf, na.rm=TRUE)
-    #   names(aus) <- paste(rownames(locate)[1], colnames(hilf)[locate[1,2]], sep=":")
-    # }
-    if (!is.na(N_fuse)){
-       if (N_fuse < aus){
-         aus <- N_fuse  ## bug fix 24 Oct 2026: had (again) "-2" before
-         names(aus) <- paste0("fuse", minq-v, ":", names(N_fuse),":", minq)
-       }
-    }
-  }
   aus
 }
 
+## label of the form construction[:fuse[:fuse...]][:derive]
+## as used by Ns for fused and derived entries
 labelToCode <- function(label, t, k, v, ...){
-  fuse <- FALSE
-  if (length(grep(":", label, fixed=TRUE))==1){
-    ## fuse result
-    hilf <- strsplit(label, ":", fixed=TRUE)[[1]]
-    fusenum <- as.numeric(sub("fuse", "", hilf[1]))
-    label <- hilf[2]
-    v <- v+fusenum
-    fuse <- TRUE
+  parts <- strsplit(label, ":", fixed=TRUE)[[1]]
+  if (length(parts) > 1){
+    nparts <- length(parts)
+    if (parts[nparts]=="derive"){
+      ## derived from a CA with strength t+1 and k+1 columns
+      source <- labelToCode(paste(parts[-nparts], collapse=":"), t+1, k+1, v, ...)
+      return(paste0("derive(", source, ")[, 1:", k, ", drop=FALSE]"))
+    }
+    stopifnot(all(parts[-1]=="fuse"))
+    fusenum <- nparts - 1
+    aus <- labelToCode(parts[1], t, k, v + fusenum, ...)
+    return(paste0("fuse(", aus, ", ", v + fusenum, ", ", v, ")"))
   }
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("KSK","PALEY",
@@ -406,7 +405,6 @@ labelToCode <- function(label, t, k, v, ...){
   if (label=="NIST"){
     aus <- paste0('nistCA(', t, ', ', k, ', ', v, ')')
   }
-  if (fuse) aus <- paste0("fuse(", aus, ", ", v, ", ", v - fusenum, ")")
   aus
 }
 

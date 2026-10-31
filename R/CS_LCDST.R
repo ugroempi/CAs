@@ -133,7 +133,7 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
   attr(aus, "f") <- f
   attr(aus, "Call") <- Call
   if (f>1)
-  hilf <- Ns(2,k,f)
+  hilf <- Ns(2,k,f, noderive=TRUE, nofuse=TRUE)
   if (f>3){
     attr(aus, "method_D-for-f") <- names(hilf)[
                              which.min(hilf[-length(hilf)])]
@@ -220,7 +220,7 @@ createCS_LCDST <- function(starter, v, G, ...){
   if (f==1) mat <- rbind(mat, v-1)
   if (f==2) mat <- rbind(mat, KSK(k=k) + v - f)
   if (f==3) mat <- rbind(mat, CAEX(k=k) + v - f)
-  if (f>3) mat <- rbind(mat, bestCA(2,k,f) + v - f)
+  if (f>3) mat <- rbind(mat, bestCA(2,k,f, noderive=TRUE, nofuse=TRUE) + v - f)
 
   fixed <- which(mat>100)
   mat[fixed] <- mat[fixed]-100  ## fix fixed values

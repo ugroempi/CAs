@@ -47,9 +47,9 @@ eCAN(t, k, v, frozen=TRUE)
 
 eCAK(t, N, v, frozen=TRUE)
 
-Ns(t, k, v, exclude=NULL)
+Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1)
 
-Ns_derive(t, k, v, exclude=NULL)
+Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1, Ndirect=NULL)
 
 Ns_fuse(t, k, v, maxfuse = 1)
 
@@ -132,7 +132,18 @@ k_pcaCA(t=2, N, v)
 
 \item{exclude}{\code{NULL} or a character vector of method(s) to exclude,
 in support of size calculations for recursive constructions
-which need to calculate sizes of best ingredients}
+which need to calculate sizes of best ingredients.
+Besides construction labels, \code{"derive"} and \code{"fuse"} exclude
+the derived and fused entries of \code{Ns}.}
+
+\item{noderive}{logical; if \code{TRUE}, \code{Ns} does not add a derived entry
+(needed for calls from within constructions and for \code{Ns_derive}, to avoid recursion)}
+
+\item{nofuse}{logical; if \code{TRUE}, \code{Ns} does not add a fused entry}
+
+\item{fusemax}{integer; maximum number of fuse steps considered for the fused entry of \code{Ns}}
+
+\item{Ndirect}{\code{NULL} or the result of \code{Ns(t, k, v, noderive=TRUE)}, if already available}
 
 \item{maxfuse}{integer number of levels to fuse (i.e., difference between number of levels before and after fusing)}
 
@@ -185,6 +196,12 @@ of columns from an affordable run size \code{N} (\code{ks}). They take into acco
 catalogues and constructions, for which sizes can be easily provided; their
 scope will grow with time, and \code{Ns} is prioritized over \code{ks}, as it is considered
 more important for applications.\cr
+\code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
+once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
+nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
+for each fuse step, fusing from up to \code{fusemax} more levels; fuse ingredients are not derived).
+Entry \code{eCAN} is always last. Constructions that need ingredient sizes
+call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE}.\cr
 Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling},
 \code{Ns_productCA}
 provide run sizes from deriving, fusing, doubling or taking the product with
