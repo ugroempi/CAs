@@ -43,6 +43,8 @@
 ## Function definition
 ## from https://stackoverflow.com/questions/17683370/how-to-produce-combinations-iteratively-in-r
 ingredientCA <- function(D, t, k, v){
+  hilf <- attr(D, "Call")
+  constr <- CallToLabel(hilf)
   list(constr=attr(D, "constr"), t=t, k=k, v=v)
 }
 

@@ -390,7 +390,7 @@ labelToCode <- function(label, t, k, v, ...){
     if (!v==2) stop('"WKS" requires v=2')
     ## the CAs are labeled by k, and there is an entry
     ## for each k between 30 and 72 (including)
-    aus <- paste0('WKS_CAs[["', k, '"]]')
+    aus <- paste0('wksCA(6,', k, ',2)')
   }
   if (label=="CS_MS"){
     if (!t==2) stop('"CS_MS" requires t=2')
@@ -427,6 +427,58 @@ labelToCode <- function(label, t, k, v, ...){
     aus <- paste0('nistCA(', t, ', ', k, ', ', v, ')')
   }
   aus
+}
+
+## label of the form construction[:fuse[:fuse...]][:derive]
+## as used by Ns for fused and derived entries
+CallToLabel <- function(call, ...){
+  call <- try(strsplit(call, "(", fixed=TRUE)[[1]])
+  if ("try-error" %in% class(call)) call <- "unknown"
+  ## label must correspond to the label used in function Ns
+  stopifnot(call %in% c("KSK","paleyCA",
+                         "CAEX", "cyclotomyCA", "ckrsCA", "RMScopiesCA",
+                         "miscCA", "recBoseCA_PCA", "SCA_Busht",
+                         "fuseBoseCA", "fuseBushtCA",
+                         "recBoseCA_CA", "projBoseCA", "compositCA",
+                         "wksCA", "CS_MS",
+                         "CS_LCDST", "CS_CK", "powerCT", "dwyerCA", "nistCA", "tjCA", "CK_doublingCA",
+                         "CK_NRB","ffCA", "CS_CMMSSY", "ODbasedCA", "pcaCA",
+                         "dpCA", "scphfCA", "cphfCA", "add1CA", "bestCA","unknown"))
+  if (call %in% c("as.matrix", "ffCA")){
+    return("FullFactorial")
+  }
+  if (call == "paleyCA"){
+    return("PALEY")
+  }
+  if (call =="tjCA"){
+    return("tjCA")
+  }
+  if (call=="cyclotomyCA"){
+    return("CYCLOTOMY")
+  }
+  if (call=="ckrsCA"){
+    return("CKRS")
+  }
+  if (call=="recBoseCA"){
+    return("recBoseCA_CA")
+  }
+  if (call=="recBosePCA"){
+    return("recBoseCA_PCA")
+  }
+  if (call=="wksCA"){
+    return("WKS")
+  }
+  if (call=="powerCA"){
+    return("powerCT")
+  }
+  if (call=="dwyerCA"){
+    return('DWYER')
+  }
+  if (call=="nistCA"){
+    return("NIST")
+  }
+  ## call and label are the same
+  return(call)
 }
 
 #' @export
