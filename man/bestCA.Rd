@@ -43,15 +43,15 @@ Thus, a seed is needed for reproducibility.}
 fixing of NA values reproducible; a non-NULL seed is
 stored in the attribute \code{fixNA_seed} of the returned object.}
 
+\item{exclude}{\code{NULL} or a character vector of method(s) to exclude,
+in support of size calculations for recursive constructions
+which need to calculate sizes of best ingredients}
+
 \item{...}{handed to construction function, currently,
 only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}
 
 \item{internet}{logical; if FALSE, methods whose designs need an internet
 connection are excluded}
-
-\item{exclude}{\code{NULL} or a character vector of method(s) to exclude,
-in support of size calculations for recursive constructions
-which need to calculate sizes of best ingredients}
 }
 \value{
 \code{bestN} returns a named integer: the first method that yields the

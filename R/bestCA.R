@@ -157,7 +157,7 @@
 #'
 
 #' @export
-bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
+bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL, ...){
   Call <- sys.call()
   if (t==1) return(matrix(0:(v-1),v,k))
   if (k <= t) return(ffCA(k , v))
@@ -171,9 +171,9 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
      # forbidden <- which(names(hilf) %in% c("DWYER","NIST"))
      # if (length(forbidden) > 0)
      #    hilf <- hilf[-forbidden]
-     hilf <- bestN(t,k,v, internet=FALSE)
+     hilf <- bestN(t,k,v, internet=FALSE, exclude=exclude)
   }else
-     hilf <- bestN(t,k,v)# Ns(t,k,v, ...)
+     hilf <- bestN(t,k,v, exclude=exclude)# Ns(t,k,v, ...)
   if (is.na(hilf))
     stop("no construction for this setting has been implemented yet")
   if (hilf > maxN)
@@ -225,13 +225,13 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, ...){
 }
 
 #' @export
-bestN <- function(t,k,v, internet=TRUE, exclude=NULL, ...){
+bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE, ...){
   ## yields the size of the smallest implemented design,
   ## with or without internet
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   stopifnot(t%%1==0, k%%1==0, v%%1==0)
   if (k <= t) return(c(FullFactorial=v^k))
-  hilf <- Ns(t,k,v, exclude=exclude)
+  hilf <- Ns(t,k,v, exclude=exclude, noderive=noderive)
   if (internet) hilf <- hilf[setdiff(names(hilf), "eCAN")] else
     hilf <- hilf[setdiff(names(hilf), c("eCAN", "DWYER", "NIST"))]
   if (length(hilf)==0) return(NA)

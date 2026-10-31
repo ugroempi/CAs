@@ -227,7 +227,7 @@
 
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
-Ns <- function(t, k, v, exclude=NULL){
+Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1){
   stopifnot(t <= 6)
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
@@ -245,7 +245,7 @@ Ns <- function(t, k, v, exclude=NULL){
     aus <- c(
     KSK=ifelse("KSK" %in% exclude || t>2 || v>2, NA, N_KSK(k)),
     CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
-                         NA, N_CK_doublingCA(t,k,v)),
+                         NA, N_CK_doublingCA(t,k,v, exclude=exclude)),
     CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
     PALEY=ifelse("PALEY" %in% exclude, NA,
           N_PALEYcat(t,k,v)),
@@ -281,8 +281,20 @@ Ns <- function(t, k, v, exclude=NULL){
     )
   aus <- aus[!is.na(aus)]
   # if (t==2 && v==2) aus <- c(KSK=N_KSK(k), aus)
-  # if (length(aus)==0 && t<6){
-  #   Nderive <- Ns_derive(t, k, v, exclude=exclude)
+  if (t<6 && !noderive){
+     suppressMessages(
+       Nderive <- Ns_derive(t, k, v, exclude=exclude)
+     )
+     if (is.data.frame(Nderive)){
+     Nderive <- Nderive[,setdiff(colnames(Nderive),
+                                 c("label", "eCAN")), drop=FALSE]
+     mincol <- which.min(Nderive[2,])
+     derivemethod <- colnames(Nderive)[mincol]
+     Nderive <- Nderive[2,mincol]
+     aus <- c(aus[1:(length(aus)-1)], Nderive, aus[length(aus)])
+     names(aus)[length(aus)-1] <- paste0(derivemethod,":derive")
+     }
+  }
   #   if (!is.na(Nderive)){
   #     message("no solution found, but deriving yields a solution:")
   #     aus <- Nderive["N",]
@@ -298,12 +310,12 @@ Ns <- function(t, k, v, exclude=NULL){
 ## obtain possibilities for derivation sources
 #' @export
 Ns_derive <- function(t, k, v, exclude=NULL){
-  Nswoderive <- Ns(t, k, v, exclude=exclude)
+  Nswoderive <- Ns(t, k, v, exclude=exclude, noderive = TRUE)
   if (t>=6){
     message("derive could not be used for strength 6")
     return(Nswoderive)
   }
-  fromNs <- Ns(t+1, k+1, v, exclude=exclude)
+  fromNs <- Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE)
 
   if (length(fromNs)>0)
     Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
@@ -791,4 +803,100 @@ ks_productCA <- function(t=2, N, v){
   suppressMessages(direct <- as.data.frame(rbind(ks(t, N, v))))
   dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
 }
+#
+# Nothing was changed. I read the code in `/home/runner/work/CAs/CAs/R` but did not run anything. These are the places I would treat with care, most serious first.
+#
+# **1. `Ns` and `Ns_derive` call each other (`CAN.R`)**
+#   - `Ns_derive` starts with `Ns(t,k,v)` and then calls `Ns(t+1,k+1,v)`. If `Ns` also calls `Ns_derive`, the first call recurses on itself.
+# - Split the current `Ns` body into a non-deriving core (say `Ns_direct`). `Ns_derive` should call only that core.
+# - The upward chain stops at t=6, so it ends. But each level evaluates every catalogue (DWYER/NIST need internet), and the work multiplies with each level.
+# - Decide whether `Ns` should derive recursively (t+2, t+3 and so on) or only one level. One level is cheaper and simpler.
+# - `Ns_derive` has other issues:
+#   - `t>=6` returns early, and `NA` is returned when `fromNs` is empty.
+# - The return type is a data frame or `NA`, not a named vector.
+# - The "no derived design was better" branch relies on `any(is.na(...))`.
+# - `Ns` would need to extract just the best derived N and give it a stable name.
+#
+# **2. The `eCAN` entry**
+#   - `Ns` always includes `eCAN`, which is a theoretical size, not an implemented design.
+# - `Ns_derive` currently derives from every entry of `Ns(t+1,k+1,v)`, including `eCAN`.
+# - Derived sizes must come only from implemented constructions. Otherwise `bestN` or `bestCA` would pick a "derived" design that cannot be built.
+# - Derived entries also need their own handling next to `eCAN`, and a way to be excluded through `exclude`. The validity check on `exclude` would need the new label.
+#
+# **3. Constructions that call `bestN` or `bestCA` internally**
+#
+#   These now re-enter `Ns` through the new derive branch. None form a true cycle as far as I can see, because `t` grows in each derive step. But each hits the cost problem above.
+# - **`N_CK_doublingCA` (`CK_doubling.R`):**
+#   - It uses `bestN(3,ceil(k/2))` and `bestN(2,ceil(k/2))`. The second is a t=2 call that will itself try deriving from t=3, k+1.
+# - `k3 = k` for k=1, and for k=2, `k3 = 1`, which hits the `k<=t` shortcut. Check the small-k edge cases.
+# - `k_CK_doublingCA` is disabled with the comment "problem is recursive use of CK_doubling". It assumes ingredient designs are not themselves doubled. With derivation, they can be.
+# - **`N_add1`:** it uses `bestN(t,k-1)` and `bestN(t-2,k-1)`. Derive of (t,k-1) goes to (t+1,k), which may use add1 again.
+# - **`N_CK_constrD`** (`CK_constrD.R:119-120`): it uses `bestN(3,k,v-1)` and `bestN(2,k-1,v-1)`.
+# - **`CKRS_augment.R`:** it uses `bestN(t,k,v-1)` and `bestCA`.
+# - **`MTVTRouxtype.R:131-155`:** it uses `bestN(t,kwork,v)` for t=4 and t=5, plus the lower strengths.
+# - **`compositCA.R`:** it uses `bestN` on divisors of `v`.
+# - **`ODbasedCA.R`:** it uses `bestN(3,k,2)`.
+# - **`auxiliary_mixed.R`:** it uses `bestN(2,...)` repeatedly.
+# - **`N_CS_LCDST`:** it calls `Ns(2,k,f)` directly.
+# - **`bestN` itself:** for non-prime-power `v` it calls `bestN(t,k,minq)`, so derivation would be repeated for the next prime power too.
+#
+# **4. Builders must exist for derived sizes**
+#   - `bestCA` builds designs via `labelToCode(constr,...)` from the construction name returned by `bestN`.
+# - A derived entry needs a name that `labelToCode` can parse. It must build the source design with `bestCA(t+1,k+1,v)`, then derive and keep the original attributes.
+# - Several places parse or reuse construction names, and a dynamic name like `derive:<source>` could break them:
+#   - `ODbasedCA.R:103-107`: `names(bestN(...))` is fed straight into `labelToCode`.
+# - `powerCA.R:113-132`: it uses `hilf$constr1/2/3` with `labelToCode`.
+# - `bestN`'s fuse naming: `paste0("fuse",...,names(N_fuse))`.
+#   - `CS_LCDST.R`: it uses `names(hilf)[which.min(hilf[-length(hilf)])]`, which assumes `eCAN` is last.
+# - Anything that assumes `eCAN` is the last element, or drops it by position, will break if derived entries are appended after it.
+# - Derive with a larger `v` (`deriveto` takes `floor(N/v)`) needs the source to be an actual CA whose rows split evenly. Check that this holds for the constructions you allow as sources.
+#
+# **5. Other callers of `Ns` that return different shapes**
+# - `Ns_CK_doubling`, `Ns_productCA` and `Ns_fuse` call `Ns` and bind its result into data frames. A changed set of names would change their columns.
+# - The `bestN` `exclude` argument must be passed through the derive branch, so that "exclude derive" and "exclude X" also apply to the source `Ns(t+1,k+1)`.
+#
+# **Suggested order of work**
+# 1. Introduce the non-deriving core and make `Ns_derive` use it.
+# 2. Exclude `eCAN` from the derive sources and add a `"derive"` label to the `exclude` list.
+# 3. Add the `labelToCode` mapping for the derived entry.
+# 4. Fix the name-parsing sites in `ODbasedCA`, `powerCA`, `CS_LCDST` and `bestN`.
+# 5. Then add a guard against deep recursion, such as a one-level limit or a depth flag. Test with `Ns` and `bestN` across t=2..6 and small k, comparing runtime before and after.
 
+# Yes, a noderive argument on Ns is a good design. It avoids a second function and gives every internal caller a simple switch.
+#
+# Signature and semantics
+#
+# Use Ns(t, k, v, exclude=NULL, noderive=FALSE).
+# With noderive=TRUE, Ns runs exactly today's body, with no derive entry. Keep that body unchanged so existing behaviour is preserved.
+# With noderive=FALSE, Ns computes the core result and then adds one entry, for example DERIVE, holding the best derived size.
+# Register "DERIVE" in the valid exclude labels, so exclude="DERIVE" also turns it off.
+# Derive entry (only when noderive=FALSE and t<6)
+#
+# Get the source sizes from Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE). This guarantees the recursion stops after one level.
+# Drop eCAN from the sources, because it is a theoretical size and cannot be built.
+# Compute floor(N/v) per source, using deriveto, and take the minimum.
+# Add the entry only if it is smaller than the best direct entry. Insert it before eCAN, so code that treats eCAN as the last element still works.
+# Ns_derive
+#
+# Change it to call Ns(..., noderive=TRUE) for both the direct and the source sizes.
+# This removes the cycle between Ns and Ns_derive. It can stay as the detailed view, and Ns can reuse its logic.
+# Callers
+#
+# Leave the default at FALSE for the public interface and for bestN and bestCA, so they get the new derived entry.
+# Pass noderive=TRUE where a derived result would mislead or recurse, or where a plain table is expected:
+# Ns_fuse, Ns_CK_doubling and Ns_productCA, which bind Ns results into data frames.
+# N_CS_LCDST (Ns(2,k,f)).
+# N_CK_doublingCA and the other ingredient-based N_* functions that use bestN. This probably needs a noderive pass-through in bestN, including its recursive bestN(t,k,minq) fuse call.
+# Decide whether ingredient calls such as N_CK_doublingCA should use derived ingredients. If they should not, pass noderive=TRUE through bestN.
+# Building the design
+#
+# Add a labelToCode mapping for DERIVE. It builds the best source with bestCA(t+1, k+1, v, noderive=TRUE), then derives (fix one column to a value, keep those rows, drop that column) and keeps the attributes.
+# This means bestCA must expose or pass through noderive as well.
+# The DERIVE label must carry or recover the source construction. The name-parsing sites then need to cope with it: ODbasedCA and powerCA (labelToCode(names(...))), and the bestN fuse naming.
+# Tests
+#
+# Check that Ns(..., noderive=TRUE) equals the old Ns output.
+# Check that Ns with the default gives the old output plus an optional DERIVE entry, and never a larger minimum.
+# Check that bestCA for a case where derive wins builds a valid CA. Use CAs::: access, as in the existing tests.
+# Compare runtime on t=2..5 against the old version.
+### bestN(3,18,16) very slow
