@@ -51,6 +51,7 @@ available).
 }
 
 \examples{
+## a case for which this is best
 D <- powerCA(3,1331,2)
 dim(D)
 D2 <- add1Column(D, 3, 2)
@@ -64,9 +65,9 @@ dim(add1CA(3,1332,2))
 \donttest{
 A <- add1CA(6,2504,2)
 dim(A)
-eCAN(6,2504,2) ## much better
-Ns(4,2504,2) ## its so much worse because this ingredient is poor
-3047 + (1394 - 272)*2
+eCAN(6,2504,2) ## better
+Ns(4,2504,2) ## its a bit worse because this ingredient is not optimal
+3047 + (288 - 272)*2
 eCAN(4,2504,2) ## Colbourn and Zhou power construction not implemented
 }
 

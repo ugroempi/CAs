@@ -3,6 +3,13 @@
 Changes since latest release,
 version 0.25
 
+ - integrated best derive and best fuse entry into Ns, and consequently 
+   also into bestN and bestCA (supported by Github Copilot); 
+   needs further thought regarding where to suppress these (currently presumably 
+   suppressed a bit too often; nevertheless seems to be somewhat costly in terms 
+   of run time for function Ns)
+ - added ingredients element to attributes of class ca arrays whose construction 
+   was based on CA ingredients (supported by Github Copilot)
  - added function RMScopies (with RMScopiesCA, N_RMScopiesCA, k_RMScopiesCA
    and the data frame rmsCOPIEScat) for strength 3 CAs from the Raaphorst-Moura-Stevens
    construction, extended by shifted column copies (contributed by Mickael
@@ -19,10 +26,9 @@ version 0.25
    instead of colbournBigFrame as the basis for functions 
    eCAN and eCAK. As this is still expected to develop with 
    potential breaking changes, it is not made the default yet.
- - added power constructions with "S" in them to powerCTcat;
-   more changes are expected from the new RMScopies designs 
-   as ingredients, as some ingredients in powerCTcat are 
-   as yet quite poor
+ - added power constructions with "S" in them to powerCTcat
+ - updated documentation for add1CA to reflect the improved 
+   ingredient from the previous bullet
 
 October 23 2026, version 0.24-4
 
