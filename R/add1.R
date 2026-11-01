@@ -10,7 +10,7 @@
 #' @aliases add1Column
 #'
 #' @usage add1CA(t, k, v, ...)
-#' @usage N_add1CA(t, k, v)
+#' @usage N_add1CA(t, k, v, ...)
 #' @usage add1Column(D, t, v, ...)
 #'
 #' @param t integer: the required strength, or the strength of \code{D} (not checked)
@@ -18,7 +18,7 @@
 #' @param v integer: the required number of levels, or the number of levels of \code{D}
 #' @param D a strength \code{t} CA with \code{v} levels in \code{k-1} columns\cr
 #' (integer levels, starting at 0 or 1)
-#' @param ... currently not used
+#' @param ... used for propagating an \code{exclude} argument, if needed
 #'
 #' @returns \code{add1Column} and \code{add1CA} return a CA of strength \code{t} in \code{v} levels in
 #' \code{k} columns.\cr
@@ -26,16 +26,32 @@
 #' \code{N_add1CA} returns the number of runs obtainable by \code{add1CA}.
 #'
 #' @section Details:
-#' Function \code{add1CA} applies function \code{add1Column} the the best available
-#' strength \code{t} CA at \code{v} levels with \code{k-1} columns in the role of \code{D}.\cr
-#' The construction relies on appending to \code{D} a copy of the last column of \code{D},
+#' Functions \code{add1CA} and \code{N_add1CA} are obsolete and
+#' are kept for backward compatibility and manual inspection only.
+#' The implementation via \code{\link{bestCA}}, based
+#' on \code{\link{Ns_add1}} and the internal function
+#' \code{N_add1best}, is much more powerful and optionally permits
+#' to add more than one column (by repeatedly adding one column).
+#' Function \code{add1Column} is the workhorse function for
+#' these more powerful functions.
+#'
+#' Function \code{add1CA} applies function \code{add1Column} to
+#' the best available strength \code{t} CA at \code{v} levels
+#' with \code{k-1} columns in the role of \code{D};
+#' \code{\link{derive}}, \code{\link{fuse}} and \code{add1} constructions
+#' are not included in the search for a best ingredient.\cr
+#' The construction relies on appending to \code{D}
+#' a copy of the last column of \code{D},
 #' followed by adding rows that consist of\cr
-#' the best strength \code{t-2} CA at \code{v} levels with \code{k-2} columns, repeated \code{v*(v-1)} times, in the first \code{k-2} columns,\cr
-#' each combined with one of the \code{v(v-1)} distinct level pairs for the last two columns.\cr
+#' the best strength \code{t-2} CA at \code{v} levels with \code{k-2} columns,
+#' repeated \code{v*(v-1)} times, in the first \code{k-2} columns,\cr
+#' each combined with one of the \code{v(v-1)} distinct level pairs
+#' for the last two columns.\cr
 #' For \code{t=2}, the best CA is simply a constant row of flexible values.
 #'
-#' The construction is not interesting for small CAs, but may be useful, where
-#' good large CAs, e.g., ones constructed by cyclotomy, have one less column
+#' The construction is not interesting for small CAs, but may be useful,
+#' where good large CAs, e.g., ones constructed by cyclotomy,
+#' have one less column
 #' than needed (and a good CA with strength \code{t-2} for \code{k-1} columns is
 #' available).
 #'
@@ -65,9 +81,12 @@
 
 #' @export
 add1CA <- function(t, k, v, ...){
-   N <- N_add1CA(t, k, v)
+   N <- N_add1CA(t, k, v, ...)
    if (!is.na(N))
-   add1Column(bestCA(t,k-1,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE),t,v)
+   add1Column(
+     bestCA(t,k-1,v,
+        noderive=TRUE, nofuse=TRUE, noadd1=TRUE, ...),
+     t,v)
 }
 
 #' @export
@@ -92,7 +111,8 @@ add1Column <- function(D, t, v, ...){
          kronecker(OD2(v)[,1:2],matrix(1,nrow=v,ncol=1))))
    }
    if (t>3){
-     D2 <- bestCA(t-2,k-1,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+     D2 <- bestCA(t-2,k-1,v,
+            noderive=TRUE, nofuse=TRUE, noadd1=TRUE, ...)
      if (!is.null(attr(D2, "constr")))
        ingredients$D2 <- ingredientCA(D2, t-2, k-1, v)
      aus <- rbind(aus,
@@ -108,60 +128,13 @@ add1Column <- function(D, t, v, ...){
 }
 
 #' @export
-N_add1CA <- function(t, k, v){
-   hilf <- bestN(t, k-1, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+N_add1CA <- function(t, k, v, ...){
+   hilf <- bestN(t, k-1, v,
+        noderive=TRUE, nofuse=TRUE, noadd1=TRUE, ...)
    #if (bestN(t,k,v, exclude="add1CA") <= hilf) return(NA)
    if (t==2) return(hilf + v*(v-1))
    if (t==3) return(hilf + v^2*(v-1))
    ## now t>3
-   hilf + unname(bestN(t-2, k-1, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE))*v*(v-1)
+   hilf + unname(bestN(t-2, k-1, v,
+                  noderive=TRUE, nofuse=TRUE, noadd1=TRUE, ...))*v*(v-1)
 }
-#'
-
-# nocov start
-## unfinished and very experimental
-add2 <- function(D, t, v, ...){
-  Call <- sys.call()
-  stopifnot(is.matrix(D))
-  levs <- levels.no(D)
-  stopifnot(all(levs==v))
-  stopifnot(is.numeric(t))
-  stopifnot(t%%1==0)
-  stopifnot(t>=2)
-  k <- ncol(D)
-  aus <- cbind(D, D[,k], D[,k])
-  if (t==2){
-    hilf <- maxconstant(bestCA(2,3,v), remove=TRUE)
-    aus <- rbind(aus,
-                 cbind(matrix(NA,nrow=nrow(hilf),ncol=k-1),
-                       hilf))
-  }
-  if (t==3){
-    hilf <- maxconstant(bestCA(3,3,v), remove=TRUE)
-    if (ncol(OD2(v))<3) stop("not applicable")
-    aus <- rbind(aus,
-                 cbind(kronecker(matrix(1,nrow=v*(v-1),ncol=1),matrix(0:(v-1),v,k-1)),
-                       kronecker(OD2(v)[,1:3],matrix(1,nrow=v,ncol=1))),
-                 cbind(matrix(NA,nrow=nrow(hilf),ncol=k-1),
-                       hilf))
-  }
-  if (t>3){
-    if (ncol(OD2(v))<3) stop("not applicable")
-    ## t-tuples with triples of the last three columns
-    hilf2 <- maxconstant(bestCA(3,3,v), remove=TRUE)
-    hilf1 <- bestCA(t-3,k-1,v)
-    ## t-tuples with pairs of the last three columns
-    hilf22 <- maxconstant(bestCA(2,3,v), remove=TRUE)
-    hilf21 <- bestCA(t-2,k-1,v)
-    aus <- rbind(aus,
-                 cbind(kronecker(matrix(1,nrow=nrow(hilf22),ncol=1),hilf21),
-                       kronecker(hilf22, matrix(1,nrow=nrow(hilf21),ncol=1))),
-                 cbind(kronecker(matrix(1,nrow=nrow(hilf2),ncol=1),hilf1),
-                       kronecker(hilf2, matrix(1,nrow=nrow(hilf1),ncol=1)))
-                 )
-  }
-  attrs <- attributes(D)
-  attrs$dim[2] <- attrs$dim[2]+2
-  return(aus)
-}
-# nocov end

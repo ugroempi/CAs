@@ -152,7 +152,10 @@ fivenum(diff)
 
 ## one entry is much better than the current Colbourn table entry
 ## coverage of this entry (t=6, k=380) has been proven
-## by Hriday Rungta (see https://github.com/ugroempi/CAs/issues/62).
+## by Hriday Rungta (see https://github.com/ugroempi/CAs/issues/62),
+## presumably with the help of an AI.
+## Sample verification runs for subsets of columns were also
+## always successful.
 ##
 }
 

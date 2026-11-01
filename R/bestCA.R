@@ -21,10 +21,15 @@
 #' @aliases nistCA
 #' @aliases tjCA
 #'
-#' @usage bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-#'   noderive=FALSE, nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
-#' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
-#'   nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
+#' @usage bestCA(t, k, v, maxN=1000000,
+#'   fixNA=TRUE, seed=NULL, exclude=NULL,
+#'   noderive=FALSE,
+#'   nofuse=FALSE, maxfuse=NULL,
+#'   noadd1=FALSE, maxadd1=1, ...)
+#' @usage bestN(t, k, v, internet=TRUE, exclude=NULL,
+#'   noderive=FALSE,
+#'   nofuse=FALSE, maxfuse=NULL,
+#'   noadd1=FALSE, maxadd1=1, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage wksCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
@@ -57,8 +62,7 @@
 #' @param noadd1 logical; if \code{TRUE}, designs obtained by adding columns
 #'   with \code{\link{add1Column}} are not considered
 #' @param maxadd1 maximum number of \code{add1Column} steps considered
-#' @param ... handed to construction function, currently,
-#'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
+#' @param ... currently not used
 #' @returns \code{bestN} returns a named integer: the first method that yields the
 #'        smallest implemented size.\cr
 #'        The other functions return a matrix of class \code{ca},
@@ -287,6 +291,7 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
 ## label of the form construction[:fuse[:fuse...]|:add1[:add1...]][:derive]
 ## as used by Ns for fused and derived entries
 labelToCode <- function(label, t, k, v, ...){
+  ## handle derive, add1 and fuse instances first
   parts <- strsplit(label, ":", fixed=TRUE)[[1]]
   if (length(parts) > 1){
     nparts <- length(parts)
@@ -303,6 +308,7 @@ labelToCode <- function(label, t, k, v, ...){
         aus <- paste0("add1Column(", aus, ", ", t, ", ", v, ")")
       return(aus)
     }
+    ## not derive and not add1 --> fuse
     stopifnot(all(parts[-1]=="fuse"))
     fusenum <- nparts - 1
     aus <- labelToCode(parts[1], t, k, v + fusenum, ...)
@@ -316,7 +322,8 @@ labelToCode <- function(label, t, k, v, ...){
   "recBoseCA_CA", "projBoseCA", "compositCA",
   "WKS", "CS_MS",
   "CS_LCDST", "CS_CK", "powerCT", "DWYER", "NIST", "TJ", "CK_doublingCA",
-  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "pcaCA", "dpCA", "scphfCA", "cphfCA", "add1CA"))
+  "CK_NRB","FullFactorial", "CS_CMMSSY", "ODbasedCA", "pcaCA", "dpCA",
+  "scphfCA", "cphfCA"))
   if (label =="FullFactorial"){
     return(paste0("as.matrix(expand.grid(rep(list(0:(", v, "-1)),", k,")))"))
   }

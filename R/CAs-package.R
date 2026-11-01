@@ -10,8 +10,9 @@
 #' All references of the package are listed in this file and referenced from the other documentation files.
 #'
 #' Within the package, available CA constructions for specific situations can be queried using
-#' the function \code{\link{Ns}}, which provides sizes from available constructions, as well as the current known optimum size;
-#' it is not guaranteed that all implemented constructions are incorporated, as this is not trivial for constructions with
+#' the function \code{\link{Ns}}, which provides sizes from available constructions,
+#' as well as the current known optimum size.
+#' It is not guaranteed that all implemented constructions are incorporated, as this is not trivial for constructions with
 #' intricate ingoing quantities.
 #' An analogous function \code{ks} is far less advanced, as the typical application situation
 #' presumably starts from a set of variables to be covered.
@@ -39,9 +40,11 @@
 #' * the construction based on CPHFs using CPHFs from Wagner, Colbourn and Simos (2022) in function \code{\link{cphfCA}}
 #' * Colbourn et al. (2010, CKRS) cross-sum of an \code{N x k} code with a strength t-1 CA to yield a strength t CA
 #' * recursive Bose constructions using \code{\link{productPCA}} or \code{\link{productCA}}, implemented in functions \code{\link{recursiveBose}} and \code{\link{recBoseCA}}; the variant with \code{link{productPCA}} is uniformly better than a similar construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
+#' * general fusion (Colbourn et al. 2010, Lemma 3.1) from \code{v}&nbsp;levels in \code{N+2}&nbsp;runs to \code{v-1}&nbsp;levels in \code{N}&nbsp;runs; the construction can be repeatedly applied
 #' * a fusion construction based on a Bose matrix, from Colbourn (2008), in function \code{\link{fuseBoseCA}}
 #' * a fusion construction based on a Bush matrix, from Colbourn (2008), in function \code{\link{fuseBushtCA}}
 #' * a projection construction based on a Bose matrix, from Colbourn (2008), in functions \code{\link{projectionBose}} and \code{\link{projBoseCA}}
+#' * a derive construction from strength \code{t+1} in \code{k+1} columns to strength&nbsp;\code{t} in \code{k} columns as described, e.g., in Zhang et al. 2014 (used as candidate for \code{\link{bestN}} and \code{\link{bestCA}})
 #' * the group-based strength 2 construction by Meagher and Stevens (2005) which uses starter vectors and a group of cycling permutations that leaves one value fixed (function \code{\link{CS_MS}})
 #' * the strength 2 cover starter construction by Lobb et al. (2012) which works similarly to Meagher and Stevens (2005) but fix one or more symbols using the additive group on the non-fixed symbols (function \code{\link{CS_LCDST}})
 #' * the strength 2 cover starter construction by Colbourn et al. (2006) which is simpler than Meagher and Stevens (2005) and allows a recursive product construction (function \code{\link{CS_CMMSSY}})

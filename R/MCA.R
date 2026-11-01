@@ -40,7 +40,8 @@
 #' @param t integer, the strength of \code{D} (smaller strength would be permitted,
 #'        but would not make sense) or the requested strength
 #' @param internet logical: is an internet connection available (for DWYER or NIST download)
-#' @param ... currently not used
+#' @param ... currently used by \code{N_upper_MCA} only, passed to \code{\link{bestN}},
+#' e.g. an \code{exclude} argument
 #'
 #' @section Details:
 #' Function \code{MCA2} implements Groemping's (2025) generalization of the first

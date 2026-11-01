@@ -32,6 +32,11 @@ reducing the number of rows by 2 for each reduction of 1 level.
 Note that there is a variant of fusion, implemented in function \code{\link{fuseBose}},
 for which the number of runs can be reduced by three; this is applicable for strength 2
 with \code{vprior} a prime or prime power and up to \code{vprior + 1} columns in \code{D}.
+
+Functions \code{\link{Ns_fuse}}, \code{\link{bestN}}, and \code{\link{bestCA}}
+include fusion constructions among those competing for being best. Their default
+\code{maxfuse=1} works for \code{vprior-vpost=1}; it can be increased to allow for
+more fusion steps.
 }
 
 \examples{
@@ -50,5 +55,5 @@ coverage(D10, 3)
 Colbourn et al. (2010, CKRS; Lemma 3.1)
 }
 \seealso{
-\code{\link[=fuseBose]{fuseBose()}} for the case mentioned in the Details section
+\code{\link[=fuseBose]{fuseBose()}}, \code{\link[=Ns_fuse]{Ns_fuse()}}, \code{\link[=bestN]{bestN()}}, \code{\link[=bestCA]{bestCA()}}
 }

@@ -8,7 +8,7 @@
 \usage{
 add1CA(t, k, v, ...)
 
-N_add1CA(t, k, v)
+N_add1CA(t, k, v, ...)
 
 add1Column(D, t, v, ...)
 }
@@ -19,7 +19,7 @@ add1Column(D, t, v, ...)
 
 \item{v}{integer: the required number of levels, or the number of levels of \code{D}}
 
-\item{...}{currently not used}
+\item{...}{used for propagating an \code{exclude} argument, if needed}
 
 \item{D}{a strength \code{t} CA with \code{v} levels in \code{k-1} columns\cr
 (integer levels, starting at 0 or 1)}
@@ -36,16 +36,32 @@ adding at most bestN(t-2,k-1,v)\emph{v}(v-1) rows.
 }
 \section{Details}{
 
-Function \code{add1CA} applies function \code{add1Column} the the best available
-strength \code{t} CA at \code{v} levels with \code{k-1} columns in the role of \code{D}.\cr
-The construction relies on appending to \code{D} a copy of the last column of \code{D},
+Functions \code{add1CA} and \code{N_add1CA} are obsolete and
+are kept for backward compatibility and manual inspection only.
+The implementation via \code{\link{bestCA}}, based
+on \code{\link{Ns_add1}} and the internal function
+\code{N_add1best}, is much more powerful and optionally permits
+to add more than one column (by repeatedly adding one column).
+Function \code{add1Column} is the workhorse function for
+these more powerful functions.
+
+Function \code{add1CA} applies function \code{add1Column} to
+the best available strength \code{t} CA at \code{v} levels
+with \code{k-1} columns in the role of \code{D};
+\code{\link{derive}}, \code{\link{fuse}} and \code{add1} constructions
+are not included in the search for a best ingredient.\cr
+The construction relies on appending to \code{D}
+a copy of the last column of \code{D},
 followed by adding rows that consist of\cr
-the best strength \code{t-2} CA at \code{v} levels with \code{k-2} columns, repeated \code{v*(v-1)} times, in the first \code{k-2} columns,\cr
-each combined with one of the \code{v(v-1)} distinct level pairs for the last two columns.\cr
+the best strength \code{t-2} CA at \code{v} levels with \code{k-2} columns,
+repeated \code{v*(v-1)} times, in the first \code{k-2} columns,\cr
+each combined with one of the \code{v(v-1)} distinct level pairs
+for the last two columns.\cr
 For \code{t=2}, the best CA is simply a constant row of flexible values.
 
-The construction is not interesting for small CAs, but may be useful, where
-good large CAs, e.g., ones constructed by cyclotomy, have one less column
+The construction is not interesting for small CAs, but may be useful,
+where good large CAs, e.g., ones constructed by cyclotomy,
+have one less column
 than needed (and a good CA with strength \code{t-2} for \code{k-1} columns is
 available).
 }

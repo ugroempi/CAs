@@ -35,7 +35,8 @@ it is sometimes but not always beneficial to increase it versus the default 1}
 
 \item{seed}{the seed for making \code{\link{postopNCK}} reproducible}
 
-\item{...}{currently not used}
+\item{...}{currently used by \code{N_upper_MCA} only, passed to \code{\link{bestN}},
+e.g. an \code{exclude} argument}
 
 \item{D}{a strength \code{t} CA (it may have mixed levels)}
 

@@ -54,7 +54,7 @@ Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
 Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
   noadd1=FALSE, maxadd1=1, Ndirect=NULL)
 
-Ns_add1(t, k, v, maxadd1=1)
+Ns_add1(t, k, v, maxadd1=1, ...)
 
 Ns_fuse(t, k, v, maxfuse = 1)
 
@@ -164,6 +164,9 @@ for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}}
 if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)}
 
 \item{frozen}{logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available}
+
+\item{...}{allows to propagate arguments to \code{Ns} (function \code{Ns_add1}),
+used for \code{exclude}}
 }
 \value{
 \code{eCAN} returns a data frame with the smallest known run size
@@ -245,17 +248,24 @@ functions \code{CAEX} or \code{SCA_Bose}).
 \examples{
 eCAN(3, 199, 2)
 N_NISTcat(3, 199, 2)
-N_TJcat(3, 199, 2) ## equals the best-known array
+N_CK_doublingCA(3, 199, 2) ## equals the best-known size
+N_TJcat(3, 199, 2) ## there is a 43 run array by TJ,
+                   ## but it is not stored in the package,
+                   ## as unnecessary array storage is avoided
 
 eCAN(4, 199, 2)
 N_TJcat(4, 199, 2) ## Colbourn table outdated
+bestN(4, 199, 2, exclude="TJ")  ## slightly worse than Colbourn table
+bestN(4, 199, 2, exclude="TJ", internet=FALSE)
 
 eCAK(2,11,3)  ## also obtained by CAEX
 k_NISTcat(2,11,3)
+bestN(2,5,3)
+bestN(2,5,3, exclude="CAEX") ## CS_MS also yields it
 k_TJcat(2,11,3) ## equals the best-known array
 
 N_CYCLOTOMYcat(3, 45, 3) ## t=3 and v=3 not implemented
-N_CYCLOTOMYcat(4, 45, 3) ## quite large!
+N_CYCLOTOMYcat(4, 45, 3) ## N=669
 k_CYCLOTOMYcat(4, 669, 3) ## can accommodate 224 columns
 N_CYCLOTOMYcat(4, 5, 3) ## is the smallest *implemented*
                         ## cyclotomy strength 4 CA for 3 levels
@@ -274,23 +284,23 @@ Ns(3, 45, 2)  ## the best array is in the TJ or the DWYER-catalogue
               ## CK_doublingCA is close
 Ns(3, 400, 2) ## powerCT construction is best
 Ns(2, 800, 3) ## function CAEX produces the best available array
-Ns(3, 200, 3) ## cphfCA is best
+Ns(3, 200, 3) ## cphfCA is best implemented
+eCAN(3, 200, 3)   # not implemented
 Ns(4, 150, 3) ## cyclotomy is very competitive
 Ns(4, 150, 2) ## TJ is best (function tjCA)
 Ns(4, 50, 2) ## Paley and Cyclotomy are the same, and both optimal
-Ns(4, 50, 3) ## the best easily available CA is
-   # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_507_4_53_3.txt
 Ns(5, 50, 2) ## CS_CK and Paley are optimal
-Ns(5, 500, 2) ## CS_CK is near-optimal
-Ns(5, 50, 3) ## the best easily available CA is
-   # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_2067_5_50_3.txt
-Ns(5, 500, 3) ## Cyclotomy is optimal
 Ns(6, 50, 2) ## WKS is optimal
    # WKS_CAs['50']; bestCA(6, 50, 2)
 Ns(6, 200, 2) ## CS_CK and Paley are optimal
-Ns(6, 2000, 2) ## Cyclotomy is optimal
+Ns(4, 50, 3) ## the best easily available CA is
+   # https://github.com/aadwyer/CA_Database/blob/main/Repository/CA/CA_507_4_53_3.txt
+eCAN(4, 50, 3) ## the Torres-Jimenez group
+               ## does not share most of their arrays
 Ns(6, 200, 3) ## powerCT is best implemented,
               ## but far worse than optimum
+eCAN(6, 200, 3) ## again, the Torres-Jimenez group
+               ## does not share most of their arrays
 
 Ns_CK_doubling(3, 22, 2)
 ## with doubling a Paley design for ceiling(22/2) columns,
@@ -299,4 +309,19 @@ Ns_CK_doubling(3, 22, 2)
 
 Ns_CK_doubling(3, 12, 3)
 ## the direct CKRS construction is best (ckrsCA)
+
+Ns(5,7016, 3)  ## adding 3 columns would help
+Ns(5,7016, 3, maxadd1=3)  ## but a good ingredient
+                          ## is missing
+\donttest{
+## run time a bit larger because of larger
+## non-prime number of levels
+Ns(3, 381, 15)
+eCAN(3, 381, 15)
+## achieve eCAN by increasing maxfuse
+Ns(3, 381, 15, maxfuse=4)
+## runs for about a minute on my machine
+D <- bestCA(3,381,15,maxfuse=4)
+dim(D)
+}
 }

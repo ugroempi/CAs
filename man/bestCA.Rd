@@ -11,11 +11,16 @@
 \title{Functions in support of obtaining the best uniform CA
 for a combination of t, k and v}
 \usage{
-bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-  noderive=FALSE, nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
+bestCA(t, k, v, maxN=1000000,
+  fixNA=TRUE, seed=NULL, exclude=NULL,
+  noderive=FALSE,
+  nofuse=FALSE, maxfuse=NULL,
+  noadd1=FALSE, maxadd1=1, ...)
 
-bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
-  nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
+bestN(t, k, v, internet=TRUE, exclude=NULL,
+  noderive=FALSE,
+  nofuse=FALSE, maxfuse=NULL,
+  noadd1=FALSE, maxadd1=1, ...)
 
 ckrsCA(t, k, v, ...)
 
@@ -64,8 +69,7 @@ with \code{\link{add1Column}} are not considered}
 
 \item{maxadd1}{maximum number of \code{add1Column} steps considered}
 
-\item{...}{handed to construction function, currently,
-only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}
+\item{...}{currently not used}
 
 \item{internet}{logical; if FALSE, methods whose designs need an internet
 connection are excluded}

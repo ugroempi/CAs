@@ -25,7 +25,12 @@
 #' for which the number of runs can be reduced by three; this is applicable for strength 2
 #' with \code{vprior} a prime or prime power and up to \code{vprior + 1} columns in \code{D}.
 #'
-#' @seealso [fuseBose()] for the case mentioned in the Details section
+#' Functions \code{\link{Ns_fuse}}, \code{\link{bestN}}, and \code{\link{bestCA}}
+#' include fusion constructions among those competing for being best. Their default
+#' \code{maxfuse=1} works for \code{vprior-vpost=1}; it can be increased to allow for
+#' more fusion steps.
+#'
+#' @seealso [fuseBose()], [Ns_fuse()], [bestN()], [bestCA()]
 #'
 #' @references Colbourn et al. (2010, CKRS; Lemma 3.1)
 #'
