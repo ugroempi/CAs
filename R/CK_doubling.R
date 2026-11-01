@@ -139,8 +139,8 @@ CK_doublingCA <- function(k, v, exclude=NULL, ...){
   Call <- sys.call()
   k3 <- ceiling(k/2)
   ## ingredients without derive and fuse, consistent with N_CK_doublingCA
-  D3 <- bestCA(3, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE)
-  D2 <- bestCA(2, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE)  ## strength 2
+  D3 <- bestCA(3, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+  D2 <- bestCA(2, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)  ## strength 2
   aus <- CK_doubling(D3, D2)[,1:k]
   class(aus) <- c("ca", class(aus))
   attr(aus, "origin") <- "CK doubling, Chateauneuf and Kreher 2002"
@@ -157,8 +157,8 @@ N_CK_doublingCA <- function(t=3, k, v, exclude=NULL, ...){
   if (!t==3) return(NA)
   k3 <- ceiling(k/2)
   ## N + M*(v-1) runs
-  unname(bestN(3, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE) +
-    bestN(2, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE)*(v - 1))
+  unname(bestN(3, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE) +
+    bestN(2, k3, v, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)*(v - 1))
 }
 
 # #' @export

@@ -22,9 +22,9 @@
 #' @aliases tjCA
 #'
 #' @usage bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-#'   noderive=FALSE, nofuse=FALSE, fusemax=NULL, ...)
+#'   noderive=FALSE, nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...)
 #' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
-#'   nofuse=FALSE, fusemax=NULL, ...)
+#'   nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage wksCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
@@ -54,6 +54,9 @@
 #' @param nofuse logical; if \code{TRUE}, fused designs are not considered
 #' @param fusemax maximum number of fuse steps considered; \code{NULL} (default)
 #'   uses 1, or the distance to the next prime power for non-prime-power \code{v}
+#' @param noadd1 logical; if \code{TRUE}, designs obtained by adding columns
+#'   with \code{\link{add1Column}} are not considered
+#' @param maxadd maximum number of \code{add1Column} steps considered
 #' @param ... handed to construction function, currently,
 #'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
 #' @returns \code{bestN} returns a named integer: the first method that yields the
@@ -166,7 +169,7 @@
 
 #' @export
 bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-                   noderive=FALSE, nofuse=FALSE, fusemax=NULL, ...){
+                   noderive=FALSE, nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...){
   Call <- sys.call()
   if (t==1){
     aus <- matrix(0:(v-1),v,k)
@@ -189,10 +192,10 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
      # if (length(forbidden) > 0)
      #    hilf <- hilf[-forbidden]
      hilf <- bestN(t,k,v, internet=FALSE, exclude=exclude, noderive=noderive,
-                   nofuse=nofuse, fusemax=fusemax)
+                   nofuse=nofuse, fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)
   }else
      hilf <- bestN(t,k,v, exclude=exclude, noderive=noderive,
-                   nofuse=nofuse, fusemax=fusemax)# Ns(t,k,v, ...)
+                   nofuse=nofuse, fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)# Ns(t,k,v, ...)
   if (is.na(hilf))
     stop("no construction for this setting has been implemented yet")
   if (hilf > maxN)
@@ -240,6 +243,10 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
     attr(aus, "ingredients") <- list(source=list(
       constr=paste(parts[-length(parts)], collapse=":"),
       t=t+1, k=k+1, v=v))
+  }else if (length(parts)>1 && any(parts[-1]=="add1")){
+    nadd <- sum(parts[-1]=="add1")
+    attr(aus, "ingredients") <- list(source=list(
+      constr=parts[1], t=t, k=k-nadd, v=v))
   }else if (length(parts)>1 && any(parts[-1]=="fuse")){
     nfuse <- sum(parts[-1]=="fuse")
     attr(aus, "ingredients") <- list(source=list(
@@ -256,7 +263,7 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
 
 #' @export
 bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
-                  nofuse=FALSE, fusemax=NULL, ...){
+                  nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...){
   ## yields the size of the smallest implemented design,
   ## with or without internet
   ## fusemax=NULL: fusing from the next prime power level (if v is not
@@ -269,7 +276,7 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
       min(primedat$q[which(primedat$q>v)]) - v
   if (!internet) exclude <- union(exclude, c("DWYER", "NIST"))
   hilf <- Ns(t,k,v, exclude=exclude, noderive=noderive, nofuse=nofuse,
-             fusemax=fusemax)
+             fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)
   hilf <- hilf[setdiff(names(hilf), "eCAN")]
   if (length(hilf)==0) return(NA)
   aus <- min(hilf)
@@ -277,7 +284,7 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
   aus
 }
 
-## label of the form construction[:fuse[:fuse...]][:derive]
+## label of the form construction[:fuse[:fuse...]|:add1[:add1...]][:derive]
 ## as used by Ns for fused and derived entries
 labelToCode <- function(label, t, k, v, ...){
   parts <- strsplit(label, ":", fixed=TRUE)[[1]]
@@ -287,6 +294,14 @@ labelToCode <- function(label, t, k, v, ...){
       ## derived from a CA with strength t+1 and k+1 columns
       source <- labelToCode(paste(parts[-nparts], collapse=":"), t+1, k+1, v, ...)
       return(paste0("derive(", source, ")[, 1:", k, ", drop=FALSE]"))
+    }
+    if (all(parts[-1]=="add1")){
+      ## add1Column applied once per add1 step to the source with k-addnum columns
+      addnum <- nparts - 1
+      aus <- labelToCode(parts[1], t, k - addnum, v, ...)
+      for (i in seq_len(addnum))
+        aus <- paste0("add1Column(", aus, ", ", t, ", ", v, ")")
+      return(aus)
     }
     stopifnot(all(parts[-1]=="fuse"))
     fusenum <- nparts - 1
@@ -429,7 +444,7 @@ labelToCode <- function(label, t, k, v, ...){
   aus
 }
 
-## label of the form construction[:fuse[:fuse...]][:derive]
+## label of the form construction[:fuse[:fuse...]|:add1[:add1...]][:derive]
 ## as used by Ns for fused and derived entries
 CallToLabel <- function(call, ...){
   call <- try(strsplit(call, "(", fixed=TRUE)[[1]])

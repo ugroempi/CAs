@@ -6,6 +6,7 @@
 \alias{eCAK}
 \alias{Ns_derive}
 \alias{Ns_fuse}
+\alias{Ns_add1}
 \alias{N_fuseBoseCA}
 \alias{N_SCA_Busht}
 \alias{N_fuseBushtCA}
@@ -47,9 +48,13 @@ eCAN(t, k, v, frozen=TRUE)
 
 eCAK(t, N, v, frozen=TRUE)
 
-Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1)
+Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1,
+  noadd1=FALSE, maxadd=1)
 
-Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1, Ndirect=NULL)
+Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1,
+  noadd1=FALSE, maxadd=1, Ndirect=NULL)
+
+Ns_add1(t, k, v, maxadd=1)
 
 Ns_fuse(t, k, v, maxfuse = 1)
 
@@ -134,7 +139,7 @@ k_pcaCA(t=2, N, v)
 in support of size calculations for recursive constructions
 which need to calculate sizes of best ingredients.
 Besides construction labels, \code{"derive"} and \code{"fuse"} exclude
-the derived and fused entries of \code{Ns}.}
+the derived, fused and add1 entries of \code{Ns}.}
 
 \item{noderive}{logical; if \code{TRUE}, \code{Ns} does not add a derived entry
 (needed for calls from within constructions and for \code{Ns_derive}, to avoid recursion)}
@@ -142,6 +147,12 @@ the derived and fused entries of \code{Ns}.}
 \item{nofuse}{logical; if \code{TRUE}, \code{Ns} does not add a fused entry}
 
 \item{fusemax}{integer; maximum number of fuse steps considered for the fused entry of \code{Ns}}
+
+\item{noadd1}{logical; if \code{TRUE}, \code{Ns} does not add an \code{add1} entry
+(needed for calls from within constructions, to avoid recursion)}
+
+\item{maxadd}{integer; maximum number of \code{\link{add1Column}} steps considered
+for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}}
 
 \item{Ndirect}{\code{NULL} or the result of \code{Ns(t, k, v, noderive=TRUE)}, if already available}
 
@@ -199,10 +210,13 @@ more important for applications.\cr
 \code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
 once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
 nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
-for each fuse step, fusing from up to \code{fusemax} more levels; fuse ingredients are not derived).
+for each fuse step, fusing from up to \code{fusemax} more levels; fuse ingredients are not derived)
+and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
+for each application of \code{\link{add1Column}}, starting from up to \code{maxadd} fewer columns;
+add1 ingredients are neither derived, fused nor add1ed).
 Entry \code{eCAN} is always last. Constructions that need ingredient sizes
-call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE}.\cr
-Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_CK_doubling},
+call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE, noadd1=TRUE}.\cr
+Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_add1}, \code{Ns_CK_doubling},
 \code{Ns_productCA}
 provide run sizes from deriving, fusing, doubling or taking the product with
 the smallest possible strength 2 CA for the requested \code{v}

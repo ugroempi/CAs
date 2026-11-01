@@ -136,7 +136,7 @@ CS_LCDST <- function(k, v, start0=TRUE, starter=NULL, ...){
   attr(aus, "Call") <- Call
   if (!is.null(ingredients)) attr(aus, "ingredients") <- ingredients
   if (f>1)
-  hilf <- Ns(2,k,f, noderive=TRUE, nofuse=TRUE)
+  hilf <- Ns(2,k,f, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
   if (f>3){
     attr(aus, "method_D-for-f") <- names(hilf)[
                              which.min(hilf[-length(hilf)])]
@@ -224,7 +224,7 @@ createCS_LCDST <- function(starter, v, G, ...){
   if (f==2) mat <- rbind(mat, KSK(k=k) + v - f)
   if (f==3) mat <- rbind(mat, CAEX(k=k) + v - f)
   if (f>3){
-    D <- bestCA(2,k,f, noderive=TRUE, nofuse=TRUE)
+    D <- bestCA(2,k,f, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
     mat <- rbind(mat, D + v - f)
     attr(mat, "ingredients") <- list(D=ingredientCA(D, 2, k, f))
   }
