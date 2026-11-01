@@ -22,9 +22,9 @@
 #' @aliases tjCA
 #'
 #' @usage bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-#'   noderive=FALSE, nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...)
+#'   noderive=FALSE, nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
 #' @usage bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
-#'   nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...)
+#'   nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
 #' @usage ckrsCA(t, k, v, ...)
 #' @usage wksCA(t, k, v, ...)
 #' @usage dwyerCA(t, k, v, ...)
@@ -52,11 +52,11 @@
 #'   which need to calculate sizes of best ingredients
 #' @param noderive logical; if \code{TRUE}, derived designs are not considered
 #' @param nofuse logical; if \code{TRUE}, fused designs are not considered
-#' @param fusemax maximum number of fuse steps considered; \code{NULL} (default)
+#' @param maxfuse maximum number of fuse steps considered; \code{NULL} (default)
 #'   uses 1, or the distance to the next prime power for non-prime-power \code{v}
 #' @param noadd1 logical; if \code{TRUE}, designs obtained by adding columns
 #'   with \code{\link{add1Column}} are not considered
-#' @param maxadd maximum number of \code{add1Column} steps considered
+#' @param maxadd1 maximum number of \code{add1Column} steps considered
 #' @param ... handed to construction function, currently,
 #'          only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}
 #' @returns \code{bestN} returns a named integer: the first method that yields the
@@ -169,7 +169,7 @@
 
 #' @export
 bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-                   noderive=FALSE, nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...){
+                   noderive=FALSE, nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...){
   Call <- sys.call()
   if (t==1){
     aus <- matrix(0:(v-1),v,k)
@@ -192,10 +192,10 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
      # if (length(forbidden) > 0)
      #    hilf <- hilf[-forbidden]
      hilf <- bestN(t,k,v, internet=FALSE, exclude=exclude, noderive=noderive,
-                   nofuse=nofuse, fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)
+                   nofuse=nofuse, maxfuse=maxfuse, noadd1=noadd1, maxadd1=maxadd1)
   }else
      hilf <- bestN(t,k,v, exclude=exclude, noderive=noderive,
-                   nofuse=nofuse, fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)# Ns(t,k,v, ...)
+                   nofuse=nofuse, maxfuse=maxfuse, noadd1=noadd1, maxadd1=maxadd1)# Ns(t,k,v, ...)
   if (is.na(hilf))
     stop("no construction for this setting has been implemented yet")
   if (hilf > maxN)
@@ -263,20 +263,20 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
 
 #' @export
 bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
-                  nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...){
+                  nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...){
   ## yields the size of the smallest implemented design,
   ## with or without internet
-  ## fusemax=NULL: fusing from the next prime power level (if v is not
+  ## maxfuse=NULL: fusing from the next prime power level (if v is not
   ##     a prime power), otherwise fusing from level v+1
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   stopifnot(t%%1==0, k%%1==0, v%%1==0)
   if (k <= t) return(c(FullFactorial=v^k))
-  if (is.null(fusemax))
-    fusemax <- if (v %in% primedat$q) 1 else
+  if (is.null(maxfuse))
+    maxfuse <- if (v %in% primedat$q) 1 else
       min(primedat$q[which(primedat$q>v)]) - v
   if (!internet) exclude <- union(exclude, c("DWYER", "NIST"))
   hilf <- Ns(t,k,v, exclude=exclude, noderive=noderive, nofuse=nofuse,
-             fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)
+             maxfuse=maxfuse, noadd1=noadd1, maxadd1=maxadd1)
   hilf <- hilf[setdiff(names(hilf), "eCAN")]
   if (length(hilf)==0) return(NA)
   aus <- min(hilf)

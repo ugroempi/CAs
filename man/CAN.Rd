@@ -48,13 +48,13 @@ eCAN(t, k, v, frozen=TRUE)
 
 eCAK(t, N, v, frozen=TRUE)
 
-Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1,
-  noadd1=FALSE, maxadd=1)
+Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
+  noadd1=FALSE, maxadd1=1)
 
-Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1,
-  noadd1=FALSE, maxadd=1, Ndirect=NULL)
+Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
+  noadd1=FALSE, maxadd1=1, Ndirect=NULL)
 
-Ns_add1(t, k, v, maxadd=1)
+Ns_add1(t, k, v, maxadd1=1)
 
 Ns_fuse(t, k, v, maxfuse = 1)
 
@@ -146,17 +146,15 @@ the derived, fused and add1 entries of \code{Ns}.}
 
 \item{nofuse}{logical; if \code{TRUE}, \code{Ns} does not add a fused entry}
 
-\item{fusemax}{integer; maximum number of fuse steps considered for the fused entry of \code{Ns}}
+\item{maxfuse}{integer number of levels to fuse (i.e., difference between number of levels before and after fusing)}
 
 \item{noadd1}{logical; if \code{TRUE}, \code{Ns} does not add an \code{add1} entry
 (needed for calls from within constructions, to avoid recursion)}
 
-\item{maxadd}{integer; maximum number of \code{\link{add1Column}} steps considered
+\item{maxadd1}{integer; maximum number of \code{\link{add1Column}} steps considered
 for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}}
 
 \item{Ndirect}{\code{NULL} or the result of \code{Ns(t, k, v, noderive=TRUE)}, if already available}
-
-\item{maxfuse}{integer number of levels to fuse (i.e., difference between number of levels before and after fusing)}
 
 \item{N}{number of runs}
 
@@ -210,9 +208,9 @@ more important for applications.\cr
 \code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
 once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
 nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
-for each fuse step, fusing from up to \code{fusemax} more levels; fuse ingredients are not derived)
+for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients are not derived)
 and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
-for each application of \code{\link{add1Column}}, starting from up to \code{maxadd} fewer columns;
+for each application of \code{\link{add1Column}}, starting from up to \code{maxadd1} fewer columns;
 add1 ingredients are neither derived, fused nor add1ed).
 Entry \code{eCAN} is always last. Constructions that need ingredient sizes
 call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE, noadd1=TRUE}.\cr

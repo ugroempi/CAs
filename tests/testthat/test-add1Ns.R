@@ -1,7 +1,7 @@
 library(CAs)
 
 test_that("Ns_add1 provides direct and add1 sizes", {
-  A <- Ns_add1(2, 8, 3, maxadd=2)
+  A <- Ns_add1(2, 8, 3, maxadd1=2)
   expect_identical(rownames(A), c("direct", "add1", "add2"))
   ## one add1 step from k-1 columns adds v*(v-1) runs for t=2
   expect_equal(unlist(A["add1", "eCAN"]),

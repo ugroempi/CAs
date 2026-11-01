@@ -12,10 +12,10 @@
 for a combination of t, k and v}
 \usage{
 bestCA(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
-  noderive=FALSE, nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...)
+  noderive=FALSE, nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
 
 bestN(t, k, v, internet=TRUE, exclude=NULL, noderive=FALSE,
-  nofuse=FALSE, fusemax=NULL, noadd1=FALSE, maxadd=1, ...)
+  nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...)
 
 ckrsCA(t, k, v, ...)
 
@@ -56,13 +56,13 @@ which need to calculate sizes of best ingredients}
 
 \item{nofuse}{logical; if \code{TRUE}, fused designs are not considered}
 
-\item{fusemax}{maximum number of fuse steps considered; \code{NULL} (default)
+\item{maxfuse}{maximum number of fuse steps considered; \code{NULL} (default)
 uses 1, or the distance to the next prime power for non-prime-power \code{v}}
 
 \item{noadd1}{logical; if \code{TRUE}, designs obtained by adding columns
 with \code{\link{add1Column}} are not considered}
 
-\item{maxadd}{maximum number of \code{add1Column} steps considered}
+\item{maxadd1}{maximum number of \code{add1Column} steps considered}
 
 \item{...}{handed to construction function, currently,
 only implemented for \code{fuseBose}, for enabling \code{fixNA=FALSE}}

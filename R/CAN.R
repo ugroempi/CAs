@@ -57,11 +57,11 @@
 #'
 #' @usage eCAN(t, k, v, frozen=TRUE)
 #' @usage eCAK(t, N, v, frozen=TRUE)
-#' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1,
-#'   noadd1=FALSE, maxadd=1)
-#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1,
-#'   noadd1=FALSE, maxadd=1, Ndirect=NULL)
-#' @usage Ns_add1(t, k, v, maxadd=1)
+#' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
+#'   noadd1=FALSE, maxadd1=1)
+#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
+#'   noadd1=FALSE, maxadd1=1, Ndirect=NULL)
+#' @usage Ns_add1(t, k, v, maxadd1=1)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1)
 #' @usage N_fuseBoseCA(t,k,v)
 #' @usage N_fuseBushtCA(t,k,v)
@@ -110,10 +110,10 @@
 #' @param noderive logical; if \code{TRUE}, \code{Ns} does not add a derived entry
 #'   (needed for calls from within constructions and for \code{Ns_derive}, to avoid recursion)
 #' @param nofuse logical; if \code{TRUE}, \code{Ns} does not add a fused entry
-#' @param fusemax integer; maximum number of fuse steps considered for the fused entry of \code{Ns}
+#' @param maxfuse integer; maximum number of fuse steps considered for the fused entry of \code{Ns}
 #' @param noadd1 logical; if \code{TRUE}, \code{Ns} does not add an \code{add1} entry
 #'   (needed for calls from within constructions, to avoid recursion)
-#' @param maxadd integer; maximum number of \code{\link{add1Column}} steps considered
+#' @param maxadd1 integer; maximum number of \code{\link{add1Column}} steps considered
 #'   for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}
 #' @param Ndirect \code{NULL} or the result of \code{Ns(t, k, v, noderive=TRUE)}, if already available
 #' @param maxfuse integer number of levels to fuse (i.e., difference between number of levels before and after fusing)
@@ -135,9 +135,9 @@
 #' \code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
 #' once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
 #' nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
-#' for each fuse step, fusing from up to \code{fusemax} more levels; fuse ingredients are not derived)
+#' for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients are not derived)
 #' and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
-#' for each application of \code{\link{add1Column}}, starting from up to \code{maxadd} fewer columns;
+#' for each application of \code{\link{add1Column}}, starting from up to \code{maxadd1} fewer columns;
 #' add1 ingredients are neither derived, fused nor add1ed).
 #' Entry \code{eCAN} is always last. Constructions that need ingredient sizes
 #' call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE, noadd1=TRUE}.\cr
@@ -251,8 +251,8 @@
 
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
-Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1,
-               noadd1=FALSE, maxadd=1){
+Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
+               noadd1=FALSE, maxadd1=1){
   stopifnot(t <= 6)
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
@@ -310,19 +310,19 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1,
   eCANentry <- aus[names(aus) == "eCAN"]
   aus <- aus[names(aus) != "eCAN"]
   if (!nofuse && !"fuse" %in% exclude && k > t){
-    Nfuse <- N_fusebest(t, k, v, exclude=exclude, fusemax=fusemax)
+    Nfuse <- N_fusebest(t, k, v, exclude=exclude, maxfuse=maxfuse)
     if (!is.null(Nfuse)) aus <- c(aus, Nfuse)
   }
   if (!noadd1 && !"add1" %in% exclude && t >= 2 && k > t+1){
-    Nadd1 <- N_add1best(t, k, v, exclude=exclude, maxadd=maxadd)
+    Nadd1 <- N_add1best(t, k, v, exclude=exclude, maxadd1=maxadd1)
     if (!is.null(Nadd1)) aus <- c(aus, Nadd1)
   }
   if (!noderive && !"derive" %in% exclude && t < 6 && k > t){
     ## deriving is applied only once, i.e., sources do not derive
     ## the direct sizes are handed over, to avoid computing them twice
     Nderive <- suppressMessages(
-      Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, fusemax=fusemax,
-                noadd1=noadd1, maxadd=maxadd,
+      Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, maxfuse=maxfuse,
+                noadd1=noadd1, maxadd1=maxadd1,
                 Ndirect=c(aus, eCANentry)))
     if (is.data.frame(Nderive)){
       ## eCAN is not a construction
@@ -339,12 +339,12 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, fusemax=1,
   c(aus, eCANentry)
 }
 
-## best fuse entry for Ns: sources have v+d levels (d=1,...,fusemax),
+## best fuse entry for Ns: sources have v+d levels (d=1,...,maxfuse),
 ## each fuse step removes 2 runs; sources are neither derived nor fused
 ## label: construction name with ":fuse" appended once per fuse step
-N_fusebest <- function(t, k, v, exclude=NULL, fusemax=1){
+N_fusebest <- function(t, k, v, exclude=NULL, maxfuse=1){
   best <- NULL
-  for (d in seq_len(fusemax)){
+  for (d in seq_len(maxfuse)){
     src <- Ns(t, k, v+d, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
     src <- src[names(src) != "eCAN"]
     if (length(src)==0) next
@@ -366,12 +366,12 @@ add1_increment <- function(t, c, v){
   unname(bestN(t-2, c-1, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE))*v*(v-1)
 }
 
-## best add1 entry for Ns: sources have k-j columns (j=1,...,maxadd),
+## best add1 entry for Ns: sources have k-j columns (j=1,...,maxadd1),
 ## each add1 step adds one column; sources are neither derived, fused nor add1ed
 ## label: construction name with ":add1" appended once per add1 step
-N_add1best <- function(t, k, v, exclude=NULL, maxadd=1){
+N_add1best <- function(t, k, v, exclude=NULL, maxadd1=1){
   best <- NULL
-  for (j in seq_len(min(maxadd, k-t-1))){
+  for (j in seq_len(min(maxadd1, k-t-1))){
     src <- Ns(t, k-j, v, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
     src <- src[names(src) != "eCAN"]
     if (length(src)==0) next
@@ -388,19 +388,19 @@ N_add1best <- function(t, k, v, exclude=NULL, maxadd=1){
 
 ## obtain possibilities for derivation sources
 #' @export
-Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, fusemax=1,
-                      noadd1=FALSE, maxadd=1, Ndirect=NULL){
+Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
+                      noadd1=FALSE, maxadd1=1, Ndirect=NULL){
   ## Ndirect: sizes of Ns(t, k, v, noderive=TRUE), if already available
   Nswoderive <- if (is.null(Ndirect))
-    Ns(t, k, v, exclude=exclude, noderive=TRUE, nofuse=nofuse, fusemax=fusemax,
-       noadd1=noadd1, maxadd=maxadd)
+    Ns(t, k, v, exclude=exclude, noderive=TRUE, nofuse=nofuse, maxfuse=maxfuse,
+       noadd1=noadd1, maxadd1=maxadd1)
     else Ndirect
   if (t>=6){
     message("derive could not be used for strength 6")
     return(Nswoderive)
   }
   fromNs <- Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE,
-               nofuse=nofuse, fusemax=fusemax, noadd1=noadd1, maxadd=maxadd)
+               nofuse=nofuse, maxfuse=maxfuse, noadd1=noadd1, maxadd1=maxadd1)
 
   if (length(fromNs)>0)
     Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
@@ -435,10 +435,10 @@ Ns_fuse <- function(t, k, v, maxfuse=1){
 
 ## obtain possibilities for add1 sources
 #' @export
-Ns_add1 <- function(t, k, v, maxadd=1){
+Ns_add1 <- function(t, k, v, maxadd1=1){
   stopifnot(t >= 2, k > t+1)
-  maxadd <- min(maxadd, k-t-1)
-  hilf <- lapply(1:maxadd,
+  maxadd1 <- min(maxadd1, k-t-1)
+  hilf <- lapply(1:maxadd1,
                  function(obj){
                    hilf <- Ns(t, k-obj, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
                    hilf + sum(sapply((k-obj):(k-1),
@@ -446,7 +446,7 @@ Ns_add1 <- function(t, k, v, maxadd=1){
                  })
   aus <- as.data.frame(do.call(dplyr::bind_rows,
     c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)),hilf)))
-  rownames(aus) <- c("direct", paste0("add", 1:maxadd))
+  rownames(aus) <- c("direct", paste0("add", 1:maxadd1))
   aus
 }
 
