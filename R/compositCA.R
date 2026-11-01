@@ -67,12 +67,12 @@ compositCA <- function(t, k, v, ...){
   ## identify best pair
   ## ingredients without derive and fuse, consistent with N_compositCA
   N_erg <- sapply(divisors, function(obj)
-                bestN(t, k, obj, noderive=TRUE, nofuse=TRUE, exclude=exclude)*
-                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE, exclude=exclude))
+                bestN(t, k, obj, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, exclude=exclude)*
+                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, exclude=exclude))
   factor1 <- divisors[which.min(N_erg)]
 
-  D1 <- bestCA(t, k, factor1, noderive=TRUE, nofuse=TRUE, exclude=exclude)
-  D2 <- bestCA(t, k, v%/%factor1, noderive=TRUE, nofuse=TRUE, exclude=exclude)
+  D1 <- bestCA(t, k, factor1, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, exclude=exclude)
+  D2 <- bestCA(t, k, v%/%factor1, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, exclude=exclude)
   aus <- crossCAs(D1, D2)
   attr(aus, "t") <- t
   attr(aus, "ingredients") <- list(
@@ -93,7 +93,7 @@ N_compositCA <- function(t, k, v, ...){
   for (i in 2:sqrt(v)){
     if (v%%i==0L) divisors <- c(divisors, i)
   }
-  N_erg <- sapply(divisors, function(obj) bestN(t, k, obj, noderive=TRUE, nofuse=TRUE, exclude=dots$exclude)*
-                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE, exclude=dots$exclude))
+  N_erg <- sapply(divisors, function(obj) bestN(t, k, obj, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, exclude=dots$exclude)*
+                    bestN(t, k, v%/%obj, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, exclude=dots$exclude))
   return(unname(min(N_erg)))
 }

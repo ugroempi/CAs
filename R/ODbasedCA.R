@@ -87,7 +87,7 @@
 ODbasedCA <- function(t=3, k, v, ...){
   stopifnot((v-1) %in% primedat$q)
   OD <- OD3(v-1)
-  hilfN <- bestN(3, k, 2, noderive=TRUE, nofuse=TRUE)
+  hilfN <- bestN(3, k, 2, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
   ## maximum feasible k for the necessary N
   if (hilfN==12 && k<=8){
     hilfk <- k
@@ -100,7 +100,7 @@ ODbasedCA <- function(t=3, k, v, ...){
       ## k_CK_doublingCA not in ks because of difficulties
     hilfk <- ks(3, hilfN, 2)
     hilfk <- max(hilfk[-length(hilfk)])
-    constr <- names(bestN(3, hilfk, 2, noderive=TRUE, nofuse=TRUE))
+    constr <- names(bestN(3, hilfk, 2, noderive=TRUE, nofuse=TRUE, noadd1=TRUE))
     }
   }
   ## obtain array with maximum possible number of columns
@@ -156,8 +156,8 @@ N_ODbasedCA <- function(t=3,k,v, nconstant=NULL, ...){
   if (!(v-1) %in% primedat$q) return(NA)
   if (is.null(nconstant)) nconstant <- ifelse(k %in% c(1:8, 12), 2, 1)
   q <- v-1
-  if (nconstant==2) N <- q^3-q + choose(v,2)*bestN(3, k, 2, noderive=TRUE, nofuse=TRUE) - (q^2-1) else
-    N <- q^3-q + choose(v,2)*(bestN(3, k, 2, noderive=TRUE, nofuse=TRUE) - 1)
+  if (nconstant==2) N <- q^3-q + choose(v,2)*bestN(3, k, 2, noderive=TRUE, nofuse=TRUE, noadd1=TRUE) - (q^2-1) else
+    N <- q^3-q + choose(v,2)*(bestN(3, k, 2, noderive=TRUE, nofuse=TRUE, noadd1=TRUE) - 1)
   unname(N)
 }
 
