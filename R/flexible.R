@@ -77,6 +77,10 @@
 #'
 #' @references Nayeri, Colbourn and Konjevod (2013)
 #'
+#' @seealso [cafast::postopNCK_c()], [cafast::markflex_c()] and [cafast::flexpos_c()]
+#' that implement the same functionality as the R-based functions of this package
+#' in C and are thus much faster
+#'
 #' @examples
 #' # identify flexible values
 #' A <- cyc(19,2)

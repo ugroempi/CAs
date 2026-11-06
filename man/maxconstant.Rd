@@ -102,3 +102,6 @@ maxconstant(plan)
 \references{
 Torres-Jimenez, Acevedo-Juarez and Avila-George (2021) for the mention of the largest clique idea
 }
+\seealso{
+\link[cafast:maxconstant_c]{cafast::maxconstant_c} for a much faster implementation of the functionality
+}

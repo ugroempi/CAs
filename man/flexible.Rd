@@ -157,3 +157,8 @@ coverage(plan_postopNCK, 2)
 \references{
 Nayeri, Colbourn and Konjevod (2013)
 }
+\seealso{
+\code{\link[cafast:postopNCK_c]{cafast::postopNCK_c()}}, \code{\link[cafast:markflex_c]{cafast::markflex_c()}} and \code{\link[cafast:flexpos_c]{cafast::flexpos_c()}}
+that implement the same functionality as the R-based functions of this package
+in C and are thus much faster
+}

@@ -46,6 +46,8 @@
 #' @section Warning:
 #' For arrays with many rows, the search for the largest cliques can take a long time.
 #'
+#' @seealso [cafast::maxconstant_c] for a much faster implementation of the functionality
+#'
 #' @references Torres-Jimenez, Acevedo-Juarez and Avila-George (2021) for the mention of the largest clique idea
 #'
 #'
