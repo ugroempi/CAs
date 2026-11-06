@@ -8,6 +8,7 @@ version 0.25
    needs further thought regarding where to suppress these (currently presumably 
    suppressed a bit too often; nevertheless seems to be somewhat costly in terms 
    of run time for function Ns)
+ - changed fuse to keep constant rows intact
  - added ingredients element to attributes of class ca arrays whose construction 
    was based on CA ingredients (supported by Github Copilot)
  - added function RMScopies (with RMScopiesCA, N_RMScopiesCA, k_RMScopiesCA

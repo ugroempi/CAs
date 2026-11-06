@@ -75,14 +75,21 @@ fuse <- function(D, vprior, vpost, ...){
     ## how can it be made sure that the 3 run reduction is achieved
     ## for strength 2 with k < maxlev and maxlev-1 a prime power?
     ## according to CKRS Lemma 3.1
+    ## separately done in fuseBose
+
+    ## make sure to keep existing constant rows
+    hilf <- apply(D, 1, function(obj) all(obj==maxlev))
+    if (any(hilf)) D <- D[-which(hilf),] else{
     for (c in 1:k){
-      if (!D[1,c]==maxlev)
-      D <- swapvals(D, c, D[1,c], maxlev) ## first row has maximum number of levels
+      hilf <- nrow(D)
+      if (!D[hilf,c]==maxlev)
+      D <- swapvals(D, c, D[hilf,c], maxlev) ## last row has maximum number of levels
     }
-    D <- D[-1,]
-    ## eliminate next row
-    elim2 <- D[1,]
-    D <- D[-1,]
+    D <- D[-hilf,]
+    }
+    ## eliminate last row
+    elim2 <- D[nrow(D),]
+    D <- D[-nrow(D),]
     repl <- which(elim2==maxlev)  ## arbitrary values for these columns
     for (c in 1:k){
       posmax <- which(D[,c]==maxlev)
