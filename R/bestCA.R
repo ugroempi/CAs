@@ -454,7 +454,7 @@ labelToCode <- function(label, t, k, v, ...){
 ## label of the form construction[:fuse[:fuse...]|:add1[:add1...]][:derive]
 ## as used by Ns for fused and derived entries
 CallToLabel <- function(call, ...){
-  call <- try(strsplit(call, "(", fixed=TRUE)[[1]])
+  call <- try(strsplit(call, "(", fixed=TRUE)[[1]], silent = TRUE)
   if ("try-error" %in% class(call)) call <- "unknown"
   ## label must correspond to the label used in function Ns
   stopifnot(call %in% c("KSK","paleyCA",
