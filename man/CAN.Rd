@@ -163,7 +163,7 @@ for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}}
 \item{cmax}{integer number: maximum \code{c} to consider for projection (\code{N_projBoseCA} returns \code{NA},
 if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)}
 
-\item{frozen}{logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available}
+\item{frozen}{logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available; at present, this is still the default, but \code{frozen=FALSE} will already obtain the new values}
 
 \item{...}{allows to propagate arguments to \code{Ns} (function \code{Ns_add1}),
 used for \code{exclude}}
