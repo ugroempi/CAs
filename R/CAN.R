@@ -60,13 +60,13 @@
 #' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
 #'   noadd1=FALSE, maxadd1=1, frozen=TRUE)
 #' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
-#'   noadd1=FALSE, maxadd1=1, Ndirect=NULL)
-#' @usage Ns_add1(t, k, v, maxadd1=1, ...)
-#' @usage Ns_fuse(t, k, v, maxfuse = 1)
+#'   noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
+#' @usage Ns_add1(t, k, v, maxadd1=1, frozen=TRUE, ...)
+#' @usage Ns_fuse(t, k, v, maxfuse = 1, frozen=TRUE)
 #' @usage N_fuseBoseCA(t,k,v)
 #' @usage N_fuseBushtCA(t,k,v)
-#' @usage Ns_CK_doubling(t=3, k, v)
-#' @usage Ns_productCA(t=2, k, v)
+#' @usage Ns_CK_doubling(t=3, k, v, frozen=TRUE)
+#' @usage Ns_productCA(t=2, k, v, frozen=TRUE)
 #' @usage N_NISTcat(t, k, v)
 #' @usage N_TJcat(t, k, v)
 #' @usage N_WKScat(t=6, k, v=2)
@@ -81,8 +81,8 @@
 #' @usage N_SCA_Busht(t, k, v)
 #' @usage N_dpCA(t=2, k, v)
 #' @usage N_pcaCA(t=2, k, v)
-#' @usage ks(t, N, v)
-#' @usage ks_productCA(t=2, N, v)
+#' @usage ks(t, N, v, frozen=TRUE)
+#' @usage ks_productCA(t=2, N, v, frozen=TRUE)
 #' @usage k_NISTcat(t, N, v)
 #' @usage k_TJcat(t, N, v)
 #' @usage k_WKScat(t=6, N, v=2)
@@ -424,18 +424,19 @@ N_add1best <- function(t, k, v, exclude=NULL, maxadd1=1){
 ## obtain possibilities for derivation sources
 #' @export
 Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
-                      noadd1=FALSE, maxadd1=1, Ndirect=NULL){
+                      noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE){
   ## Ndirect: sizes of Ns(t, k, v, noderive=TRUE), if already available
   Nswoderive <- if (is.null(Ndirect))
     Ns(t, k, v, exclude=exclude, noderive=TRUE, nofuse=nofuse, maxfuse=maxfuse,
-       noadd1=noadd1, maxadd1=maxadd1)
+       noadd1=noadd1, maxadd1=maxadd1, frozen=frozen)
     else Ndirect
   if (t>=6){
     message("derive could not be used for strength 6")
     return(Nswoderive)
   }
   fromNs <- Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE,
-               nofuse=nofuse, maxfuse=maxfuse, noadd1=noadd1, maxadd1=maxadd1)
+               nofuse=nofuse, maxfuse=maxfuse, noadd1=noadd1,
+               maxadd1=maxadd1, frozen=frozen)
 
   if (length(fromNs)>0)
     Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
@@ -456,32 +457,32 @@ Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
 
 ## obtain possibilities for fusion sources
 #' @export
-Ns_fuse <- function(t, k, v, maxfuse=1){
+Ns_fuse <- function(t, k, v, maxfuse=1, frozen=TRUE){
   hilf <- lapply(1:maxfuse,
                  function(obj){
-                   hilf <- Ns(t, k, v+obj, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+                   hilf <- Ns(t, k, v+obj, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen)
                    hilf - 2*obj
                  })
   aus <- as.data.frame(do.call(dplyr::bind_rows,
-    c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)),hilf)))
+    c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen)),hilf)))
   rownames(aus) <- c("direct", paste0("fuse", rep(1:maxfuse)))
   aus
 }
 
 ## obtain possibilities for add1 sources
 #' @export
-Ns_add1 <- function(t, k, v, maxadd1=1, ...){
+Ns_add1 <- function(t, k, v, maxadd1=1, frozen=TRUE, ...){
   stopifnot(t >= 2, k > t+1)
   maxadd1 <- min(maxadd1, k-t-1)
   hilf <- lapply(1:maxadd1,
                  function(obj){
                    hilf <- Ns(t, k-obj, v,
-                              noderive=TRUE, nofuse=TRUE, noadd1=TRUE, ...)
+                              noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen, ...)
                    hilf + sum(sapply((k-obj):(k-1),
                                      function(c) add1_increment(t, c, v)))
                  })
   aus <- as.data.frame(do.call(dplyr::bind_rows,
-    c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)),hilf)))
+    c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen, ...)),hilf)))
   rownames(aus) <- c("direct", paste0("add", 1:maxadd1))
   aus
 }
@@ -515,15 +516,15 @@ N_SCA_Busht <- function(t, k, v){
 
 ## obtain sizes for CK doubling for v=2 and v=3
 #' @export
-Ns_CK_doubling <- function(t=3, k, v){
+Ns_CK_doubling <- function(t=3, k, v, frozen=TRUE){
   if (!v %in% c(2,3)) return(NA)
   if(!t==3) return(NA)
   khilf <- ceiling(k/2)
-  hilf <- Ns(3, khilf, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+  hilf <- Ns(3, khilf, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen)
   if (v==3) plus <- suppressMessages(N_CAEX(k=khilf)) else
     plus <- N_KSK(khilf)
   doubled <- as.data.frame(rbind(hilf + (v-1)*plus))
-  direct <- as.data.frame(rbind(Ns(t, k, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)))
+  direct <- as.data.frame(rbind(Ns(t, k, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen)))
   dplyr::bind_rows(direct=direct, doubled=doubled, .id="way")
 }
 
@@ -548,7 +549,7 @@ N_dpCA <- function(t=2,k,v){
 ## obtain sizes for product construction
 ## with large D1 and small D2
 #' @export
-Ns_productCA <- function(t=2, k, v){
+Ns_productCA <- function(t=2, k, v, frozen=TRUE){
   if (!t==2) return(NA)
   M <- v^2
   if (v %in% primedat$q)
@@ -556,9 +557,9 @@ Ns_productCA <- function(t=2, k, v){
   else
     l <- 3 ## latin square
   khilf <- ceiling(k/l)
-  hilf <- Ns(2, khilf, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+  hilf <- Ns(2, khilf, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen)
   productCA <- as.data.frame(rbind(hilf + M - 2))
-  suppressMessages(direct <- as.data.frame(rbind(Ns(t, k, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE))))
+  suppressMessages(direct <- as.data.frame(rbind(Ns(t, k, v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen))))
   dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
 }
 
@@ -908,7 +909,7 @@ k_dpCA <- function(t=2,N,v){
 ## obtain sizes for product construction
 ## with large D1 and small D2
 #' @export
-ks_productCA <- function(t=2, N, v){
+ks_productCA <- function(t=2, N, v, frozen=TRUE){
   ## the function compares direct ks for N
   ## with ks from subtracting the smallest "to-be-added" run number M-2
   ##   from N and multiplying the numbers of columns from the remaining
@@ -922,27 +923,28 @@ ks_productCA <- function(t=2, N, v){
   Nhilf <- N - M + 2
   hilf <- ks(2, Nhilf, v)
   productCA <- as.data.frame(rbind(hilf*l))
-  suppressMessages(direct <- as.data.frame(rbind(ks(t, N, v))))
+  suppressMessages(direct <- as.data.frame(rbind(ks(t, N, v, frozen=frozen))))
   dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
 }
 
-## obtain sizes for product construction
-## with large D1 and small D2
-#' @export
-ks_productCA <- function(t=2, N, v){
-  ## the function compares direct ks for N
-  ## with ks from subtracting the smallest "to-be-added" run number M-2
-  ##   from N and multiplying the numbers of columns from the remaining
-  ##   N - M + 2 with the number of columns l from the smallest CA for v
-  if (!t==2) return(NA)
-  M <- v^2
-  if (v %in% primedat$q)
-    l <- v+1
-  else
-    l <- 3 ## latin square
-  Nhilf <- N - M + 2
-  hilf <- ks(2, Nhilf, v)
-  productCA <- as.data.frame(rbind(hilf*l))
-  suppressMessages(direct <- as.data.frame(rbind(ks(t, N, v))))
-  dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
-}
+# ## was duplicated
+# ## obtain sizes for product construction
+# ## with large D1 and small D2
+# #' @export
+# ks_productCA <- function(t=2, N, v){
+#   ## the function compares direct ks for N
+#   ## with ks from subtracting the smallest "to-be-added" run number M-2
+#   ##   from N and multiplying the numbers of columns from the remaining
+#   ##   N - M + 2 with the number of columns l from the smallest CA for v
+#   if (!t==2) return(NA)
+#   M <- v^2
+#   if (v %in% primedat$q)
+#     l <- v+1
+#   else
+#     l <- 3 ## latin square
+#   Nhilf <- N - M + 2
+#   hilf <- ks(2, Nhilf, v)
+#   productCA <- as.data.frame(rbind(hilf*l))
+#   suppressMessages(direct <- as.data.frame(rbind(ks(t, N, v))))
+#   dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
+# }

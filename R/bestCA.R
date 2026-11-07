@@ -89,8 +89,11 @@
 #'
 #' The attributes of the returned object contain elements \code{eCAN},
 #' \code{CAs-version} and \code{date}: \code{eCAN} gives the current
-#' best array; as this may change, the other attributes provide the
-#' context.
+#' best array, which is from the most recent internet source, if available;
+#' the \code{eCAN} attribute has the information appended, whether or not
+#' a frozen state from the package had to be used.
+#' As the best array (and the frozen state) may change,
+#' the other attributes provide the context.
 #'
 #' @seealso [Ns()]
 #' @examples
@@ -258,7 +261,8 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
   }
   ## prepend the Call attribute
   attr(aus, "Call") <- c(Call, attr(aus, "Call"))
-  attr(aus, "eCAN") <- eCAN(t,k,v)
+  attr(aus, "eCAN") <- c(eCAN(t,k,v,frozen=is.null(smolenBigFrame)),
+                         frozen=is.null(smolenBigFrame))
   attr(aus, "date") <- Sys.Date()
   attr(aus, "CAs-version") <- packageVersion("CAs")
   if (!"ca" %in% class(aus)) class(aus) <- c("ca", class(aus))

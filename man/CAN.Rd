@@ -52,19 +52,19 @@ Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
   noadd1=FALSE, maxadd1=1, frozen=TRUE)
 
 Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
-  noadd1=FALSE, maxadd1=1, Ndirect=NULL)
+  noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
 
-Ns_add1(t, k, v, maxadd1=1, ...)
+Ns_add1(t, k, v, maxadd1=1, frozen=TRUE, ...)
 
-Ns_fuse(t, k, v, maxfuse = 1)
+Ns_fuse(t, k, v, maxfuse = 1, frozen=TRUE)
 
 N_fuseBoseCA(t,k,v)
 
 N_fuseBushtCA(t,k,v)
 
-Ns_CK_doubling(t=3, k, v)
+Ns_CK_doubling(t=3, k, v, frozen=TRUE)
 
-Ns_productCA(t=2, k, v)
+Ns_productCA(t=2, k, v, frozen=TRUE)
 
 N_NISTcat(t, k, v)
 
@@ -94,9 +94,9 @@ N_dpCA(t=2, k, v)
 
 N_pcaCA(t=2, k, v)
 
-ks(t, N, v)
+ks(t, N, v, frozen=TRUE)
 
-ks_productCA(t=2, N, v)
+ks_productCA(t=2, N, v, frozen=TRUE)
 
 k_NISTcat(t, N, v)
 

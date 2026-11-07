@@ -109,8 +109,11 @@ been implemented).
 
 The attributes of the returned object contain elements \code{eCAN},
 \code{CAs-version} and \code{date}: \code{eCAN} gives the current
-best array; as this may change, the other attributes provide the
-context.
+best array, which is from the most recent internet source, if available;
+the \code{eCAN} attribute has the information appended, whether or not
+a frozen state from the package had to be used.
+As the best array (and the frozen state) may change,
+the other attributes provide the context.
 }
 
 \examples{
