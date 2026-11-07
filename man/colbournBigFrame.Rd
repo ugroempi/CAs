@@ -33,13 +33,27 @@ data.frame that holds the November 2024 status of the Colbourn tables of upper b
 
 Until recently, the Colbourn (without year) tables were an authoritative source
 of the state of the art run sizes of covering arrays and were kept reasonably
-up-to-date by Charlie Colbourn. At present (June 2025), the tables are no longer
-available to the public, and it is unclear, whether they are still updated.
-The status of the tables in this package is November 2024. If the community finds
-a way to maintain a database of this information, possibly in improved form,
-this package needs to find a way to keep up with the changes. This
-affects in particular the data.frame  \code{colbournBigFrame}, which is being used
-as the basis behind decisions on which methods to implement.
+up-to-date by Charlie Colbourn. At present (June 2025 and beyond),
+the tables are no longer
+available to the public, and are apparently no longer updated.
+The status of the tables in this package is November 2024.
+
+At present (Nov 2026), Christopher Smolen has undertaken it to maintain "living
+tables), i.e., to accept and check submissions of smaller CAs and also construction
+ingredients. His tables at
+\url{https://github.com/chrispbsmolen/ca-tools/blob/main/table/README.md},
+included for now as an internal object
+\code{CAs:::smolenBigFrame} and loaded on package load at their then-current state,
+have already smaller run sizes than the frozen Colbourn tables for a relevant
+percentage of settings. At the same time, a group in the community also thinks
+about re-implementing the Colbourn tables. Ideally, those efforts converts to a
+useful and stable new "go-to" place for current best sizes with useful information
+also on how to obtain arrays of those sizes.
+
+This package needs to find a way to keep up with the changes. At present, the
+functions \code{\link{eCAN}} and \code{\link{eCAK}} still use the Colbourn
+tables by default, but can be switched to the Smolen tables by their argument
+\code{frozen=FALSE}.
 
 As the source information in the Colbourn tables is sometimes very terse,
 it is not always intelligible for uninitiated humans,
@@ -74,6 +88,6 @@ colbournBigFrame[2224,]
 Ns(3, 128, 6) ## Cyclotomy needs 768 runs (construction 4a, not 3a)
 }
 \references{
-Colbourn (without year)
+Colbourn (without year), Smolen (2026)
 }
 \keyword{datasets}

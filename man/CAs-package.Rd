@@ -14,9 +14,16 @@ Implements covering arrays, as proposed in Groemping (2025) \doi{10.1109/ICSTW64
 This package constructs covering arrays, i.e., arrays that cover all \eqn{t}-ary combinations of a set of factors at least once.
 The focus is on mathematical constructions.
 
-The goal is to implement as many constructions as possible that yield arrays with small numbers of runs, as evidenced by the
-Colbourn covering array tables, which do not provide the CAs themselves but pointers to which CA constructions yield the smallest known array
-for which setting.
+The goal is to implement as many constructions as possible that yield arrays
+with small numbers of runs, as evidenced by the Colbourn covering array tables,
+which do not provide the CAs themselves but pointers to which CA constructions
+yield the smallest known array for which setting. As of Version 0.25, the
+package also includes, initially as an internal object only, the new
+Smolen tables (Smolen 2026) (internal object \code{smolenBigFrame}),
+which hold the status of Christopher Smolen's newly-introduced tables at the time of loading
+the package (if an internet connection is availabe, \code{NULL} othewise).
+A strategy for handling the dynamically-developing situation around covering array
+tables will have to be developed.
 
 All references of the package are listed in this file and referenced from the other documentation files.
 
@@ -216,6 +223,8 @@ Raaphorst, S., Moura, L. and Stevens, B. (2014). A construction for strength-3 c
 Sherwood, G.B., Martirosyan, S.S., Colbourn, C.J. (2006). Covering arrays of higher strength from permutation vectors. J. of Combinatorial Designs 14, 202-213. https://doi.org/10.1002/jcd.20067
 
 Sherwood, G.B. (2008). Optimal and near-optimal mixed covering arrays by column expansion. Discrete Mathematics 308, 6022-6035. https://doi.org/10.1016/j.disc.2007.11.021
+
+Smolen, C.P.B. (2026). A provenance-tracked table of best-known covering array sizes. https://github.com/chrispbsmolen/ca-tools/blob/main/table/README.md.
 
 Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction of Transversal Covers Using Group Divisible Designs. Ars Combinatoria 63, 145-159.
 

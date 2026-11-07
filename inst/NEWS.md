@@ -25,7 +25,8 @@ version 0.25
    if a working internet connection is available), 
    which can be activated
    instead of colbournBigFrame as the basis for functions 
-   eCAN and eCAK. As this is still expected to develop with 
+   eCAN and eCAK (optional argument frozen=FALSE, which also propagates 
+   to functions Ns and ks). As this is still expected to develop with 
    potential breaking changes, it is not made the default yet.
  - added power constructions with "S" in them to powerCTcat
  - updated documentation for add1CA to reflect the improved 

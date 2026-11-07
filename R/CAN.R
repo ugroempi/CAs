@@ -1,7 +1,7 @@
 #' Functions for N and k from Colbourn tables, other libraries, and implemented constructions
 #'
 #' The functions extract the number of runs needed for a specified setting
-#' according to the Colbourn tables or the more current Smolen tables,
+#' according to the Colbourn tables (Colbourn without year) or the more current Smolen tables (Smolen 2026),
 #' according to the NIST library of CAs
 #' and the Torres-Jimenez library of CAs,
 #' as well as according to implemented constructions
@@ -58,7 +58,7 @@
 #' @usage eCAN(t, k, v, frozen=TRUE)
 #' @usage eCAK(t, N, v, frozen=TRUE)
 #' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
-#'   noadd1=FALSE, maxadd1=1)
+#'   noadd1=FALSE, maxadd1=1, frozen=TRUE)
 #' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
 #'   noadd1=FALSE, maxadd1=1, Ndirect=NULL)
 #' @usage Ns_add1(t, k, v, maxadd1=1, ...)
@@ -193,6 +193,9 @@
 #'  In cases for which there is no entry in the respective
 #'  table or library, the returned results are missing values.
 #'
+#' @references Colbourn (without year) and Smolen (2026) for \code{eCAN} and \code{eCAK},
+#' many other sources for the specific constructions
+#'
 #' @examples
 #' eCAN(3, 199, 2)
 #' N_NISTcat(3, 199, 2)
@@ -276,7 +279,7 @@
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
 Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
-               noadd1=FALSE, maxadd1=1){
+               noadd1=FALSE, maxadd1=1, frozen=TRUE){
   stopifnot(t <= 6)
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
@@ -327,7 +330,7 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
     TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
     NIST=ifelse("NIST" %in% exclude, NA,N_NISTcat(t,k,v)),
-    eCAN=eCAN(t,k,v)[[1]])
+    eCAN=eCAN(t,k,v, frozen=frozen)[[1]])
     )
   aus <- aus[!is.na(aus)]
   ## eCAN is a theoretical size and always stays the last entry
@@ -560,6 +563,7 @@ Ns_productCA <- function(t=2, k, v){
 }
 
 ## obtain known smallest CA sizes from Colbourn catalogue
+## or Smolen tables (if frozen is FALSE)
 #' @export
 eCAN <- function(t,k,v, frozen=TRUE){
   if (!is.null(smolenBigFrame) && !frozen){
@@ -567,6 +571,8 @@ eCAN <- function(t,k,v, frozen=TRUE){
     sourceCol <- "construction"
   }
   else{
+    if (!frozen && is.null(smolenBigFrame))
+      stop("frozen=FALSE is not possible, as smolenBigFrame is not available")
     hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
     sourceCol <- "Source"
   }
@@ -589,6 +595,8 @@ eCAK <- function(t,N,v, frozen=TRUE ){
     sourceCol <- "construction"
   }
   else{
+    if (!frozen && is.null(smolenBigFrame))
+      stop("frozen=FALSE is not possible, as smolenBigFrame is not available")
     hilf <- colbournBigFrame[which(colbournBigFrame$t==t & colbournBigFrame$v==v),]
     sourceCol <- "Source"
   }
@@ -717,7 +725,7 @@ N_miscCAcat <- function(t,k,v){
 }
 
 #' @export
-ks <- function(t, N, v){
+ks <- function(t, N, v, frozen=TRUE){
   suppressMessages(
     aus <- c(
     PALEY=k_PALEYcat(t,N,v),
@@ -745,7 +753,7 @@ ks <- function(t, N, v){
     DWYER=k_DWYERcat(t,N,v),
     NIST=k_NISTcat(t,N,v),
     TJ=k_TJcat(t,N,v),
-    eCAK=eCAK(t,N,v)[[1]])
+    eCAK=eCAK(t,N,v, frozen=frozen)[[1]])
   )
   aus <- aus[!is.na(aus)]
   if (t==2 && v==2) aus <- c(KSK=k_KSK(N), aus)

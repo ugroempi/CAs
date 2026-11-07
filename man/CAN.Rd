@@ -49,7 +49,7 @@ eCAN(t, k, v, frozen=TRUE)
 eCAK(t, N, v, frozen=TRUE)
 
 Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
-  noadd1=FALSE, maxadd1=1)
+  noadd1=FALSE, maxadd1=1, frozen=TRUE)
 
 Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
   noadd1=FALSE, maxadd1=1, Ndirect=NULL)
@@ -154,6 +154,8 @@ the derived, fused and add1 entries of \code{Ns}.}
 \item{maxadd1}{integer; maximum number of \code{\link{add1Column}} steps considered
 for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}}
 
+\item{frozen}{logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available; at present, this is still the default, but \code{frozen=FALSE} will already obtain the new values}
+
 \item{Ndirect}{\code{NULL} or the result of \code{Ns(t, k, v, noderive=TRUE)}, if already available}
 
 \item{N}{number of runs}
@@ -162,8 +164,6 @@ for the \code{add1} entry of \code{Ns} or for \code{Ns_add1}}
 
 \item{cmax}{integer number: maximum \code{c} to consider for projection (\code{N_projBoseCA} returns \code{NA},
 if a design cannot be found within this limit; increase to \code{Inf}, if arbitrarily large N are of interest)}
-
-\item{frozen}{logical; if \code{TRUE}, forces use of the frozen Colbourn tables instead of the new Smolen tables, if the latter are available; at present, this is still the default, but \code{frozen=FALSE} will already obtain the new values}
 
 \item{...}{allows to propagate arguments to \code{Ns} (function \code{Ns_add1}),
 used for \code{exclude}}
@@ -192,7 +192,7 @@ table or library, the returned results are missing values.
 }
 \description{
 The functions extract the number of runs needed for a specified setting
-according to the Colbourn tables or the more current Smolen tables,
+according to the Colbourn tables (Colbourn without year) or the more current Smolen tables (Smolen 2026),
 according to the NIST library of CAs
 and the Torres-Jimenez library of CAs,
 as well as according to implemented constructions
@@ -324,4 +324,8 @@ Ns(3, 381, 15, maxfuse=4)
 D <- bestCA(3,381,15,maxfuse=4)
 dim(D)
 }
+}
+\references{
+Colbourn (without year) and Smolen (2026) for \code{eCAN} and \code{eCAK},
+many other sources for the specific constructions
 }
