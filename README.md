@@ -12,7 +12,7 @@
 - **License**: GPL-3
 - **Current GitHub Version**: 0.25
 - **Latest [CRAN Version](https://CRAN.R-project.org/package=CAs)**:
-  0.24-4
+  0.25
 
 Implements covering arrays, as proposed in Groemping (2025)
 [doi:10.1109/ICSTW64639.2025.10962463](https://doi.org/10.1109/ICSTW64639.2025.10962463).
