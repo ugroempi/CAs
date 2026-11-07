@@ -4,7 +4,8 @@ Changes since latest release,
 version 0.25
 
  - integrated best derive and best fuse entry into Ns, and consequently 
-   also into bestN and bestCA (supported by Github Copilot); 
+   also into bestN and bestCA, caching interim results for acceptable
+   run times (supported by Github Copilot); 
    needs further thought regarding where to suppress these (currently presumably 
    suppressed a bit too often; nevertheless seems to be somewhat costly in terms 
    of run time for function Ns)
