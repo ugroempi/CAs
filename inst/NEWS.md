@@ -1,7 +1,6 @@
 # NEWS
 
-Changes since latest release,
-version 0.25
+November 7, 2026, version 0.25
 
  - integrated best derive and best fuse entry into Ns, and consequently 
    also into bestN and bestCA, caching interim results for acceptable
