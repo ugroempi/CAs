@@ -294,6 +294,51 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
                           "derive", "fuse", "add1"
                           ))) message("exclude contains invalid element(s)")
 
+  aus <- Ns_direct(t, k, v, exclude)
+  ## eCAN is a theoretical size and always stays the last entry
+  eCANval <- eCAN(t,k,v, frozen=frozen)[[1]]
+  eCANentry <- if (is.na(eCANval)) aus[0] else c(eCAN=eCANval)
+  if (!nofuse && !"fuse" %in% exclude && k > t){
+    Nfuse <- N_fusebest(t, k, v, exclude=exclude, maxfuse=maxfuse)
+    if (!is.null(Nfuse)) aus <- c(aus, Nfuse)
+  }
+  if (!noadd1 && !"add1" %in% exclude && t >= 2 && k > t+1){
+    Nadd1 <- N_add1best(t, k, v, exclude=exclude, maxadd1=maxadd1)
+    if (!is.null(Nadd1)) aus <- c(aus, Nadd1)
+  }
+  if (!noderive && !"derive" %in% exclude && t < 6 && k > t){
+    ## deriving is applied only once, i.e., sources do not derive
+    ## the direct sizes are handed over, to avoid computing them twice
+    Nderive <- suppressMessages(
+      Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, maxfuse=maxfuse,
+                noadd1=noadd1, maxadd1=maxadd1,
+                Ndirect=c(aus, eCANentry)))
+    if (is.data.frame(Nderive)){
+      ## eCAN is not a construction
+      Nderive <- unlist(Nderive["N-derived",
+                         setdiff(colnames(Nderive), c("label", "eCAN"))])
+      Nderive <- Nderive[!is.na(Nderive)]
+      if (length(Nderive) > 0){
+        best <- which.min(Nderive)
+        aus <- c(aus, stats::setNames(unname(Nderive[best]),
+                               paste0(names(Nderive)[best], ":derive")))
+      }
+    }
+  }
+  c(aus[setdiff(names(aus), c("TJ","DWYER","NIST"))],
+    aus[intersect(names(aus), c("TJ","DWYER","NIST"))],
+    eCANentry)
+}
+
+## sizes of the directly implemented constructions (without eCAN),
+## cached, because Ns is called repeatedly with the same arguments
+## (by fuse, add1 and derive sources, by constructions that use bestN,
+## and by repeated user calls); the results depend on package data only
+Ns_direct <- function(t, k, v, exclude=NULL){
+  key <- paste(t, k, v, paste(sort(unique(setdiff(exclude,
+            c("derive","fuse","add1","eCAN")))), collapse=","), sep="|")
+  hit <- .Ns_cache[[key]]
+  if (!is.null(hit)) return(hit)
   suppressMessages(
     aus <- c(
     KSK=ifelse("KSK" %in% exclude || t>2 || v>2, NA, N_KSK(k)),
@@ -329,43 +374,11 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
  #   add1CA=ifelse("add1CA" %in% exclude, NA, N_add1(t,k,v)),
     TJ=ifelse("TJ" %in% exclude, NA,N_TJcat(t,k,v)),
     DWYER=ifelse("DWYER" %in% exclude, NA,N_DWYERcat(t,k,v)),
-    NIST=ifelse("NIST" %in% exclude, NA,N_NISTcat(t,k,v)),
-    eCAN=eCAN(t,k,v, frozen=frozen)[[1]])
-    )
+    NIST=ifelse("NIST" %in% exclude, NA,N_NISTcat(t,k,v))
+    ))
   aus <- aus[!is.na(aus)]
-  ## eCAN is a theoretical size and always stays the last entry
-  eCANentry <- aus[names(aus) == "eCAN"]
-  aus <- aus[names(aus) != "eCAN"]
-  if (!nofuse && !"fuse" %in% exclude && k > t){
-    Nfuse <- N_fusebest(t, k, v, exclude=exclude, maxfuse=maxfuse)
-    if (!is.null(Nfuse)) aus <- c(aus, Nfuse)
-  }
-  if (!noadd1 && !"add1" %in% exclude && t >= 2 && k > t+1){
-    Nadd1 <- N_add1best(t, k, v, exclude=exclude, maxadd1=maxadd1)
-    if (!is.null(Nadd1)) aus <- c(aus, Nadd1)
-  }
-  if (!noderive && !"derive" %in% exclude && t < 6 && k > t){
-    ## deriving is applied only once, i.e., sources do not derive
-    ## the direct sizes are handed over, to avoid computing them twice
-    Nderive <- suppressMessages(
-      Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, maxfuse=maxfuse,
-                noadd1=noadd1, maxadd1=maxadd1,
-                Ndirect=c(aus, eCANentry)))
-    if (is.data.frame(Nderive)){
-      ## eCAN is not a construction
-      Nderive <- unlist(Nderive["N-derived",
-                         setdiff(colnames(Nderive), c("label", "eCAN"))])
-      Nderive <- Nderive[!is.na(Nderive)]
-      if (length(Nderive) > 0){
-        best <- which.min(Nderive)
-        aus <- c(aus, stats::setNames(unname(Nderive[best]),
-                               paste0(names(Nderive)[best], ":derive")))
-      }
-    }
-  }
-  c(aus[setdiff(names(aus), c("TJ","DWYER","NIST"))],
-    aus[intersect(names(aus), c("TJ","DWYER","NIST"))],
-    eCANentry)
+  assign(key, aus, envir=.Ns_cache)
+  aus
 }
 
 ## best fuse entry for Ns: sources have v+d levels (d=1,...,maxfuse),
