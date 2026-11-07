@@ -72,14 +72,21 @@ The goal is to implement as many constructions as possible that yield
 arrays with small numbers of runs, as evidenced by the Colbourn covering
 array tables, which do not provide the CAs themselves but pointers to
 which CA constructions yield the smallest known array for which setting.
+As of Version 0.25, the package also includes, initially as an internal
+object only, the new Smolen tables (Smolen 2026) (internal object
+<code>smolenBigFrame</code>), which hold the status of Christopher
+Smolen’s newly-introduced tables at the time of loading the package (if
+an internet connection is availabe, <code>NULL</code> othewise). A
+strategy for handling the dynamically-developing situation around
+covering array tables will have to be developed.
 
 All references of the package are listed in this file and referenced
 from the other documentation files.
 
 Within the package, available CA constructions for specific situations
 can be queried using the function <code>Ns</code>, which provides sizes
-from available constructions, as well as the current known optimum size;
-it is not guaranteed that all implemented constructions are
+from available constructions, as well as the current known optimum size.
+It is not guaranteed that all implemented constructions are
 incorporated, as this is not trivial for constructions with intricate
 ingoing quantities. An analogous function <code>ks</code> is far less
 advanced, as the typical application situation presumably starts from a
@@ -199,6 +206,14 @@ construction of Hartman (2005, Theorem 7.1 and Corollary 7.2).
 
 <li>
 
+general fusion (Colbourn et al. 2010, Lemma 3.1) from
+<code>v</code> levels in <code>N+2</code> runs to
+<code>v-1</code> levels in <code>N</code> runs; the construction can be
+repeatedly applied
+</li>
+
+<li>
+
 a fusion construction based on a Bose matrix, from Colbourn (2008), in
 function <code>fuseBoseCA</code>
 </li>
@@ -213,6 +228,14 @@ function <code>fuseBushtCA</code>
 
 a projection construction based on a Bose matrix, from Colbourn (2008),
 in functions <code>projectionBose</code> and <code>projBoseCA</code>
+</li>
+
+<li>
+
+a derive construction from strength <code>t+1</code> in <code>k+1</code>
+columns to strength <code>t</code> in <code>k</code> columns as
+described, e.g., in Zhang et al. 2014 (used as candidate for
+<code>bestN</code> and <code>bestCA</code>)
 </li>
 
 <li>
@@ -770,6 +793,13 @@ Designs 14, 202-213. <https://doi.org/10.1002/jcd.20067>
 Sherwood, G.B. (2008). Optimal and near-optimal mixed covering arrays by
 column expansion. Discrete Mathematics 308, 6022-6035.
 <https://doi.org/10.1016/j.disc.2007.11.021>
+</p>
+
+<p>
+
+Smolen, C.P.B. (2026). A provenance-tracked table of best-known covering
+array sizes.
+<https://github.com/chrispbsmolen/ca-tools/blob/main/table/README.md>.
 </p>
 
 <p>
