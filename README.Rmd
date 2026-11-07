@@ -186,7 +186,7 @@ The figures show performance percentages relative to the best-known arrays as co
 ## status_dat.rda was created by function status in file C:/rtests/CAsbak/inspectNs.R
 bpFun <- function(ratiolim, vmax=10){
   load("C:/rtests/CAsbak/status_dat_0.22.rda")
-  CAsVersion <- 0.22  ## !!! intentionally not automatic, because the status info 
+  CAsVersion <- 0.25  ## !!! intentionally not automatic, because the status info 
                       ## !!! update is sometimes delayed versus the package update
   hilf <- status_dat[which(status_dat$v<=vmax & status_dat$N<=1000000),]
   par(mfrow=c(2,3), oma=c(0,0,3,0), mar=c(3.1, 3.1, 2.1, 1.1), cex=1.2, cex.main=1.2)
