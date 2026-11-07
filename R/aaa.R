@@ -2,6 +2,9 @@
 .pkg_internal_env <- new.env(parent = emptyenv())
 .pkg_internal_env$smolenBigFrame <- NULL # Default fallback
 
+## cache for direct sizes in Ns
+.Ns_cache <- new.env(parent = emptyenv())
+
 .onLoad <- function(libname, pkgname) {
   # 2. Wrap the loading process in a try block
   try({
