@@ -185,7 +185,7 @@ The figures show performance percentages relative to the best-known arrays as co
 ```{r status1, message=FALSE, fig.width=8, fig.height=5.5}
 ## status_dat.rda was created by function status in file C:/rtests/CAsbak/inspectNs.R
 bpFun <- function(ratiolim, vmax=10){
-  load("C:/rtests/CAsbak/status_dat_0.22.rda")
+  load("C:/rtests/CAsbak/status_dat_0.25.rda")
   CAsVersion <- 0.25  ## !!! intentionally not automatic, because the status info 
                       ## !!! update is sometimes delayed versus the package update
   hilf <- status_dat[which(status_dat$v<=vmax & status_dat$N<=1000000),]
