@@ -10,7 +10,7 @@
 
 - **Author**: Ulrike Groemping, BHT Berlin.
 - **License**: GPL-3
-- **Current GitHub Version**: 0.25
+- **Current GitHub Version**: 0.25-1
 - **Latest [CRAN Version](https://CRAN.R-project.org/package=CAs)**:
   0.25
 

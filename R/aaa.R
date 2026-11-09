@@ -10,7 +10,7 @@
   try({
     # Replace with your actual path or URL
     pfadGithubSmolen <-
-      "https://raw.githubusercontent.com/chrispbsmolen/ca-tools/main/table/ca_table.csv"
+      "https://raw.githubusercontent.com/chrispbsmolen/ca-tools/main/table/ca_frame.csv"
     # 2. Build the request and configure a strict timeout (e.g., 3 seconds)
     req <- httr2::request(pfadGithubSmolen)
     req <- httr2::req_timeout(req, 3)

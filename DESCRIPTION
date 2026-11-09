@@ -1,7 +1,7 @@
 Package: CAs
 Type: Package
 Title: Creating Covering Arrays
-Version: 0.25
+Version: 0.25-1
 Authors@R: c(person(given = "Ulrike",
                     family = "Groemping",
                     role = c("aut", "cre"),
