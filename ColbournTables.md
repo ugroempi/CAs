@@ -1,13 +1,18 @@
-Frozen version of the Colbourn tables
-=====================================
-provided by Ulrike Grömping (July 25, 2025). 
+Frozen version of the Colbourn tables, with best sizes from current CRAN version of package **CAs**
+==================================================================================================
+originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 11, 2026.<br> 
 **See also**: [@cpbsmolen's collection of best-known covering arrays](https://chrispbsmolen.github.io/ca-tools/) to which newly-found arrays can be submitted. It keeps track of progress and propagates improvements to other constructions; it may not (yet) always track *all* consequences of improved arrays the way Charles Colbourn did.
 
 # Purpose
 
 This file gives access to a November 2024 status of Covering Array
-tables maintained by Charlie Colbourn (short: the Colbourn tables), as
-those tables are no longer available to the public at their previous
+tables maintained by Charlie Colbourn (short: the Colbourn tables), 
+and compares the run sizes from that table with the best run sizes obtainable 
+by a call of function `bestCA(t,k,v,maxfuse=6)` in the latest CRAN version 
+of package **CAs** (note that the creation of very large arrays will likely 
+fail for resource reasons, the package targets smaller situations).
+
+<small><small><small>The Colbourn tables are no longer available to the public at their previous
 location (see references). In a few places (e.g., for strength $`t=3`$
 with $`v=4`$ levels for more than 798 columns or for strength $`t=6`$
 with $`v=2`$ levels for $`k=30,\dots,72`$; not systematically checked
@@ -17,7 +22,7 @@ latest wayback machine crawl of February 2025 at
 as the latest crawl dates for linked individual tables are all earlier
 than February 2025. The one instance for $`t=2`$, $`v=10`$ with a crawl
 date later than November 2024 (crawled in Dec 2024) has unchanged
-content.
+content.</small></small></small>
 
 # Tables
 
@@ -44,6 +49,5 @@ Colbourn, C.J. (Status November 2024). Covering array tables: 2 ≤v ≤25,
 2 ≤t≤6, t≤k ≤10000, 2005–23.
 <https://www.public.asu.edu/~ccolbou/src/tabby>
 
-This used to be a public resource, currently www.public.asu.edu is
-intentionally not public (as stated by the ASU helpdesk), which is the
-reason for providing the information here.
+This used to be a public resource, but has been discontinued. 
+Community efforts for its replacement are underway.
