@@ -12,7 +12,7 @@ by a call of function `bestCA(t,k,v,maxfuse=6)` in the latest CRAN version
 of package **CAs** (note that the creation of very large arrays will likely 
 fail for resource reasons, the package targets smaller situations).
 
-<small><small><small>The Colbourn tables are no longer available to the public at their previous
+<sub>The Colbourn tables are no longer available to the public at their previous
 location (see references). In a few places (e.g., for strength $`t=3`$
 with $`v=4`$ levels for more than 798 columns or for strength $`t=6`$
 with $`v=2`$ levels for $`k=30,\dots,72`$; not systematically checked
@@ -22,7 +22,7 @@ latest wayback machine crawl of February 2025 at
 as the latest crawl dates for linked individual tables are all earlier
 than February 2025. The one instance for $`t=2`$, $`v=10`$ with a crawl
 date later than November 2024 (crawled in Dec 2024) has unchanged
-content.</small></small></small>
+content.</sub>
 
 # Tables
 
