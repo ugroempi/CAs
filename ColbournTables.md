@@ -33,7 +33,9 @@ the smallest runs size *N* required for a given number of columns *N*
 based on a known construction, which is hinted at in the column headed
 “Source”. These tables are a replication of those by Colbourn, as they
 were available recently (download in November 2024), but are not
-available at present.
+available at present. The have been augmented by the best available 
+sizes from R package **CAs**; rows that were added for that purpose are 
+marked with type "extra" (instead of Colbourn). 
 
 |  | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 |
 |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
