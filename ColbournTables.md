@@ -8,7 +8,7 @@ originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 14, 2026
 This file gives access to a November 2024 status of Covering Array
 tables maintained by Charlie Colbourn (short: the Colbourn tables), 
 and compares the run sizes from that table with the best run sizes obtainable 
-by a call of function `bestCA(t,k,v,maxfuse=6)` in the latest GitHub release 
+by a call of function `bestCA(t,k,v,maxfuse=6,maxadd1=3)` in the latest GitHub release 
 of package **CAs** (note that the creation of very large arrays will likely 
 fail for resource reasons, the package targets smaller situations).
 
