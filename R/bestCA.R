@@ -319,7 +319,7 @@ labelToCode <- function(label, t, k, v, ...){
     return(paste0("fuse(", aus, ", ", v + fusenum, ", ", v, ")"))
   }
   ## label must correspond to the label used in function Ns
-  stopifnot(label %in% c("KSK","PALEY",
+  stopifnot(label %in% c("KSK","JE","ZeroSum","PALEY",
   "CAEX", "CYCLOTOMY", "CKRS", "RMScopiesCA",
   "miscCA", "recBoseCA_PCA", "SCA_Busht",
   "fuseBoseCA", "fuseBushtCA",
@@ -334,6 +334,13 @@ labelToCode <- function(label, t, k, v, ...){
   if (label =="KSK"){
     if (!v==2) stop('"KSK" requires v=2')
     aus <- paste0("KSK(", k, ")")
+  }
+  if (label =="JE"){
+    if (!v==2) stop('"JE" requires v=2')
+    aus <- paste0("JE(", t, ", ", k, ")")
+  }
+  if (label =="ZeroSum"){
+    aus <- paste0("ZeroSum(", t, ", ", k, ", ", v, ")")
   }
   if (label=="miscCA"){
     aus <- paste0("miscCA(", t, ", ", k, ", ", v, ", ...)")
@@ -632,6 +639,7 @@ tjCA <- function(t, k, v=2, ...){
 ffCA <- function(k, v){
   Call <- sys.call()
   aus <- maxconstant(as.matrix(expand.grid(rep(list(0:(v-1)), k))))
+  dimnames(aus) <- NULL
   attr(aus, "t") <- NA
   attr(aus, "origin") <- "Full Factorial"
   attr(aus, "nconstant") <- v

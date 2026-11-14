@@ -283,7 +283,7 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
   stopifnot(t <= 6)
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
-  if (!all(exclude %in% c("KSK","PALEY", "CAEX", "CYCLOTOMY",
+  if (!all(exclude %in% c("KSK","JE","ZeroSum","PALEY", "CAEX", "CYCLOTOMY",
                           "CKRS", "RMScopiesCA",
                           "SCA_Busht", "fuseBoseCA", "fuseBushtCA",
                           "recBoseCA_PCA", "recBoseCA_CA", "projBoseCA",
@@ -342,6 +342,8 @@ Ns_direct <- function(t, k, v, exclude=NULL){
   suppressMessages(
     aus <- c(
     KSK=ifelse("KSK" %in% exclude || t>2 || v>2, NA, N_KSK(k)),
+    JE=ifelse("JE" %in% exclude || v>2 || k>t+2, NA, N_JE(t,k)),
+    ZeroSum=ifelse("ZeroSum" %in% exclude || k>t+1, NA, N_ZeroSum(t,k,v)),
     CK_doublingCA=ifelse("CK_doublingCA" %in% exclude,
                          NA, N_CK_doublingCA(t,k,v, exclude=exclude)),
     CS_CK=ifelse("CS_CK" %in% exclude, NA,N_CS_CK(t,k,v)),
@@ -742,6 +744,9 @@ N_miscCAcat <- function(t,k,v){
 ks <- function(t, N, v, frozen=TRUE){
   suppressMessages(
     aus <- c(
+    KSK=ifelse(v>2 || t>2, NA, k_KSK(N)),
+    JE=ifelse(v>2, NA, k_JE(t,N)),
+    ZeroSum=k_ZeroSum(t,N,v),
     PALEY=k_PALEYcat(t,N,v),
     CAEX=k_CAEX(t,N,v),
     CK_NRB=k_CK_NRB(t,N,v),

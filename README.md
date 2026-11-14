@@ -113,6 +113,19 @@ in function <code>KSK</code>,
 
 <li>
 
+optimal 2-level CAs of strength <code>t</code> with <code>t+2</code>
+columns by Johnson and Entringer (1989),
+</li>
+
+<li>
+
+zero-sum CAs of strength <code>t</code> with <code>t+1</code> columns
+for arbitrary <code>v</code>, as reported in Colbourn and Dinitz (2007,
+III 7.16),
+</li>
+
+<li>
+
 strength 3 to 6 2-level constructions via Paley matrices according to
 Colbourn (2015) in function <code>paleyCA</code>,
 </li>
@@ -573,6 +586,12 @@ Springer International Publishing, Cham, pp. 29-42.
 
 <p>
 
+Colbourn, C.J. and Dinitz, J.H. (2007, 2nd ed.). Handbook of
+Combinatorial Designs. Chapman & Hall, Boca Raton.
+</p>
+
+<p>
+
 Colbourn, C.J., Dougherty, R.E., Horsley, D. (2019). Distributing hash
 families with few rows. Theoretical Computer Science 800, 31-41. doi:
 10.1016/j.tcs.2019.10.014
@@ -666,6 +685,13 @@ Science Interfaces Series, vol 34. Springer-Verlag, New York.
 Ji, L. and Yin, J., 2010. Constructions of new orthogonal arrays and
 covering arrays of strength three. Journal of Combinatorial Theory,
 Series A 117, 236-247. <https://doi.org/10.1016/j.jcta.2009.06.002>
+</p>
+
+<p>
+
+Johnson, K.A. and Entringer, R. (1989). Largest induced subgraphs of the
+n-cube that contain no 4-cycles. Journal of Combinatorial Theory, Series
+B 46(3), 346-355. <https://doi.org/10.1016/0095-8956(89)90054-3>.
 </p>
 
 <p>
@@ -822,6 +848,13 @@ longer functional, no alternative location known).
 Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021).
 Covering array EXtender. Applied Mathematics and Computation 402,
 126122. <https://doi.org/10.1016/j.amc.2021.126122>
+</p>
+
+<p>
+
+Torres-Jimenez, J., Izquierdo-Marquez, I., Avila-George, H. (2019).
+Methods to Construct Uniform Covering Arrays. IEEE Access 7,
+42774-42797. <https://doi.org/10.1109/ACCESS.2019.2907057>.
 </p>
 
 <p>

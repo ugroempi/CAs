@@ -45,6 +45,8 @@ Besides the construction functions, coverage properties of any array can be chec
 So far, the following constructions for uniform CAs have been implemented:
 \itemize{
 \item strength 2 2-level CAs by Kleitman and Spencer (1973) and Katona (1973) in function \code{\link{KSK}},
+\item optimal 2-level CAs of strength \code{t} with \code{t+2} columns by Johnson and Entringer (1989),
+\item zero-sum CAs of strength \code{t} with \code{t+1} columns for arbitrary \code{v}, as reported in Colbourn and Dinitz (2007, III 7.16),
 \item strength 3 to 6 2-level constructions via Paley matrices according to Colbourn (2015) in function \code{\link{paleyCA}},
 \item orthogonal arrays from a Bose (1938) or Bush (1952) construction in functions \code{\link{SCA_Bose}} and \code{\link{SCA_Busht}}; the latter does one more column for strength 3 with \code{q} a power of 2, according to the Sherwood, Martirosyan and Colbourn (2006) example for the usage of permutation vectors.
 \item constructions based on cyclotomy (Colbourn 2010) in function \code{\link{cyclotomyCA}} for practitioners (based on arrays listed in the Colbourn tables), and function \code{\link{cyc}} for experts who know which prime power and construction type to request for which strength.
@@ -162,6 +164,8 @@ Colbourn, C. J. (2010). Covering arrays from cyclotomy, Des. Codes Cryptogr., vo
 
 Colbourn, C.J. (2015). Suitable Permutations, Binary Covering Arrays, and Paley Matrices, in: Colbourn, C.J. (Ed.), Algebraic Design Theory and Hadamard Matrices, Springer Proceedings in Mathematics & Statistics. Springer International Publishing, Cham, pp. 29-42. https://doi.org/10.1007/978-3-319-17729-8_3
 
+Colbourn, C.J. and Dinitz, J.H. (2007, 2nd ed.). Handbook of Combinatorial Designs. Chapman & Hall, Boca Raton.
+
 Colbourn, C.J., Dougherty, R.E., Horsley, D. (2019). Distributing hash families with few rows. Theoretical Computer Science 800, 31-41. doi: 10.1016/j.tcs.2019.10.014
 
 Colbourn, C.J., Kéri, G., (2009). Binary Covering Arrays and Existentially Closed Graphs, in: Chee, Y.M., Li, C., Ling, S., Wang, H., Xing, C. (Eds.), Coding and Cryptology, Lecture Notes in Computer Science. Springer Berlin Heidelberg, Berlin, Heidelberg, pp. 22-33. https://doi.org/10.1007/978-3-642-01877-0_3
@@ -187,6 +191,8 @@ Groemping, U. (2025). Generalizing a Sherwood (2008) construction for mixed leve
 Hartmann, A. (2005). Software and Hardware Testing Using Combinatorial Covering Suites. In: Golumbic, M.C., Hartman, I.BA. (eds) \emph{Graph Theory, Combinatorics and Algorithms}. Operations Research/Computer Science Interfaces Series, vol 34. Springer-Verlag, New York.
 
 Ji, L. and Yin, J., 2010. Constructions of new orthogonal arrays and covering arrays of strength three. Journal of Combinatorial Theory, Series A 117, 236-247. https://doi.org/10.1016/j.jcta.2009.06.002
+
+Johnson, K.A. and Entringer, R. (1989). Largest induced subgraphs of the n-cube that contain no 4-cycles. Journal of Combinatorial Theory, Series B 46(3), 346-355. https://doi.org/10.1016/0095-8956(89)90054-3.
 
 Kleitman, D.J. and Spencer, J. (1973). Families of k-independent sets, Discrete Math., vol. 6, no. 3, pp. 255-262. https://doi.org/10.1016/0012-365X(73)90098-8.
 
@@ -231,6 +237,8 @@ Stevens, B., Ling, A. and Mendelsohn, E. (2002). A Direct Construction of Transv
 Torres-Jimenez, J. (without year, last accessed 10 Feb 2025, arrays downloaded 6 Feb 2025). Covering arrays. Formerly available at \code{www . tamps . cinvestav . mx / ~oc /} (blanks must be removed, but no longer functional, no alternative location known).
 
 Torres-Jimenez, J., Acevedo-Juarez, B., Avila-George, H. (2021). Covering array EXtender. Applied Mathematics and Computation 402, 126122. https://doi.org/10.1016/j.amc.2021.126122
+
+Torres-Jimenez, J., Izquierdo-Marquez, I., Avila-George, H. (2019). Methods to Construct Uniform Covering Arrays. IEEE Access 7, 42774-42797. https://doi.org/10.1109/ACCESS.2019.2907057.
 
 Torres-Jimenez, J., Ramirez-Acuna, D.O., Acevedo-Juarez, B., Avila-George, H. (2022). New upper bounds for sequence Covering Arrays using a 3-stage approach. Expert Systems With Applications 207, 118022. https://doi.org/10.1016/j.eswa.2022.118022
 
