@@ -36,7 +36,7 @@ test_that("bestCA records the ingredient of an add1 design", {
 
 test_that("labels apply fuse first, then derive, then add1", {
   expect_identical(CAs:::labelToCode("PALEY:derive:add1", 2, 9, 2),
-    "add1Column(derive(paleyCA(3, 9, 2))[, 1:8, drop=FALSE], 2, 2)")
+    "add1Column(derive(paleyCA(3, 9))[, 1:8, drop=FALSE], 2, 2)")
   expect_identical(CAs:::labelToCode("CKRS:fuse:derive", 3, 9, 3),
     "derive(fuse(ckrsCA(4, 10, 4), 4, 3))[, 1:9, drop=FALSE]")
 })

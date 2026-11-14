@@ -28,6 +28,8 @@ N_ZeroSum(t, k, v)
 \item{k}{number of columns}
 
 \item{N}{number of runs}
+
+\item{v}{number of levels}
 }
 \value{
 \code{JE} returns a matrix of class \code{ca} with

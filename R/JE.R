@@ -22,6 +22,7 @@
 #' @param t requested strength
 #' @param k number of columns
 #' @param N number of runs
+#' @param v number of levels
 #'
 #' @details
 #' Functions \code{ZeroSum} and \code{JE} return the
