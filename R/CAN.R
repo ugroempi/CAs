@@ -331,13 +331,14 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
     eCANentry)
 }
 
-## order construction names: internet-based constructions (TJ, DWYER, NIST)
-## after the others, and eCAN absolutely last; order is otherwise stable
+## order construction names: TJ (stored arrays) after the others, then the
+## internet-based constructions (DWYER, NIST), and eCAN absolutely last; order is otherwise stable
 ## suffixes like ":derive" or ":fuse" are ignored for classification
 order_constructions <- function(nm){
   base <- sub(":.*$", "", nm)
-  order(ifelse(base == "eCAN", 3L,
-        ifelse(base %in% c("TJ","DWYER","NIST"), 2L, 1L)))
+  order(ifelse(base == "eCAN", 4L,
+        ifelse(base %in% c("DWYER","NIST"), 3L,
+        ifelse(base == "TJ", 2L, 1L))))
 }
 
 ## sizes of the directly implemented constructions (without eCAN),
