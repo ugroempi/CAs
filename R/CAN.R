@@ -326,9 +326,7 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
       }
     }
   }
-  c(aus[setdiff(names(aus), c("TJ","DWYER","NIST"))],
-    aus[intersect(names(aus), c("TJ","DWYER","NIST"))],
-    eCANentry)
+  c(aus[order_constructions(names(aus))], eCANentry)
 }
 
 ## order construction names: TJ (stored arrays) after the others, then the
