@@ -1,5 +1,11 @@
 # NEWS
 
+Version 0.25-2, Work in progress since latest GitHub release 
+ - rearranged order in Ns, Ns_derive, Ns_fuse and Ns_add that it 
+   always uses non-internet and non_TJ constructions and also 
+   their derived versions (with derive, fuse or add1) before 
+   TJ and its derived versions or internet-dependent constructions
+
 November 14, 2026, Version 0.25-1, not uploaded to CRAN
  - switched to ca_frame.csv instead of ca_table.csv for smolenBigFrame
  - added Johnson Entringer and Zero Sum constructions
