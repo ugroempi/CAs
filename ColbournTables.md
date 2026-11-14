@@ -1,6 +1,6 @@
-Frozen version of the Colbourn tables, with best sizes from current CRAN version of package **CAs**
-==================================================================================================
-originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 11, 2026.<br> 
+Frozen version of the Colbourn tables, with best sizes from latest Github release of package **CAs**
+====================================================================================================
+originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 14, 2026.<br> 
 **See also**: [@cpbsmolen's collection of best-known covering arrays](https://chrispbsmolen.github.io/ca-tools/) to which newly-found arrays can be submitted. It keeps track of progress and propagates improvements to other constructions; it may not (yet) always track *all* consequences of improved arrays the way Charles Colbourn did.
 
 # Purpose
@@ -8,7 +8,7 @@ originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 11, 2026
 This file gives access to a November 2024 status of Covering Array
 tables maintained by Charlie Colbourn (short: the Colbourn tables), 
 and compares the run sizes from that table with the best run sizes obtainable 
-by a call of function `bestCA(t,k,v,maxfuse=6)` in the latest CRAN version 
+by a call of function `bestCA(t,k,v,maxfuse=6)` in the latest GitHub release 
 of package **CAs** (note that the creation of very large arrays will likely 
 fail for resource reasons, the package targets smaller situations).
 
