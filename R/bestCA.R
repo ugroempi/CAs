@@ -246,18 +246,19 @@ bestCA <- function(t, k, v, maxN=1000000, fixNA=TRUE, seed=NULL, exclude=NULL,
   if (is.null(attr(aus, "t"))) attr(aus, "t") <- t
   attr(aus, "constr") <- constr
   parts <- strsplit(constr, ":", fixed=TRUE)[[1]]
-  if (tail(parts, 1)=="derive"){
-    attr(aus, "ingredients") <- list(source=list(
-      constr=paste(parts[-length(parts)], collapse=":"),
-      t=t+1, k=k+1, v=v))
-  }else if (length(parts)>1 && any(parts[-1]=="add1")){
-    nadd <- sum(parts[-1]=="add1")
-    attr(aus, "ingredients") <- list(source=list(
-      constr=parts[1], t=t, k=k-nadd, v=v))
-  }else if (length(parts)>1 && any(parts[-1]=="fuse")){
-    nfuse <- sum(parts[-1]=="fuse")
-    attr(aus, "ingredients") <- list(source=list(
-      constr=parts[1], t=t, k=k, v=v+nfuse))
+  if (length(parts) > 1){
+    ## the last step is the outermost one; the source is what it was applied to
+    last <- tail(parts, 1)
+    if (last=="derive"){
+      attr(aus, "ingredients") <- list(source=list(
+        constr=paste(parts[-length(parts)], collapse=":"),
+        t=t+1, k=k+1, v=v))
+    }else{
+      nrun <- sum(cumprod(rev(parts[-1])==last))
+      src <- paste(parts[seq_len(length(parts)-nrun)], collapse=":")
+      attr(aus, "ingredients") <- list(source=list(
+        constr=src, t=t, k=k-(last=="add1")*nrun, v=v+(last=="fuse")*nrun))
+    }
   }
   ## prepend the Call attribute
   attr(aus, "Call") <- c(Call, attr(aus, "Call"))
@@ -292,31 +293,33 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
   aus
 }
 
-## label of the form construction[:fuse[:fuse...]|:add1[:add1...]][:derive]
-## as used by Ns for fused and derived entries
+## label of the form construction[:fuse...][:derive][:add1...] as used by Ns
+## the steps are applied from left to right, i.e., fuse first, add1 last
 labelToCode <- function(label, t, k, v, ...){
   ## handle derive, add1 and fuse instances first
   parts <- strsplit(label, ":", fixed=TRUE)[[1]]
   if (length(parts) > 1){
     nparts <- length(parts)
-    if (parts[nparts]=="derive"){
+    last <- parts[nparts]
+    stopifnot(last %in% c("derive", "add1", "fuse"))
+    if (last=="derive"){
       ## derived from a CA with strength t+1 and k+1 columns
       source <- labelToCode(paste(parts[-nparts], collapse=":"), t+1, k+1, v, ...)
       return(paste0("derive(", source, ")[, 1:", k, ", drop=FALSE]"))
     }
-    if (all(parts[-1]=="add1")){
-      ## add1Column applied once per add1 step to the source with k-addnum columns
-      addnum <- nparts - 1
-      aus <- labelToCode(parts[1], t, k - addnum, v, ...)
-      for (i in seq_len(addnum))
+    ## consecutive identical steps at the end
+    nrun <- sum(cumprod(rev(parts[-1])==last))
+    src <- paste(parts[seq_len(nparts-nrun)], collapse=":")
+    if (last=="add1"){
+      ## add1Column is applied once per add1 step
+      aus <- labelToCode(src, t, k - nrun, v, ...)
+      for (i in seq_len(nrun))
         aus <- paste0("add1Column(", aus, ", ", t, ", ", v, ")")
       return(aus)
     }
-    ## not derive and not add1 --> fuse
-    stopifnot(all(parts[-1]=="fuse"))
-    fusenum <- nparts - 1
-    aus <- labelToCode(parts[1], t, k, v + fusenum, ...)
-    return(paste0("fuse(", aus, ", ", v + fusenum, ", ", v, ")"))
+    ## fuse
+    aus <- labelToCode(src, t, k, v + nrun, ...)
+    return(paste0("fuse(", aus, ", ", v + nrun, ", ", v, ")"))
   }
   ## label must correspond to the label used in function Ns
   stopifnot(label %in% c("KSK","JE","ZeroSum","PALEY",
