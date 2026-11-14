@@ -8,7 +8,7 @@ originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 14, 2026
 This file gives access to a November 2024 status of Covering Array
 tables maintained by Charlie Colbourn (short: the Colbourn tables), 
 and compares the run sizes from that table with the best run sizes obtainable 
-by a call of function `bestCA(t,k,v,maxfuse=6)` in the latest GitHub release 
+by a call of function `bestCA(t,k,v,maxfuse=6,maxadd1=3)` in the latest GitHub release 
 of package **CAs** (note that the creation of very large arrays will likely 
 fail for resource reasons, the package targets smaller situations).
 
@@ -33,7 +33,9 @@ the smallest runs size *N* required for a given number of columns *N*
 based on a known construction, which is hinted at in the column headed
 “Source”. These tables are a replication of those by Colbourn, as they
 were available recently (download in November 2024), but are not
-available at present.
+available at present. The have been augmented by the best available 
+sizes from R package **CAs**; rows that were added for that purpose are 
+marked with type "extra" (instead of Colbourn). 
 
 |  | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 |
 |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
