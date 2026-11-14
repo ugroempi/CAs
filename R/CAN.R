@@ -318,6 +318,7 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
       Nderive <- unlist(Nderive["N-derived",
                          setdiff(colnames(Nderive), c("label", "eCAN"))])
       Nderive <- Nderive[!is.na(Nderive)]
+      Nderive <- Nderive[order_constructions(names(Nderive))]
       if (length(Nderive) > 0){
         best <- which.min(Nderive)
         aus <- c(aus, stats::setNames(unname(Nderive[best]),
@@ -328,6 +329,15 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
   c(aus[setdiff(names(aus), c("TJ","DWYER","NIST"))],
     aus[intersect(names(aus), c("TJ","DWYER","NIST"))],
     eCANentry)
+}
+
+## order construction names: internet-based constructions (TJ, DWYER, NIST)
+## after the others, and eCAN absolutely last; order is otherwise stable
+## suffixes like ":derive" or ":fuse" are ignored for classification
+order_constructions <- function(nm){
+  base <- sub(":.*$", "", nm)
+  order(ifelse(base == "eCAN", 3L,
+        ifelse(base %in% c("TJ","DWYER","NIST"), 2L, 1L)))
 }
 
 ## sizes of the directly implemented constructions (without eCAN),
@@ -460,6 +470,8 @@ Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
                             t=t, 'N'=Ns, k=k))
   aus <- dplyr::bind_rows(Nswoderive, Ns, .id="label")
   aus <- as.data.frame(aus)
+  cn <- setdiff(colnames(aus), "label")
+  aus <- aus[, c("label", cn[order_constructions(cn)]), drop=FALSE]
 
   rownames(aus) <- c("N_direct", "t-from", "k-from", "N-from","t", "N-derived", "k")
   aus <- aus[c(1,6,5,7,2,3,4),]
@@ -480,6 +492,7 @@ Ns_fuse <- function(t, k, v, maxfuse=1, frozen=TRUE){
                  })
   aus <- as.data.frame(do.call(dplyr::bind_rows,
     c(list(direct=Ns(t,k,v, noderive=TRUE, nofuse=TRUE, noadd1=TRUE, frozen=frozen)),hilf)))
+  aus <- aus[, order_constructions(colnames(aus)), drop=FALSE]
   rownames(aus) <- c("direct", paste0("fuse", rep(1:maxfuse)))
   aus
 }
