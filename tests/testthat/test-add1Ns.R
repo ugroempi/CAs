@@ -33,3 +33,15 @@ test_that("bestCA records the ingredient of an add1 design", {
   expect_identical(attr(D, "ingredients")$source[c("constr", "t", "k", "v")],
                    list(constr="CK_NRB", t=3, k=6, v=3))
 })
+
+test_that("labels apply fuse first, then derive, then add1", {
+  expect_identical(CAs:::labelToCode("PALEY:derive:add1", 2, 9, 2),
+    "add1Column(derive(paleyCA(3, 9))[, 1:8, drop=FALSE], 2, 2)")
+  expect_identical(CAs:::labelToCode("CKRS:fuse:derive", 3, 9, 3),
+    "derive(fuse(ckrsCA(4, 10, 4), 4, 3))[, 1:9, drop=FALSE]")
+})
+
+test_that("Ns never derives from an add1ed source", {
+  N <- Ns(4, 60, 3)
+  expect_false(any(grepl(":add1:derive", names(N))))
+})

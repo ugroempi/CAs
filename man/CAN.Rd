@@ -208,13 +208,20 @@ of columns from an affordable run size \code{N} (\code{ks}). They take into acco
 catalogues and constructions, for which sizes can be easily provided; their
 scope will grow with time, and \code{Ns} is prioritized over \code{ks}, as it is considered
 more important for applications.\cr
-\code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
+\code{Ns} also contains
+
+\itemize{
+\item the best derived entry (label \code{<construction>:derive}, derived
 once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
-nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
-for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients are not derived)
-and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
+nor \code{eCAN}),
+\item and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
+for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients can be derived,
+but not from adding a column, because adding a column is cheaper after fusion)
+\item and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
 for each application of \code{\link{add1Column}}, starting from up to \code{maxadd1} fewer columns;
-add1 ingredients are neither derived, fused nor add1ed).
+add1 ingredients can be derived or fused nor add1ed).
+}
+
 Entry \code{eCAN} is always last. Constructions that need ingredient sizes
 call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE, noadd1=TRUE}.\cr
 Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_add1}, \code{Ns_CK_doubling},

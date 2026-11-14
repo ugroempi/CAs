@@ -1,14 +1,14 @@
 # NEWS
 
-Version 0.25-2, Work in progress since latest GitHub release 
+November 14, 2026, Version 0.25-1, not uploaded to CRAN
+ - switched to ca_frame.csv instead of ca_table.csv for smolenBigFrame
+ - added Johnson Entringer and Zero Sum constructions
  - rearranged order in Ns, Ns_derive, Ns_fuse and Ns_add that it 
    always uses non-internet and non_TJ constructions and also 
    their derived versions (with derive, fuse or add1) before 
    TJ and its derived versions or internet-dependent constructions
-
-November 14, 2026, Version 0.25-1, not uploaded to CRAN
- - switched to ca_frame.csv instead of ca_table.csv for smolenBigFrame
- - added Johnson Entringer and Zero Sum constructions
+ - changed order of application for derive, add1 and fuse, such that 
+   add1 always comes last (as it is cheaper for derived or fused arrays)
 
 November 7, 2026, version 0.25
 

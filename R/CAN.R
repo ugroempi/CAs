@@ -134,13 +134,20 @@
 #' catalogues and constructions, for which sizes can be easily provided; their
 #' scope will grow with time, and \code{Ns} is prioritized over \code{ks}, as it is considered
 #' more important for applications.\cr
-#' \code{Ns} also contains the best derived entry (label \code{<construction>:derive}, derived
+#' \code{Ns} also contains
+#'
+#' \itemize{
+#' \item the best derived entry (label \code{<construction>:derive}, derived
 #' once from the best strength \code{t+1} source with \code{k+1} columns, which itself is neither derived
-#' nor \code{eCAN}) and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
-#' for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients are not derived)
-#' and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
+#' nor \code{eCAN}),
+#' \item and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
+#' for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients can be derived,
+#' but not from adding a column, because adding a column is cheaper after fusion)
+#' \item and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
 #' for each application of \code{\link{add1Column}}, starting from up to \code{maxadd1} fewer columns;
-#' add1 ingredients are neither derived, fused nor add1ed).
+#' add1 ingredients can be derived or fused nor add1ed).
+#' }
+#'
 #' Entry \code{eCAN} is always last. Constructions that need ingredient sizes
 #' call \code{Ns} or \code{\link{bestN}} with \code{noderive=TRUE, nofuse=TRUE, noadd1=TRUE}.\cr
 #' Functions \code{Ns_derive}, \code{Ns_fuse}, \code{Ns_add1}, \code{Ns_CK_doubling},
@@ -302,16 +309,13 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
     Nfuse <- N_fusebest(t, k, v, exclude=exclude, maxfuse=maxfuse)
     if (!is.null(Nfuse)) aus <- c(aus, Nfuse)
   }
-  if (!noadd1 && !"add1" %in% exclude && t >= 2 && k > t+1){
-    Nadd1 <- N_add1best(t, k, v, exclude=exclude, maxadd1=maxadd1)
-    if (!is.null(Nadd1)) aus <- c(aus, Nadd1)
-  }
   if (!noderive && !"derive" %in% exclude && t < 6 && k > t){
-    ## deriving is applied only once, i.e., sources do not derive
+    ## deriving is applied only once, and sources are neither add1ed nor derived
+    ## (add1 must be applied after derive, as it is cheaper for the lower strength)
     ## the direct sizes are handed over, to avoid computing them twice
     Nderive <- suppressMessages(
       Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, maxfuse=maxfuse,
-                noadd1=noadd1, maxadd1=maxadd1,
+                noadd1=TRUE, maxadd1=maxadd1,
                 Ndirect=c(aus, eCANentry)))
     if (is.data.frame(Nderive)){
       ## eCAN is not a construction
@@ -325,6 +329,12 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
                                paste0(names(Nderive)[best], ":derive")))
       }
     }
+  }
+  ## add1 is applied last (after fuse and derive), see N_add1best
+  if (!noadd1 && !"add1" %in% exclude && t >= 2 && k > t+1){
+    Nadd1 <- N_add1best(t, k, v, exclude=exclude, maxadd1=maxadd1,
+                          noderive=noderive, nofuse=nofuse, maxfuse=maxfuse)
+    if (!is.null(Nadd1)) aus <- c(aus, Nadd1)
   }
   c(aus[order_constructions(names(aus))], eCANentry)
 }
@@ -421,15 +431,17 @@ add1_increment <- function(t, c, v, ...){
 }
 
 ## best add1 entry for Ns: sources have k-j columns (j=1,...,maxadd1),
-## each add1 step adds one column; sources are neither derived, fused nor add1ed
-## label: construction name with ":add1" appended once per add1 step
-N_add1best <- function(t, k, v, exclude=NULL, maxadd1=1){
+## each add1 step adds one column; sources may be fused or derived (add1 is
+## always the last step), but not add1ed
+## label: source label with ":add1" appended once per add1 step
+N_add1best <- function(t, k, v, exclude=NULL, maxadd1=1,
+                       noderive=TRUE, nofuse=TRUE, maxfuse=1){
   best <- NULL
   for (j in seq_len(min(maxadd1, k-t-1))){
     ## 1 to min(maxadd1, k-t-1)
     ## small add1 wins over larger add1 in case of tie
-    src <- Ns(t, k-j, v, exclude=exclude,
-              noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
+    src <- Ns(t, k-j, v, exclude=exclude, noderive=noderive,
+              nofuse=nofuse, maxfuse=maxfuse, noadd1=TRUE)
     src <- src[names(src) != "eCAN"]
     if (length(src)==0) next
     add <- sum(sapply((k-j):(k-1),
@@ -458,9 +470,10 @@ Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
     message("derive could not be used for strength 6")
     return(Nswoderive)
   }
+  ## add1 is applied after deriving, not before
   fromNs <- Ns(t+1, k+1, v, exclude=exclude, noderive=TRUE,
-               nofuse=nofuse, maxfuse=maxfuse, noadd1=noadd1,
-               maxadd1=maxadd1, frozen=frozen)
+               nofuse=nofuse, maxfuse=maxfuse, noadd1=TRUE,
+               frozen=frozen)
 
   if (length(fromNs)>0)
     Ns <- sapply(fromNs, function(obj) deriveto(obj, k+1, v)[1])
