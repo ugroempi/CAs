@@ -1,5 +1,8 @@
 # NEWS
 
+Version 0.25-2, work in progress after release 0.25-1
+ - 
+
 November 14, 2026, Version 0.25-1, not uploaded to CRAN
  - switched to ca_frame.csv instead of ca_table.csv for smolenBigFrame
  - added Johnson Entringer and Zero Sum constructions
