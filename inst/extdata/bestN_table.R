@@ -13,7 +13,7 @@
 ## Initial code was created by Claude 5.5
 
 library(CAs)
-bestN_table <- function(t = 3, v = 3, kmin = 4, kmax = 10000, ...){
+bestN_table <- function(t = 3, v = 3, kmin = 4, kmax = 10000, maxfuse=6, ...){
   cb <- CAs::colbournBigFrame
   cb <- cb[cb$t == t & cb$v == v & cb$k >= kmin & cb$k <= kmax, ]
   cb <- cb[order(cb$k), ]
@@ -83,7 +83,7 @@ for (v in 2:25){
       style = cell_fill(color = "orange"),  ## #FFA500;
       locations = cells_body(columns = diff, rows = diff > eCAN*0.1)
     )
-    gttab <- tab_spanner(gttab, "best N from package CAs 0.25-1", 4:5)
+    gttab <- tab_spanner(gttab, "best N from package CAs 0.25-1 (from version 0.25-2 Ns function for more suitable labels)", 4:5)
     gttab <- tab_spanner(gttab, "eCAN from Colbourn tables", 2:3)
     gttab <- tab_header(gttab, paste0("Colbourn tables with CAs bestN values for t=", t, " and v=", v),
                         subtitle="diff color coded: green=bestN equal or better, yellow=bestN up to 5% worse, orange=bestN more than 10% worse")
