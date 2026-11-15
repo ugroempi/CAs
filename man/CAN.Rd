@@ -51,8 +51,8 @@ eCAK(t, N, v, frozen=TRUE)
 Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
   noadd1=FALSE, maxadd1=1, frozen=TRUE)
 
-Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=NULL,
-  noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
+Ns_derive(t, k, v, exclude=NULL, nofuse=TRUE, maxfuse=NULL,
+  noadd1=TRUE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
 
 Ns_add1(t, k, v, maxadd1=1, frozen=TRUE, ...)
 
@@ -216,7 +216,8 @@ once from the best strength \code{t+1} source with \code{k+1} columns, which its
 nor \code{eCAN}),
 \item and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
 for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients can be derived,
-but not from adding a column, because adding a column is cheaper after fusion)
+(label \code{<construction>:derive:fuse}, as deriving before fusing is more effective),
+#' but not from adding a column, because adding a column is cheaper after fusion)
 \item and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
 for each application of \code{\link{add1Column}}, starting from up to \code{maxadd1} fewer columns;
 add1 ingredients can be derived or fused nor add1ed).

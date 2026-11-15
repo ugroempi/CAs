@@ -59,8 +59,8 @@
 #' @usage eCAK(t, N, v, frozen=TRUE)
 #' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
 #'   noadd1=FALSE, maxadd1=1, frozen=TRUE)
-#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=NULL,
-#'   noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
+#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=TRUE, maxfuse=NULL,
+#'   noadd1=TRUE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
 #' @usage Ns_add1(t, k, v, maxadd1=1, frozen=TRUE, ...)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1, frozen=TRUE)
 #' @usage N_fuseBoseCA(t,k,v)
@@ -143,7 +143,8 @@
 #' nor \code{eCAN}),
 #' \item and the best fused entry (label \code{<construction>} with \code{":fuse"} appended
 #' for each fuse step, fusing from up to \code{maxfuse} more levels; fuse ingredients can be derived,
-#' but not from adding a column, because adding a column is cheaper after fusion)
+#' (label \code{<construction>:derive:fuse}, as deriving before fusing is more effective),
+#' #' but not from adding a column, because adding a column is cheaper after fusion)
 #' \item and the best add1 entry (label \code{<construction>} with \code{":add1"} appended
 #' for each application of \code{\link{add1Column}}, starting from up to \code{maxadd1} fewer columns;
 #' add1 ingredients can be derived or fused nor add1ed).
@@ -309,7 +310,8 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL
   eCANval <- eCAN(t,k,v, frozen=frozen)[[1]]
   eCANentry <- if (is.na(eCANval)) aus[0] else c(eCAN=eCANval)
   if (!nofuse && !"fuse" %in% exclude && k > t){
-    Nfuse <- N_fusebest(t, k, v, exclude=exclude, maxfuse=maxfuse)
+    Nfuse <- N_fusebest(t, k, v, exclude=exclude, maxfuse=maxfuse,
+                        noderive=noderive)
     if (!is.null(Nfuse)) aus <- c(aus, Nfuse)
   }
   if (!noderive && !"derive" %in% exclude && t < 6 && k > t){
@@ -406,20 +408,42 @@ Ns_direct <- function(t, k, v, exclude=NULL){
 }
 
 ## best fuse entry for Ns: sources have v+d levels (d=1,...,maxfuse),
-## each fuse step removes 2 runs; sources are neither derived nor fused
-## label: construction name with ":fuse" appended once per fuse step
-N_fusebest <- function(t, k, v, exclude=NULL, maxfuse=1){
+## each fuse step removes 2 runs; sources are directly constructed or
+##    derived (once) from strength t+1 in k+1 columns
+## label: construction name, ":derive" if applicable,
+##    and with ":fuse" appended once per fuse step
+## uses the cached direct sizes only (no eCAN, no recursion into Ns)
+N_fusebest <- function(t, k, v, exclude=NULL,
+                       maxfuse=1, noderive=FALSE){
   best <- NULL
+  derive <- !noderive && !"derive" %in% exclude && t < 6
   for (d in seq_len(maxfuse)){
-    src <- Ns(t, k, v+d, exclude=exclude, noderive=TRUE, nofuse=TRUE, noadd1=TRUE)
-    src <- src[names(src) != "eCAN"]
-    if (length(src)==0) next
-    cand <- min(src) - 2*d
-    if (cand < 1) next
-    if (is.null(best) || cand < best) {
-      best <- stats::setNames(cand, paste0(names(src)[which.min(src)],
-                                    strrep(":fuse", d)))
+    ## use the cached/cacheable Ns_direct here
+    # src <- Ns_direct(t, k, v+d, exclude=exclude)
+    # if (length(src)==0) next
+    # cand <- min(src) - 2*d
+    # if (cand < 1) next
+    # if (is.null(best) || cand < best) {
+    #   best <- stats::setNames(cand, paste0(names(src)[which.min(src)],
+    #                                 strrep(":fuse", d)))
+    ## a CA with v+d levels has at least (v+d)^t runs, also if derived
+    if (t >= 2 && !is.null(best) && (v+d)^t - 2*d >= best) next
+    src <- Ns_direct(t, k, v+d, exclude)
+    if (length(src) > 0){
+      cand <- min(src) - 2*d
+      if (cand >= 1 && (is.null(best) || cand < best))
+        best <- stats::setNames(cand, paste0(names(src)[which.min(src)],
+                                             strrep(":fuse", d)))
     }
+    if (derive){
+      srcD <- Ns_direct(t+1, k+1, v+d, exclude)
+      if (length(srcD) > 0){
+        cand <- unname(deriveto(min(srcD), k+1, v+d)["N"]) - 2*d
+        if (cand >= 1 && (is.null(best) || cand < best))
+          best <- stats::setNames(cand, paste0(names(srcD)[which.min(srcD)],
+                                               ":derive", strrep(":fuse", d)))
+      }
+      }
   }
   best
 }
@@ -462,8 +486,8 @@ N_add1best <- function(t, k, v, exclude=NULL, maxadd1=1,
 
 ## obtain possibilities for derivation sources
 #' @export
-Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=NULL,
-                      noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE){
+Ns_derive <- function(t, k, v, exclude=NULL, nofuse=TRUE, maxfuse=NULL,
+                      noadd1=TRUE, maxadd1=1, Ndirect=NULL, frozen=TRUE){
   ## Ndirect: sizes of Ns(t, k, v, noderive=TRUE), if already available
   Nswoderive <- if (is.null(Ndirect))
     Ns(t, k, v, exclude=exclude, noderive=TRUE, nofuse=nofuse, maxfuse=maxfuse,
