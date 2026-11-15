@@ -1,5 +1,7 @@
 # NEWS
 
+Version 0.25-2, work in progress after release 0.25-1
+
 November 15, 2026, Version 0.25-1, not uploaded to CRAN
  - Ns and Ns_derive now default to maxfuse=NULL, like bestN; the default is the 
    distance to the next larger prime power also for prime power v 
