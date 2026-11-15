@@ -319,7 +319,7 @@ Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL
     ## (add1 must be applied after derive, as it is cheaper for the lower strength)
     ## the direct sizes are handed over, to avoid computing them twice
     Nderive <- suppressMessages(
-      Ns_derive(t, k, v, exclude=exclude, nofuse=nofuse, maxfuse=maxfuse,
+      Ns_derive(t, k, v, exclude=exclude, nofuse=TRUE, maxfuse=maxfuse,
                 noadd1=TRUE, maxadd1=maxadd1,
                 Ndirect=c(aus, eCANentry)))
     if (is.data.frame(Nderive)){
