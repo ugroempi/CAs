@@ -13,7 +13,8 @@
 ## Initial code was created by Claude 5.5
 
 library(CAs)
-bestN_table <- function(t = 3, v = 3, kmin = 4, kmax = 10000, maxfuse=6, ...){
+bestN_table <- function(t = 3, v = 3, kmin = 4, kmax = 10000,
+                        maxfuse=6, ...){
   cb <- CAs::colbournBigFrame
   cb <- cb[cb$t == t & cb$v == v & cb$k >= kmin & cb$k <= kmax, ]
   cb <- cb[order(cb$k), ]
@@ -24,7 +25,7 @@ bestN_table <- function(t = 3, v = 3, kmin = 4, kmax = 10000, maxfuse=6, ...){
     key <- as.character(k)
     hit <- cache[[key]]
     if (is.null(hit)){
-      b <- bestN(t, k, v, ...)
+      b <- bestN(t, k, v, maxfuse=maxfuse, ...)
       hit <- list(N = if (length(b) == 0 || is.na(b)) NA_real_ else unname(b),
                   constr = if (length(b) == 0 || is.na(b)) NA_character_
                   else names(b))
@@ -81,12 +82,17 @@ for (v in 2:25){
     gttab <- tab_style(
       data = gttab,
       style = cell_fill(color = "orange"),  ## #FFA500;
-      locations = cells_body(columns = diff, rows = diff > eCAN*0.1)
+      locations = cells_body(columns = diff, rows = diff > eCAN*0.1 & diff <= eCAN*0.25)
     )
-    gttab <- tab_spanner(gttab, "best N from package CAs release 0.25-1", 4:5)
+    gttab <- tab_style(
+      data = gttab,
+      style = cell_fill(color = "red2"),  ## #ED0000;
+      locations = cells_body(columns = diff, rows = diff > eCAN*0.25)
+    )
+    gttab <- tab_spanner(gttab, "best N from package CAs 0.25-1", 4:5)
     gttab <- tab_spanner(gttab, "eCAN from Colbourn tables", 2:3)
     gttab <- tab_header(gttab, paste0("Colbourn tables with CAs bestN values for t=", t, " and v=", v),
-                        subtitle="diff color coded: green=bestN equal or better, yellow=bestN up to 5% worse, orange=bestN more than 10% worse")
+                        subtitle="diff color coded: green=bestN equal or better, yellow=bestN up to 5% worse, orange=bestN 10% to 25% worse, red=bestN more than 25% worse")
     gtsave(data=gttab, filename = paste0("t",t,"v",v,".html"),
            path="c:/rtests/CAsbak/bestNtables/")
   }
