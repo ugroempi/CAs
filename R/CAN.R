@@ -284,12 +284,6 @@
 #' dim(D)
 #' }
 
-## default number of fuse steps: distance to the next larger prime power
-## (also for prime power v, e.g., 23 -> 25 needs 2 steps)
-default_maxfuse <- function(v){
-  min(primedat$q[which(primedat$q>v)]) - v
-}
-
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
 Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
@@ -978,6 +972,13 @@ ks_productCA <- function(t=2, N, v, frozen=TRUE){
   suppressMessages(direct <- as.data.frame(rbind(ks(t, N, v, frozen=frozen))))
   dplyr::bind_rows(direct=direct, productCA=productCA, .id="way")
 }
+
+## default number of fuse steps: distance to the next larger prime power
+## (also for prime power v, e.g., 23 -> 25 needs 2 steps)
+default_maxfuse <- function(v){
+  min(primedat$q[which(primedat$q>v)]) - v
+}
+
 
 # ## was duplicated
 # ## obtain sizes for product construction
