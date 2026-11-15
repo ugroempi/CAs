@@ -57,9 +57,9 @@
 #'
 #' @usage eCAN(t, k, v, frozen=TRUE)
 #' @usage eCAK(t, N, v, frozen=TRUE)
-#' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
+#' @usage Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
 #'   noadd1=FALSE, maxadd1=1, frozen=TRUE)
-#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
+#' @usage Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=NULL,
 #'   noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
 #' @usage Ns_add1(t, k, v, maxadd1=1, frozen=TRUE, ...)
 #' @usage Ns_fuse(t, k, v, maxfuse = 1, frozen=TRUE)
@@ -110,7 +110,8 @@
 #' @param noderive logical; if \code{TRUE}, \code{Ns} does not add a derived entry
 #'   (needed for calls from within constructions and for \code{Ns_derive}, to avoid recursion)
 #' @param nofuse logical; if \code{TRUE}, \code{Ns} does not add a fused entry
-#' @param maxfuse integer; maximum number of fuse steps considered for the fused entry of \code{Ns}
+#' @param maxfuse integer; maximum number of fuse steps considered for the fused entry of \code{Ns};
+#'   \code{NULL} (default) uses 1 for prime power \code{v}, and the distance to the next prime power otherwise
 #' @param noadd1 logical; if \code{TRUE}, \code{Ns} does not add an \code{add1} entry
 #'   (needed for calls from within constructions, to avoid recursion)
 #' @param maxadd1 integer; maximum number of \code{\link{add1Column}} steps considered
@@ -285,9 +286,13 @@
 
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
-Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
+Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
                noadd1=FALSE, maxadd1=1, frozen=TRUE){
   stopifnot(t <= 6)
+  ## default: fuse from the next prime power level (as in bestN)
+  if (is.null(maxfuse))
+    maxfuse <- if (v %in% primedat$q) 1 else
+      min(primedat$q[which(primedat$q>v)]) - v
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
   if (!all(exclude %in% c("KSK","JE","ZeroSum","PALEY", "CAEX", "CYCLOTOMY",
@@ -459,7 +464,7 @@ N_add1best <- function(t, k, v, exclude=NULL, maxadd1=1,
 
 ## obtain possibilities for derivation sources
 #' @export
-Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
+Ns_derive <- function(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=NULL,
                       noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE){
   ## Ndirect: sizes of Ns(t, k, v, noderive=TRUE), if already available
   Nswoderive <- if (is.null(Ndirect))

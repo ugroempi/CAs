@@ -1,7 +1,8 @@
 # NEWS
 
 Version 0.25-2, work in progress after release 0.25-1
- - 
+ - Ns (and Ns_derive) now default to maxfuse=NULL, like bestN, so that
+   fusing from the next prime power (e.g., 3,651,23 from 25 levels) is included
 
 November 14, 2026, Version 0.25-1, not uploaded to CRAN
  - switched to ca_frame.csv instead of ca_table.csv for smolenBigFrame

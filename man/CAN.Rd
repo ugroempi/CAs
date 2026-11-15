@@ -48,10 +48,10 @@ eCAN(t, k, v, frozen=TRUE)
 
 eCAK(t, N, v, frozen=TRUE)
 
-Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=1,
+Ns(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
   noadd1=FALSE, maxadd1=1, frozen=TRUE)
 
-Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=1,
+Ns_derive(t, k, v, exclude=NULL, nofuse=FALSE, maxfuse=NULL,
   noadd1=FALSE, maxadd1=1, Ndirect=NULL, frozen=TRUE)
 
 Ns_add1(t, k, v, maxadd1=1, frozen=TRUE, ...)
