@@ -1,7 +1,8 @@
 # NEWS
 
 Version 0.25-2, work in progress after release 0.25-1
- - 
+ - Ns (and Ns_derive) now default to maxfuse=NULL, like bestN; the default is the distance to the next
+   larger prime power also for prime power v (e.g., bestN(3,651,23) fuses twice from 25 levels)
 
 November 14, 2026, Version 0.25-1, not uploaded to CRAN
  - switched to ca_frame.csv instead of ca_table.csv for smolenBigFrame

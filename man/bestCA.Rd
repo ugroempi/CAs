@@ -62,7 +62,7 @@ which need to calculate sizes of best ingredients}
 \item{nofuse}{logical; if \code{TRUE}, fused designs are not considered}
 
 \item{maxfuse}{maximum number of fuse steps considered; \code{NULL} (default)
-uses 1, or the distance to the next prime power for non-prime-power \code{v}}
+uses the distance to the next larger prime power}
 
 \item{noadd1}{logical; if \code{TRUE}, designs obtained by adding columns
 with \code{\link{add1Column}} are not considered}
