@@ -111,7 +111,7 @@
 #'   (needed for calls from within constructions and for \code{Ns_derive}, to avoid recursion)
 #' @param nofuse logical; if \code{TRUE}, \code{Ns} does not add a fused entry
 #' @param maxfuse integer; maximum number of fuse steps considered for the fused entry of \code{Ns};
-#'   \code{NULL} (default) uses 1 for prime power \code{v}, and the distance to the next prime power otherwise
+#'   \code{NULL} (default) uses the distance to the next larger prime power
 #' @param noadd1 logical; if \code{TRUE}, \code{Ns} does not add an \code{add1} entry
 #'   (needed for calls from within constructions, to avoid recursion)
 #' @param maxadd1 integer; maximum number of \code{\link{add1Column}} steps considered
@@ -284,15 +284,19 @@
 #' dim(D)
 #' }
 
+## default number of fuse steps: distance to the next larger prime power
+## (also for prime power v, e.g., 23 -> 25 needs 2 steps)
+default_maxfuse <- function(v){
+  min(primedat$q[which(primedat$q>v)]) - v
+}
+
 ## provide sizes of implemented methods and unimplemented catalogues
 #' @export
 Ns <- function(t, k, v, exclude=NULL, noderive=FALSE, nofuse=FALSE, maxfuse=NULL,
                noadd1=FALSE, maxadd1=1, frozen=TRUE){
   stopifnot(t <= 6)
-  ## default: fuse from the next prime power level (as in bestN)
-  if (is.null(maxfuse))
-    maxfuse <- if (v %in% primedat$q) 1 else
-      min(primedat$q[which(primedat$q>v)]) - v
+  ## default: fuse from up to the next larger prime power level (as in bestN)
+  if (is.null(maxfuse)) maxfuse <- default_maxfuse(v)
   if (!is.null(exclude)) stopifnot(is.character(exclude))
   exclude <- setdiff(exclude, "eCAN")  ## eCAN cannot be excluded
   if (!all(exclude %in% c("KSK","JE","ZeroSum","PALEY", "CAEX", "CYCLOTOMY",

@@ -58,7 +58,7 @@
 #' @param noderive logical; if \code{TRUE}, derived designs are not considered
 #' @param nofuse logical; if \code{TRUE}, fused designs are not considered
 #' @param maxfuse maximum number of fuse steps considered; \code{NULL} (default)
-#'   uses 1, or the distance to the next prime power for non-prime-power \code{v}
+#'   uses the distance to the next larger prime power
 #' @param noadd1 logical; if \code{TRUE}, designs obtained by adding columns
 #'   with \code{\link{add1Column}} are not considered
 #' @param maxadd1 maximum number of \code{add1Column} steps considered
@@ -275,14 +275,12 @@ bestN <- function(t,k,v, internet=TRUE, exclude=NULL, noderive=FALSE,
                   nofuse=FALSE, maxfuse=NULL, noadd1=FALSE, maxadd1=1, ...){
   ## yields the size of the smallest implemented design,
   ## with or without internet
-  ## maxfuse=NULL: fusing from the next prime power level (if v is not
-  ##     a prime power), otherwise fusing from level v+1
+  ## maxfuse=NULL: fusing from up to the next larger prime power level
   stopifnot(is.numeric(t), is.numeric(k), is.numeric(v))
   stopifnot(t%%1==0, k%%1==0, v%%1==0)
   if (k <= t) return(c(FullFactorial=v^k))
   if (is.null(maxfuse))
-    maxfuse <- if (v %in% primedat$q) 1 else
-      min(primedat$q[which(primedat$q>v)]) - v
+    maxfuse <- default_maxfuse(v)
   if (!internet) exclude <- union(exclude, c("DWYER", "NIST"))
   hilf <- Ns(t,k,v, exclude=exclude, noderive=noderive, nofuse=nofuse,
              maxfuse=maxfuse, noadd1=noadd1, maxadd1=maxadd1)
