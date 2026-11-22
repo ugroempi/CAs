@@ -6,18 +6,18 @@
 \alias{uniquecount}
 \alias{flexprofile}
 \alias{postopNCK}
-\title{Redundancy checks and profile}
+\title{Redundancy checks, profile, and NCK post-processing}
 \usage{
-flexpos(D, t, ...)
+flexpos(D, t, nocafast=FALSE, ...)
 
 uniquecount(D, t, ...)
 
-markflex(D, t, fixrows=0, verbose=0, ...)
+markflex(D, t, fixrows=0, verbose=0, nocafast=FALSE, ...)
 
 flexprofile(D, ...)
 
-postopNCK(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
-       innerRetry=10, innerMaxnochange=25, seed=NULL, ...)
+postopNCK(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnochange = 10,
+       innerRetry=NULL, innerMaxnochange=25, seed=NULL, nocafast=FALSE, ...)
 }
 \arguments{
 \item{D}{an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}}
@@ -30,16 +30,18 @@ postopNCK(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
 
 \item{...}{can be used to hand additional arguments to \code{postopNCK_c} of package \pkg{cafast}}
 
-\item{outerRetry}{integer-valued number of retries for escaping local optimum, if \code{outerMaxnochange} iterations were not successful}
+\item{outerRetry}{\code{NULL}, or integer-valued number of retries for escaping local optimum, if \code{outerMaxnochange} iterations were not successful. The default depends on whether the suggested package \pkg{cafast} is available (50) or not (10).}
 
 \item{outerMaxnochange}{integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements}
 
-\item{innerRetry}{integer-valued number of reshuffles for escaping local optimum, if \code{innerMaxnochange} iterations were not successful}
+\item{innerRetry}{\code{NULL}, or integer-valued number of reshuffles for escaping local optimum, if \code{innerMaxnochange} iterations were not successful. The default depends on whether the suggested package \pkg{cafast} is available (10) or not (1).}
 
 \item{innerMaxnochange}{integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements}
 
 \item{seed}{\code{NULL}, or an integer-valued seed for the random process;\cr
 a non-NULL seed is stored in the \code{seed} attribute of the output object}
+
+\item{nocafast}{logical; if \code{TRUE}, suppresses the use of package \pkg{cafast};\cr}
 }
 \value{
 Function \code{flexpos} returns a logical matrix with \code{TRUE} values indicating
@@ -52,9 +54,15 @@ and attributes \code{Call} and \code{seed} augmented by the \code{postopNCK} cal
 }
 \description{
 Functions for manipulating flexible values: determination of flexible positions (flexpos),
-determination of a flexible set (markflex), and calculation of the profile (flexprofile)
+determination of a flexible set (markflex), and calculation of the profile (flexprofile);
+furthermore, postopNCK for the Nayeri, Konjevod and Colbourn (2013) postprocessing
+based on flexible values
 }
 \section{Details}{
+
+Functions \code{flexpos}, \code{markflex} and \code{postopNCK} call
+their faster C-pendant from package \pkg{cafast}, whenever that package is
+available and its use is not suppressed by \code{nocafast=TRUE}.
 
 Function \code{flexpos} marks flexible \emph{positions}, i.e. positions all of whose \code{t}-way interactions are also covered
 in at least one tuple without them. It will not work to treat all these positions as flexible \emph{at the same time},
@@ -72,8 +80,9 @@ Function \code{flexprofile} obtains the profile of column-wise flexible values f
 
 Function \code{postopNCK} likely needs some tuning for speed and efficiency,
 but is nevertheless often successful; if the suggested package \pkg{cafast}
-is available, its C-implementation of the function is used, because it is substantially faster.\cr
-It attempts to remove rows by trying to make entire rows
+is available, its C-implementation of the function is used, including the larger default
+values from that implementation, because it is substantially faster.\cr
+The function attempts to remove rows by trying to make entire rows
 contain flexible values; in fact, it removes rows that have fewer than \code{t} non-flexible values,
 as those cannot contribute to \code{t}-coverage. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
 If successful, it returns \code{D} after removal of as many as possible flexible

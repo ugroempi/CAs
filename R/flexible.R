@@ -1,7 +1,9 @@
-#' Redundancy checks and profile
+#' Redundancy checks, profile, and NCK post-processing
 #'
 #' Functions for manipulating flexible values: determination of flexible positions (flexpos),
-#' determination of a flexible set (markflex), and calculation of the profile (flexprofile)
+#' determination of a flexible set (markflex), and calculation of the profile (flexprofile);
+#' furthermore, postopNCK for the Nayeri, Konjevod and Colbourn (2013) postprocessing
+#' based on flexible values
 #'
 #' @rdname flexible
 #'
@@ -11,26 +13,31 @@
 #' @aliases flexprofile
 #' @aliases postopNCK
 #'
-#' @usage flexpos(D, t, ...)
+#' @usage flexpos(D, t, nocafast=FALSE, ...)
 #' @usage uniquecount(D, t, ...)
-#' @usage markflex(D, t, fixrows=0, verbose=0, ...)
+#' @usage markflex(D, t, fixrows=0, verbose=0, nocafast=FALSE, ...)
 #' @usage flexprofile(D, ...)
-#' @usage postopNCK(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
-#'        innerRetry=10, innerMaxnochange=25, seed=NULL, ...)
+#' @usage postopNCK(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnochange = 10,
+#'        innerRetry=NULL, innerMaxnochange=25, seed=NULL, nocafast=FALSE, ...)
 #'
 #' @param D an N x k CA of strength t with v levels, coded from 0 to v-1 or from 1 to v; flexible values, if any, must be denoted as \code{NA}
 #' @param t integer-valued (>=2), the strength of \code{D}
 #' @param fixrows integer from 0 to \code{N} for preventing the top \code{fixrows} rows from being moved
 #' @param verbose integer-valued degree of verbosity; 1 requests that the latest stages of unsuccessful attempts are added as an attribute to the returned unchanged matrix in case of a failure
-#' @param outerRetry integer-valued number of retries for escaping local optimum, if \code{outerMaxnochange} iterations were not successful
+#' @param outerRetry \code{NULL}, or integer-valued number of retries for escaping local optimum, if \code{outerMaxnochange} iterations were not successful. The default depends on whether the suggested package \pkg{cafast} is available (50) or not (10).
 #' @param outerMaxnochange integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements
-#' @param innerRetry integer-valued number of reshuffles for escaping local optimum, if \code{innerMaxnochange} iterations were not successful
+#' @param innerRetry \code{NULL}, or integer-valued number of reshuffles for escaping local optimum, if \code{innerMaxnochange} iterations were not successful. The default depends on whether the suggested package \pkg{cafast} is available (10) or not (1).
 #' @param innerMaxnochange integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements
 #' @param seed \code{NULL}, or an integer-valued seed for the random process;\cr
 #'        a non-NULL seed is stored in the \code{seed} attribute of the output object
+#' @param nocafast logical; if \code{TRUE}, suppresses the use of package \pkg{cafast};\cr
 #' @param ... can be used to hand additional arguments to \code{postopNCK_c} of package \pkg{cafast}
 #'
 #' @section Details:
+#' Functions \code{flexpos}, \code{markflex} and \code{postopNCK} call
+#' their faster C-pendant from package \pkg{cafast}, whenever that package is
+#' available and its use is not suppressed by \code{nocafast=TRUE}.
+#'
 #' Function \code{flexpos} marks flexible \emph{positions}, i.e. positions all of whose \code{t}-way interactions are also covered
 #' in at least one tuple without them. It will not work to treat all these positions as flexible \emph{at the same time},
 #' because this would eliminate \emph{all} instances of the affected interactions.
@@ -47,8 +54,9 @@
 #'
 #' Function \code{postopNCK} likely needs some tuning for speed and efficiency,
 #' but is nevertheless often successful; if the suggested package \pkg{cafast}
-#' is available, its C-implementation of the function is used, because it is substantially faster.\cr
-#' It attempts to remove rows by trying to make entire rows
+#' is available, its C-implementation of the function is used, including the larger default
+#' values from that implementation, because it is substantially faster.\cr
+#' The function attempts to remove rows by trying to make entire rows
 #' contain flexible values; in fact, it removes rows that have fewer than \code{t} non-flexible values,
 #' as those cannot contribute to \code{t}-coverage. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
 #' If successful, it returns \code{D} after removal of as many as possible flexible
@@ -161,6 +169,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
     stop("t must be at least 2")
   }
 
+  if (require(cafast) && !nocafast) return(cafast::markflex_c(D, t, fixrows=fixrows))
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
@@ -237,7 +246,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
 }
 
 #' @export
-flexpos <- function(D, t, ...){
+flexpos <- function(D, t, nocafast=FALSE, ...){
   ## creates logical matrix with flexible positions set to TRUE
 
   # Input validation for D
@@ -258,6 +267,9 @@ flexpos <- function(D, t, ...){
 
   if (any(is.na(D))) message("Note: Some flexible positions are already fixed. This reduces the positions that can be found.")
 
+  if (require(cafast) && !nocafast){
+    return(cafast::flexpos_c(D, t))
+  }
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
@@ -315,17 +327,11 @@ flexprofile <- function(D, ...){
 
 
 #' @export
-postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
-                      innerRetry=10, innerMaxnochange=25, seed=NULL, ...){
-  if (require(cafast)){
-    message("using cafast::postopNCK_c")
-    attrs <- attributes(D)
-    D <- postopNCK_c(D, t, fixrows=fixrows, outerRetry = outerRetry,
-                outerMaxnochange = outerMaxnochange, innerRetry = innerRetry,
-                innerMaxnochange = innerMaxnochange, seed=seed, ...)
-    if ("ca" %in% attrs) message("attributes have not yet been implemented")
-    return(D)
-  }
+postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnochange = 10,
+                      innerRetry=NULL, innerMaxnochange=25, seed=NULL, nocafast=FALSE, ...){
+  Call <- sys.call()
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
   # Input validation for D
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
@@ -343,13 +349,8 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
   }
 
   # Get matrix dimensions before other validations
-  if (is.matrix(D)) {
     N <- nrow(D)
     k <- ncol(D)
-  } else {
-    N <- nrow(D)
-    k <- ncol(D)
-  }
 
   # Check t against k
   if (t > k) {
@@ -390,10 +391,23 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnocha
     }
   }
 
-  Call <- sys.call()
   attrs <- attributes(D)
   attrs$dim <- NULL
   levs <- levels.no.NA(D)
+
+  ## refer all the rest to cafast, if that is available
+  if (require(cafast) && !nocafast){
+    message("using cafast::postopNCK_c")
+    attrs <- attributes(D)
+    D <- cafast::postopNCK_c(D, t, fixrows=fixrows, outerRetry = outerRetry,
+                     outerMaxnochange = outerMaxnochange, innerRetry = innerRetry,
+                     innerMaxnochange = innerMaxnochange, seed=seed, verbose=verbose, ...)
+    if ("ca" %in% attrs) message("attributes have not yet been implemented")
+    return(D)
+  }
+
+  ## proceed without cafast, if that is unavailable or suppressed
+
   ## lower bound for the run size
   bound <- prod(sort(levs, decreasing = TRUE)[1:t])
   if (nrow(D)==bound){

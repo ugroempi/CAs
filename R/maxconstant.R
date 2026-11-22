@@ -7,7 +7,8 @@
 #'
 #' @aliases maxconstant
 #'
-#' @usage maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...)
+#' @usage maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE,
+#' dupcheck=FALSE, nocafast=FALSE, ...)
 #'
 #' @param D a uniform CA without duplicated rows, unless dupcheck is set to TRUE
 #' @param verbose 0 for neither comments nor attributes added to output objects,\cr
@@ -17,6 +18,7 @@
 #' @param remove logical, should constant rows be removed? If TRUE, the function returns a matrix with fewer rows than \code{D}.
 #' @param one_is_enough logical; should the algorithm limit itself to making one row constant?
 #' @param dupcheck logical, should duplicate rows be checked and removed? If FALSE, the function assumes that there are no duplicate rows.
+#' @param nocafast logical, should use of package \pkg{cafast} be suppressed?
 #' @param ... currently not used
 #'
 #' @returns an equivalent version of \code{D} that has as many constant rows as possible,
@@ -43,13 +45,15 @@
 #' For all other cases, the last largest clique is used.\cr
 #' The constant rows have ascending levels, starting with the lowest level.
 #'
+#' Whenever the suggested package \pkg{cafast} is available, its much faster
+#' C implementation is used (unless suppressed).
+#'
 #' @section Warning:
 #' For arrays with many rows, the search for the largest cliques can take a long time.
 #'
-#' @seealso [cafast::maxconstant_c] for a much faster implementation of the functionality
+#' @seealso [cafast::maxconstant_c] for the much faster implementation of the functionality that is used unless suppressed or unavailable
 #'
 #' @references Torres-Jimenez, Acevedo-Juarez and Avila-George (2021) for the mention of the largest clique idea
-#'
 #'
 #' @examples
 #' set.seed(1212) ## for array randomization
@@ -106,7 +110,7 @@ permvals <- function(D, c, from, to, check=TRUE, ...){
 #' @importFrom igraph add_edges
 #' @importFrom igraph largest_cliques
 #' @export
-maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...){
+maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, nocafast=FALSE, ...){
   Dnam <- deparse(substitute(D))
   stopifnot(verbose %in% c(0,1,2,12))
   stopifnot(is.matrix(D))
@@ -114,13 +118,18 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
   stopifnot(is.logical(dupcheck))
   stopifnot(is.logical(one_is_enough))
   stopifnot(is.logical(remove))
+  lev <- levels.no.NA(D)
+  if (length(table(lev))>1)
+    stop("function maxconstant works for symmetric CAs only")
+  ## do the rest with cafast, if available and not suppressed
+  if (require(cafast) && !nocafast) return(cafast::maxconstant_c(D, verbose=verbose,
+                              remove=remove, one_is_enough=one_is_enough,
+                              dupcheck = dupcheck, ...))
+  ## continuation without cafast, if unavailable or suppressed
   if (dupcheck){
     D <- D[!duplicated(D),, drop=FALSE]
   }
   N <- nrow(D); k <- ncol(D)
-  lev <- levels.no.NA(D)
-  if (length(table(lev))>1)
-    stop("function maxconstant works for symmetric CAs only")
   v <- nlev <- lev[1]
   consts <- lengths(lapply(1:N, function(obj) unique(D[obj,])))==1
   ## TRUE for constant rows
@@ -128,6 +137,9 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
 
   if (nconstant > 0) posconsts <- which(consts==1)
   if (nconstant > 1) posconsts <- posconsts[sort(D[posconsts,1], index.return=TRUE)$ix]
+  if (!dupcheck) if (any(duplicated(D[posconsts,]))){
+    warning("constant rows contain duplicates")
+  }
 
   ## move the existing maximum possible number of constant rows to the front
   if (nconstant == nlev){

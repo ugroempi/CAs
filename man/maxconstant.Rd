@@ -5,7 +5,8 @@
 \alias{maxconstant}
 \title{Function to make the maximum possible number of rows constant}
 \usage{
-maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...)
+maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE,
+dupcheck=FALSE, nocafast=FALSE, ...)
 }
 \arguments{
 \item{D}{a uniform CA without duplicated rows, unless dupcheck is set to TRUE}
@@ -22,6 +23,8 @@ maxconstant(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupcheck=FALSE, ...
 \item{one_is_enough}{logical; should the algorithm limit itself to making one row constant?}
 
 \item{dupcheck}{logical, should duplicate rows be checked and removed? If FALSE, the function assumes that there are no duplicate rows.}
+
+\item{nocafast}{logical, should use of package \pkg{cafast} be suppressed?}
 }
 \value{
 an equivalent version of \code{D} that has as many constant rows as possible,
@@ -52,6 +55,9 @@ the first such clique is used.\cr
 If there are no constant rows and only one constant row is possible, the first row is made constant.\cr
 For all other cases, the last largest clique is used.\cr
 The constant rows have ascending levels, starting with the lowest level.
+
+Whenever the suggested package \pkg{cafast} is available, its much faster
+C implementation is used (unless suppressed).
 }
 
 \section{Warning}{
@@ -103,5 +109,5 @@ maxconstant(plan)
 Torres-Jimenez, Acevedo-Juarez and Avila-George (2021) for the mention of the largest clique idea
 }
 \seealso{
-\link[cafast:maxconstant_c]{cafast::maxconstant_c} for a much faster implementation of the functionality
+\link[cafast:maxconstant_c]{cafast::maxconstant_c} for the much faster implementation of the functionality that is used unless suppressed or unavailable
 }
