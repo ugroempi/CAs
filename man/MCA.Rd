@@ -5,16 +5,20 @@
 \alias{MCA2}
 \alias{CA_to_MCA}
 \alias{N_upper_MCA}
+\alias{N_upper_MCA2}
 \alias{projBoseMCA}
 \title{Making mixed-level CAs}
 \usage{
-MCA2(nlevels, D=NULL, outerRetry=10, innerRetry=1, seed=NULL, ...)
+MCA2(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
 
-MCAt(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...)
+MCAt(nlevels, t, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
 
-CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=10, innerRetry=1, seed=NULL, ...)
+CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=NULL,
+innerRetry=NULL, seed=NULL, ...)
 
 N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
+
+N_upper_MCA2(nlevels, internet = TRUE, ...)
 
 projBoseMCA(nlevels, t=2, ...)
 }
@@ -27,18 +31,23 @@ into decreeasing order}
 \item{t}{integer, the strength of \code{D} (smaller strength would be permitted,
 but would not make sense) or the requested strength}
 
-\item{outerRetry}{passed to \code{\link{postopNCK}}; if \code{0},
-run size reduction will not be attempted.}
+\item{outerRetry}{\code{NULL} or non-negative integer value, passed to \code{\link{postopNCK}}; if \code{0},
+run size reduction will not be attempted. The default (\code{NULL}) depends on whether the
+suggested package \pkg{cafast} is available (50) or not (10).}
 
-\item{innerRetry}{positive integer value, passed to \code{\link{postopNCK}};
-it is sometimes but not always beneficial to increase it versus the default 1}
+\item{innerRetry}{\code{NULL} or positive integer value, passed to \code{\link{postopNCK}};
+the default depends on whether the suggested package \pkg{CAs} is available.
+It is sometimes but not always beneficial to increase it versus the default 1
+also without \pkg{cafast}.}
 
 \item{seed}{the seed for making \code{\link{postopNCK}} reproducible}
 
-\item{...}{currently used by \code{N_upper_MCA} only, passed to \code{\link{bestN}},
-e.g. an \code{exclude} argument}
+\item{...}{currently used by \code{N_upper_MCA}, passed to \code{\link{bestN}},
+e.g. an \code{exclude} argument, and by \code{MCA2}, passed to \code{cafast::postopNCK_c}}
 
-\item{D}{a strength \code{t} CA (it may have mixed levels)}
+\item{D}{for \code{MCA2}, a CA to be used for expanding; if \code{NULL}, it is
+automatically determined; it is meant for experts only, and it may have mixed levels\cr
+for \code{CA_to_MCA}, a strength \code{t} CA (it may also have mixed levels)}
 
 \item{cs}{integer vector of column numbers}
 
@@ -140,12 +149,17 @@ D <- MCA2(c(rep(2,10), 8))
 dim(D)
 coverage(D, 2)
 ## N_upper_MCA is very pessimistic
-N_upper_MCA(c(rep(2,10), 8))
-
-## another case for which N_upper_MCA seems to be tight
-## (postopNCK cannot achieve an improvement in reasonable time)
+N_upper_MCA(c(rep(2,10), 8), t=2)
+## N_upper_MCA2 is better but still very pessimistic
+## for this tiny example
+N_upper_MCA2(c(rep(2,10), 8))
+## a more dramatic difference
+N_upper_MCA(c(4,4,4,3,3,rep(2,60)), 2)   ## much too large
+N_upper_MCA2(c(4,4,4,3,3,rep(2,60)), 2)  ## exact size before postprocessing
+## a lesser difference
 N_upper_MCA(c(rep(5,8), 3,3))
-D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
+N_upper_MCA2(c(rep(5,8), 3,3), returnMore=TRUE)
+D <- MCA2(c(rep(5,8), 3,3), D=miscCA(2,9,5), outerRetry=0)
 dim(D)
 head(D); tail(D)
 
@@ -155,19 +169,16 @@ D <- MCA2(c(rep(2,70), rep(3,80), rep(4,8), rep(6,2)),
 dim(D)
 coverage(D, 2)
 ## alternative call for the same setting
-D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
+D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,8,80,70)),
           outerRetry=0)
-\dontrun{
+\donttest{
   ## make a lucky run reproducible by using a random seed
   myseed <- sample(32000, 1)
-  Doptimized <- postopNCK(D, 2, seed=myseed)
-  ## This runs for an excessive time without user interruption.
-  ## There have occasionally been cases (e.g. seed 75 on windows),
-  ## for which the run size was reduced to 45 runs early.
-  ## It is not known whether it eventually improves more
-  ##    (lower bound 24 runs is likely not achievable).
-  ## The run can be stopped by <ESC>, once patience runs out
-  ##    or enough improvement was achieved.
+  print(myseed)
+  Doptimized <- postopNCK(D, 2, seed=myseed, verbose=1, restarts=1)
+  ## This runs for a while.
+  ##    Lower bound 36 runs is likely not achievable.
+  ## 42 or 41 rows were repeatedly achieved.
 }
 
 ## use the argument D for starting with a naive
@@ -176,20 +187,20 @@ D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
 ##      seven 5-level columns and permits expansion as required);
 D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
          outerRetry=0)
-\dontrun{
+\donttest{
    ## make a lucky run reproducible by using a random seed
    myseed <- sample(32000, 1)
-   ## The code below uses the default number of steps
-   ## (which would run for excessive time),
-   ## but can be interrupted with <ESC> if run size improvement
+   ## with cafast::postopNCK_c, with increased outerMaxnochange,
+   ## the optimum size 20 can be reached (was e.g. the case for
+   ## seeds 1188 or 25063 on Windows).
+   ## Without package cafast, run time would be excessive;
+   ## can be interrupted with <ESC> if run size improvement
    ## has been sufficient or seems to stall
    ## (make sure to wait until the outer retry has safely finished);
-   ## run size optimization quickly reduces the 45 (or 29) runs
-   ##      to 22 or 23 runs (20 is the lower bound);
-   ##      21 runs have also been observed.
-   ## Without user interrupt, the code will run
-   ##      for excessively long time.
-   Doptimized <- postopNCK(D, 2, seed=myseed)
+   Doptimized <- postopNCK(D, 2, seed=myseed, verbose=1,
+      outerMaxnochange=30)
+   dim(Doptimized)
+   ## optimization stopped, because the global optimum was reached
 }
 
 ########################################################
@@ -217,7 +228,7 @@ D <- bestCA(3,5,3)  ## CA(33,3,5,3)
 ## to four 3-level columns and one 2-level column in 33 runs,
 \donttest{
 Dmixed <- CA_to_MCA(D, cs=5, tolev=2, t=3) ## last column reduced to 2 levels
-## a lengthy search cannot reduce the number of runs
+## the search cannot reduce the number of runs
 }
 ## D can be easily reduced to the optimal 27 runs,
 ## if two columns are reduced to 2 levels each:

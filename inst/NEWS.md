@@ -1,8 +1,12 @@
 # NEWS
 
 Version 0.25-2, work in progress after release 0.25-1
- - modified postopNCK to use cafast::postopNCK_c, whenever
-   package cafast is available
+ - modified functions postopNCK, maxconstant, flexpos and markflex 
+   to use their pendants from package cafast (same name with _c appended), 
+   whenever package cafast is available and its use is not suppressed
+ - added function N_upper_MCA2 and made MCA2 use this function instead 
+   of the previous helper function, yielding improved run sizes before 
+   post processing
 
 November 15, 2026, Version 0.25-1, not uploaded to CRAN
  - Ns and Ns_derive now default to maxfuse=NULL, like bestN; the default is the 

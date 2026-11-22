@@ -12,12 +12,15 @@
 #' @aliases MCAt
 #' @aliases CA_to_MCA
 #' @aliases N_upper_MCA
+#' @aliases N_upper_MCA2
 #' @aliases projBoseMCA
 #'
-#' @usage MCA2(nlevels, D=NULL, outerRetry=10, innerRetry=1, seed=NULL, ...)
-#' @usage MCAt(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...)
-#' @usage CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=10, innerRetry=1, seed=NULL, ...)
+#' @usage MCA2(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
+#' @usage MCAt(nlevels, t, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
+#' @usage CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=NULL,
+#' innerRetry=NULL, seed=NULL, ...)
 #' @usage N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
+#' @usage N_upper_MCA2(nlevels, internet = TRUE, ...)
 #' @usage projBoseMCA(nlevels, t=2, ...)
 #'
 #' @param nlevels a vector of numbers of levels, or a data.frame that is the table
@@ -27,12 +30,14 @@
 #' @param D for \code{MCA2}, a CA to be used for expanding; if \code{NULL}, it is
 #' automatically determined; it is meant for experts only, and it may have mixed levels\cr
 #' for \code{CA_to_MCA}, a strength \code{t} CA (it may also have mixed levels)
-#' @param outerRetry passed to \code{\link{postopNCK}}; if \code{0},
-#'       run size reduction will not be attempted.
-#' @param innerRetry positive integer value, passed to \code{\link{postopNCK}};
-#'       it is sometimes but not always beneficial to increase it versus the default 1
+#' @param outerRetry \code{NULL} or non-negative integer value, passed to \code{\link{postopNCK}}; if \code{0},
+#'       run size reduction will not be attempted. The default (\code{NULL}) depends on whether the
+#'       suggested package \pkg{cafast} is available (50) or not (10).
+#' @param innerRetry \code{NULL} or positive integer value, passed to \code{\link{postopNCK}};
+#'       the default depends on whether the suggested package \pkg{CAs} is available.
+#'       It is sometimes but not always beneficial to increase it versus the default 1
+#'       also without \pkg{cafast}.
 #' @param seed the seed for making \code{\link{postopNCK}} reproducible
-#' @param D a strength \code{t} CA (it may have mixed levels)
 #' @param cs integer vector of column numbers
 #' @param tolevs integer vector of target numbers of levels for the columns indicated
 #'        by \code{cs}; must not be larger than the number of levels of the related
@@ -40,8 +45,8 @@
 #' @param t integer, the strength of \code{D} (smaller strength would be permitted,
 #'        but would not make sense) or the requested strength
 #' @param internet logical: is an internet connection available (for DWYER or NIST download)
-#' @param ... currently used by \code{N_upper_MCA} only, passed to \code{\link{bestN}},
-#' e.g. an \code{exclude} argument
+#' @param ... currently used by \code{N_upper_MCA}, passed to \code{\link{bestN}},
+#' e.g. an \code{exclude} argument, and by \code{MCA2}, passed to \code{cafast::postopNCK_c}
 #'
 #' @section Details:
 #' Function \code{MCA2} implements Groemping's (2025) generalization of the first
@@ -128,12 +133,17 @@
 #' dim(D)
 #' coverage(D, 2)
 #' ## N_upper_MCA is very pessimistic
-#' N_upper_MCA(c(rep(2,10), 8))
-#'
-#' ## another case for which N_upper_MCA seems to be tight
-#' ## (postopNCK cannot achieve an improvement in reasonable time)
+#' N_upper_MCA(c(rep(2,10), 8), t=2)
+#' ## N_upper_MCA2 is better but still very pessimistic
+#' ## for this tiny example
+#' N_upper_MCA2(c(rep(2,10), 8))
+#' ## a more dramatic difference
+#' N_upper_MCA(c(4,4,4,3,3,rep(2,60)), 2)   ## much too large
+#' N_upper_MCA2(c(4,4,4,3,3,rep(2,60)), 2)  ## exact size before postprocessing
+#' ## a lesser difference
 #' N_upper_MCA(c(rep(5,8), 3,3))
-#' D <- CA_to_MCA(CS_LCDST(10,5), 9:10, c(3,3), outerRetry=0)
+#' N_upper_MCA2(c(rep(5,8), 3,3), returnMore=TRUE)
+#' D <- MCA2(c(rep(5,8), 3,3), D=miscCA(2,9,5), outerRetry=0)
 #' dim(D)
 #' head(D); tail(D)
 #'
@@ -143,19 +153,16 @@
 #' dim(D)
 #' coverage(D, 2)
 #' ## alternative call for the same setting
-#' D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,16,80,70)),
+#' D <- MCA2(data.frame(levels=c(6,4,3,2), frequency=c(2,8,80,70)),
 #'           outerRetry=0)
-#' \dontrun{
+#' \donttest{
 #'   ## make a lucky run reproducible by using a random seed
 #'   myseed <- sample(32000, 1)
-#'   Doptimized <- postopNCK(D, 2, seed=myseed)
-#'   ## This runs for an excessive time without user interruption.
-#'   ## There have occasionally been cases (e.g. seed 75 on windows),
-#'   ## for which the run size was reduced to 45 runs early.
-#'   ## It is not known whether it eventually improves more
-#'   ##    (lower bound 24 runs is likely not achievable).
-#'   ## The run can be stopped by <ESC>, once patience runs out
-#'   ##    or enough improvement was achieved.
+#'   print(myseed)
+#'   Doptimized <- postopNCK(D, 2, seed=myseed, verbose=1, restarts=1)
+#'   ## This runs for a while.
+#'   ##    Lower bound 36 runs is likely not achievable.
+#'   ## 42 or 41 rows were repeatedly achieved.
 #' }
 #'
 #' ## use the argument D for starting with a naive
@@ -164,20 +171,20 @@
 #' ##      seven 5-level columns and permits expansion as required);
 #' D <- MCA2(c(5, rep(4,2), rep(3,7), rep(2,20)), D=bestCA(2,30,5),
 #'          outerRetry=0)
-#' \dontrun{
+#' \donttest{
 #'    ## make a lucky run reproducible by using a random seed
 #'    myseed <- sample(32000, 1)
-#'    ## The code below uses the default number of steps
-#'    ## (which would run for excessive time),
-#'    ## but can be interrupted with <ESC> if run size improvement
+#'    ## with cafast::postopNCK_c, with increased outerMaxnochange,
+#'    ## the optimum size 20 can be reached (was e.g. the case for
+#'    ## seeds 1188 or 25063 on Windows).
+#'    ## Without package cafast, run time would be excessive;
+#'    ## can be interrupted with <ESC> if run size improvement
 #'    ## has been sufficient or seems to stall
 #'    ## (make sure to wait until the outer retry has safely finished);
-#'    ## run size optimization quickly reduces the 45 (or 29) runs
-#'    ##      to 22 or 23 runs (20 is the lower bound);
-#'    ##      21 runs have also been observed.
-#'    ## Without user interrupt, the code will run
-#'    ##      for excessively long time.
-#'    Doptimized <- postopNCK(D, 2, seed=myseed)
+#'    Doptimized <- postopNCK(D, 2, seed=myseed, verbose=1,
+#'       outerMaxnochange=30)
+#'    dim(Doptimized)
+#'    ## optimization stopped, because the global optimum was reached
 #' }
 #'
 #' ########################################################
@@ -205,7 +212,7 @@
 #' ## to four 3-level columns and one 2-level column in 33 runs,
 #' \donttest{
 #' Dmixed <- CA_to_MCA(D, cs=5, tolev=2, t=3) ## last column reduced to 2 levels
-#' ## a lengthy search cannot reduce the number of runs
+#' ## the search cannot reduce the number of runs
 #' }
 #' ## D can be easily reduced to the optimal 27 runs,
 #' ## if two columns are reduced to 2 levels each:
@@ -250,7 +257,10 @@
 #'      D <- MCAt(c(4,4,3,2,2,2), 4, innerRetry=3, seed=888)
 #'
 #' @export
-MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
+MCAt <- function(nlevels, t, outerRetry=NULL,
+                 innerRetry=NULL, seed=NULL, ...){
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
   # Input validation with meaningful error messages
   if (missing(t))
     stop("t (interaction strength) must be specified")
@@ -308,9 +318,10 @@ MCAt <- function(nlevels, t, outerRetry=10, innerRetry=1, seed=NULL, ...){
 
 #' @export
 CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
-                      outerRetry=10, innerRetry=1, seed=NULL, ...){
+                      outerRetry=NULL, innerRetry=NULL, seed=NULL, ...){
   Call <- sys.call()
-
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
   # Input validation with meaningful error messages
   if (missing(D))
     stop("D (covering array) must be specified")
@@ -383,7 +394,7 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
   Dnow <- D
   if (outerRetry >= 1) tryCatch({
       aus <- postopNCK(Dnow, t, outerRetry = outerRetry,
-                       innerRetry = innerRetry, seed=seed)
+                       innerRetry = innerRetry, seed=seed, ...)
       latest_result <- aus
       Dnow <- aus
   },
@@ -413,10 +424,10 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
 }
 
 #' @export
-MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
-                 seed=NULL, ...){
+MCA2 <- function(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...){
   Call <- sys.call()
-
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
   # Input validation with meaningful error messages
   if (missing(nlevels))
     stop("nlevels must be specified")
@@ -459,7 +470,7 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
                  prod(nlevels$levels[1:2]))
 
   ## find a suitable construction
-  hilf <- find_mix_construction_separate(nlevels)
+  hilf <- N_upper_MCA2(nlevels, returnMore = TRUE)
   ## create the ingoing array
   if (is.null(D))
       D <- bestCA(2, hilf$k, hilf$v)
@@ -481,7 +492,8 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=10, innerRetry=1,
   message("on interrupt, the current best result is returned")
   message("there will be at most ", outerRetry, " outer loop steps")
   tryCatch({
-      aus <- postopNCK(Dnow, 2, innerRetry = innerRetry, outerRetry=outerRetry, seed=seed)
+      aus <- postopNCK(Dnow, 2, innerRetry = innerRetry, outerRetry=outerRetry,
+                       seed=seed, ...)
       latest_result <- aus
       Dnow <- aus
     },
@@ -522,10 +534,33 @@ N_upper_MCA <- function(nlevels, t=2, internet=TRUE, ...){
   if (!is.list(nlevels))
     if (!is.numeric(nlevels))
       stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
+  if (is.numeric(nlevels)){
+    k <- length(nlevels)
+    v <- max(nlevels)
+  }else{
+    if (!all(c("levels", "frequency") %in% names(nlevels)))
+      stop("nlevels must have components 'levels' and 'frequency'")
+    if (!length(nlevels$levels)==length(nlevels$frequency))
+      stop("the components 'levels' and 'frequency' must have the same length")
+    k <- sum(nlevels$frequency)
+    v <- max(nlevels$levels)
+  }
+  bestN(t, k, v, internet=internet, ...)
+}
+
+#' @export
+N_upper_MCA2 <- function(nlevels, internet=TRUE, returnMore=FALSE, ...){
+  if (!is.list(nlevels))
+    if (!is.numeric(nlevels))
+      stop("if not a list or a data.frame, \nnlevels must be a vector of numbers of levels")
     if (is.numeric(nlevels)){
       k <- length(nlevels)
       v <- max(nlevels)
-    }else{
+      nlevels <- table(nlevels)
+      nlevels <- data.frame(
+        levels=as.numeric(rev(names(nlevels))),
+        frequency=rev(unname(as.numeric(nlevels)))
+        )} else{
       if (!all(c("levels", "frequency") %in% names(nlevels)))
         stop("nlevels must have components 'levels' and 'frequency'")
       if (!length(nlevels$levels)==length(nlevels$frequency))
@@ -533,7 +568,22 @@ N_upper_MCA <- function(nlevels, t=2, internet=TRUE, ...){
       k <- sum(nlevels$frequency)
       v <- max(nlevels$levels)
     }
-  bestN(t, k, v, internet=internet, ...)
+  nlevels <- nlevels[order(nlevels$levels, decreasing = TRUE),]
+  ndifflevs <- nrow(nlevels)
+  mink <- nlevels$frequency[1] + ndifflevs - 1
+  s <- sapply(nlevels$levels, function(obj) ncol(OD2(obj)))
+  propflex <- (1-nlevels$levels/v)
+  nOD <- nlevels$levels*(nlevels$levels-1)
+  found <- FALSE
+  while(!found){
+    minN <- bestN(2, mink, v, internet=internet, ...)
+    minnflex <- ceiling(minN*propflex)
+    r <- floor(minnflex/nOD)
+    capacity <- s^r
+    colsneeded <- ceiling(nlevels$frequency/capacity)
+    if (sum(colsneeded)>mink) mink <- mink + 1 else found <- TRUE
+  }
+  if (returnMore) return(list(N=minN, k=mink, v=v)) else return(minN)
 }
 
 #' @export
