@@ -28,7 +28,7 @@
 #' @param innerMaxnochange integer-valued number of iterations to try and find optimum positions within a candidate row or its automatically-determined replacements
 #' @param seed \code{NULL}, or an integer-valued seed for the random process;\cr
 #'        a non-NULL seed is stored in the \code{seed} attribute of the output object
-#' @param ... currently not used
+#' @param ... can be used to hand additional arguments to \code{postopNCK_c} of package \pkg{cafast}
 #'
 #' @section Details:
 #' Function \code{flexpos} marks flexible \emph{positions}, i.e. positions all of whose \code{t}-way interactions are also covered
@@ -46,7 +46,8 @@
 #' Function \code{flexprofile} obtains the profile of column-wise flexible values for \code{D}.
 #'
 #' Function \code{postopNCK} likely needs some tuning for speed and efficiency,
-#' but is nevertheless often successful.\cr
+#' but is nevertheless often successful; if the suggested package \pkg{cafast}
+#' is available, its C-implementation of the function is used, because it is substantially faster.\cr
 #' It attempts to remove rows by trying to make entire rows
 #' contain flexible values; in fact, it removes rows that have fewer than \code{t} non-flexible values,
 #' as those cannot contribute to \code{t}-coverage. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
@@ -316,6 +317,15 @@ flexprofile <- function(D, ...){
 #' @export
 postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
                       innerRetry=10, innerMaxnochange=25, seed=NULL, ...){
+  if (require(cafast)){
+    message("using cafast::postopNCK_c")
+    attrs <- attributes(D)
+    D <- postopNCK_c(D, t, fixrows=fixrows, outerRetry = outerRetry,
+                outerMaxnochange = outerMaxnochange, innerRetry = innerRetry,
+                innerMaxnochange = innerMaxnochange, seed=seed, ...)
+    if ("ca" %in% attrs) message("attributes have not yet been implemented")
+    return(D)
+  }
   # Input validation for D
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")

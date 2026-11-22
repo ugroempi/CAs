@@ -28,7 +28,7 @@ postopNCK(D, t, fixrows=0, verbose=0, outerRetry = 50, outerMaxnochange = 10,
 
 \item{verbose}{integer-valued degree of verbosity; 1 requests that the latest stages of unsuccessful attempts are added as an attribute to the returned unchanged matrix in case of a failure}
 
-\item{...}{currently not used}
+\item{...}{can be used to hand additional arguments to \code{postopNCK_c} of package \pkg{cafast}}
 
 \item{outerRetry}{integer-valued number of retries for escaping local optimum, if \code{outerMaxnochange} iterations were not successful}
 
@@ -71,7 +71,8 @@ The returned flexible positions tend to be at the bottom of the array.
 Function \code{flexprofile} obtains the profile of column-wise flexible values for \code{D}.
 
 Function \code{postopNCK} likely needs some tuning for speed and efficiency,
-but is nevertheless often successful.\cr
+but is nevertheless often successful; if the suggested package \pkg{cafast}
+is available, its C-implementation of the function is used, because it is substantially faster.\cr
 It attempts to remove rows by trying to make entire rows
 contain flexible values; in fact, it removes rows that have fewer than \code{t} non-flexible values,
 as those cannot contribute to \code{t}-coverage. It implements a variant of the proposed algorithm by Nayeri et al. (2013).
