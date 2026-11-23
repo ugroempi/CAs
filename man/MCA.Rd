@@ -9,16 +9,18 @@
 \alias{projBoseMCA}
 \title{Making mixed-level CAs}
 \usage{
-MCA2(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
+MCA2(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL,
+verbose=0, nocafast=FALSE, ...)
 
-MCAt(nlevels, t, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
+MCAt(nlevels, t, outerRetry=NULL, innerRetry=NULL, seed=NULL,
+verbose=0, nocafast=FALSE, ...)
 
 CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=NULL,
-innerRetry=NULL, seed=NULL, ...)
+innerRetry=NULL, seed=NULL, verbose=0, nocafast=FALSE, ...)
 
 N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
 
-N_upper_MCA2(nlevels, internet = TRUE, ...)
+N_upper_MCA2(nlevels, internet = TRUE, returnMore=FALSE, ...)
 
 projBoseMCA(nlevels, t=2, ...)
 }
@@ -42,6 +44,10 @@ also without \pkg{cafast}.}
 
 \item{seed}{the seed for making \code{\link{postopNCK}} reproducible}
 
+\item{verbose}{integer number, handed to \code{\link{postopNCK}}}
+
+\item{nocafast}{logical; if \code{TRUE}, suppresses the use of fast functions from package \pkg{cafast}}
+
 \item{...}{currently used by \code{N_upper_MCA}, passed to \code{\link{bestN}},
 e.g. an \code{exclude} argument, and by \code{MCA2}, passed to \code{cafast::postopNCK_c}}
 
@@ -56,6 +62,8 @@ by \code{cs}; must not be larger than the number of levels of the related
 columns in \code{cs}, and must not be smaller than 2}
 
 \item{internet}{logical: is an internet connection available (for DWYER or NIST download)}
+
+\item{returnMore}{logical: should \code{k} and \code{v} be returned in addition to \code{N}?}
 }
 \value{
 Functions \code{MCA2}, \code{MCAt} and \code{CA_to_MCA} return a matrix of

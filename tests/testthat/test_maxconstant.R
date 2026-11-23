@@ -40,3 +40,6 @@ test_that("maxconstant correctly handles NA values in clique rows",
               maxconstant(markflex(paleyCA(3,8,2),2)[-c(7,11:12),] ),
               2)), 1)
           })
+## there is no warning from cafast::maxconstant_c
+test_that("maxconstant warns in case of duplicated constant rows",
+          expect_warning(maxconstant(rbind(0,miscCA(3,8,2)), nocafast=TRUE)))

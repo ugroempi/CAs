@@ -122,7 +122,7 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
   if (length(table(lev))>1)
     stop("function maxconstant works for symmetric CAs only")
   ## do the rest with cafast, if available and not suppressed
-  if (require(cafast) && !nocafast) return(cafast::maxconstant_c(D, verbose=verbose,
+  if (requireNamespace("cafast") && !nocafast) return(cafast::maxconstant_c(D, verbose=verbose,
                               remove=remove, one_is_enough=one_is_enough,
                               dupcheck = dupcheck, ...))
   ## continuation without cafast, if unavailable or suppressed

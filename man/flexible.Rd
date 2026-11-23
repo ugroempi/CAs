@@ -28,6 +28,8 @@ postopNCK(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnochange = 10,
 
 \item{verbose}{integer-valued degree of verbosity; 1 requests that the latest stages of unsuccessful attempts are added as an attribute to the returned unchanged matrix in case of a failure}
 
+\item{nocafast}{logical; if \code{TRUE}, suppresses the use of package \pkg{cafast};\cr}
+
 \item{...}{can be used to hand additional arguments to \code{postopNCK_c} of package \pkg{cafast}}
 
 \item{outerRetry}{\code{NULL}, or integer-valued number of retries for escaping local optimum, if \code{outerMaxnochange} iterations were not successful. The default depends on whether the suggested package \pkg{cafast} is available (50) or not (10).}
@@ -40,8 +42,6 @@ postopNCK(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnochange = 10,
 
 \item{seed}{\code{NULL}, or an integer-valued seed for the random process;\cr
 a non-NULL seed is stored in the \code{seed} attribute of the output object}
-
-\item{nocafast}{logical; if \code{TRUE}, suppresses the use of package \pkg{cafast};\cr}
 }
 \value{
 Function \code{flexpos} returns a logical matrix with \code{TRUE} values indicating

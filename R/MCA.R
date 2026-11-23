@@ -15,12 +15,14 @@
 #' @aliases N_upper_MCA2
 #' @aliases projBoseMCA
 #'
-#' @usage MCA2(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
-#' @usage MCAt(nlevels, t, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...)
+#' @usage MCA2(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL,
+#' verbose=0, nocafast=FALSE, ...)
+#' @usage MCAt(nlevels, t, outerRetry=NULL, innerRetry=NULL, seed=NULL,
+#' verbose=0, nocafast=FALSE, ...)
 #' @usage CA_to_MCA(D, cs, tolevs, t=attr(D, "t"), outerRetry=NULL,
-#' innerRetry=NULL, seed=NULL, ...)
+#' innerRetry=NULL, seed=NULL, verbose=0, nocafast=FALSE, ...)
 #' @usage N_upper_MCA(nlevels, t=2, internet = TRUE, ...)
-#' @usage N_upper_MCA2(nlevels, internet = TRUE, ...)
+#' @usage N_upper_MCA2(nlevels, internet = TRUE, returnMore=FALSE, ...)
 #' @usage projBoseMCA(nlevels, t=2, ...)
 #'
 #' @param nlevels a vector of numbers of levels, or a data.frame that is the table
@@ -38,6 +40,8 @@
 #'       It is sometimes but not always beneficial to increase it versus the default 1
 #'       also without \pkg{cafast}.
 #' @param seed the seed for making \code{\link{postopNCK}} reproducible
+#' @param verbose integer number, handed to \code{\link{postopNCK}}
+#' @param nocafast logical; if \code{TRUE}, suppresses the use of fast functions from package \pkg{cafast}
 #' @param cs integer vector of column numbers
 #' @param tolevs integer vector of target numbers of levels for the columns indicated
 #'        by \code{cs}; must not be larger than the number of levels of the related
@@ -45,6 +49,7 @@
 #' @param t integer, the strength of \code{D} (smaller strength would be permitted,
 #'        but would not make sense) or the requested strength
 #' @param internet logical: is an internet connection available (for DWYER or NIST download)
+#' @param returnMore logical: should \code{k} and \code{v} be returned in addition to \code{N}?
 #' @param ... currently used by \code{N_upper_MCA}, passed to \code{\link{bestN}},
 #' e.g. an \code{exclude} argument, and by \code{MCA2}, passed to \code{cafast::postopNCK_c}
 #'
@@ -258,9 +263,9 @@
 #'
 #' @export
 MCAt <- function(nlevels, t, outerRetry=NULL,
-                 innerRetry=NULL, seed=NULL, ...){
-  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
-  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
+                 innerRetry=NULL, seed=NULL, verbose=0, nocafast=FALSE, ...){
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 10, 1)
   # Input validation with meaningful error messages
   if (missing(t))
     stop("t (interaction strength) must be specified")
@@ -313,15 +318,17 @@ MCAt <- function(nlevels, t, outerRetry=NULL,
   D <- bestCA(t,k,v)
   cs <- setdiff(1:k, which(levs==v))
   CA_to_MCA(D, cs, levs[cs], t, outerRetry = outerRetry,
-            innerRetry = innerRetry, seed=seed, ...)
+            innerRetry = innerRetry, seed=seed, nocafast=nocafast,
+            verbose=verbose, ...)
 }
 
 #' @export
 CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
-                      outerRetry=NULL, innerRetry=NULL, seed=NULL, ...){
+                      outerRetry=NULL, innerRetry=NULL, seed=NULL,
+                      verbose=0, nocafast=FALSE, ...){
   Call <- sys.call()
-  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
-  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 10, 1)
   # Input validation with meaningful error messages
   if (missing(D))
     stop("D (covering array) must be specified")
@@ -394,7 +401,8 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
   Dnow <- D
   if (outerRetry >= 1) tryCatch({
       aus <- postopNCK(Dnow, t, outerRetry = outerRetry,
-                       innerRetry = innerRetry, seed=seed, ...)
+                       innerRetry = innerRetry, seed=seed,
+                       nocafast=nocafast, ...)
       latest_result <- aus
       Dnow <- aus
   },
@@ -424,10 +432,11 @@ CA_to_MCA <- function(D, cs, tolevs, t=attr(D, "t"),
 }
 
 #' @export
-MCA2 <- function(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, ...){
+MCA2 <- function(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL,
+                 verbose=0, nocafast=FALSE, ...){
   Call <- sys.call()
-  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
-  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 10, 1)
   # Input validation with meaningful error messages
   if (missing(nlevels))
     stop("nlevels must be specified")
@@ -493,7 +502,7 @@ MCA2 <- function(nlevels, D=NULL, outerRetry=NULL, innerRetry=NULL, seed=NULL, .
   message("there will be at most ", outerRetry, " outer loop steps")
   tryCatch({
       aus <- postopNCK(Dnow, 2, innerRetry = innerRetry, outerRetry=outerRetry,
-                       seed=seed, ...)
+                       seed=seed, nocafast=nocafast, ...)
       latest_result <- aus
       Dnow <- aus
     },

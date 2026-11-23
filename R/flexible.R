@@ -152,7 +152,7 @@
 #' ## such examples can be found in the help for MCA2
 
 #' @export
-markflex <- function(D, t, fixrows=0, verbose=0, ...){
+markflex <- function(D, t, fixrows=0, verbose=0, nocafast=FALSE, ...){
   # Input validation for D
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
@@ -169,7 +169,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, ...){
     stop("t must be at least 2")
   }
 
-  if (require(cafast) && !nocafast) return(cafast::markflex_c(D, t, fixrows=fixrows))
+  if (requireNamespace("cafast") && !nocafast) return(cafast::markflex_c(D, t, fixrows=fixrows))
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
@@ -267,7 +267,7 @@ flexpos <- function(D, t, nocafast=FALSE, ...){
 
   if (any(is.na(D))) message("Note: Some flexible positions are already fixed. This reduces the positions that can be found.")
 
-  if (require(cafast) && !nocafast){
+  if (requireNamespace("cafast") && !nocafast){
     return(cafast::flexpos_c(D, t))
   }
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
@@ -330,8 +330,8 @@ flexprofile <- function(D, ...){
 postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnochange = 10,
                       innerRetry=NULL, innerMaxnochange=25, seed=NULL, nocafast=FALSE, ...){
   Call <- sys.call()
-  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace(cafast), 50, 10)
-  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace(cafast), 10, 1)
+  if (is.null(outerRetry)) outerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 50, 10)
+  if (is.null(innerRetry)) innerRetry <- ifelse(requireNamespace("cafast") && !nocafast, 10, 1)
   # Input validation for D
   if (!is.matrix(D) && !is.data.frame(D)) {
     stop("D must be a matrix or data.frame")
@@ -396,7 +396,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnoc
   levs <- levels.no.NA(D)
 
   ## refer all the rest to cafast, if that is available
-  if (require(cafast) && !nocafast){
+  if (requireNamespace("cafast") && !nocafast){
     message("using cafast::postopNCK_c")
     attrs <- attributes(D)
     D <- cafast::postopNCK_c(D, t, fixrows=fixrows, outerRetry = outerRetry,
