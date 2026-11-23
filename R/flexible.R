@@ -169,7 +169,10 @@ markflex <- function(D, t, fixrows=0, verbose=0, nocafast=FALSE, ...){
     stop("t must be at least 2")
   }
 
-  if (requireNamespace("cafast") && !nocafast) return(cafast::markflex_c(D, t, fixrows=fixrows))
+  if (requireNamespace("cafast") && !nocafast){
+    aus <- cafast::markflex_c(D, t, fixrows=fixrows)
+    return(finalize_markflex(aus, attr(aus, "rowOrder")))
+  }
   hilf <- matcheck(D, uniform=FALSE, flexible=NA)
   v <- hilf$v ## vector of length k;
   k <- hilf$k; N <- hilf$N
@@ -238,11 +241,29 @@ markflex <- function(D, t, fixrows=0, verbose=0, nocafast=FALSE, ...){
     }
   }
   aus <- D; aus[hilf] <- NA
-  ## profile not calculated with hilf, because D might already have NA entries
-  attr(aus, "flexible") <- list(value=NA,
-                                profile=flexprofile(aus))
-  attr(aus, "rowOrder") <- rowOrder
+  finalize_markflex(aus, rowOrder)
+}
+
+## single location for the attributes of markflex results,
+## independent of the use of cafast
+finalize_markflex <- function(aus, rowOrder){
+  attrs <- list(dim=dim(aus), dimnames=dimnames(aus))
+  attrs <- attrs[!vapply(attrs, is.null, logical(1))]
+  ## profile not calculated from hilf, because D might already have NA entries
+  attributes(aus) <- c(attrs,
+                       list(flexible=list(value=NA, profile=flexprofile(aus)),
+                            rowOrder=rowOrder))
   aus
+}
+
+## single location for the attributes of postopNCK results,
+## independent of the use of cafast
+finalize_postopNCK <- function(Di, attrs, seed, Call){
+  if (!"ca" %in% class(Di)) class(Di) <- c("ca", class(Di))
+  attributes(Di) <- c(attributes(Di), attrs)
+  attr(Di, "seed") <- c(attr(Di, "seed"), seed)
+  attr(Di, "Call") <- Call
+  Di
 }
 
 #' @export
@@ -398,12 +419,14 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnoc
   ## refer all the rest to cafast, if that is available
   if (requireNamespace("cafast") && !nocafast){
     message("using cafast::postopNCK_c")
-    attrs <- attributes(D)
-    D <- cafast::postopNCK_c(D, t, fixrows=fixrows, outerRetry = outerRetry,
+    Di <- cafast::postopNCK_c(D, t, fixrows=fixrows, outerRetry = outerRetry,
                      outerMaxnochange = outerMaxnochange, innerRetry = innerRetry,
                      innerMaxnochange = innerMaxnochange, seed=seed, verbose=verbose, ...)
-    if ("ca" %in% attrs) message("attributes have not yet been implemented")
-    return(D)
+    attr(Di, "seed") <- NULL
+    attr(Di, "Call") <- NULL
+    if (is.null(attr(Di, "flexible")))
+      attr(Di, "flexible") <- list(value=NA, profile=flexprofile(Di))
+    return(finalize_postopNCK(Di, attrs, seed, Call))
   }
 
   ## proceed without cafast, if that is unavailable or suppressed
@@ -449,11 +472,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnoc
       break
       }
   }
-  if (!"ca" %in% class(Di)) class(Di) <- c("ca", class(Di))
-  attributes(Di) <- c(attributes(Di), attrs)
-  attr(Di, "seed") <- c(attr(Di, "seed"), seed)
-  attr(Di, "Call") <- Call
-  return(Di)
+  return(finalize_postopNCK(Di, attrs, seed, Call))
   }, interrupt = function(e) {
     message("Interrupted by user. Returning last completed result.")
     if (!"ca" %in% class(last_result))
