@@ -137,7 +137,7 @@ maxconstant <- function(D, verbose=0, remove=FALSE, one_is_enough=FALSE, dupchec
 
   if (nconstant > 0) posconsts <- which(consts==1)
   if (nconstant > 1) posconsts <- posconsts[sort(D[posconsts,1], index.return=TRUE)$ix]
-  if (!dupcheck) if (any(duplicated(D[posconsts,]))){
+  if (!dupcheck) if (any(duplicated(D[posconsts,,drop=FALSE]))){
     warning("constant rows contain duplicates")
   }
 
