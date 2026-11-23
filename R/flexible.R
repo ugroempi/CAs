@@ -197,7 +197,7 @@ markflex <- function(D, t, fixrows=0, verbose=0, nocafast=FALSE, ...){
   if (!is.numeric(verbose) || length(verbose) != 1 || verbose < 0 || verbose != floor(verbose)) {
     stop("verbose must be a non-negative integer")
   }
-  suppressMessages( flexPositions <- flexpos(D, t, verbose=verbose, ...))
+  suppressMessages( flexPositions <- flexpos(D, t, verbose=verbose, nocafast=nocafast, ...))
   ## move rows with many flexible positions to bottom
   ## goal: be able to eliminate rows
   rowOrder <- 1:N
@@ -414,7 +414,7 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnoc
     message("D is already optimal")
     return(D)
   }
-  Di <- markflex(D, t, fixrows=fixrows, verbose=verbose, ...)
+  Di <- markflex(D, t, fixrows=fixrows, verbose=verbose, nocafast=nocafast, ...)
   ncur <- nold <- nrow(D)
   count_unchanged <- 0
   set.seed(seed)
@@ -433,7 +433,8 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnoc
     message("postopNCK outer: ", i)
     ## call with default skipcheck=TRUE
     Di <- postopNCK_one(Di, t, fixrows=fixrows, verbose=verbose,
-                        innerMaxnochange=innerMaxnochange, innerRetry=innerRetry, ...)
+                        innerMaxnochange=innerMaxnochange, innerRetry=innerRetry,
+                        nocafast=nocafast, ...)
     if (ncur == nrow(Di)) {
       count_unchanged <- count_unchanged + 1
       if (count_unchanged >= outerMaxnochange) break
@@ -465,8 +466,8 @@ postopNCK <- function(D, t, fixrows=0, verbose=0, outerRetry = NULL, outerMaxnoc
   })
 }
 
-postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, innerRetry=10, skipcheck=TRUE, ...){
-  if (!skipcheck) aus <- markflex(D, t, fixrows=fixrows, verbose=verbose, ...) else aus <- D
+postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, innerRetry=10, skipcheck=TRUE, nocafast=FALSE, ...){
+  if (!skipcheck) aus <- markflex(D, t, fixrows=fixrows, verbose=verbose, nocafast=nocafast, ...) else aus <- D
   orig_row <- attr(aus, "rowOrder")
   k <- ncol(aus)
   N <- nrow(aus)
@@ -524,7 +525,7 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
         aus[,j][naj] <- sample(0:(vs[j]-1), length(naj), replace=TRUE)
       }
 
-      aus <- markflex(aus, t, fixrows=ifelse(!any(exhausted), fixrows, max(which(exhausted))), ...)
+      aus <- markflex(aus, t, fixrows=ifelse(!any(exhausted), fixrows, max(which(exhausted))), nocafast=nocafast, ...)
       orig_row <- orig_row[attr(aus, "rowOrder")]
       exhausted <- exhausted[attr(aus, "rowOrder")]
          if (exhausted[N]) cat("returned to exhausted last row ", orig_row[N],"\n")
@@ -563,7 +564,7 @@ postopNCK_one <- function(D, t, fixrows=0, verbose=0, innerMaxnochange=25, inner
         aus[is.na(aus[,j]),j] <- sample(0:(vs[j]-1), sum(is.na(aus[,j])), replace=TRUE)
       }
       ## create new flexible set
-      aus <- markflex(aus, t, fixrows=max(which(exhausted)))
+      aus <- markflex(aus, t, fixrows=max(which(exhausted)), nocafast=nocafast)
       orig_row <- orig_row[attr(aus, "rowOrder")]
       exhausted <- exhausted[attr(aus, "rowOrder")]
       # print(orig_row[which(exhausted)])
