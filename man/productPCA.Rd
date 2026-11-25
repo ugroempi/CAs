@@ -32,9 +32,9 @@ is.PCA(D, start0=NULL, ...)
 
 \item{l1}{width of P block in \code{D2} (see Details section)}
 
-\item{tryhard}{logical: if \code{TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.}
+\item{tryhard}{logical: if \code{nocafast=FALSE}, \code{tryhard=TRUE} doubles the default search time allocated for \code{cafast::CA_to_PCA_c}; otherwise, if \code{tryhard=TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.}
 
-\item{ignorePCAstatus}{logical: should \code{CA_to_PCA} ignore the \code{PCAstatus} attribute of \code{D} (if any)?}
+\item{ignorePCAstatus}{logical: ignored if \code{nocafast=FALSE}; otherwise: should \code{CA_to_PCA} ignore the \code{PCAstatus} attribute of \code{D} (if any)?}
 
 \item{nocafast}{logical, should use of package \pkg{cafast} (function \code{CA_to_PCA_c}) be suppressed? Without suppression, \code{tryhard=TRUE} is translated to \code{seconds=120} (unless \code{seconds} is given in \code{...}), and \code{ignorePCAstatus} is ignored.}
 
@@ -53,10 +53,10 @@ and the number of rows is \code{N + M - v}.\cr
 The returned matrix has its levels coded like the ingoing matrices, i.e., integers starting with 0 or 1.
 
 Function \code{CA_to_PCA} returns an equivalent CA of S3 class \code{ca} that has PCA (or SCA) structure (see Section "Partitioned Covering Array (PCA)"),
-if possible.
-
-The resulting CAs have an attribute \code{PCAstatus},
+if possible. The resulting CA has an attribute \code{PCAstatus},
 which is a list with elements \code{type} (PCA or SCA), \code{k1} and \code{k2}.
+If package \pkg{cafast} was used, it also has an attribute \code{PCAexact},
+which indicates whether an exhaustive search was completed.
 
 Function \code{is.PCA} returns a logical with the analogous attribute; it can be (mis)used for checking
 consistency between the codings of designs by specifying \code{start0}.
@@ -96,15 +96,21 @@ properties of that matrix.
 
 \code{CA_to_PCA} rearranges \code{D} into a PCA structure (see Section "Partitioned Covering Array (PCA)")
 by rearranging columns, swapping symbols, and in case of \code{tryhard=TRUE} also rearranging rows.\cr
-In case of \code{tryhard=TRUE}, it is tried to achieve PCA status \code{k2=1} or \code{k2=2}; in that case,
-if it is possible to achieve \code{v} constant rows (i.e., \code{k2=0}), the function finds these.\cr
+Per default, the function calls function \code{CA_to_PCA_c} of package \pkg{cafast}, whenever that package
+is installed (version >= 0.1.1) and use of the package is not suppressed by the argument \code{nocafast).
+There is no reason for the user to suppress use of package \code{cafast}, which speeds up the search
+enormously and increases the chance of finding a structure with a large
+number of columns in the left-hand side part. The function allows for 60 seconds run time per
+default. This run time is doubled by the argument \code{tryhard=TRUE}. Alternatively,
+the user can provide the \code{seconds} argument for function \code{cafast::CA_to_PCA_c}.\cr
+If package \pkg{cafast} is not available, \code{tryhard=TRUE} tries to achieve PCA status \code{k2=1} or \code{k2=2};
+in that case, if it is possible to achieve \code{v} constant rows (i.e., \code{k2=0}), the function finds these.\cr
 Without \code{tryhard=TRUE}, the resulting PCA will have \code{k1} as the number of columns with \code{v} different
 levels in the first \code{v} rows.\cr
-\code{tryhard=TRUE} may be useful for small designs, but may substantially increase run times for \code{D} with many rows or many columns.
+\code{tryhard=TRUE} may be useful for small designs, but may substantially increase run times for
+\code{D} with many rows or many columns.
 
-Function \code{CA_to_PCA} brings its argument into the best possible PCA shape by swapping columns only, working on the first \code{q} rows.
-If the argument \code{tryhard} is invoked, the function tries to achieve \code{k1=k-1} or \code{k1=k-2} by trying \code{\link{maxconstant}} on
-subsets of columns. Function \code{is.PCA} checks the PCA status of its argument without modifying it in any way.
+Function \code{is.PCA} checks the PCA status of its argument without modifying it in any way.
 }
 
 \section{Partitioned Covering Array (PCA)}{
