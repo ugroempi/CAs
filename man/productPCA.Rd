@@ -11,7 +11,7 @@ pcaCA(k, v, ...)
 
 productPCA(D1, D2=NULL, k1=NULL, l1=NULL, ...)
 
-CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...)
+CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, nocafast=FALSE, ...)
 
 is.PCA(D, start0=NULL, ...)
 }
@@ -36,6 +36,10 @@ is.PCA(D, start0=NULL, ...)
 
 \item{ignorePCAstatus}{logical: should \code{CA_to_PCA} ignore the \code{PCAstatus} attribute of \code{D} (if any)?}
 
+
+\item{nocafast}{logical, should use of package \pkg{cafast} (function \code{CA_to_PCA_c}) be suppressed?}
+
+\item{...}{passed on to \code{CA_to_PCA_c} of package \pkg{cafast} (e.g., \code{seconds}) by \code{CA_to_PCA}; otherwise currently not used}
 \item{start0}{\code{NULL}, or logical: do the values start with 0 (otherwise with 1)?}
 }
 \value{
