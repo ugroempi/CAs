@@ -11,7 +11,7 @@ pcaCA(k, v, ...)
 
 productPCA(D1, D2=NULL, k1=NULL, l1=NULL, ...)
 
-CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...)
+CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, nocafast=FALSE, ...)
 
 is.PCA(D, start0=NULL, ...)
 }
@@ -20,7 +20,7 @@ is.PCA(D, start0=NULL, ...)
 
 \item{v}{integer: the number of levels for each column}
 
-\item{...}{currently not used}
+\item{...}{passed on to \code{CA_to_PCA_c} of package \pkg{cafast} (e.g., \code{seconds}) by \code{CA_to_PCA}; otherwise currently not used}
 
 \item{D1}{an N x k CA of strength 2 with v levels, split into k1 + k2 columns for \code{productPCA}}
 
@@ -35,6 +35,8 @@ is.PCA(D, start0=NULL, ...)
 \item{tryhard}{logical: if \code{TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.}
 
 \item{ignorePCAstatus}{logical: should \code{CA_to_PCA} ignore the \code{PCAstatus} attribute of \code{D} (if any)?}
+
+\item{nocafast}{logical, should use of package \pkg{cafast} (function \code{CA_to_PCA_c}) be suppressed? Without suppression, \code{tryhard=TRUE} is translated to \code{seconds=120} (unless \code{seconds} is given in \code{...}), and \code{ignorePCAstatus} is ignored.}
 
 \item{start0}{\code{NULL}, or logical: do the values start with 0 (otherwise with 1)?}
 }

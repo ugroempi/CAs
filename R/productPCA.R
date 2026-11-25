@@ -13,7 +13,7 @@
 #'
 #' @usage pcaCA(k, v, ...)
 #' @usage productPCA(D1, D2=NULL, k1=NULL, l1=NULL, ...)
-#' @usage CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...)
+#' @usage CA_to_PCA(D, tryhard=FALSE, ignorePCAstatus=TRUE, nocafast=FALSE, ...)
 #' @usage is.PCA(D, start0=NULL, ...)
 #'
 #' @param k integer: the number of requested columns
@@ -25,8 +25,9 @@
 #' @param l1 width of P block in \code{D2} (see Details section)
 #' @param tryhard logical: if \code{TRUE}, \code{CA_to_PCA} tries to achieve \code{v} constant rows for \code{k-1} or \code{k-2} columns; this may take a while in case of many columns.
 #' @param ignorePCAstatus logical: should \code{CA_to_PCA} ignore the \code{PCAstatus} attribute of \code{D} (if any)?
+#' @param nocafast logical, should use of package \pkg{cafast} (function \code{CA_to_PCA_c}) be suppressed? Without suppression, \code{tryhard=TRUE} is translated to \code{seconds=120} (unless \code{seconds} is given in \code{...}), and \code{ignorePCAstatus} is ignored.
 #' @param start0 \code{NULL}, or logical: do the values start with 0 (otherwise with 1)?
-#' @param ... currently not used
+#' @param ... passed on to \code{CA_to_PCA_c} of package \pkg{cafast} (e.g., \code{seconds}) by \code{CA_to_PCA}; otherwise currently not used
 #'
 #' @section Details:
 #' Function \code{pcaCA} returns a PCA from - possibly recursive - application
@@ -369,7 +370,7 @@ is.PCA <- function(D, start0=NULL, ...){
 }
 
 #' @export
-CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...){
+CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, nocafast=FALSE, ...){
   Call <- sys.call()
 
   attrs <- attributes(D)  ## reinstate later
@@ -378,7 +379,17 @@ CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...){
   ## assumes that undeclared flexible values are coded as NA
   hilf <- matcheck(D, flexible=NA)
   v <- hilf$v; k <- hilf$k; N <- hilf$N; start0 <- hilf$start0; flexible <- hilf$flexval
-  hilf <- maxconstant(D, verbose=2)
+
+  ## do the rest with cafast, if available and not suppressed
+  if (!nocafast && requireNamespace("cafast", quietly=TRUE)){
+    args <- list(...)
+    if (tryhard && is.null(args$seconds)) args$seconds <- 120
+    aus <- do.call(cafast::CA_to_PCA_c, c(list(D), args))
+    attr(aus, "Call") <- attrs$Call
+    return(aus)
+  }
+  ## continuation without cafast, if unavailable or suppressed
+  hilf <- maxconstant(D, verbose=2, nocafast=nocafast)
 
   ## entire matrix has v constant rows, i.e., k2=0
   if (length(unique(hilf[v,]))==1){
@@ -457,7 +468,7 @@ CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...){
 
   ## try to achieve a split with k1=k-1 and k2=1
   for (i in 1:k){
-    hilf <-  maxconstant(D[,-i], verbose=2)
+    hilf <-  maxconstant(D[,-i], verbose=2, nocafast=nocafast)
     if (length(unique(hilf[v,]))==1){
       xcol <- i
       break
@@ -490,7 +501,7 @@ CA_to_PCA <- function(D, tryhard=FALSE, ignorePCAstatus=TRUE, ...){
     ## try pairs of columns
     pickpairs <- nchoosek(k,2)
     for (i in 1:ncol(pickpairs)){
-      hilf <-  maxconstant(D[,-pickpairs[,i]], verbose=2)
+      hilf <-  maxconstant(D[,-pickpairs[,i]], verbose=2, nocafast=nocafast)
       if (length(unique(hilf[v,]))==1){
         xcol <- pickpairs[,i]
         break ## breaks the loop over i
