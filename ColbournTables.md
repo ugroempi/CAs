@@ -1,7 +1,7 @@
 Frozen version of the Colbourn tables, with best sizes from latest Github release of package **CAs**
 ====================================================================================================
 originally provided by Ulrike Grömping Feb 26, 2025; latest update Nov 15, 2026.<br> 
-**See also**: [@cpbsmolen's collection of best-known covering arrays](https://chrispbsmolen.github.io/ca-tools/) to which newly-found arrays can be submitted. It keeps track of progress and propagates improvements to other constructions; it may not (yet) always track *all* consequences of improved arrays the way Charles Colbourn did.
+**See also**: [@chrispbsmolen's collection of best-known covering arrays](https://coveringarraytools.org/) to which newly-found arrays can be submitted. It keeps track of progress and propagates improvements to other constructions; it may not (yet) always track *all* consequences of improved arrays the way Charles Colbourn did.
 
 # Purpose
 
