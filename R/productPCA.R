@@ -59,7 +59,7 @@
 #' \code{CA_to_PCA} rearranges \code{D} into a PCA structure (see Section "Partitioned Covering Array (PCA)")
 #' by rearranging columns, swapping symbols, and in case of \code{tryhard=TRUE} also rearranging rows.\cr
 #' Per default, the function calls function \code{CA_to_PCA_c} of package \pkg{cafast}, whenever that package
-#' is installed (version >= 0.1.1) and use of the package is not suppressed by the argument \code{nocafast).
+#' is installed (version >= 0.1.1) and use of the package is not suppressed by the argument \code{nocafast}.
 #' There is no reason for the user to suppress use of package \code{cafast}, which speeds up the search
 #' enormously and increases the chance of finding a structure with a large
 #' number of columns in the left-hand side part. The function allows for 60&nbsp;seconds run time per
