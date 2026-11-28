@@ -12,6 +12,8 @@ test_that("JE", {
 
   temp <- JE(4,6)
   expect_equal(dim(temp), c(21, 6))
+  expect_equal(dim(JE(4)), c(21, 6))
+  expect_equal(dim(JE(k=6)), c(21, 6))
   expect_equal(colSums(temp), rep(11L, 6))
   expect_s3_class(temp,"ca")
   expect_equal(attr(temp, "origin"), "Johnson and Entringer")

@@ -103,7 +103,7 @@ JE <- function(t=NULL, k=NULL){
   if (is.null(k) && is.null(t))
     stop("At least one of k and t must be specified")
   ## if one is NULL, it is calculated from the other
-  if (!is.numeric(k) || length(k) != 1 || k < 1 || k != as.integer(k))
+  if (!is.null(k) && (!is.numeric(k) || length(k) != 1 || k < 1 || k != as.integer(k)))
     stop("k must be a single positive integer")
 
   if (!is.null(t)){

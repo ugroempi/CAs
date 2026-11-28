@@ -9,7 +9,8 @@ Version 0.25-2, work in progress after release 0.25-1
    of the previous helper function, yielding improved run sizes before 
    post processing
  - added a reference to JE for the explicit translation from graph 
-   to covering array
+   to covering array, and made it possible to only specify t (threw 
+   error before)
 
 November 15, 2026, Version 0.25-1, not uploaded to CRAN
  - Ns and Ns_derive now default to maxfuse=NULL, like bestN; the default is the 
