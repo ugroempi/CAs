@@ -57,7 +57,8 @@
 #' \code{v} and \code{N} respectively.
 #'
 #' @references Colbourn and Dinitz (2007, III 7.16 for Zero Sum),
-#' Johnson and Entringer (1989)
+#' Johnson and Entringer (1989), as explained e.g. in
+#' Torres-Jimenez et al. (2019)
 #'
 #' @examples
 #' D <- JE(k=8)
