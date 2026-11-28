@@ -260,6 +260,8 @@ finalize_markflex <- function(aus, rowOrder){
 ## independent of the use of cafast
 finalize_postopNCK <- function(Di, attrs, seed, Call){
   if (!"ca" %in% class(Di)) class(Di) <- c("ca", class(Di))
+  if ("dim" %in% names(attrs)) attrs$dim <- NULL
+  if ("dimnames" %in% names(attrs)) attrs$dimnames <- NULL
   attributes(Di) <- c(attributes(Di), attrs)
   attr(Di, "seed") <- c(attr(Di, "seed"), seed)
   attr(Di, "Call") <- Call
